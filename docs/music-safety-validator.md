@@ -11,11 +11,11 @@ The validator compares an immutable source image with a restoration candidate an
 ## Evidence layers
 
 1. content-addressed source and candidate identity,
-2. deterministic image registration with explicit confidence,
+2. deterministic image registration with explicit confidence and byte/pixel ceilings,
 3. separate staff-system and TAB-system geometry,
 4. expected five-line staff and configurable six-line TAB counts,
 5. horizontal-line continuity and break measurements,
-6. local dark-pixel loss and invention outside long system lines,
+6. local dark-pixel loss and invention outside a shared long-line mask using the source threshold,
 7. connected-component loss, invention, and movement,
 8. page-region findings for teacher review.
 
@@ -31,11 +31,11 @@ Low whole-image difference is never sufficient evidence of preservation. A candi
 
 ## Staff and TAB separation
 
-Staff and TAB systems are measured independently. Staff defaults to five expected horizontal lines per system; guitar TAB defaults to six and remains configurable. Unknown line groups are reported instead of silently reclassified.
+Staff and TAB systems are measured independently. Staff defaults to five expected horizontal lines per system; guitar TAB defaults to six and remains configurable. Unknown line groups and pages with no recognized staff/TAB system require review instead of being treated as a pass.
 
 ## Candidate comparison
 
-`compare_candidate_reports` excludes rejected candidates, then ranks `pass` before `review_required`, lower risk score before higher risk score, and finally content digest for deterministic ties. Candidate selection is not teacher approval.
+`compare_candidate_reports` requires every report to reference the same immutable source, derives ranking from verdict and measured risk rather than trusting caller-supplied rank fields, excludes rejected candidates, then ranks `pass` before `review_required`, lower risk before higher risk, and finally content digest for deterministic ties. Candidate selection is not teacher approval.
 
 ## Teacher review and training separation
 
@@ -73,5 +73,6 @@ Exit codes:
 
 - no OMR, MusicXML, semantic pitch/rhythm recognition, or OCR,
 - translation-only registration after deterministic size normalization,
+- configurable 50 MB byte and 80-million-pixel defaults,
 - no automatic learning or training-label creation,
 - real representative fixture bytes remain outside ordinary Git until separately approved.
