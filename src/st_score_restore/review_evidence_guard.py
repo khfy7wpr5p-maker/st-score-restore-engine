@@ -5,8 +5,8 @@ import json
 from typing import Any
 
 from .job_api_types import JobApiError
-from .job_service_support import _artifact_id, _canonical_json_bytes
-from .review_evidence import GENERATOR_VERSION, EvidenceArtifact, ReviewEvidenceResult, generate_review_evidence
+from .job_service_support import _artifact_id
+from .review_evidence import generate_review_evidence
 
 
 class ReviewEvidenceGuardMixin:
@@ -17,7 +17,12 @@ class ReviewEvidenceGuardMixin:
             self._prepare_review_evidence_locked(job, actor=actor)
         super()._transition(job, target, actor)
 
-    def _prepare_review_evidence_locked(self, job: dict[str, Any], *, actor: str) -> None:
+    def _prepare_review_evidence_locked(
+        self,
+        job: dict[str, Any],
+        *,
+        actor: str,
+    ) -> None:
         if job["state"] != "VALIDATING":
             raise JobApiError(
                 "invalid_review_evidence_state",
@@ -40,12 +45,18 @@ class ReviewEvidenceGuardMixin:
                     details={"pageNumber": page["pageNumber"]},
                 )
             source_id = page["sourceArtifactId"]
-            source_bytes = self._artifact_bytes(self._artifact(job["jobId"], source_id))
-            candidate_bytes = self._artifact_bytes(self._artifact(job["jobId"], candidate_id))
-            safety_report = json.loads(
-                self._artifact_bytes(self._artifact(job["jobId"], report_id)).decode("utf-8")
+            source_bytes = self._artifact_bytes(
+                self._artifact(job["jobId"], source_id)
             )
-            raw_result = generate_review_evidence(
+            candidate_bytes = self._artifact_bytes(
+                self._artifact(job["jobId"], candidate_id)
+            )
+            safety_report = json.loads(
+                self._artifact_bytes(
+                    self._artifact(job["jobId"], report_id)
+                ).decode("utf-8")
+            )
+            result = generate_review_evidence(
                 source_bytes,
                 candidate_bytes,
                 safety_report,
@@ -55,7 +66,6 @@ class ReviewEvidenceGuardMixin:
                 page_number=page["pageNumber"],
                 attempt_id=attempt_id,
             )
-            result = self._normalize_review_evidence(raw_result)
             for artifact in result.artifacts:
                 self._store_artifact(
                     job,
@@ -89,39 +99,13 @@ class ReviewEvidenceGuardMixin:
                     "sourceArtifactId": source_id,
                     "candidateArtifactId": candidate_id,
                     "safetyReportArtifactId": report_id,
-                    "cropArtifactIds": [artifact.artifact_id for artifact in result.artifacts],
-                    "regionalFindingCount": result.bundle["navigation"]["regionalFindingCount"],
+                    "cropArtifactIds": [
+                        artifact.artifact_id for artifact in result.artifacts
+                    ],
+                    "regionalFindingCount": result.bundle["navigation"][
+                        "regionalFindingCount"
+                    ],
                     "semanticRecognitionClaimed": False,
                 },
                 attempt_id,
             )
-
-    @staticmethod
-    def _normalize_review_evidence(result: ReviewEvidenceResult) -> ReviewEvidenceResult:
-        """Narrow legacy generator metadata to the accepted M4.4 contract."""
-
-        bundle = dict(result.bundle)
-        bundle["generatorVersion"] = "0.5.0"
-        display = dict(bundle.get("displayIntegrity") or {})
-        display.pop("colorInterpretation", None)
-        display.update(
-            {
-                "rendering": "grayscale_luminance_evidence",
-                "inputColorProfiles": "not_inspected",
-                "colorManagementValidated": False,
-            }
-        )
-        bundle["displayIntegrity"] = display
-        bundle_bytes = _canonical_json_bytes(bundle)
-        artifacts = tuple(
-            EvidenceArtifact(
-                item.artifact_id,
-                item.role,
-                item.name,
-                item.media_type,
-                item.data,
-                item.finding_index,
-            )
-            for item in result.artifacts
-        )
-        return ReviewEvidenceResult(bundle, bundle_bytes, artifacts)

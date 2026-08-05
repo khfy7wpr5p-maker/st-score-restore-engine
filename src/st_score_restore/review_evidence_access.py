@@ -7,11 +7,21 @@ from typing import Any, Mapping
 
 from .job_api_types import API_SCHEMA_VERSION, API_VERSION, JobApiError
 
-_EVIDENCE_ROLES = {"review_evidence_bundle", "review_source_crop", "review_candidate_crop"}
+_EVIDENCE_ROLES = {
+    "review_evidence_bundle",
+    "review_source_crop",
+    "review_candidate_crop",
+}
 
 
 class ReviewEvidenceAccessMixin:
-    def get_review_bundle(self, job_id: str, page_number: int, *, actor: str) -> dict[str, Any]:
+    def get_review_bundle(
+        self,
+        job_id: str,
+        page_number: int,
+        *,
+        actor: str,
+    ) -> dict[str, Any]:
         with self.store.lock:
             job = self._job(job_id)
             page = self._page(job, page_number)
@@ -24,7 +34,9 @@ class ReviewEvidenceAccessMixin:
                     details={"pageNumber": page_number},
                 )
             artifact = self._artifact(job_id, bundle_id)
-            bundle = json.loads(self._artifact_bytes(artifact).decode("utf-8"))
+            bundle = json.loads(
+                self._artifact_bytes(artifact).decode("utf-8")
+            )
             self._validate_current_bundle(page, bundle_id, bundle)
             self._append_event(
                 job,
@@ -58,16 +70,23 @@ class ReviewEvidenceAccessMixin:
             artifact = self.store.artifacts.get((job_id, artifact_id))
             if artifact is not None:
                 references = list(artifact["references"])
-                evidence_references = [item for item in references if item["role"] in _EVIDENCE_ROLES]
-                if evidence_references:
+                evidence_references = [
+                    item
+                    for item in references
+                    if item["role"] in _EVIDENCE_ROLES
+                ]
+                non_evidence_references = [
+                    item
+                    for item in references
+                    if item["role"] not in _EVIDENCE_ROLES
+                ]
+                if evidence_references and role == "reviewer" and purpose == "review":
                     job = self._job(job_id)
                     if artifact["data"] is None:
-                        raise JobApiError("artifact_expired", "Artifact bytes are unavailable.", http_status=410)
-                    if role != "reviewer" or purpose != "review":
                         raise JobApiError(
-                            "artifact_access_forbidden",
-                            "Review evidence artifacts require reviewer access and review purpose.",
-                            http_status=403,
+                            "artifact_expired",
+                            "Artifact bytes are unavailable.",
+                            http_status=410,
                         )
                     selected = evidence_references[0]
                     self._append_event(
@@ -76,12 +95,26 @@ class ReviewEvidenceAccessMixin:
                         actor,
                         {
                             "artifactId": artifact_id,
-                            "artifactRoles": sorted({item["role"] for item in references}),
+                            "artifactRoles": sorted(
+                                {item["role"] for item in references}
+                            ),
                             "accessKind": "review_evidence",
                         },
                         selected["attemptId"],
                     )
-                    return self._artifact_metadata(artifact, reference=selected), bytes(artifact["data"])
+                    return (
+                        self._artifact_metadata(
+                            artifact,
+                            reference=selected,
+                        ),
+                        bytes(artifact["data"]),
+                    )
+                if evidence_references and not non_evidence_references:
+                    raise JobApiError(
+                        "artifact_access_forbidden",
+                        "Review evidence artifacts require reviewer access and review purpose.",
+                        http_status=403,
+                    )
         return super().get_artifact(
             job_id,
             artifact_id,
@@ -103,8 +136,10 @@ class ReviewEvidenceAccessMixin:
             or bundle.get("pageNumber") != page["pageNumber"]
             or bundle.get("attemptId") != page["currentAttemptId"]
             or parents.get("sourceArtifactId") != page["sourceArtifactId"]
-            or parents.get("candidateArtifactId") != page["currentCandidateArtifactId"]
-            or parents.get("safetyReportArtifactId") != page["currentSafetyReportArtifactId"]
+            or parents.get("candidateArtifactId")
+            != page["currentCandidateArtifactId"]
+            or parents.get("safetyReportArtifactId")
+            != page["currentSafetyReportArtifactId"]
             or page.get("currentEvidenceBundleArtifactId") != bundle_id
         ):
             raise JobApiError(

@@ -40,8 +40,14 @@ class ReviewEvidenceWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(200, reviewer.status)
         payload = json.loads(reviewer.body)
-        self.assertEqual(self.bundle_id, payload["evidenceBundleArtifactId"])
-        self.assertEqual(self.page["currentAttemptId"], payload["bundle"]["attemptId"])
+        self.assertEqual(
+            self.bundle_id,
+            payload["evidenceBundleArtifactId"],
+        )
+        self.assertEqual(
+            self.page["currentAttemptId"],
+            payload["bundle"]["attemptId"],
+        )
         if payload["bundle"]["artifacts"]:
             crop_id = payload["bundle"]["artifacts"][0]["artifactId"]
             denied = self.api.handle(
@@ -53,53 +59,109 @@ class ReviewEvidenceWorkflowTests(unittest.TestCase):
             allowed = self.api.handle(
                 "GET",
                 f"/api/v1/restoration-jobs/{self.job_id}/artifacts/{crop_id}?purpose=review",
-                {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1"},
+                {
+                    "X-Api-Key": REVIEWER_KEY,
+                    "X-Actor-Id": "teacher-1",
+                },
             )
             self.assertEqual(200, allowed.status)
             self.assertTrue(allowed.body.startswith(b"\x89PNG"))
 
     def test_api_requires_current_evidence_and_records_binding(self):
+        headers = {
+            "X-Api-Key": REVIEWER_KEY,
+            "X-Actor-Id": "teacher-1",
+            "Content-Type": "application/json",
+        }
         missing = self.api.handle(
             "POST",
             f"/api/v1/restoration-jobs/{self.job_id}/review",
-            {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1", "Content-Type": "application/json"},
-            json.dumps({"decisions": [{"pageNumber": 1, "action": "reject"}]}).encode(),
+            headers,
+            json.dumps(
+                {"decisions": [{"pageNumber": 1, "action": "reject"}]}
+            ).encode(),
         )
         self.assertEqual(409, missing.status)
-        self.assertEqual("missing_review_evidence", json.loads(missing.body)["error"]["code"])
+        self.assertEqual(
+            "missing_review_evidence",
+            json.loads(missing.body)["error"]["code"],
+        )
 
         stale = self.api.handle(
             "POST",
             f"/api/v1/restoration-jobs/{self.job_id}/review",
-            {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1", "Content-Type": "application/json"},
-            json.dumps({"decisions": [{"pageNumber": 1, "action": "reject", "evidenceBundleArtifactId": "sha256:" + "0" * 64}]}).encode(),
+            headers,
+            json.dumps(
+                {
+                    "decisions": [
+                        {
+                            "pageNumber": 1,
+                            "action": "reject",
+                            "evidenceBundleArtifactId": "sha256:" + "0" * 64,
+                        }
+                    ]
+                }
+            ).encode(),
         )
         self.assertEqual(409, stale.status)
-        self.assertEqual("stale_review_evidence", json.loads(stale.body)["error"]["code"])
+        self.assertEqual(
+            "stale_review_evidence",
+            json.loads(stale.body)["error"]["code"],
+        )
 
         valid = self.api.handle(
             "POST",
             f"/api/v1/restoration-jobs/{self.job_id}/review",
-            {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1", "Content-Type": "application/json"},
-            json.dumps({"decisions": [{"pageNumber": 1, "action": "reject", "evidenceBundleArtifactId": self.bundle_id}]}).encode(),
+            headers,
+            json.dumps(
+                {
+                    "decisions": [
+                        {
+                            "pageNumber": 1,
+                            "action": "reject",
+                            "evidenceBundleArtifactId": self.bundle_id,
+                        }
+                    ]
+                }
+            ).encode(),
         )
         self.assertEqual(200, valid.status)
         completed = json.loads(valid.body)
         self.assertEqual("COMPLETED", completed["state"])
-        self.assertEqual(self.bundle_id, completed["pages"][0]["reviewDecision"]["evidenceBundleArtifactId"])
+        self.assertEqual(
+            self.bundle_id,
+            completed["pages"][0]["reviewDecision"][
+                "evidenceBundleArtifactId"
+            ],
+        )
         audit = self.service.get_audit(self.job_id)["events"]
-        review = [item for item in audit if item["eventType"] == "TEACHER_REVIEW_RECORDED"][-1]
+        review = [
+            item
+            for item in audit
+            if item["eventType"] == "TEACHER_REVIEW_RECORDED"
+        ][-1]
         self.assertTrue(review["details"]["reviewEvidenceBound"])
-        self.assertEqual(self.bundle_id, review["details"]["decisions"][0]["evidenceBundleArtifactId"])
+        self.assertEqual(
+            self.bundle_id,
+            review["details"]["decisions"][0]["evidenceBundleArtifactId"],
+        )
 
     def test_retry_clears_current_pointer_and_preserves_old_artifact(self):
         retried = self.service.review_job(
             self.job_id,
-            [{"pageNumber": 1, "action": "reprocess", "evidenceBundleArtifactId": self.bundle_id}],
+            [
+                {
+                    "pageNumber": 1,
+                    "action": "reprocess",
+                    "evidenceBundleArtifactId": self.bundle_id,
+                }
+            ],
             reviewer_id="teacher-1",
         )
         self.assertEqual("READY_FOR_PROCESSING", retried["state"])
-        self.assertIsNone(retried["pages"][0]["currentEvidenceBundleArtifactId"])
+        self.assertIsNone(
+            retried["pages"][0]["currentEvidenceBundleArtifactId"]
+        )
         metadata, old_bytes = self.service.get_artifact(
             self.job_id,
             self.bundle_id,
@@ -127,6 +189,42 @@ class ReviewEvidenceWorkflowTests(unittest.TestCase):
             )
         self.assertEqual("artifact_expired", caught.exception.code)
 
+    def test_evidence_role_collision_does_not_hide_original_artifact(self):
+        source_id = self.page["sourceArtifactId"]
+        with self.service.store.lock:
+            job = self.service._job(self.job_id)
+            source_data = self.service._artifact_bytes(
+                self.service._artifact(self.job_id, source_id)
+            )
+            self.service._store_artifact(
+                job,
+                artifact_id=source_id,
+                attempt_id=self.page["currentAttemptId"],
+                page_number=1,
+                role="review_source_crop",
+                name="page-1.finding-collision.source.png",
+                media_type="image/png",
+                data=source_data,
+            )
+        original_metadata, original_bytes = self.service.get_artifact(
+            self.job_id,
+            source_id,
+            role="client",
+            purpose="original",
+            actor="client-app",
+        )
+        self.assertEqual("immutable_source", original_metadata["role"])
+        self.assertEqual(source_data, original_bytes)
+        evidence_metadata, evidence_bytes = self.service.get_artifact(
+            self.job_id,
+            source_id,
+            role="reviewer",
+            purpose="review",
+            actor="teacher-1",
+        )
+        self.assertEqual("review_source_crop", evidence_metadata["role"])
+        self.assertEqual(source_data, evidence_bytes)
+
     def test_invalid_second_bundle_keeps_entire_batch_unchanged(self):
         created, _ = self.service.create_job(
             page_bundle(),
@@ -136,14 +234,25 @@ class ReviewEvidenceWorkflowTests(unittest.TestCase):
         self.service.run_pending()
         current = self.service.get_job(created["jobId"])
         first = current["pages"][0]
-        second = current["pages"][1]
-        before_audit = len(self.service.get_audit(created["jobId"])["events"])
+        before_audit = len(
+            self.service.get_audit(created["jobId"])["events"]
+        )
         with self.assertRaises(JobApiError) as caught:
             self.service.review_job(
                 created["jobId"],
                 [
-                    {"pageNumber": 1, "action": "reject", "evidenceBundleArtifactId": first["currentEvidenceBundleArtifactId"]},
-                    {"pageNumber": 2, "action": "reject", "evidenceBundleArtifactId": "sha256:" + "f" * 64},
+                    {
+                        "pageNumber": 1,
+                        "action": "reject",
+                        "evidenceBundleArtifactId": first[
+                            "currentEvidenceBundleArtifactId"
+                        ],
+                    },
+                    {
+                        "pageNumber": 2,
+                        "action": "reject",
+                        "evidenceBundleArtifactId": "sha256:" + "f" * 64,
+                    },
                 ],
                 reviewer_id="teacher-1",
             )
@@ -151,7 +260,10 @@ class ReviewEvidenceWorkflowTests(unittest.TestCase):
         unchanged = self.service.get_job(created["jobId"])
         self.assertIsNone(unchanged["pages"][0]["reviewDecision"])
         self.assertIsNone(unchanged["pages"][1]["reviewDecision"])
-        self.assertEqual(before_audit, len(self.service.get_audit(created["jobId"])["events"]))
+        self.assertEqual(
+            before_audit,
+            len(self.service.get_audit(created["jobId"])["events"]),
+        )
 
 
 if __name__ == "__main__":

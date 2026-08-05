@@ -88,14 +88,31 @@ class EvidenceTests(unittest.TestCase):
         one = self.make()
         two = self.make()
         self.assertEqual(one.bundle_bytes, two.bundle_bytes)
-        self.assertEqual([item.data for item in one.artifacts], [item.data for item in two.artifacts])
+        self.assertEqual(
+            [item.data for item in one.artifacts],
+            [item.data for item in two.artifacts],
+        )
         self.assertEqual(2, len(one.artifacts))
-        self.assertEqual(artifact_id(one.artifacts[0].data), one.artifacts[0].artifact_id)
+        self.assertEqual(
+            artifact_id(one.artifacts[0].data),
+            one.artifacts[0].artifact_id,
+        )
+        self.assertEqual("0.5.0", one.bundle["generatorVersion"])
+        self.assertFalse(one.bundle["automaticApproval"])
+        self.assertFalse(one.bundle["semanticRecognitionClaimed"])
+        display = one.bundle["displayIntegrity"]
+        self.assertEqual("grayscale_luminance_evidence", display["rendering"])
+        self.assertEqual("not_inspected", display["inputColorProfiles"])
+        self.assertFalse(display["colorManagementValidated"])
+        self.assertNotIn("colorInterpretation", display)
 
     def test_regions_are_clipped_normalized_and_nonregional_preserved(self):
         result = self.make().bundle
         first = result["findings"][0]
-        self.assertEqual({"x": 46, "y": 26, "width": 78, "height": 78}, first["cropBounds"])
+        self.assertEqual(
+            {"x": 46, "y": 26, "width": 78, "height": 78},
+            first["cropBounds"],
+        )
         self.assertEqual(0.35, first["normalizedRegion"]["x"])
         self.assertIsNone(result["findings"][1]["cropBounds"])
         self.assertEqual(1, result["navigation"]["regionalFindingCount"])
