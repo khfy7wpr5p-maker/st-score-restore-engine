@@ -11,6 +11,7 @@ from .durable_store_support import (
     parse_iso,
     validate_audit_chain,
 )
+from .job_store import ACTIVE_WORK_STATES
 
 
 class DurableLoadingMixin:
@@ -140,17 +141,17 @@ class DurableLoadingMixin:
         current = datetime.now(UTC)
         for job_id, job in jobs.items():
             queue = queue_rows.get(job_id)
-            queued = job.get("state") in {"UPLOADED", "READY_FOR_PROCESSING"}
-            if queued and queue is None:
+            active_work = job.get("state") in ACTIVE_WORK_STATES
+            if active_work and queue is None:
                 raise DurableStoreError(
                     "queue_record_missing",
-                    "A queued job is missing its durable work record.",
-                    details={"jobId": job_id},
+                    "An active work item is missing its durable work record.",
+                    details={"jobId": job_id, "state": job.get("state")},
                 )
-            if not queued and queue is not None:
+            if not active_work and queue is not None:
                 raise DurableStoreError(
                     "unexpected_queue_record",
-                    "A non-queued job has a durable work record.",
+                    "A non-active job has a durable work record.",
                     details={"jobId": job_id, "state": job.get("state")},
                 )
             if queue is None:
@@ -192,6 +193,7 @@ class DurableLoadingMixin:
                     "leaseOwner": queue["lease_owner"],
                     "leaseToken": queue["lease_token"],
                     "leaseExpiresAt": queue["lease_expires_at"],
+                    "attemptId": queue["attempt_id"],
                 }
             else:
                 job["processingClaimed"] = False

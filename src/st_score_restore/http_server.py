@@ -5,19 +5,33 @@ from __future__ import annotations
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Event, Thread
 from typing import Type
+from uuid import uuid4
 
 from .http_api import ApiV1
 from .job_service import RestorationJobService
 
 
 class JobWorker:
-    """Single bounded worker; no external queue or persistence is implied."""
+    """One bounded worker with a unique durable lease owner identity."""
 
-    def __init__(self, service: RestorationJobService, *, poll_seconds: float = 0.05) -> None:
+    def __init__(
+        self,
+        service: RestorationJobService,
+        *,
+        poll_seconds: float = 0.05,
+        worker_id: str | None = None,
+    ) -> None:
         self.service = service
         self.poll_seconds = max(0.01, float(poll_seconds))
+        self.worker_id = (worker_id or f"worker-{uuid4().hex}").strip()
+        if not self.worker_id:
+            raise ValueError("worker_id must be a non-empty string")
         self._stop = Event()
-        self._thread = Thread(target=self._run, name="st-score-worker", daemon=True)
+        self._thread = Thread(
+            target=self._run,
+            name=f"st-score-{self.worker_id[:32]}",
+            daemon=True,
+        )
 
     def start(self) -> None:
         self._thread.start()
@@ -29,7 +43,10 @@ class JobWorker:
     def _run(self) -> None:
         while not self._stop.is_set():
             try:
-                processed = self.service.run_pending(actor="worker")
+                processed = self.service.run_pending(
+                    actor="worker",
+                    lease_owner=self.worker_id,
+                )
             except Exception as error:  # fail closed without killing the worker loop
                 print(f"worker error: {type(error).__name__}")
                 processed = None
@@ -74,7 +91,6 @@ def make_handler(api: ApiV1, *, max_request_bytes: int) -> Type[BaseHTTPRequestH
                 self.wfile.write(response.body)
 
         def log_message(self, format: str, *args) -> None:
-            # Avoid filenames, query parameters, or document metadata in default logs.
             message = format % args
             print(f"{self.client_address[0]} - {message}")
 
