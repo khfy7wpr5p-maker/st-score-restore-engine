@@ -113,6 +113,27 @@ def make_handler(api: ApiV1, *, config: JobApiConfig) -> Type[BaseHTTPRequestHan
             super().setup()
             self.connection.settimeout(float(config.connection_timeout_seconds))
 
+        def send_error(self, code, message=None, explain=None) -> None:
+            """Replace stdlib HTML/parser errors with stable JSON and close."""
+
+            mapping = {
+                400: (400, "malformed_http_request", "The HTTP request is malformed."),
+                413: (413, "request_body_too_large", "The HTTP request exceeds the configured body limit."),
+                414: (414, "request_target_too_long", "The HTTP request target exceeds the configured limit."),
+                431: (431, "headers_too_large", "The HTTP request headers exceed the parser limit."),
+                501: (405, "method_not_allowed", "The built-in adapter accepts only GET, POST, and DELETE."),
+                505: (505, "http_version_not_supported", "The built-in adapter accepts HTTP/1.1 only."),
+            }
+            status, error_code, error_message = mapping.get(
+                int(code),
+                (int(code), "http_protocol_error", "The HTTP request was rejected by the protocol parser."),
+            )
+            self.close_connection = True
+            self._safe_write_response(
+                _transport_error(status, error_code, error_message),
+                force_close=True,
+            )
+
         def handle_expect_100(self) -> bool:
             self.close_connection = True
             self._safe_write_response(

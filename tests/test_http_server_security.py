@@ -213,6 +213,17 @@ class HttpServerSecurityTests(unittest.TestCase):
         self.assertEqual(400,status(response))
         self.assertEqual("invalid_header_value",body_json(response)["error"]["code"])
 
+    def test_stdlib_parser_errors_and_unknown_methods_are_structured_json(self):
+        response=self.harness.request(b"BREW /health HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        self.assertEqual(405,status(response))
+        self.assertEqual("method_not_allowed",body_json(response)["error"]["code"])
+        response=self.harness.request(b"GET /"+b"a"*70000+b" HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        self.assertEqual(414,status(response))
+        self.assertEqual("request_target_too_long",body_json(response)["error"]["code"])
+        response=self.harness.request(b"GET /health HTTP/1.1\r\nHost: localhost\r\nX-Large: "+b"a"*70000+b"\r\n\r\n")
+        self.assertEqual(431,status(response))
+        self.assertEqual("headers_too_large",body_json(response)["error"]["code"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -79,7 +79,7 @@ def validate_router_request(
         raise JobApiError("invalid_request_body", "The HTTP request body must be immutable bytes.")
     if len(body) > config.max_request_bytes:
         raise JobApiError("request_body_too_large", "The HTTP request body exceeds the configured limit.", http_status=413)
-    if method.upper() in {"GET", "HEAD"} and body:
+    if method.upper() in {"GET", "HEAD", "DELETE"} and body:
         raise JobApiError("unexpected_request_body", "This HTTP method does not accept a request body.")
 
 
@@ -308,6 +308,8 @@ def _unquote_parameter(value: str, header_name: str) -> str:
                 elif ord(character) < 32 or ord(character) == 127:
                     raise JobApiError("invalid_header_parameter", f"{header_name} contains an unsafe escape.")
                 else:
+                    # Preserve common non-RFC Windows path separators instead of
+                    # silently deleting the backslash; safe_upload_name strips paths.
                     output.extend(("\\", character))
                 escaped = False
             elif character == "\\":

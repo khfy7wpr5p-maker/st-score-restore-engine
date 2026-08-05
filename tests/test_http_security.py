@@ -195,8 +195,10 @@ class RequestMetadataTests(unittest.TestCase):
         self.assertEqual(414, ctx.exception.http_status)
 
     def test_get_body_header_and_json_limits_are_enforced(self):
-        with self.assertRaises(JobApiError):
-            validate_router_request("GET", "/health", {}, b"x", config())
+        for method in ("GET", "HEAD", "DELETE"):
+            with self.subTest(method=method):
+                with self.assertRaises(JobApiError):
+                    validate_router_request(method, "/health", {}, b"x", config())
         with self.assertRaises(JobApiError):
             validate_router_request("GET", "/health", {"X-Large": "x" * 9000}, b"", config())
 
