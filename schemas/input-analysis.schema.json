@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/input-analysis.schema.json",
+  "title": "ST Score Restore input analysis manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "inspectionId",
+    "artifactId",
+    "inspectorVersion",
+    "status",
+    "restorationPerformed",
+    "inputKind",
+    "suppliedExtension",
+    "extensionMatchesContent",
+    "document",
+    "pages",
+    "imageMetadata",
+    "qualityFindings",
+    "warnings",
+    "recommendedAction"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "inspectionId": {"type": "string", "pattern": "^inspection:[0-9a-f]{64}$"},
+    "artifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "inspectorVersion": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "status": {"const": "accepted"},
+    "restorationPerformed": {"const": false},
+    "inputKind": {"enum": ["pdf", "jpeg", "png"]},
+    "suppliedExtension": {"type": ["string", "null"]},
+    "extensionMatchesContent": {"type": ["boolean", "null"]},
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pdfVersion", "pageCount", "pageCountMethod", "classification", "classificationConfidence", "encrypted", "structuralEvidence"],
+      "properties": {
+        "pdfVersion": {"type": ["string", "null"]},
+        "pageCount": {"type": ["integer", "null"], "minimum": 1},
+        "pageCountMethod": {"enum": ["uncompressed_page_object_markers", "single_image", "unknown"]},
+        "classification": {"enum": ["digital", "scanned", "hybrid", "unknown", "not_applicable"]},
+        "classificationConfidence": {"enum": ["high", "medium", "low", "not_applicable"]},
+        "encrypted": {"type": "boolean"},
+        "structuralEvidence": {"type": "object"}
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pageIndex", "width", "height", "unit", "orientation", "dpiEstimate"],
+        "properties": {
+          "pageIndex": {"type": "integer", "minimum": 0},
+          "width": {"type": ["number", "null"], "exclusiveMinimum": 0},
+          "height": {"type": ["number", "null"], "exclusiveMinimum": 0},
+          "unit": {"enum": ["points", "pixels"]},
+          "orientation": {"type": ["string", "null"], "enum": ["portrait", "landscape", "square", null]},
+          "dpiEstimate": {
+            "oneOf": [
+              {"type": "null"},
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "y", "unit", "source"],
+                "properties": {
+                  "x": {"type": "number", "exclusiveMinimum": 0},
+                  "y": {"type": "number", "exclusiveMinimum": 0},
+                  "unit": {"const": "dpi"},
+                  "source": {"enum": ["jfif", "png_pHYs"]}
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "imageMetadata": {"type": ["object", "null"]},
+    "qualityFindings": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "status", "confidence", "pageIndex", "region", "evidence"],
+        "properties": {
+          "type": {"enum": ["perspective", "crop", "glare", "shadow", "blur", "noise", "compression", "low_resolution"]},
+          "status": {"enum": ["not_assessed", "not_applicable", "unlikely", "probable", "confirmed"]},
+          "confidence": {"enum": ["none", "low", "medium", "high"]},
+          "pageIndex": {"type": ["integer", "null"], "minimum": 0},
+          "region": {"type": ["object", "null"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "severity", "message", "pageIndex", "region", "evidence"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["info", "warning", "review_required"]},
+          "message": {"type": "string", "minLength": 1},
+          "pageIndex": {"type": ["integer", "null"], "minimum": 0},
+          "region": {"type": ["object", "null"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "recommendedAction": {"enum": ["preserve_vector_pdf", "review_before_raster_processing", "manual_review_required", "review_quality_before_restoration"]}
+  }
+}
