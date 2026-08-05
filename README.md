@@ -35,7 +35,7 @@ This repository remains an independent service. It accepts PDF, JPG/JPEG, PNG, a
 
 ## Current status
 
-Architecture and Milestone M0 repository foundation are approved. The Milestone M1 fixture, permission, privacy, retention, and permitted-use contract is under review. No production restoration implementation has been started.
+Architecture, Milestone M0 repository foundation, and the fixture permission/privacy contract are approved. The read-only input inspection and immutable artifact-manifest contract is under review. No restoration behavior has been implemented.
 
 ## Development baseline
 
@@ -45,8 +45,11 @@ Architecture and Milestone M0 repository foundation are approved. The Milestone 
 - Third-party runtime dependencies: none
 - Production restoration behavior: not implemented
 - Fixture artifact bytes: not included; current catalog is metadata-only
+- Input inspection: read-only PDF/JPEG/PNG structural analysis
+- Source identity: deterministic SHA-256 artifact manifest
+- Pixel quality analysis: deliberately unassessed until an approved decoder exists
 
-Validate the repository foundation and fixture contract with:
+Validate the repository contracts with:
 
 ```bash
 python tools/validate_repository.py
@@ -55,12 +58,22 @@ python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
+Inspect a local source without modifying it:
+
+```bash
+python tools/inspect_input.py path/to/score.pdf
+```
+
 See:
 
 - [Development environment](docs/development-environment.md)
 - [Dependency and license policy](docs/dependency-and-license-policy.md)
 - [Fixture, permission, and usage governance](docs/fixture-governance.md)
+- [Immutable input inspection contract](docs/input-inspection-contract.md)
 - [Fixture catalog](fixtures/catalog.v1.json)
 - [Fixture manifest schema](schemas/fixture-manifest.schema.json)
+- [Artifact manifest schema](schemas/artifact-manifest.schema.json)
+- [Input analysis schema](schemas/input-analysis.schema.json)
 - [ADR 0002: Python runtime and repository layout](docs/adr/0002-python-runtime-and-repository-layout.md)
 - [ADR 0003: Fixture permission and usage governance](docs/adr/0003-fixture-consent-and-usage-governance.md)
+- [ADR 0004: Immutable input inspection](docs/adr/0004-immutable-input-inspection.md)
