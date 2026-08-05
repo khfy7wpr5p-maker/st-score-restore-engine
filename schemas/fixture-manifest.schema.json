@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/fixture-manifest.schema.json",
+  "title": "ST Score Restore Fixture Catalog",
+  "description": "Version 1.0.0 structural contract. Cross-field privacy, permission, retention, artifact, and coverage rules are enforced by st_score_restore.fixture_manifest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "catalogId", "description", "fixtures"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "catalogId": {"$ref": "#/$defs/id"},
+    "description": {"type": "string", "minLength": 1},
+    "fixtures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/fixture"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$"},
+    "nullableString": {"type": ["string", "null"], "minLength": 1},
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixtureId", "title", "input", "degradations", "artifact", "provenance", "privacy", "consent", "permittedUses", "retention", "annotations", "syntheticGeneration", "review"],
+      "properties": {
+        "fixtureId": {"$ref": "#/$defs/id"},
+        "title": {"type": "string", "minLength": 1},
+        "input": {"$ref": "#/$defs/input"},
+        "degradations": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": ["none", "skew", "perspective", "page_curl", "shadow", "glare", "uneven_lighting", "blur", "noise", "compression", "low_resolution"]}
+        },
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "privacy": {"$ref": "#/$defs/privacy"},
+        "consent": {"$ref": "#/$defs/consent"},
+        "permittedUses": {"$ref": "#/$defs/uses"},
+        "retention": {"$ref": "#/$defs/retention"},
+        "annotations": {"$ref": "#/$defs/annotations"},
+        "syntheticGeneration": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/synthetic"}]},
+        "review": {"$ref": "#/$defs/review"}
+      }
+    },
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "mediaType", "notationKinds", "pageCount"],
+      "properties": {
+        "kind": {"enum": ["digital_pdf", "scanned_pdf", "hybrid_pdf", "jpg", "jpeg", "png", "phone_photo"]},
+        "mediaType": {"enum": ["application/pdf", "image/jpeg", "image/png"]},
+        "notationKinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["staff", "guitar_tab", "combined_staff_tab"]}},
+        "pageCount": {"type": "integer", "minimum": 1}
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "relativePath", "sha256", "byteSize"],
+      "properties": {
+        "state": {"enum": ["planned", "metadata_only", "available", "revoked"]},
+        "relativePath": {"$ref": "#/$defs/nullableString"},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "byteSize": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sourceKind", "sourceReference", "rightsHolder", "licenseId", "usageBasis"],
+      "properties": {
+        "sourceKind": {"enum": ["synthetic", "public_domain", "licensed", "user_provided"]},
+        "sourceReference": {"type": "string", "minLength": 1},
+        "rightsHolder": {"type": "string", "minLength": 1},
+        "licenseId": {"type": "string", "minLength": 1},
+        "usageBasis": {"type": "string", "minLength": 1}
+      }
+    },
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["containsPersonalData", "containsStudentData", "deidentified", "privacyReviewStatus"],
+      "properties": {
+        "containsPersonalData": {"type": "boolean"},
+        "containsStudentData": {"type": "boolean"},
+        "deidentified": {"type": "boolean"},
+        "privacyReviewStatus": {"enum": ["not_required", "pending", "approved", "rejected"]}
+      }
+    },
+    "consent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["teacherApproval", "trainingConsent", "consentReference"],
+      "properties": {
+        "teacherApproval": {"type": "boolean"},
+        "trainingConsent": {"enum": ["granted", "denied", "not_requested", "not_applicable", "withdrawn"]},
+        "consentReference": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "uses": {
+      "type": "object", "additionalProperties": false,
+      "required": ["testing", "training", "publication", "demonstration"],
+      "properties": {
+        "testing": {"type": "boolean"}, "training": {"type": "boolean"},
+        "publication": {"type": "boolean"}, "demonstration": {"type": "boolean"}
+      }
+    },
+    "retention": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy", "expiresOn", "storageLocation"],
+      "properties": {
+        "policy": {"enum": ["metadata_only", "repository_permanent", "external_until_date", "delete_after_validation", "prohibited"]},
+        "expiresOn": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "storageLocation": {"type": "string", "minLength": 1}
+      }
+    },
+    "annotations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["regressionId", "riskTargets", "expectedInvariantNotes"],
+      "properties": {
+        "regressionId": {"$ref": "#/$defs/id"},
+        "riskTargets": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": ["staff_lines", "tab_lines", "noteheads", "stems", "flags", "beams", "augmentation_dots", "accidentals", "rests", "barlines", "ties_slurs", "tab_numbers", "guitar_articulations", "text_markings"]}
+        },
+        "expectedInvariantNotes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "synthetic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["derivedFromFixtureId", "generator", "generatorVersion", "seed", "parameters", "cleanSourceApproved"],
+      "properties": {
+        "derivedFromFixtureId": {"$ref": "#/$defs/nullableString"},
+        "generator": {"type": "string", "minLength": 1},
+        "generatorVersion": {"type": "string", "minLength": 1},
+        "seed": {"type": "integer", "minimum": 0},
+        "parameters": {"type": "object", "additionalProperties": {"type": ["string", "number", "integer", "boolean"]}},
+        "cleanSourceApproved": {"const": true}
+      }
+    },
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reviewedBy", "reviewedOn", "notes"],
+      "properties": {
+        "status": {"enum": ["planned", "pending", "approved", "rejected", "revoked"]},
+        "reviewedBy": {"$ref": "#/$defs/nullableString"},
+        "reviewedOn": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}
