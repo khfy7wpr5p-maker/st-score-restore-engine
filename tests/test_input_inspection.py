@@ -120,18 +120,11 @@ class InputInspectionTests(unittest.TestCase):
         first = inspect_bytes(data, source_name="page.png")
         second = inspect_bytes(data, source_name="page.png")
         self.assertEqual(first, second)
-        self.assertEqual(
-            first["artifact"]["digest"]["value"],
-            hashlib.sha256(data).hexdigest(),
-        )
+        self.assertEqual(first["artifact"]["digest"]["value"], hashlib.sha256(data).hexdigest())
         self.assertTrue(first["artifact"]["immutable"])
         self.assertEqual(first["analysis"]["pages"][0]["width"], 1600)
         self.assertEqual(first["analysis"]["pages"][0]["height"], 2200)
-        self.assertAlmostEqual(
-            first["analysis"]["pages"][0]["dpiEstimate"]["x"],
-            300,
-            delta=0.05,
-        )
+        self.assertAlmostEqual(first["analysis"]["pages"][0]["dpiEstimate"]["x"], 300, delta=0.05)
         self.assertFalse(first["analysis"]["restorationPerformed"])
 
     def test_jpeg_exif_orientation_changes_display_view_not_source(self) -> None:
@@ -155,10 +148,9 @@ class InputInspectionTests(unittest.TestCase):
     def test_scanned_pdf_is_identified(self) -> None:
         result = inspect_bytes(make_pdf("scanned"), source_name="scan.pdf")
         self.assertEqual(result["analysis"]["document"]["classification"], "scanned")
-        self.assertEqual(
-            result["analysis"]["recommendedAction"],
-            "review_before_raster_processing",
-        )
+        self.assertEqual(result["analysis"]["recommendedAction"], "review_before_raster_processing")
+        findings = {item["type"]: item for item in result["analysis"]["qualityFindings"]}
+        self.assertEqual(findings["low_resolution"]["status"], "not_assessed")
 
     def test_hybrid_pdf_is_identified(self) -> None:
         result = inspect_bytes(make_pdf("hybrid"), source_name="hybrid.pdf")
@@ -173,6 +165,8 @@ class InputInspectionTests(unittest.TestCase):
     def test_source_name_does_not_expose_parent_path(self) -> None:
         result = inspect_bytes(make_png(20, 40, 72), source_name="/private/student/page.png")
         self.assertEqual(result["artifact"]["sourceName"], "page.png")
+        windows = inspect_bytes(make_png(20, 40, 72), source_name=r"C:\private\student\page.png")
+        self.assertEqual(windows["artifact"]["sourceName"], "page.png")
 
     def test_path_inspection_preserves_exact_bytes(self) -> None:
         data = make_png(40, 60, 150)
@@ -204,15 +198,27 @@ class InputInspectionTests(unittest.TestCase):
         with self.assertRaises(InputInspectionError) as context:
             inspect_bytes(data, source_name="page.txt")
         self.assertEqual(context.exception.code, "unsupported_media_type")
-        self.assertEqual(
-            context.exception.details["sha256"],
-            hashlib.sha256(data).hexdigest(),
-        )
+        self.assertEqual(context.exception.details["sha256"], hashlib.sha256(data).hexdigest())
 
     def test_oversized_input_is_rejected_before_processing(self) -> None:
         with self.assertRaises(InputInspectionError) as context:
             inspect_bytes(b"x" * 11, max_bytes=10)
         self.assertEqual(context.exception.code, "oversized_input")
+
+    def test_png_without_idat_is_rejected(self) -> None:
+        ihdr = struct.pack(">IIBBBBB", 8, 8, 8, 0, 0, 0, 0)
+        data = b"\x89PNG\r\n\x1a\n" + png_chunk(b"IHDR", ihdr) + png_chunk(b"IEND", b"")
+        with self.assertRaises(InputInspectionError) as context:
+            inspect_bytes(data, source_name="missing-idat.png")
+        self.assertEqual(context.exception.code, "malformed_png")
+
+    def test_jpeg_without_scan_is_rejected(self) -> None:
+        jfif = b"JFIF\x00" + b"\x01\x02" + b"\x01" + struct.pack(">HH", 300, 300) + b"\x00\x00"
+        sof = bytes([8]) + struct.pack(">HH", 100, 100) + b"\x01" + b"\x01\x11\x00"
+        data = b"\xff\xd8" + segment(0xE0, jfif) + segment(0xC0, sof) + b"\xff\xd9"
+        with self.assertRaises(InputInspectionError) as context:
+            inspect_bytes(data, source_name="missing-scan.jpg")
+        self.assertEqual(context.exception.code, "malformed_jpeg")
 
     def test_png_crc_corruption_is_rejected(self) -> None:
         data = bytearray(make_png(8, 8, 72))
