@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from st_score_restore.fixture_manifest import FixtureCatalogError, load_catalog  # noqa: E402
 from st_score_restore.input_inspection import INSPECTOR_VERSION, SCHEMA_VERSION as INPUT_SCHEMA_VERSION  # noqa: E402
+from st_score_restore.job_api_types import API_VERSION  # noqa: E402
 from st_score_restore.music_safety_validator import VALIDATOR_VERSION, SCHEMA_VERSION as SAFETY_SCHEMA_VERSION  # noqa: E402
 from st_score_restore.safe_restoration import ENGINE_VERSION, SCHEMA_VERSION as RESTORE_SCHEMA_VERSION  # noqa: E402
 
@@ -23,30 +24,53 @@ REQUIRED_FILES = (
     "src/st_score_restore/restoration_types.py", "src/st_score_restore/restoration_geometry.py",
     "src/st_score_restore/restoration_photometric.py", "src/st_score_restore/restoration_encoding.py",
     "src/st_score_restore/music_safety_types.py", "src/st_score_restore/music_safety_validator.py",
+    "src/st_score_restore/job_api_types.py", "src/st_score_restore/job_store.py",
+    "src/st_score_restore/job_service.py", "src/st_score_restore/job_service_processing.py",
+    "src/st_score_restore/job_service_review.py", "src/st_score_restore/job_service_internal.py",
+    "src/st_score_restore/job_service_support.py", "src/st_score_restore/http_api.py",
+    "src/st_score_restore/http_server.py",
     "tests/README.md", "tests/test_fixture_manifest.py", "tests/test_input_inspection.py",
     "tests/test_safe_restoration.py", "tests/test_music_safety_validator.py",
+    "tests/test_music_safety_hardening.py", "tests/test_job_api.py",
     "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
     "schemas/restoration-candidate.schema.json", "schemas/music-safety-report.schema.json",
-    "models/README.md", "api/README.md", "examples/README.md", "LICENSES/README.md",
+    "models/README.md", "api/README.md", "api/openapi.v1.json",
+    "examples/README.md", "LICENSES/README.md",
     "LICENSES/opencv-python-headless-4.13.0.92.md", "LICENSES/numpy-2.3.5.md",
     "docs/technical-specification.md", "docs/roadmap.md", "docs/development-environment.md",
     "docs/dependency-and-license-policy.md", "docs/dependency-reviews/opencv-python-headless-4.13.0.92.md",
     "docs/fixture-governance.md", "docs/input-inspection-contract.md",
     "docs/safe-restoration-baseline.md", "docs/music-safety-validator.md",
+    "docs/job-api-and-teacher-review.md",
     "docs/adr/0001-independent-safety-first-engine.md",
     "docs/adr/0002-python-runtime-and-repository-layout.md",
     "docs/adr/0003-fixture-consent-and-usage-governance.md",
     "docs/adr/0004-immutable-input-inspection.md",
     "docs/adr/0005-opencv-safe-restoration-baseline.md",
     "docs/adr/0006-music-tab-safety-validator.md",
+    "docs/adr/0007-in-process-job-api-and-review-workflow.md",
     "tools/validate_fixture_catalog.py", "tools/validate_dependency_lock.py",
     "tools/inspect_input.py", "tools/restore_image.py", "tools/validate_music_safety.py",
-    ".github/workflows/repository-validation.yml",
+    "tools/run_api.py", ".github/workflows/repository-validation.yml",
 )
 FORBIDDEN_TRACKED_SUFFIXES = {".onnx", ".pt", ".pth", ".ckpt", ".safetensors"}
 ALLOWED_FIXTURE_FILES = {Path("fixtures/README.md"), Path("fixtures/catalog.v1.json")}
+REQUIRED_API_PATHS = {
+    "/api/v1/restoration-jobs",
+    "/api/v1/restoration-jobs/{jobId}",
+    "/api/v1/restoration-jobs/{jobId}/status",
+    "/api/v1/restoration-jobs/{jobId}/pages",
+    "/api/v1/restoration-jobs/{jobId}/pages/{pageNumber}/candidates",
+    "/api/v1/restoration-jobs/{jobId}/pages/{pageNumber}/safety-report",
+    "/api/v1/restoration-jobs/{jobId}/review",
+    "/api/v1/restoration-jobs/{jobId}/attempts",
+    "/api/v1/restoration-jobs/{jobId}/cancel",
+    "/api/v1/restoration-jobs/{jobId}/training-consent",
+    "/api/v1/restoration-jobs/{jobId}/audit",
+    "/api/v1/restoration-jobs/{jobId}/artifacts/{artifactId}",
+}
 
 
 def fail(message: str) -> None:
@@ -66,22 +90,25 @@ def validate_pyproject() -> None:
     project = data.get("project", {})
     if project.get("name") != "st-score-restore-engine":
         fail("unexpected project.name")
-    if project.get("version") != VALIDATOR_VERSION:
-        fail("project.version must match the active safety validator version")
+    if project.get("version") != API_VERSION:
+        fail("project.version must match the active job API version")
     if project.get("requires-python") != ">=3.11,<3.13":
         fail("unexpected project.requires-python")
     expected = ["numpy==2.3.5", "opencv-python-headless==4.13.0.92"]
     if project.get("dependencies") != expected:
         fail("unexpected approved runtime dependency graph")
     policy = data.get("tool", {}).get("st_score_restore", {})
-    if policy.get("primary_python") != "3.12":
-        fail("unexpected primary Python runtime")
-    if policy.get("production_restoration_enabled") is not False:
-        fail("production restoration must remain disabled")
-    if policy.get("opencv_candidate_enabled") is not True:
-        fail("OpenCV candidate flag must be enabled")
-    if policy.get("music_safety_validator_enabled") is not True:
-        fail("music safety validator flag must be enabled")
+    expected_flags = {
+        "primary_python": "3.12",
+        "production_restoration_enabled": False,
+        "opencv_candidate_enabled": True,
+        "music_safety_validator_enabled": True,
+        "job_api_enabled": True,
+        "in_memory_store_only": True,
+    }
+    for key, expected_value in expected_flags.items():
+        if policy.get(key) != expected_value:
+            fail(f"unexpected policy value for {key}")
 
 
 def load_json(relative_path: Path) -> dict:
@@ -103,6 +130,7 @@ def validate_json_documents() -> None:
     config_schema = load_json(Path("schemas/restoration-config.schema.json"))
     candidate_schema = load_json(Path("schemas/restoration-candidate.schema.json"))
     safety_schema = load_json(Path("schemas/music-safety-report.schema.json"))
+    openapi = load_json(Path("api/openapi.v1.json"))
     if fixture_schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
         fail("fixture manifest must use JSON Schema Draft 2020-12")
     if artifact_schema.get("properties", {}).get("schemaVersion", {}).get("const") != INPUT_SCHEMA_VERSION:
@@ -130,7 +158,20 @@ def validate_json_documents() -> None:
         re.compile(candidate_name_pattern or "")
     except re.error as error:
         fail(f"candidateName schema pattern is invalid: {error}")
-    if not INSPECTOR_VERSION or not ENGINE_VERSION or not VALIDATOR_VERSION:
+    if openapi.get("openapi") != "3.1.0":
+        fail("OpenAPI contract must use version 3.1.0")
+    if openapi.get("info", {}).get("version") != API_VERSION:
+        fail("OpenAPI info.version must match the job API version")
+    missing_paths = sorted(REQUIRED_API_PATHS - set(openapi.get("paths", {})))
+    if missing_paths:
+        fail("OpenAPI contract is missing paths: " + ", ".join(missing_paths))
+    bearer = openapi.get("components", {}).get("securitySchemes", {}).get("bearerAuth", {})
+    if bearer.get("type") != "http" or bearer.get("scheme") != "bearer":
+        fail("OpenAPI bearerAuth scheme is missing or invalid")
+    review_description = openapi.get("paths", {}).get("/api/v1/restoration-jobs/{jobId}/review", {}).get("post", {}).get("description", "")
+    if "never creates training consent" not in review_description:
+        fail("OpenAPI review contract must separate approval from training consent")
+    if not INSPECTOR_VERSION or not ENGINE_VERSION or not VALIDATOR_VERSION or not API_VERSION:
         fail("runtime component versions must not be empty")
 
 

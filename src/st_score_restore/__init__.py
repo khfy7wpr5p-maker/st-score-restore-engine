@@ -1,9 +1,13 @@
 """Core contracts for ST Score Restore Engine.
 
 Input inspection stays importable independently of the OpenCV image backend.
-Candidate generation lives in ``st_score_restore.safe_restoration`` and
-music/TAB validation lives in ``st_score_restore.music_safety_validator``.
-Production restoration and automatic teacher approval remain disabled.
+Candidate generation lives in ``st_score_restore.safe_restoration``;
+music/TAB validation lives in ``st_score_restore.music_safety_validator``;
+and the non-production job API lives behind ``st_score_restore.job_service``
+and ``st_score_restore.http_api``.
+
+Production restoration, durable service deployment, and automatic teacher
+approval remain disabled.
 """
 
 from .input_inspection import (
@@ -13,8 +17,10 @@ from .input_inspection import (
     inspect_bytes,
     inspect_path,
 )
+from .job_api_types import API_VERSION
 
 __all__ = [
+    "API_VERSION",
     "DEFAULT_MAX_BYTES",
     "INSPECTOR_VERSION",
     "InputInspectionError",
@@ -22,4 +28,4 @@ __all__ = [
     "inspect_path",
 ]
 
-__version__ = "0.3.0"
+__version__ = API_VERSION
