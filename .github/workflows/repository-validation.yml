@@ -31,5 +31,11 @@ jobs:
       - name: Validate repository contract
         run: python tools/validate_repository.py
 
+      - name: Validate fixture catalog
+        run: python tools/validate_fixture_catalog.py
+
+      - name: Run standard-library tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
       - name: Compile Python sources
-        run: python -m compileall -q src tools
+        run: python -m compileall -q src tools tests

@@ -1,12 +1,21 @@
 # Test fixtures
 
-No real score, TAB, student or teacher document may be added until the fixture manifest and consent rules in Issue #3 are approved.
+Fixture governance is defined by:
 
-Initial fixture priorities:
+- [`catalog.v1.json`](catalog.v1.json),
+- [`../schemas/fixture-manifest.schema.json`](../schemas/fixture-manifest.schema.json),
+- [`../docs/fixture-governance.md`](../docs/fixture-governance.md),
+- [`../docs/adr/0003-fixture-consent-and-usage-governance.md`](../docs/adr/0003-fixture-consent-and-usage-governance.md).
 
-- public-domain material,
-- synthetic score and TAB pages,
-- approved clean originals with synthetic degradations,
-- explicit usage metadata for testing, training and publication.
+The current catalog is metadata-only. It covers digital PDF, scanned PDF, hybrid PDF, JPG/JPEG, PNG, phone photos, staff notation, guitar TAB, combined systems, and every approved degradation category without adding document bytes.
 
-Private and incoming material belongs outside Git under `fixtures/private/` or `fixtures/incoming/`.
+No real score, TAB, student, teacher, copyrighted, private, training, or phone-photo artifact may be committed merely because it has a catalog entry. Artifact availability requires approved provenance, rights, privacy, permission, retention, checksum, and review metadata.
+
+Private and incoming material remains outside Git under `fixtures/private/` or `fixtures/incoming/`.
+
+Validate the catalog with:
+
+```bash
+python tools/validate_fixture_catalog.py
+python -m unittest discover -s tests -p "test_*.py" -v
+```
