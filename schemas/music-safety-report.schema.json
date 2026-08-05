@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/music-safety-report.schema.json",
+  "title": "ST Score Restore music-score and guitar-TAB safety report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "validatorVersion", "reportId", "status", "verdict",
+    "automaticApproval", "source", "candidate", "configuration",
+    "configurationDigest", "registration", "thresholds", "geometry",
+    "metrics", "findings", "decision", "fallback", "teacherReview", "comparator"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "validatorVersion": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "reportId": {"type": "string", "pattern": "^safety-report:[0-9a-f]{64}$"},
+    "status": {"const": "completed"},
+    "verdict": {"enum": ["pass", "review_required", "reject"]},
+    "automaticApproval": {"const": false},
+    "source": {"$ref": "#/$defs/artifact"},
+    "candidate": {"$ref": "#/$defs/artifact"},
+    "configuration": {"type": "object"},
+    "configurationDigest": {"$ref": "#/$defs/digest"},
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "resizedToSource", "translationX", "translationY", "response", "reliable"],
+      "properties": {
+        "method": {"const": "phase_correlation_translation"},
+        "resizedToSource": {"type": "boolean"},
+        "translationX": {"type": "number"},
+        "translationY": {"type": "number"},
+        "response": {"type": "number"},
+        "reliable": {"type": "boolean"}
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceDarkThreshold", "candidateDarkThreshold"],
+      "properties": {
+        "sourceDarkThreshold": {"type": "integer", "minimum": 0, "maximum": 255},
+        "candidateDarkThreshold": {"type": "integer", "minimum": 0, "maximum": 255}
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["staff", "tab", "unknownSystems"],
+      "properties": {
+        "staff": {"$ref": "#/$defs/systemMetrics"},
+        "tab": {"$ref": "#/$defs/systemMetrics"},
+        "unknownSystems": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "candidate"],
+          "properties": {"source": {"type": "integer", "minimum": 0}, "candidate": {"type": "integer", "minimum": 0}}
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbols", "components", "riskScore"],
+      "properties": {
+        "symbols": {"type": "object"},
+        "components": {"type": "object"},
+        "riskScore": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "severity", "region", "evidence", "semanticCertainty"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["low", "medium", "high", "critical"]},
+          "region": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/region"}]},
+          "evidence": {"type": "object"},
+          "semanticCertainty": {"const": "not_claimed"}
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rejectReasons", "reviewRequiredReasons", "teacherReviewRequired"],
+      "properties": {
+        "rejectReasons": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "reviewRequiredReasons": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "teacherReviewRequired": {"type": "boolean"}
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["originalAvailable", "recommendedAction"],
+      "properties": {
+        "originalAvailable": {"const": true},
+        "recommendedAction": {"enum": ["retain_original", "return_original"]}
+      }
+    },
+    "teacherReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "reviewerId", "notes", "trainingLabelCreated", "trainingUseConsent"],
+      "properties": {
+        "decision": {"type": ["string", "null"], "enum": ["approved", "rejected", "reprocess", null]},
+        "reviewerId": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]},
+        "trainingLabelCreated": {"const": false},
+        "trainingUseConsent": {"type": "null"}
+      }
+    },
+    "comparator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible", "tier", "riskScore"],
+      "properties": {
+        "eligible": {"type": "boolean"},
+        "tier": {"type": "integer", "minimum": 0, "maximum": 2},
+        "riskScore": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {"algorithm": {"const": "sha256"}, "value": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactId", "name", "digest", "widthPixels", "heightPixels"],
+      "properties": {
+        "artifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "name": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\]+$"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "widthPixels": {"type": "integer", "minimum": 1},
+        "heightPixels": {"type": "integer", "minimum": 1}
+      }
+    },
+    "systemMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectedLinesPerSystem", "sourceSystemCount", "candidateSystemCount", "systemCountPreserved", "sourceLineCounts", "candidateLineCounts", "lineBreakFraction"],
+      "properties": {
+        "expectedLinesPerSystem": {"type": "integer", "minimum": 1},
+        "sourceSystemCount": {"type": "integer", "minimum": 0},
+        "candidateSystemCount": {"type": "integer", "minimum": 0},
+        "systemCountPreserved": {"type": "boolean"},
+        "sourceLineCounts": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+        "candidateLineCounts": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+        "lineBreakFraction": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height", "normalized"],
+      "properties": {
+        "x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1},
+        "normalized": {"type": "object"}
+      }
+    }
+  }
+}
