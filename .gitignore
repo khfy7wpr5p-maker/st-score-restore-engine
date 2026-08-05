@@ -28,6 +28,10 @@ artifacts/
 outputs/
 uploads/
 tmp/
+runtime-data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
 
 # Private or unapproved data
 fixtures/private/

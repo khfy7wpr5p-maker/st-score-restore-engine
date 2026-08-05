@@ -30,9 +30,9 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 ## Current status
 
-Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, and a non-production `/api/v1` job/teacher-review workflow are implemented.
+Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, and an optional durable local SQLite/blob store are implemented.
 
-Production deployment, durable storage, external queues, production identity, arbitrary multi-page PDF processing, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
+Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
 ## Development baseline
 
@@ -42,12 +42,13 @@ Production deployment, durable storage, external queues, production identity, ar
 - OpenCV backend: `opencv-python-headless==4.13.0.92`
 - NumPy runtime: `numpy==2.3.5`
 - Job API: `/api/v1`, version `0.4.0`
-- HTTP/store baseline: standard-library server, one worker, in-memory only
+- HTTP/worker baseline: standard-library server and one worker
+- Storage baseline: in-memory by default; opt-in local SQLite metadata and content-addressed blobs
 - Fixture artifact bytes: not included; current catalog is metadata-only
 - Source identity: deterministic SHA-256 artifact manifest
 - Candidate identity: separate SHA-256 digest and audit manifest
 - Safety report: staff and TAB geometry, line continuity, local symbol and component risk
-- Audit: append-only hash-linked events
+- Audit: append-only hash-linked events, verified when durable state is loaded
 - Digital PDFs: preserved as vector; never implicitly rasterized
 - Teacher approval: separate from candidate generation and training consent
 
@@ -71,7 +72,7 @@ python tools/validate_music_safety.py source.png candidate.png \
   --candidate-manifest candidate.audit.json
 ```
 
-Run the local non-production API:
+Run the local non-production API with the default in-memory store:
 
 ```bash
 export ST_SCORE_CLIENT_API_KEY='replace-with-at-least-16-characters'
@@ -79,13 +80,24 @@ export ST_SCORE_REVIEWER_API_KEY='replace-with-a-different-16-character-key'
 python tools/run_api.py --host 127.0.0.1 --port 8080
 ```
 
-Do not expose the built-in API adapter to an untrusted network.
+Opt into restart-persistent local storage:
+
+```bash
+python tools/run_api.py \
+  --host 127.0.0.1 \
+  --port 8080 \
+  --data-dir runtime-data/st-score-restore \
+  --worker-lease-seconds 300
+```
+
+The selected data directory contains source and derived document bytes and is not encrypted by the application. Use a dedicated private directory. Do not commit it and do not expose the built-in API adapter to an untrusted network.
 
 See:
 
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
 - [Job API and teacher-review baseline](docs/job-api-and-teacher-review.md)
+- [Durable local persistence baseline](docs/durable-local-persistence.md)
 - [OpenAPI contract](api/openapi.v1.json)
 - [Dependency and license policy](docs/dependency-and-license-policy.md)
 - [Fixture, permission, and usage governance](docs/fixture-governance.md)
@@ -93,3 +105,4 @@ See:
 - [OpenCV safe-restoration baseline](docs/safe-restoration-baseline.md)
 - [Music-score and guitar-TAB safety validator](docs/music-safety-validator.md)
 - [ADR 0007](docs/adr/0007-in-process-job-api-and-review-workflow.md)
+- [ADR 0008](docs/adr/0008-durable-local-persistence.md)

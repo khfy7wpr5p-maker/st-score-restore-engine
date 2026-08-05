@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from st_score_restore.durable_job_store import STORE_SCHEMA_VERSION  # noqa: E402
 from st_score_restore.fixture_manifest import FixtureCatalogError, load_catalog  # noqa: E402
 from st_score_restore.input_inspection import INSPECTOR_VERSION, SCHEMA_VERSION as INPUT_SCHEMA_VERSION  # noqa: E402
 from st_score_restore.job_api_types import API_VERSION  # noqa: E402
@@ -25,6 +26,11 @@ REQUIRED_FILES = (
     "src/st_score_restore/restoration_photometric.py", "src/st_score_restore/restoration_encoding.py",
     "src/st_score_restore/music_safety_types.py", "src/st_score_restore/music_safety_validator.py",
     "src/st_score_restore/job_api_types.py", "src/st_score_restore/job_store.py",
+    "src/st_score_restore/durable_store_support.py", "src/st_score_restore/durable_blob_store.py",
+    "src/st_score_restore/durable_job_store.py",
+    "src/st_score_restore/durable_job_store_loading.py",
+    "src/st_score_restore/durable_job_store_writing.py",
+    "src/st_score_restore/durable_job_store_maintenance.py",
     "src/st_score_restore/job_service.py", "src/st_score_restore/job_service_processing.py",
     "src/st_score_restore/job_service_review.py", "src/st_score_restore/job_service_internal.py",
     "src/st_score_restore/job_service_support.py", "src/st_score_restore/http_api.py",
@@ -32,6 +38,7 @@ REQUIRED_FILES = (
     "tests/README.md", "tests/test_fixture_manifest.py", "tests/test_input_inspection.py",
     "tests/test_safe_restoration.py", "tests/test_music_safety_validator.py",
     "tests/test_music_safety_hardening.py", "tests/test_job_api.py",
+    "tests/test_job_review_atomicity.py", "tests/test_durable_job_store.py",
     "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
@@ -43,7 +50,7 @@ REQUIRED_FILES = (
     "docs/dependency-and-license-policy.md", "docs/dependency-reviews/opencv-python-headless-4.13.0.92.md",
     "docs/fixture-governance.md", "docs/input-inspection-contract.md",
     "docs/safe-restoration-baseline.md", "docs/music-safety-validator.md",
-    "docs/job-api-and-teacher-review.md",
+    "docs/job-api-and-teacher-review.md", "docs/durable-local-persistence.md",
     "docs/adr/0001-independent-safety-first-engine.md",
     "docs/adr/0002-python-runtime-and-repository-layout.md",
     "docs/adr/0003-fixture-consent-and-usage-governance.md",
@@ -51,6 +58,7 @@ REQUIRED_FILES = (
     "docs/adr/0005-opencv-safe-restoration-baseline.md",
     "docs/adr/0006-music-tab-safety-validator.md",
     "docs/adr/0007-in-process-job-api-and-review-workflow.md",
+    "docs/adr/0008-durable-local-persistence.md",
     "tools/validate_fixture_catalog.py", "tools/validate_dependency_lock.py",
     "tools/inspect_input.py", "tools/restore_image.py", "tools/validate_music_safety.py",
     "tools/run_api.py", ".github/workflows/repository-validation.yml",
@@ -104,7 +112,9 @@ def validate_pyproject() -> None:
         "opencv_candidate_enabled": True,
         "music_safety_validator_enabled": True,
         "job_api_enabled": True,
-        "in_memory_store_only": True,
+        "in_memory_store_only": False,
+        "durable_local_store_enabled": True,
+        "production_deployment_enabled": False,
     }
     for key, expected_value in expected_flags.items():
         if policy.get(key) != expected_value:
@@ -173,6 +183,8 @@ def validate_json_documents() -> None:
         fail("OpenAPI review contract must separate approval from training consent")
     if not INSPECTOR_VERSION or not ENGINE_VERSION or not VALIDATOR_VERSION or not API_VERSION:
         fail("runtime component versions must not be empty")
+    if STORE_SCHEMA_VERSION != 1:
+        fail("unexpected durable local store schema version")
 
 
 def validate_fixture_contract() -> None:
@@ -198,12 +210,21 @@ def validate_sensitive_artifacts() -> None:
         fail("unapproved fixture files found: " + ", ".join(map(str, unexpected)))
 
 
+def validate_runtime_data_ignores() -> None:
+    ignored = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    required = {"runtime-data/", "*.sqlite3", "*.sqlite3-wal", "*.sqlite3-shm"}
+    missing = sorted(pattern for pattern in required if pattern not in ignored)
+    if missing:
+        fail("durable runtime data ignore patterns are missing: " + ", ".join(missing))
+
+
 def main() -> None:
     validate_required_files()
     validate_pyproject()
     validate_json_documents()
     validate_fixture_contract()
     validate_sensitive_artifacts()
+    validate_runtime_data_ignores()
     print("Repository validation passed.")
 
 

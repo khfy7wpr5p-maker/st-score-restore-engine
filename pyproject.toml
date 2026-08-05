@@ -16,4 +16,6 @@ production_restoration_enabled = false
 opencv_candidate_enabled = true
 music_safety_validator_enabled = true
 job_api_enabled = true
-in_memory_store_only = true
+in_memory_store_only = false
+durable_local_store_enabled = true
+production_deployment_enabled = false

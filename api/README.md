@@ -1,6 +1,6 @@
 # API boundary
 
-The repository now contains a non-production `/api/v1` job and teacher-review baseline.
+The repository contains a non-production `/api/v1` job and teacher-review baseline.
 
 ## Public contract
 
@@ -9,6 +9,8 @@ The repository now contains a non-production `/api/v1` job and teacher-review ba
 - domain service: `st_score_restore.job_service`
 - dependency-free router: `st_score_restore.http_api`
 - standard-library server adapter: `st_score_restore.http_server`
+- default test/demo store: `st_score_restore.job_store.InMemoryJobStore`
+- optional durable local store: `st_score_restore.durable_job_store.SQLiteJobStore`
 - local entry point: `tools/run_api.py`
 
 Core routes include job creation/status, pages, candidates, safety reports, page review, retry attempts, cancellation, separate training consent, audit events, authenticated artifact access, and retention expiry.
@@ -19,8 +21,12 @@ Core routes include job creation/status, pages, candidates, safety reports, page
 - deterministic candidate engine: `st_score_restore.safe_restoration`
 - music-score/TAB veto validator: `st_score_restore.music_safety_validator`
 
+## Local persistence option
+
+The API defaults to process-local memory. `tools/run_api.py --data-dir <path>` opts into SQLite metadata, verified content-addressed local blobs, restart persistence, and bounded local queue leases. This option does not change the HTTP contract.
+
 ## Non-production warning
 
-The current store and worker are process-local. Static keys and `X-Actor-Id` are development controls only. There is no TLS, database, external queue, rate limiting, durable cleanup scheduler, signed object delivery, or production identity provider.
+Static keys and `X-Actor-Id` are development controls only. The durable local store is not an encrypted cloud object store and the SQLite queue is not an external broker. There is no TLS, rate limiting, durable distributed scheduler, signed object delivery, secret manager, production identity provider, backup service, or disaster-recovery guarantee.
 
-Issues #13–#18 track required hardening and deferred PDF/UI work. The built-in adapter must not be exposed to an untrusted network.
+Issue #13 remains open for production persistence and deployment hardening. Issues #14–#18 track identity, PDF, UI, concurrency, and HTTP security work. The built-in adapter must not be exposed to an untrusted network.
