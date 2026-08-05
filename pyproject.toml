@@ -1,6 +1,6 @@
 [project]
 name = "st-score-restore-engine"
-version = "0.4.0"
+version = "0.5.0"
 description = "Safety-first restoration and validation engine for music-score and guitar-TAB documents."
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
@@ -20,4 +20,5 @@ in_memory_store_only = false
 durable_local_store_enabled = true
 multi_worker_fencing_enabled = true
 http_transport_hardening_enabled = true
+review_evidence_enabled = true
 production_deployment_enabled = false
