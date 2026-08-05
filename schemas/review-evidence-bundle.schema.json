@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/review-evidence-bundle.schema.json",
+  "title": "ST Score Restore immutable review evidence bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "generatorVersion", "status", "automaticApproval",
+    "semanticRecognitionClaimed", "pageNumber", "attemptId", "parents",
+    "coordinateSpace", "configuration", "candidateTransform",
+    "displayIntegrity", "navigation", "findings", "artifacts", "reviewBinding"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "generatorVersion": {"const": "0.5.0"},
+    "status": {"const": "completed"},
+    "automaticApproval": {"const": false},
+    "semanticRecognitionClaimed": {"const": false},
+    "pageNumber": {"type": "integer", "minimum": 1},
+    "attemptId": {"type": "string", "minLength": 1},
+    "parents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceArtifactId", "candidateArtifactId", "safetyReportArtifactId", "safetyReportId"],
+      "properties": {
+        "sourceArtifactId": {"$ref": "#/$defs/artifactId"},
+        "candidateArtifactId": {"$ref": "#/$defs/artifactId"},
+        "safetyReportArtifactId": {"$ref": "#/$defs/artifactId"},
+        "safetyReportId": {"type": "string", "pattern": "^safety-report:[0-9a-f]{64}$"}
+      }
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "widthPixels", "heightPixels", "origin", "normalizedRange"],
+      "properties": {
+        "name": {"const": "source_pixels"},
+        "widthPixels": {"type": "integer", "minimum": 1},
+        "heightPixels": {"type": "integer", "minimum": 1},
+        "origin": {"const": "top_left"},
+        "normalizedRange": {
+          "type": "array", "prefixItems": [{"const": 0.0}, {"const": 1.0}],
+          "minItems": 2, "maxItems": 2
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cropPaddingPixels", "maxRegions", "maxCropPixels"],
+      "properties": {
+        "cropPaddingPixels": {"type": "integer", "minimum": 0, "maximum": 512},
+        "maxRegions": {"type": "integer", "minimum": 0, "maximum": 256},
+        "maxCropPixels": {"type": "integer", "minimum": 1, "maximum": 40000000}
+      }
+    },
+    "candidateTransform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method", "resizedToSource", "reportResizedToSource", "translationX",
+        "translationY", "reliable", "translationApplied", "candidateToSourceMatrix"
+      ],
+      "properties": {
+        "method": {"const": "phase_correlation_translation"},
+        "resizedToSource": {"type": "boolean"},
+        "reportResizedToSource": {"type": "boolean"},
+        "translationX": {"type": "number"},
+        "translationY": {"type": "number"},
+        "reliable": {"type": "boolean"},
+        "translationApplied": {"type": "boolean"},
+        "candidateToSourceMatrix": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "items": {"type": "number"}
+          }
+        }
+      }
+    },
+    "displayIntegrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cropEncoding", "interpolation", "sourcePixelDigest",
+        "alignedCandidatePixelDigest", "rendering", "inputColorProfiles",
+        "colorManagementValidated"
+      ],
+      "properties": {
+        "cropEncoding": {"const": "png_grayscale_8bit"},
+        "interpolation": {
+          "type": "object", "additionalProperties": false,
+          "required": ["resize", "registration"],
+          "properties": {"resize": {"const": "area"}, "registration": {"const": "linear"}}
+        },
+        "sourcePixelDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "alignedCandidatePixelDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "rendering": {"const": "grayscale_luminance_evidence"},
+        "inputColorProfiles": {"const": "not_inspected"},
+        "colorManagementValidated": {"const": false}
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "findingCount", "regionalFindingCount", "pagination", "zoom",
+        "keyboardOrder", "screenReaderLabelsRequired"
+      ],
+      "properties": {
+        "findingCount": {"type": "integer", "minimum": 0},
+        "regionalFindingCount": {"type": "integer", "minimum": 0},
+        "pagination": {"const": "finding_index"},
+        "zoom": {
+          "type": "object", "additionalProperties": false,
+          "required": ["minimum", "maximum", "step", "fitModes"],
+          "properties": {
+            "minimum": {"const": 0.25}, "maximum": {"const": 8.0}, "step": {"const": 0.25},
+            "fitModes": {
+              "type": "array",
+              "prefixItems": [{"const": "fit_width"}, {"const": "fit_region"}, {"const": "actual_pixels"}],
+              "minItems": 3, "maxItems": 3
+            }
+          }
+        },
+        "keyboardOrder": {
+          "type": "array", "minItems": 7, "maxItems": 7,
+          "prefixItems": [
+            {"const": "previous_finding"}, {"const": "next_finding"},
+            {"const": "source_view"}, {"const": "candidate_view"},
+            {"const": "approve"}, {"const": "reject"}, {"const": "reprocess"}
+          ]
+        },
+        "screenReaderLabelsRequired": {"const": true}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": [
+          "findingIndex", "code", "severity", "semanticCertainty",
+          "sourceRegion", "normalizedRegion", "cropBounds",
+          "sourceCropArtifactId", "candidateCropArtifactId"
+        ],
+        "properties": {
+          "findingIndex": {"type": "integer", "minimum": 0},
+          "code": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["low", "medium", "high", "critical"]},
+          "semanticCertainty": {"const": "not_claimed"},
+          "sourceRegion": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/pixelRegion"}]},
+          "normalizedRegion": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/normalizedRegion"}]},
+          "cropBounds": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/pixelRegion"}]},
+          "sourceCropArtifactId": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/artifactId"}]},
+          "candidateCropArtifactId": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/artifactId"}]}
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["artifactId", "role", "name", "mediaType", "byteSize", "findingIndex"],
+        "properties": {
+          "artifactId": {"$ref": "#/$defs/artifactId"},
+          "role": {"enum": ["review_source_crop", "review_candidate_crop"]},
+          "name": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\]+$"},
+          "mediaType": {"const": "image/png"},
+          "byteSize": {"type": "integer", "minimum": 1},
+          "findingIndex": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "reviewBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requiredEvidenceBundleArtifactId", "trainingConsentImplied"],
+      "properties": {
+        "requiredEvidenceBundleArtifactId": {"const": true},
+        "trainingConsentImplied": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "artifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "pixelRegion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}
+      }
+    },
+    "normalizedRegion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "number", "minimum": 0, "maximum": 1},
+        "y": {"type": "number", "minimum": 0, "maximum": 1},
+        "width": {"type": "number", "minimum": 0, "maximum": 1},
+        "height": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  }
+}
