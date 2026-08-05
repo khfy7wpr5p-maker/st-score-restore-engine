@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/restoration-candidate.schema.json",
+  "title": "ST Score Restore OpenCV candidate audit manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "engineVersion", "engine", "status", "sourceArtifactId", "sourceDigest", "sourceReturnedUnmodified", "configuration", "configurationDigest", "candidate", "safety", "operations"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "engineVersion": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "engine": {"const": "opencv_safe_baseline"},
+    "status": {"enum": ["candidate_ready", "review_required"]},
+    "sourceArtifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "sourceDigest": {"$ref": "#/$defs/digest"},
+    "sourceReturnedUnmodified": {"const": true},
+    "configuration": {"type": "object"},
+    "configurationDigest": {"$ref": "#/$defs/digest"},
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactId", "candidateName", "role", "immutable", "derivedFrom", "mediaType", "byteSize", "digest", "widthPixels", "heightPixels", "teacherApproved"],
+      "properties": {
+        "artifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "candidateName": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\]+$"},
+        "role": {"const": "restoration_candidate"},
+        "immutable": {"const": true},
+        "derivedFrom": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "mediaType": {"enum": ["image/png", "image/jpeg", "application/pdf"]},
+        "byteSize": {"type": "integer", "minimum": 1},
+        "digest": {"$ref": "#/$defs/digest"},
+        "widthPixels": {"type": "integer", "minimum": 1},
+        "heightPixels": {"type": "integer", "minimum": 1},
+        "teacherApproved": {"const": false}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generativeOperationsUsed", "symbolCompletionUsed", "protectedPixelCount", "protectedPixelFraction", "protectedPixelsMadeLighter", "reviewRequiredReasons"],
+      "properties": {
+        "generativeOperationsUsed": {"const": false},
+        "symbolCompletionUsed": {"const": false},
+        "protectedPixelCount": {"type": "integer", "minimum": 0},
+        "protectedPixelFraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "protectedPixelsMadeLighter": {"const": 0},
+        "reviewRequiredReasons": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "enabled", "applied", "parameters", "evidence", "warnings", "inputPixelDigest", "outputPixelDigest"],
+        "properties": {
+          "name": {"type": "string"},
+          "enabled": {"type": "boolean"},
+          "applied": {"type": "boolean"},
+          "parameters": {"type": "object"},
+          "evidence": {"type": "object"},
+          "warnings": {"type": "array", "items": {"type": "string"}},
+          "inputPixelDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "outputPixelDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "value": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

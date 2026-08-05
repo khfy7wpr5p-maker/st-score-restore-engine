@@ -1,7 +1,8 @@
 """Core contracts for ST Score Restore Engine.
 
-The package currently provides fixture governance and read-only input inspection.
-No restoration behavior is enabled.
+Input inspection stays importable independently of the optional image backend.
+The OpenCV candidate engine lives in ``st_score_restore.safe_restoration``.
+Production restoration and teacher approval remain disabled.
 """
 
 from .input_inspection import (
@@ -20,4 +21,4 @@ __all__ = [
     "inspect_path",
 ]
 
-__version__ = "0.0.0"
+__version__ = "0.2.0"

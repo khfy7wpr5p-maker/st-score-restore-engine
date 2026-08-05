@@ -1,0 +1,4 @@
+# ST Score Restore Engine runtime lock for Python 3.11-3.12.
+# Full runtime graph, exact versions. Install wheels only; do not resolve implicitly.
+numpy==2.3.5
+opencv-python-headless==4.13.0.92
