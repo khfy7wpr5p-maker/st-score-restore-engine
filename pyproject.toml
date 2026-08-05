@@ -1,0 +1,12 @@
+[project]
+name = "st-score-restore-engine"
+version = "0.0.0"
+description = "Safety-first restoration and validation engine for music-score and guitar-TAB documents."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = []
+
+[tool.st_score_restore]
+schema_version = 1
+primary_python = "3.12"
+production_restoration_enabled = false
