@@ -51,6 +51,9 @@ jobs:
       - name: Validate fixture catalog
         run: python tools/validate_fixture_catalog.py
 
+      - name: Validate Stage 1A dataset contract
+        run: python tools/validate_dataset_manifest.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
