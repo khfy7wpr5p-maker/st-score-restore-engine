@@ -1,6 +1,23 @@
-"""Package boundary for ST Score Restore Engine.
+"""Core contracts for ST Score Restore Engine.
 
-Milestone M0 intentionally contains no restoration behavior.
+The package currently provides fixture governance and read-only input inspection.
+No restoration behavior is enabled.
 """
+
+from .input_inspection import (
+    DEFAULT_MAX_BYTES,
+    INSPECTOR_VERSION,
+    InputInspectionError,
+    inspect_bytes,
+    inspect_path,
+)
+
+__all__ = [
+    "DEFAULT_MAX_BYTES",
+    "INSPECTOR_VERSION",
+    "InputInspectionError",
+    "inspect_bytes",
+    "inspect_path",
+]
 
 __version__ = "0.0.0"
