@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/dataset-catalog.schema.json",
+  "title": "ST Score Restore Stage 1A Dataset Catalog",
+  "description": "Structural metadata contract. Cross-field purpose, privacy, split, lineage, and revocation rules are enforced by st_score_restore.dataset_manifest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "catalogId", "description", "items"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "catalogId": {"$ref": "#/$defs/id"},
+    "description": {"type": "string", "minLength": 1},
+    "items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$"},
+    "nullableString": {"type": ["string", "null"], "minLength": 1},
+    "nullableDate": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status", "authorizationReference", "authorizedBy", "authorizedOn",
+        "expiresOn", "restrictions", "revokedOn", "revocationReference"
+      ],
+      "properties": {
+        "status": {"enum": ["not_requested", "pending", "granted", "denied", "expired", "withdrawn", "not_applicable"]},
+        "authorizationReference": {"$ref": "#/$defs/nullableString"},
+        "authorizedBy": {"$ref": "#/$defs/nullableString"},
+        "authorizedOn": {"$ref": "#/$defs/nullableDate"},
+        "expiresOn": {"$ref": "#/$defs/nullableDate"},
+        "restrictions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "revokedOn": {"$ref": "#/$defs/nullableDate"},
+        "revocationReference": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "datasetItemId", "sourceFamilyId", "parentItemId", "artifact", "provenance",
+        "privacy", "input", "permissions", "split", "retention",
+        "syntheticGeneration", "review", "assertions"
+      ],
+      "properties": {
+        "datasetItemId": {"$ref": "#/$defs/id"},
+        "sourceFamilyId": {"$ref": "#/$defs/id"},
+        "parentItemId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "sha256", "byteSize", "storageLocator"],
+          "properties": {
+            "state": {"enum": ["metadata_only", "external_available", "revoked"]},
+            "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+            "byteSize": {"type": ["integer", "null"], "minimum": 1},
+            "storageLocator": {"type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"}
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sourceKind", "sourceReference", "rightsHolder", "licenseId", "usageBasis"],
+          "properties": {
+            "sourceKind": {"enum": ["project_authored", "public_domain", "licensed", "user_provided", "synthetic"]},
+            "sourceReference": {"type": "string", "minLength": 1},
+            "rightsHolder": {"type": "string", "minLength": 1},
+            "licenseId": {"type": "string", "minLength": 1},
+            "usageBasis": {"type": "string", "minLength": 1}
+          }
+        },
+        "privacy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["classification", "reviewStatus", "deidentificationMethod", "deidentifiedArtifactSha256"],
+          "properties": {
+            "classification": {"enum": ["none", "deidentified", "personal", "student"]},
+            "reviewStatus": {"enum": ["not_required", "pending", "approved", "rejected"]},
+            "deidentificationMethod": {"$ref": "#/$defs/nullableString"},
+            "deidentifiedArtifactSha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "mediaType", "notationKinds", "pageCount", "degradations"],
+          "properties": {
+            "kind": {"enum": ["digital_pdf", "scanned_pdf", "hybrid_pdf", "jpg", "jpeg", "png", "phone_photo"]},
+            "mediaType": {"enum": ["application/pdf", "image/jpeg", "image/png"]},
+            "notationKinds": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"enum": ["staff", "guitar_tab", "combined_staff_tab"]}
+            },
+            "pageCount": {"type": "integer", "minimum": 1},
+            "degradations": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"enum": ["none", "skew", "perspective", "page_curl", "shadow", "glare", "uneven_lighting", "blur", "noise", "compression", "low_resolution"]}
+            }
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fixture_validation", "quality_evaluation", "quality_calibration",
+            "pdf_pipeline_evaluation", "safety_calibration", "held_out_evaluation",
+            "model_training", "publication", "demonstration"
+          ],
+          "properties": {
+            "fixture_validation": {"$ref": "#/$defs/permission"},
+            "quality_evaluation": {"$ref": "#/$defs/permission"},
+            "quality_calibration": {"$ref": "#/$defs/permission"},
+            "pdf_pipeline_evaluation": {"$ref": "#/$defs/permission"},
+            "safety_calibration": {"$ref": "#/$defs/permission"},
+            "held_out_evaluation": {"$ref": "#/$defs/permission"},
+            "model_training": {"$ref": "#/$defs/permission"},
+            "publication": {"$ref": "#/$defs/permission"},
+            "demonstration": {"$ref": "#/$defs/permission"}
+          }
+        },
+        "split": {"enum": ["unassigned", "development", "calibration", "held_out", "training_reserved"]},
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["policy", "expiresOn", "storageClass", "deletionRequired"],
+          "properties": {
+            "policy": {"enum": ["metadata_only", "external_until_date", "delete_after_validation", "prohibited"]},
+            "expiresOn": {"$ref": "#/$defs/nullableDate"},
+            "storageClass": {"enum": ["not_assigned", "custody_external"]},
+            "deletionRequired": {"type": "boolean"}
+          }
+        },
+        "syntheticGeneration": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["generator", "generatorVersion", "generatorCommit", "seed", "parameters", "cleanSourceApproved"],
+              "properties": {
+                "generator": {"type": "string", "minLength": 1},
+                "generatorVersion": {"type": "string", "minLength": 1},
+                "generatorCommit": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "seed": {"type": "integer", "minimum": 0},
+                "parameters": {"type": "object"},
+                "cleanSourceApproved": {"const": true}
+              }
+            }
+          ]
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reviewedBy", "reviewedOn", "notes"],
+          "properties": {
+            "status": {"enum": ["planned", "pending", "approved", "rejected", "revoked"]},
+            "reviewedBy": {"$ref": "#/$defs/nullableString"},
+            "reviewedOn": {"$ref": "#/$defs/nullableDate"},
+            "notes": {"type": "string"}
+          }
+        },
+        "assertions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["teacherApprovalImpliedDatasetPermission", "teacherApprovalImpliedTrainingPermission", "originalBytesInGit"],
+          "properties": {
+            "teacherApprovalImpliedDatasetPermission": {"const": false},
+            "teacherApprovalImpliedTrainingPermission": {"const": false},
+            "originalBytesInGit": {"const": false}
+          }
+        }
+      }
+    }
+  }
+}
