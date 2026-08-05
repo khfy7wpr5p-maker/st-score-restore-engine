@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Literal, Mapping
 
 API_SCHEMA_VERSION = "1.0.0"
-API_VERSION = "0.4.0"
+API_VERSION = "0.5.0"
 
 JobState = Literal[
     "UPLOADED", "ANALYZING", "READY_FOR_PROCESSING", "PROCESSING",

@@ -19,6 +19,8 @@ Result comparator
       ↓
 Music-score and TAB safety validator
       ↓
+Immutable review evidence
+      ↓
 Teacher approval
       ↓
 Enhanced PDF and/or image + audit report
@@ -30,9 +32,9 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 ## Current status
 
-Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, and a strict local HTTP/multipart boundary are implemented.
+Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
-Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
+Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
 ## Development baseline
 
@@ -41,7 +43,8 @@ Production deployment, encrypted cloud object storage, an external queue, produc
 - Runtime lock: `requirements.lock`
 - OpenCV backend: `opencv-python-headless==4.13.0.92`
 - NumPy runtime: `numpy==2.3.5`
-- Job API: `/api/v1`, version `0.4.0`
+- Job API: `/api/v1`, version `0.5.0`
+- Review contract: reviewer-only immutable evidence bundles and stale-screen binding
 - HTTP baseline: strict standard-library server with bounded headers/body/timeouts; still not approved for untrusted networks
 - HTTP connection model: one request per connection; pipelining, chunked requests, upgrades, and `Expect` are rejected
 - Storage baseline: in-memory by default; opt-in local SQLite metadata and content-addressed blobs
@@ -50,6 +53,7 @@ Production deployment, encrypted cloud object storage, an external queue, produc
 - Source identity: deterministic SHA-256 artifact manifest
 - Candidate identity: separate SHA-256 digest and audit manifest
 - Safety report: staff and TAB geometry, line continuity, local symbol and component risk
+- Review evidence: source-space overlays, deterministic grayscale before/after crops, transform provenance
 - Audit: append-only hash-linked events, verified when durable state is loaded
 - Digital PDFs: preserved as vector; never implicitly rasterized
 - Teacher approval: separate from candidate generation and training consent
@@ -99,6 +103,7 @@ See:
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
 - [Job API and teacher-review baseline](docs/job-api-and-teacher-review.md)
+- [Immutable review evidence contract](docs/review-evidence-contract.md)
 - [Durable local persistence baseline](docs/durable-local-persistence.md)
 - [Local multi-worker concurrency and recovery](docs/multi-worker-concurrency-and-recovery.md)
 - [Built-in HTTP and multipart security boundary](docs/http-transport-and-multipart-security.md)
@@ -112,3 +117,4 @@ See:
 - [ADR 0008](docs/adr/0008-durable-local-persistence.md)
 - [ADR 0009](docs/adr/0009-attempt-bound-worker-fencing-and-recovery.md)
 - [ADR 0010](docs/adr/0010-strict-local-http-and-multipart-boundary.md)
+- [ADR 0011](docs/adr/0011-immutable-review-evidence-and-stale-screen-binding.md)

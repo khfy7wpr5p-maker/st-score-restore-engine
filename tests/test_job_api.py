@@ -104,6 +104,7 @@ class JobServiceIntegrationTests(unittest.TestCase):
         self.assertEqual(2, len(awaiting["pages"]))
         for page in awaiting["pages"]:
             self.assertIsNotNone(page["currentCandidateArtifactId"])
+            self.assertIsNotNone(page["currentEvidenceBundleArtifactId"])
             self.assertIn(page["safetyReport"]["verdict"], {"pass", "review_required"})
         candidate_one = awaiting["pages"][0]["currentCandidateArtifactId"]
         candidate_two = awaiting["pages"][1]["currentCandidateArtifactId"]
@@ -133,6 +134,7 @@ class JobServiceIntegrationTests(unittest.TestCase):
         self.assertEqual(2, len(retry["attempts"]))
         self.assertIsNotNone(retry["pages"][0]["reviewDecision"])
         self.assertIsNone(retry["pages"][1]["reviewDecision"])
+        self.assertIsNone(retry["pages"][1]["currentEvidenceBundleArtifactId"])
         service.run_pending()
         after_retry = service.get_job(job_id)
         self.assertEqual("AWAITING_REVIEW", after_retry["state"])
@@ -215,13 +217,15 @@ class HttpApiTests(unittest.TestCase):
         current = self.service.get_job(job_id)
         candidate_one = current["pages"][0]["currentCandidateArtifactId"]
         candidate_two = current["pages"][1]["currentCandidateArtifactId"]
+        evidence_one = current["pages"][0]["currentEvidenceBundleArtifactId"]
+        evidence_two = current["pages"][1]["currentEvidenceBundleArtifactId"]
         blocked_review = self.api.handle("POST", f"/api/v1/restoration-jobs/{job_id}/review", {"X-Api-Key": CLIENT_KEY, "Content-Type": "application/json"}, json.dumps({"decisions": []}).encode())
         self.assertEqual(403, blocked_review.status)
         preview = self.api.handle("GET", f"/api/v1/restoration-jobs/{job_id}/artifacts/{candidate_one}?purpose=review", {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1"})
         self.assertEqual(200, preview.status)
         final_before_review = self.api.handle("GET", f"/api/v1/restoration-jobs/{job_id}/artifacts/{candidate_one}", {"X-Api-Key": CLIENT_KEY})
         self.assertEqual(403, final_before_review.status)
-        review = self.api.handle("POST", f"/api/v1/restoration-jobs/{job_id}/review", {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1", "Content-Type": "application/json"}, json.dumps({"decisions": [{"pageNumber": 1, "action": "approve", "candidateArtifactId": candidate_one}, {"pageNumber": 2, "action": "reject", "candidateArtifactId": candidate_two}]}).encode())
+        review = self.api.handle("POST", f"/api/v1/restoration-jobs/{job_id}/review", {"X-Api-Key": REVIEWER_KEY, "X-Actor-Id": "teacher-1", "Content-Type": "application/json"}, json.dumps({"decisions": [{"pageNumber": 1, "action": "approve", "candidateArtifactId": candidate_one, "evidenceBundleArtifactId": evidence_one}, {"pageNumber": 2, "action": "reject", "candidateArtifactId": candidate_two, "evidenceBundleArtifactId": evidence_two}]}).encode())
         self.assertEqual(200, review.status)
         self.assertEqual("COMPLETED", json.loads(review.body)["state"])
         self.assertEqual(200, self.api.handle("GET", f"/api/v1/restoration-jobs/{job_id}/artifacts/{candidate_one}", {"X-Api-Key": CLIENT_KEY}).status)
