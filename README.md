@@ -30,7 +30,7 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 ## Current status
 
-Architecture, governance, fixture permissions, immutable input inspection, and the deterministic OpenCV candidate baseline are implemented. The OpenCV result is only a reviewable candidate; production restoration, teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled.
+Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, and the conservative music-score/TAB safety validator are implemented. Results remain reviewable artifacts; production restoration, HTTP services, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled.
 
 ## Development baseline
 
@@ -42,8 +42,9 @@ Architecture, governance, fixture permissions, immutable input inspection, and t
 - Fixture artifact bytes: not included; current catalog is metadata-only
 - Source identity: deterministic SHA-256 artifact manifest
 - Candidate identity: separate SHA-256 digest and audit manifest
+- Safety report: staff and TAB geometry, line continuity, local symbol and component risk
 - Digital PDFs: preserved as vector; never implicitly rasterized
-- Teacher approval: always separate from candidate generation
+- Teacher approval: always separate from candidate generation and training consent
 
 Validate the repository contracts with:
 
@@ -67,6 +68,14 @@ Create a separate candidate and audit report:
 python tools/restore_image.py source.png candidate.png --audit candidate.audit.json
 ```
 
+Validate the candidate against the source:
+
+```bash
+python tools/validate_music_safety.py source.png candidate.png \
+  --report candidate.safety.json \
+  --candidate-manifest candidate.audit.json
+```
+
 See:
 
 - [Technical Specification](docs/technical-specification.md)
@@ -75,7 +84,10 @@ See:
 - [Fixture, permission, and usage governance](docs/fixture-governance.md)
 - [Immutable input inspection contract](docs/input-inspection-contract.md)
 - [OpenCV safe-restoration baseline](docs/safe-restoration-baseline.md)
+- [Music-score and guitar-TAB safety validator](docs/music-safety-validator.md)
 - [Dependency review](docs/dependency-reviews/opencv-python-headless-4.13.0.92.md)
 - [Restoration configuration schema](schemas/restoration-config.schema.json)
 - [Restoration candidate schema](schemas/restoration-candidate.schema.json)
+- [Music safety report schema](schemas/music-safety-report.schema.json)
 - [ADR 0005](docs/adr/0005-opencv-safe-restoration-baseline.md)
+- [ADR 0006](docs/adr/0006-music-tab-safety-validator.md)

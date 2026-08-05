@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from st_score_restore.fixture_manifest import FixtureCatalogError, load_catalog  # noqa: E402
 from st_score_restore.input_inspection import INSPECTOR_VERSION, SCHEMA_VERSION as INPUT_SCHEMA_VERSION  # noqa: E402
+from st_score_restore.music_safety_validator import VALIDATOR_VERSION, SCHEMA_VERSION as SAFETY_SCHEMA_VERSION  # noqa: E402
 from st_score_restore.safe_restoration import ENGINE_VERSION, SCHEMA_VERSION as RESTORE_SCHEMA_VERSION  # noqa: E402
 
 REQUIRED_FILES = (
@@ -19,27 +20,29 @@ REQUIRED_FILES = (
     ".python-version", ".gitignore", ".editorconfig",
     "src/st_score_restore/__init__.py", "src/st_score_restore/fixture_manifest.py",
     "src/st_score_restore/input_inspection.py", "src/st_score_restore/safe_restoration.py",
-    "src/st_score_restore/restoration_types.py",
-    "src/st_score_restore/restoration_geometry.py",
-    "src/st_score_restore/restoration_photometric.py",
-    "src/st_score_restore/restoration_encoding.py",
+    "src/st_score_restore/restoration_types.py", "src/st_score_restore/restoration_geometry.py",
+    "src/st_score_restore/restoration_photometric.py", "src/st_score_restore/restoration_encoding.py",
+    "src/st_score_restore/music_safety_types.py", "src/st_score_restore/music_safety_validator.py",
     "tests/README.md", "tests/test_fixture_manifest.py", "tests/test_input_inspection.py",
-    "tests/test_safe_restoration.py", "fixtures/README.md", "fixtures/catalog.v1.json",
+    "tests/test_safe_restoration.py", "tests/test_music_safety_validator.py",
+    "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
-    "schemas/restoration-candidate.schema.json", "models/README.md", "api/README.md",
-    "examples/README.md", "LICENSES/README.md", "LICENSES/opencv-python-headless-4.13.0.92.md",
-    "LICENSES/numpy-2.3.5.md", "docs/technical-specification.md", "docs/roadmap.md",
-    "docs/development-environment.md", "docs/dependency-and-license-policy.md",
-    "docs/dependency-reviews/opencv-python-headless-4.13.0.92.md",
+    "schemas/restoration-candidate.schema.json", "schemas/music-safety-report.schema.json",
+    "models/README.md", "api/README.md", "examples/README.md", "LICENSES/README.md",
+    "LICENSES/opencv-python-headless-4.13.0.92.md", "LICENSES/numpy-2.3.5.md",
+    "docs/technical-specification.md", "docs/roadmap.md", "docs/development-environment.md",
+    "docs/dependency-and-license-policy.md", "docs/dependency-reviews/opencv-python-headless-4.13.0.92.md",
     "docs/fixture-governance.md", "docs/input-inspection-contract.md",
-    "docs/safe-restoration-baseline.md", "docs/adr/0001-independent-safety-first-engine.md",
+    "docs/safe-restoration-baseline.md", "docs/music-safety-validator.md",
+    "docs/adr/0001-independent-safety-first-engine.md",
     "docs/adr/0002-python-runtime-and-repository-layout.md",
     "docs/adr/0003-fixture-consent-and-usage-governance.md",
     "docs/adr/0004-immutable-input-inspection.md",
     "docs/adr/0005-opencv-safe-restoration-baseline.md",
+    "docs/adr/0006-music-tab-safety-validator.md",
     "tools/validate_fixture_catalog.py", "tools/validate_dependency_lock.py",
-    "tools/inspect_input.py", "tools/restore_image.py",
+    "tools/inspect_input.py", "tools/restore_image.py", "tools/validate_music_safety.py",
     ".github/workflows/repository-validation.yml",
 )
 FORBIDDEN_TRACKED_SUFFIXES = {".onnx", ".pt", ".pth", ".ckpt", ".safetensors"}
@@ -63,8 +66,8 @@ def validate_pyproject() -> None:
     project = data.get("project", {})
     if project.get("name") != "st-score-restore-engine":
         fail("unexpected project.name")
-    if project.get("version") != ENGINE_VERSION:
-        fail("project.version must match safe restoration engine version")
+    if project.get("version") != VALIDATOR_VERSION:
+        fail("project.version must match the active safety validator version")
     if project.get("requires-python") != ">=3.11,<3.13":
         fail("unexpected project.requires-python")
     expected = ["numpy==2.3.5", "opencv-python-headless==4.13.0.92"]
@@ -77,6 +80,8 @@ def validate_pyproject() -> None:
         fail("production restoration must remain disabled")
     if policy.get("opencv_candidate_enabled") is not True:
         fail("OpenCV candidate flag must be enabled")
+    if policy.get("music_safety_validator_enabled") is not True:
+        fail("music safety validator flag must be enabled")
 
 
 def load_json(relative_path: Path) -> dict:
@@ -97,6 +102,7 @@ def validate_json_documents() -> None:
     analysis_schema = load_json(Path("schemas/input-analysis.schema.json"))
     config_schema = load_json(Path("schemas/restoration-config.schema.json"))
     candidate_schema = load_json(Path("schemas/restoration-candidate.schema.json"))
+    safety_schema = load_json(Path("schemas/music-safety-report.schema.json"))
     if fixture_schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
         fail("fixture manifest must use JSON Schema Draft 2020-12")
     if artifact_schema.get("properties", {}).get("schemaVersion", {}).get("const") != INPUT_SCHEMA_VERSION:
@@ -109,21 +115,22 @@ def validate_json_documents() -> None:
         fail("candidate manifest schema version does not match the engine")
     if candidate_schema.get("properties", {}).get("engine", {}).get("const") != "opencv_safe_baseline":
         fail("candidate manifest engine identifier is unexpected")
+    if safety_schema.get("properties", {}).get("schemaVersion", {}).get("const") != SAFETY_SCHEMA_VERSION:
+        fail("music safety report schema version does not match the validator")
+    validator_pattern = safety_schema.get("properties", {}).get("validatorVersion", {}).get("pattern")
+    if validator_pattern != r"^\d+\.\d+\.\d+$":
+        fail("music safety validatorVersion pattern is unexpected")
+    if safety_schema.get("properties", {}).get("automaticApproval", {}).get("const") is not False:
+        fail("music safety reports must prohibit automatic approval")
     pixel_limit = config_schema.get("properties", {}).get("max_decode_pixels", {})
     if pixel_limit.get("maximum") != 200_000_000:
         fail("restoration config decoded-pixel ceiling is unexpected")
-    candidate_name_pattern = (
-        candidate_schema.get("properties", {})
-        .get("candidate", {})
-        .get("properties", {})
-        .get("candidateName", {})
-        .get("pattern")
-    )
+    candidate_name_pattern = candidate_schema.get("properties", {}).get("candidate", {}).get("properties", {}).get("candidateName", {}).get("pattern")
     try:
         re.compile(candidate_name_pattern or "")
     except re.error as error:
         fail(f"candidateName schema pattern is invalid: {error}")
-    if not INSPECTOR_VERSION or not ENGINE_VERSION:
+    if not INSPECTOR_VERSION or not ENGINE_VERSION or not VALIDATOR_VERSION:
         fail("runtime component versions must not be empty")
 
 
