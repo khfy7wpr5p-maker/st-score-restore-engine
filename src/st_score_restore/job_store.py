@@ -10,12 +10,39 @@ import secrets
 from threading import RLock
 from typing import Any
 
+ACTIVE_WORK_STATES = {
+    "UPLOADED",
+    "ANALYZING",
+    "READY_FOR_PROCESSING",
+    "PROCESSING",
+    "COMPARING",
+    "VALIDATING",
+}
+CLAIMABLE_WORK_STATES = ACTIVE_WORK_STATES
+
+
+class StaleWorkClaimError(RuntimeError):
+    """A worker lease no longer authorizes processing mutations."""
+
+    code = "stale_work_claim"
+
+    def __init__(self, message: str = "The worker claim is stale or expired.") -> None:
+        super().__init__(message)
+        self.message = message
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": "error",
+            "error": {"code": self.code, "message": self.message, "details": {}},
+        }
+
 
 @dataclass(frozen=True)
 class WorkClaim:
-    """One bounded worker lease for a queued restoration job."""
+    """One bounded worker lease for a specific queued job attempt."""
 
     job_id: str
+    attempt_id: str
     lease_token: str
     lease_owner: str
     lease_expires_at: str
@@ -39,7 +66,7 @@ class InMemoryJobStore:
         lease_owner: str,
         lease_seconds: int,
     ) -> WorkClaim | None:
-        """Claim one queued job without allowing an active lease to be stolen."""
+        """Claim one active work item without allowing an active lease to be stolen."""
 
         if not isinstance(lease_owner, str) or not lease_owner.strip():
             raise ValueError("lease_owner must be a non-empty string")
@@ -52,7 +79,7 @@ class InMemoryJobStore:
                 (
                     job
                     for job in self.jobs.values()
-                    if job["state"] in {"UPLOADED", "READY_FOR_PROCESSING"}
+                    if job["state"] in CLAIMABLE_WORK_STATES
                 ),
                 key=lambda job: (job["createdAt"], job["jobId"]),
             )
@@ -68,15 +95,61 @@ class InMemoryJobStore:
                     "leaseToken": token,
                     "leaseOwner": lease_owner,
                     "leaseExpiresAt": _iso(expires),
+                    "attemptId": job["currentAttemptId"],
                 }
                 job["processingLease"] = record
+                job["processingClaimed"] = True
                 return WorkClaim(
                     job_id=job["jobId"],
+                    attempt_id=job["currentAttemptId"],
                     lease_token=token,
                     lease_owner=lease_owner,
                     lease_expires_at=record["leaseExpiresAt"],
                 )
         return None
+
+    def assert_claim(self, claim: WorkClaim, *, now: datetime) -> None:
+        """Fail when the token, owner, attempt, or expiry no longer matches."""
+
+        current = _aware_utc(now)
+        with self.lock:
+            job = self.jobs.get(claim.job_id)
+            lease = job.get("processingLease") if job else None
+            valid = bool(
+                job
+                and job.get("currentAttemptId") == claim.attempt_id
+                and lease
+                and secrets.compare_digest(lease.get("leaseToken", ""), claim.lease_token)
+                and secrets.compare_digest(lease.get("leaseOwner", ""), claim.lease_owner)
+                and _parse_iso(lease["leaseExpiresAt"]) > current
+            )
+            if not valid:
+                raise StaleWorkClaimError()
+
+    def renew_claim(
+        self,
+        claim: WorkClaim,
+        *,
+        now: datetime,
+        lease_seconds: int,
+    ) -> WorkClaim:
+        """Renew only a still-active claim and keep the same fencing token."""
+
+        if not 5 <= int(lease_seconds) <= 3_600:
+            raise ValueError("lease_seconds must be between 5 and 3600")
+        current = _aware_utc(now)
+        with self.lock:
+            self.assert_claim(claim, now=current)
+            expires = current + timedelta(seconds=int(lease_seconds))
+            lease = self.jobs[claim.job_id]["processingLease"]
+            lease["leaseExpiresAt"] = _iso(expires)
+            return WorkClaim(
+                job_id=claim.job_id,
+                attempt_id=claim.attempt_id,
+                lease_token=claim.lease_token,
+                lease_owner=claim.lease_owner,
+                lease_expires_at=lease["leaseExpiresAt"],
+            )
 
     def release_claim(self, claim: WorkClaim) -> None:
         """Release a lease only when the caller still owns its token."""
@@ -90,6 +163,7 @@ class InMemoryJobStore:
                 lease.get("leaseToken", ""), claim.lease_token
             ):
                 job.pop("processingLease", None)
+                job["processingClaimed"] = False
 
     @staticmethod
     def append_event(

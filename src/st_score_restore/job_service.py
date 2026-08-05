@@ -7,7 +7,7 @@ from typing import Any, Iterable, Mapping
 from uuid import uuid4
 
 from .job_api_types import JobApiConfig, JobApiError
-from .job_store import InMemoryJobStore
+from .job_store import ACTIVE_WORK_STATES, InMemoryJobStore, StaleWorkClaimError, WorkClaim
 from .job_service_internal import JobInternalMixin
 from .job_service_processing import JobProcessingMixin
 from .job_service_review import JobReviewMixin
@@ -35,6 +35,100 @@ class RestorationJobService(
             lambda prefix: f"{prefix}_{uuid4().hex}"
         )
 
+    def process_job(self, job_id: str, *, actor: str = "worker") -> dict[str, Any]:
+        """Reject durable processing that bypasses the worker-claim boundary."""
+
+        require_claim = getattr(self.store, "require_processing_claim", None)
+        if callable(require_claim):
+            require_claim(job_id)
+        return super().process_job(job_id, actor=actor)
+
+    def run_pending(
+        self,
+        *,
+        actor: str = "worker",
+        lease_owner: str | None = None,
+    ) -> str | None:
+        """Process one item with durable fencing when the store supports it."""
+
+        processing_claim = getattr(self.store, "processing_claim", None)
+        if not callable(processing_claim):
+            return super().run_pending(actor=actor)
+        lease_seconds = int(getattr(self.store, "worker_lease_seconds", 300))
+        claim = self.store.claim_next_job(
+            now=self._now(),
+            lease_owner=(lease_owner or actor).strip() or "worker",
+            lease_seconds=lease_seconds,
+        )
+        if claim is None:
+            return None
+        try:
+            with processing_claim(claim, now_provider=self._now):
+                with self.store.lock:
+                    job = self._job(claim.job_id)
+                    self._validate_claimed_attempt_locked(job, claim)
+                    if job["state"] not in {"UPLOADED", "READY_FOR_PROCESSING"}:
+                        self._recover_claimed_attempt_locked(job, claim, actor)
+                self.process_job(claim.job_id, actor=actor)
+            return claim.job_id
+        finally:
+            self.store.release_claim(claim)
+
+    def _validate_claimed_attempt_locked(
+        self,
+        job: dict[str, Any],
+        claim: WorkClaim,
+    ) -> None:
+        if (
+            job.get("currentAttemptId") != claim.attempt_id
+            or job.get("state") not in ACTIVE_WORK_STATES
+        ):
+            raise StaleWorkClaimError()
+
+    def _recover_claimed_attempt_locked(
+        self,
+        job: dict[str, Any],
+        claim: WorkClaim,
+        actor: str,
+    ) -> None:
+        """Restart one expired in-flight attempt without accepting partial output."""
+
+        source_state = str(job["state"])
+        if source_state not in ACTIVE_WORK_STATES:
+            raise StaleWorkClaimError()
+        attempt = self._current_attempt(job)
+        if attempt["attemptId"] != claim.attempt_id:
+            raise StaleWorkClaimError()
+        for page_number in attempt["targetPages"]:
+            page = self._page(job, int(page_number))
+            page["currentCandidateArtifactId"] = None
+            page["currentSafetyReportArtifactId"] = None
+            page["reviewDecision"] = None
+            page["selectedArtifactId"] = None
+        attempt["state"] = "READY_FOR_PROCESSING"
+        attempt["completedAt"] = None
+        attempt["error"] = None
+        job["state"] = "READY_FOR_PROCESSING"
+        self._append_event(
+            job,
+            "WORK_LEASE_RECOVERED",
+            actor,
+            {
+                "fromState": source_state,
+                "leaseOwner": claim.lease_owner,
+                "partialArtifactsRetainedForAudit": True,
+                "partialArtifactsSelected": False,
+            },
+            claim.attempt_id,
+        )
+        self._append_event(
+            job,
+            "STATE_TRANSITION",
+            actor,
+            {"from": source_state, "to": "READY_FOR_PROCESSING", "recovery": True},
+            claim.attempt_id,
+        )
+
     def review_job(
         self,
         job_id: str,
@@ -47,7 +141,6 @@ class RestorationJobService(
 
         raw = list(decisions)
         if not raw:
-            # Delegate stable error construction to the review mixin.
             return super().review_job(
                 job_id, raw, reviewer_id=reviewer_id, notes=notes
             )

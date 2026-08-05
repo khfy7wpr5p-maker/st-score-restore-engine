@@ -7,12 +7,13 @@ existing mutable service contract remains in memory while every outer
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 import secrets
 import sqlite3
-from threading import RLock
-from typing import Any
+from threading import RLock, local
+from typing import Any, Callable, Iterator
 
 from .durable_blob_store import ContentAddressedBlobStore
 from .durable_job_store_loading import DurableLoadingMixin
@@ -23,8 +24,9 @@ from .durable_store_support import (
     STORE_SCHEMA_VERSION,
     aware_utc,
     iso,
+    parse_iso,
 )
-from .job_store import InMemoryJobStore, WorkClaim
+from .job_store import InMemoryJobStore, StaleWorkClaimError, WorkClaim
 
 
 class _TransactionalLock:
@@ -40,9 +42,12 @@ class _TransactionalLock:
         try:
             if self._depth == 0:
                 self.store._begin_outer_transaction()
+                self.store._validate_and_renew_thread_claim_locked()
             self._depth += 1
             return self
         except Exception:
+            if self.store._connection.in_transaction:
+                self.store._connection.rollback()
             self._mutex.release()
             raise
 
@@ -90,6 +95,7 @@ class SQLiteJobStore(
                 "The SQLite database path must not be a symbolic link.",
             )
         self._mutex = RLock()
+        self._claim_context = local()
         self.jobs: dict[str, dict[str, Any]] = {}
         self.artifacts: dict[tuple[str, str], dict[str, Any]] = {}
         self.idempotency: dict[str, dict[str, str]] = {}
@@ -122,6 +128,38 @@ class SQLiteJobStore(
         with self._mutex:
             self._connection.close()
 
+    @contextmanager
+    def processing_claim(
+        self,
+        claim: WorkClaim,
+        *,
+        now_provider: Callable[[], datetime],
+    ) -> Iterator[None]:
+        """Fence every outer mutation in this thread with one lease token."""
+
+        if getattr(self._claim_context, "claim", None) is not None:
+            raise DurableStoreError(
+                "nested_processing_claim",
+                "A worker thread may hold only one processing claim.",
+            )
+        self._claim_context.claim = claim
+        self._claim_context.now_provider = now_provider
+        try:
+            yield
+        finally:
+            self._claim_context.claim = None
+            self._claim_context.now_provider = None
+
+    def require_processing_claim(self, job_id: str) -> WorkClaim:
+        """Require the current thread to hold a claim for the requested job."""
+
+        claim = getattr(self._claim_context, "claim", None)
+        if not isinstance(claim, WorkClaim) or claim.job_id != job_id:
+            raise StaleWorkClaimError(
+                "Durable processing requires the current job's active worker claim."
+            )
+        return claim
+
     def claim_next_job(
         self,
         *,
@@ -129,7 +167,7 @@ class SQLiteJobStore(
         lease_owner: str,
         lease_seconds: int,
     ) -> WorkClaim | None:
-        """Atomically claim one queued job across store instances."""
+        """Atomically claim one queued or recoverable in-flight job."""
 
         if not isinstance(lease_owner, str) or not lease_owner.strip():
             raise DurableStoreError(
@@ -161,7 +199,7 @@ class SQLiteJobStore(
                 )
                 row = self._connection.execute(
                     """
-                    SELECT job_id
+                    SELECT job_id, attempt_id
                       FROM work_queue
                      WHERE lease_token IS NULL
                      ORDER BY enqueued_at, job_id
@@ -172,6 +210,7 @@ class SQLiteJobStore(
                     self._connection.commit()
                     return None
                 job_id = str(row["job_id"])
+                attempt_id = str(row["attempt_id"])
                 updated = self._connection.execute(
                     """
                     UPDATE work_queue
@@ -179,9 +218,10 @@ class SQLiteJobStore(
                            lease_token = ?,
                            lease_expires_at = ?
                      WHERE job_id = ?
+                       AND attempt_id = ?
                        AND lease_token IS NULL
                     """,
-                    (lease_owner, token, iso(expires), job_id),
+                    (lease_owner, token, iso(expires), job_id, attempt_id),
                 ).rowcount
                 if updated != 1:
                     self._connection.rollback()
@@ -192,8 +232,79 @@ class SQLiteJobStore(
                 raise
         return WorkClaim(
             job_id=job_id,
+            attempt_id=attempt_id,
             lease_token=token,
             lease_owner=lease_owner,
+            lease_expires_at=iso(expires),
+        )
+
+    def assert_claim(self, claim: WorkClaim, *, now: datetime) -> None:
+        """Fail when a claim is stale, expired, or belongs to another attempt."""
+
+        current = aware_utc(now)
+        with self._mutex:
+            row = self._connection.execute(
+                """
+                SELECT attempt_id, lease_owner, lease_token, lease_expires_at
+                  FROM work_queue
+                 WHERE job_id = ?
+                """,
+                (claim.job_id,),
+            ).fetchone()
+            if not self._claim_row_matches(row, claim, current):
+                raise StaleWorkClaimError()
+
+    def renew_claim(
+        self,
+        claim: WorkClaim,
+        *,
+        now: datetime,
+        lease_seconds: int,
+    ) -> WorkClaim:
+        """Renew only a still-active claim while preserving its fencing token."""
+
+        if not 5 <= int(lease_seconds) <= 3_600:
+            raise DurableStoreError(
+                "invalid_worker_lease",
+                "lease_seconds must be between 5 and 3600.",
+            )
+        current = aware_utc(now)
+        expires = current + timedelta(seconds=int(lease_seconds))
+        with self._mutex:
+            self._connection.execute("BEGIN IMMEDIATE")
+            try:
+                row = self._connection.execute(
+                    "SELECT * FROM work_queue WHERE job_id = ?",
+                    (claim.job_id,),
+                ).fetchone()
+                if not self._claim_row_matches(row, claim, current):
+                    raise StaleWorkClaimError()
+                updated = self._connection.execute(
+                    """
+                    UPDATE work_queue
+                       SET lease_expires_at = ?
+                     WHERE job_id = ? AND attempt_id = ?
+                       AND lease_owner = ? AND lease_token = ?
+                    """,
+                    (
+                        iso(expires),
+                        claim.job_id,
+                        claim.attempt_id,
+                        claim.lease_owner,
+                        claim.lease_token,
+                    ),
+                ).rowcount
+                if updated != 1:
+                    raise StaleWorkClaimError()
+                self._connection.commit()
+            except Exception:
+                self._connection.rollback()
+                raise
+        return WorkClaim(
+            job_id=claim.job_id,
+            attempt_id=claim.attempt_id,
+            lease_token=claim.lease_token,
+            lease_owner=claim.lease_owner,
             lease_expires_at=iso(expires),
         )
 
@@ -209,14 +320,88 @@ class SQLiteJobStore(
                        SET lease_owner = NULL,
                            lease_token = NULL,
                            lease_expires_at = NULL
-                     WHERE job_id = ? AND lease_token = ?
+                     WHERE job_id = ? AND attempt_id = ?
+                       AND lease_owner = ? AND lease_token = ?
                     """,
-                    (claim.job_id, claim.lease_token),
+                    (
+                        claim.job_id,
+                        claim.attempt_id,
+                        claim.lease_owner,
+                        claim.lease_token,
+                    ),
                 )
                 self._connection.commit()
             except Exception:
                 self._connection.rollback()
                 raise
+
+    def _validate_and_renew_thread_claim_locked(self) -> None:
+        claim = getattr(self._claim_context, "claim", None)
+        if claim is None:
+            return
+        now_provider = getattr(self._claim_context, "now_provider", None)
+        if not callable(now_provider):
+            raise DurableStoreError(
+                "claim_clock_missing",
+                "The processing claim requires a clock provider.",
+            )
+        current = aware_utc(now_provider())
+        row = self._connection.execute(
+            "SELECT * FROM work_queue WHERE job_id = ?",
+            (claim.job_id,),
+        ).fetchone()
+        if not self._claim_row_matches(row, claim, current):
+            raise StaleWorkClaimError()
+        expires = current + timedelta(seconds=self.worker_lease_seconds)
+        updated = self._connection.execute(
+            """
+            UPDATE work_queue
+               SET lease_expires_at = ?
+             WHERE job_id = ? AND attempt_id = ?
+               AND lease_owner = ? AND lease_token = ?
+            """,
+            (
+                iso(expires),
+                claim.job_id,
+                claim.attempt_id,
+                claim.lease_owner,
+                claim.lease_token,
+            ),
+        ).rowcount
+        if updated != 1:
+            raise StaleWorkClaimError()
+        job = self.jobs.get(claim.job_id)
+        if job is None or str(job.get("currentAttemptId")) != claim.attempt_id:
+            raise StaleWorkClaimError()
+        job["processingClaimed"] = True
+        job["processingLease"] = {
+            "leaseOwner": claim.lease_owner,
+            "leaseToken": claim.lease_token,
+            "leaseExpiresAt": iso(expires),
+            "attemptId": claim.attempt_id,
+        }
+
+    @staticmethod
+    def _claim_row_matches(
+        row: sqlite3.Row | None,
+        claim: WorkClaim,
+        current: datetime,
+    ) -> bool:
+        if row is None:
+            return False
+        expiry = row["lease_expires_at"]
+        if expiry is None:
+            return False
+        try:
+            active = parse_iso(str(expiry)) > current
+        except (TypeError, ValueError):
+            return False
+        return bool(
+            active
+            and str(row["attempt_id"]) == claim.attempt_id
+            and secrets.compare_digest(str(row["lease_owner"] or ""), claim.lease_owner)
+            and secrets.compare_digest(str(row["lease_token"] or ""), claim.lease_token)
+        )
 
     def _begin_outer_transaction(self) -> None:
         self._transaction_new_blobs = set()
@@ -254,8 +439,6 @@ class SQLiteJobStore(
         try:
             self._drain_pending_deletions()
         except DurableStoreError as cleanup_error:
-            # Metadata is already committed. Keep the pending deletion record
-            # and surface the diagnostic without reporting the mutation failed.
             self.last_cleanup_error = cleanup_error
 
 
@@ -263,4 +446,5 @@ __all__ = [
     "DurableStoreError",
     "SQLiteJobStore",
     "STORE_SCHEMA_VERSION",
+    "StaleWorkClaimError",
 ]

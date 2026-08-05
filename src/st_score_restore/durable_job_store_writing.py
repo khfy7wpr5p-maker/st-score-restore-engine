@@ -11,16 +11,16 @@ from typing import Any
 
 from .durable_store_support import (
     DurableStoreError,
-    QUEUED_STATES,
     dump_json,
     iso,
-    parse_iso,
     validate_audit_chain,
 )
+from .job_store import ACTIVE_WORK_STATES
 
 
 class DurableWritingMixin:
     def _flush_locked(self) -> None:
+        self._normalize_processing_metadata()
         self._validate_memory_state()
         previous_live_digests = {
             str(row["digest"])
@@ -48,6 +48,16 @@ class DurableWritingMixin:
                 "INSERT OR IGNORE INTO pending_blob_deletions(digest) VALUES(?)",
                 (digest,),
             )
+
+    def _normalize_processing_metadata(self) -> None:
+        """Persist lease metadata only while the job still owns active work."""
+
+        for job in self.jobs.values():
+            if job.get("state") not in ACTIVE_WORK_STATES or not job.get(
+                "processingClaimed", False
+            ):
+                job["processingClaimed"] = False
+                job.pop("processingLease", None)
 
     def _validate_memory_state(self) -> None:
         for job_id, job in self.jobs.items():
@@ -148,20 +158,16 @@ class DurableWritingMixin:
 
     def _insert_queue(self, existing_queue: dict[str, dict[str, Any]]) -> None:
         for job_id, job in sorted(self.jobs.items()):
-            if job["state"] not in QUEUED_STATES:
+            if job["state"] not in ACTIVE_WORK_STATES:
                 continue
             attempt_id = str(job["currentAttemptId"])
             prior = existing_queue.get(job_id)
-            preserve = prior is not None and prior.get("attempt_id") == attempt_id
+            preserve = prior is not None and str(prior.get("attempt_id")) == attempt_id
             lease_owner = prior["lease_owner"] if preserve else None
             lease_token = prior["lease_token"] if preserve else None
             lease_expires_at = prior["lease_expires_at"] if preserve else None
             if job.get("processingClaimed"):
-                expired = bool(
-                    lease_expires_at
-                    and parse_iso(str(lease_expires_at)) <= datetime.now(UTC)
-                )
-                if not lease_token or not lease_expires_at or expired:
+                if not lease_token or not lease_expires_at:
                     lease_owner = "service-worker"
                     lease_token = secrets.token_hex(24)
                     lease_expires_at = iso(
@@ -172,6 +178,7 @@ class DurableWritingMixin:
                     "leaseOwner": lease_owner,
                     "leaseToken": lease_token,
                     "leaseExpiresAt": lease_expires_at,
+                    "attemptId": attempt_id,
                 }
             else:
                 lease_owner = None
