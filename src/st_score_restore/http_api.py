@@ -136,6 +136,18 @@ class ApiV1:
                     self.service.get_safety_report(safety_match.group(1), int(safety_match.group(2))),
                     request_id=request_id,
                 )
+            evidence_match = re.fullmatch(r"/api/v1/restoration-jobs/([^/]+)/pages/(\d+)/review-bundle", path)
+            if evidence_match and normalized_method == "GET":
+                self._require_role(role, {"reviewer"})
+                return _json_response(
+                    200,
+                    self.service.get_review_bundle(
+                        evidence_match.group(1),
+                        int(evidence_match.group(2)),
+                        actor=actor,
+                    ),
+                    request_id=request_id,
+                )
             review_match = re.fullmatch(r"/api/v1/restoration-jobs/([^/]+)/review", path)
             if review_match and normalized_method == "POST":
                 self._require_role(role, {"reviewer"})
@@ -143,6 +155,21 @@ class ApiV1:
                 decisions = payload.get("decisions", [])
                 if not isinstance(decisions, list):
                     raise JobApiError("invalid_review_decisions", "decisions must be an array.")
+                for index, decision in enumerate(decisions):
+                    if not isinstance(decision, Mapping):
+                        raise JobApiError(
+                            "invalid_review_decision",
+                            "Every review decision must be an object.",
+                            details={"decisionIndex": index},
+                        )
+                    evidence_id = decision.get("evidenceBundleArtifactId")
+                    if not isinstance(evidence_id, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", evidence_id):
+                        raise JobApiError(
+                            "missing_review_evidence",
+                            "Every API review decision must include the current evidenceBundleArtifactId.",
+                            http_status=409,
+                            details={"decisionIndex": index},
+                        )
                 supplied_reviewer = str(payload.get("reviewerId", actor))
                 if supplied_reviewer != actor:
                     raise JobApiError(

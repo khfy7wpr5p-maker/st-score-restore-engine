@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+import json
 from typing import Any, Iterable, Mapping
 from uuid import uuid4
 
@@ -11,14 +12,16 @@ from .job_store import ACTIVE_WORK_STATES, InMemoryJobStore, StaleWorkClaimError
 from .job_service_internal import JobInternalMixin
 from .job_service_processing import JobProcessingMixin
 from .job_service_review import JobReviewMixin
+from .review_evidence_service import ReviewEvidenceMixin
 
 
 class RestorationJobService(
+    ReviewEvidenceMixin,
     JobProcessingMixin,
     JobReviewMixin,
     JobInternalMixin,
 ):
-    """Coordinates existing inspection, OpenCV, and music/TAB safety components."""
+    """Coordinates inspection, restoration, validation, and evidence-bound review."""
 
     def __init__(
         self,
@@ -103,6 +106,7 @@ class RestorationJobService(
             page = self._page(job, int(page_number))
             page["currentCandidateArtifactId"] = None
             page["currentSafetyReportArtifactId"] = None
+            page["currentEvidenceBundleArtifactId"] = None
             page["reviewDecision"] = None
             page["selectedArtifactId"] = None
         attempt["state"] = "READY_FOR_PROCESSING"
@@ -168,6 +172,33 @@ class RestorationJobService(
                                 "Review action must be approve, reject, or reprocess.",
                                 details={"pageNumber": page_number},
                             )
+                        current_bundle_id = page.get("currentEvidenceBundleArtifactId")
+                        supplied_bundle_id = item.get("evidenceBundleArtifactId")
+                        if supplied_bundle_id is None:
+                            supplied_bundle_id = current_bundle_id
+                        if not current_bundle_id:
+                            raise JobApiError(
+                                "review_evidence_not_ready",
+                                "The page review evidence bundle is not ready.",
+                                http_status=409,
+                                details={"pageNumber": page_number},
+                            )
+                        if supplied_bundle_id != current_bundle_id:
+                            raise JobApiError(
+                                "stale_review_evidence",
+                                "The supplied review evidence bundle is not current.",
+                                http_status=409,
+                                details={
+                                    "pageNumber": page_number,
+                                    "currentEvidenceBundleArtifactId": current_bundle_id,
+                                },
+                            )
+                        bundle = json.loads(
+                            self._artifact_bytes(
+                                self._artifact(job_id, current_bundle_id)
+                            ).decode("utf-8")
+                        )
+                        self._validate_current_bundle(page, current_bundle_id, bundle)
                         if action == "approve":
                             candidate_id = item.get("candidateArtifactId")
                             if candidate_id != page["currentCandidateArtifactId"]:
