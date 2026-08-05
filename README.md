@@ -35,4 +35,25 @@ This repository remains an independent service. It accepts PDF, JPG/JPEG, PNG, a
 
 ## Current status
 
-Architecture approved. Documentation baseline prepared. No production implementation has been started.
+Architecture approved. Milestone M0 repository foundation is under review. No production restoration implementation has been started.
+
+## Development baseline
+
+- Primary runtime: Python 3.12
+- Compatibility validation: Python 3.11 and 3.12
+- Package layout: `src/st_score_restore`
+- Third-party runtime dependencies: none in Milestone M0
+- Production restoration behavior: not implemented
+
+Validate the repository foundation with:
+
+```bash
+python tools/validate_repository.py
+python -m compileall -q src tools
+```
+
+See:
+
+- [Development environment](docs/development-environment.md)
+- [Dependency and license policy](docs/dependency-and-license-policy.md)
+- [ADR 0002: Python runtime and repository layout](docs/adr/0002-python-runtime-and-repository-layout.md)
