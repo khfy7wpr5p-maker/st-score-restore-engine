@@ -94,6 +94,7 @@ class SQLiteJobStore(
         self.artifacts: dict[tuple[str, str], dict[str, Any]] = {}
         self.idempotency: dict[str, dict[str, str]] = {}
         self._transaction_new_blobs: set[str] = set()
+        self.last_cleanup_error: DurableStoreError | None = None
         self._connection = sqlite3.connect(
             self.database_path,
             timeout=max(1.0, busy_timeout_ms / 1000),
@@ -249,7 +250,13 @@ class SQLiteJobStore(
                 raise cleanup_error from flush_error
             raise
         self._transaction_new_blobs.clear()
-        self._drain_pending_deletions()
+        self.last_cleanup_error = None
+        try:
+            self._drain_pending_deletions()
+        except DurableStoreError as cleanup_error:
+            # Metadata is already committed. Keep the pending deletion record
+            # and surface the diagnostic without reporting the mutation failed.
+            self.last_cleanup_error = cleanup_error
 
 
 __all__ = [

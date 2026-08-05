@@ -78,6 +78,16 @@ class DurableLoadingMixin:
                     "Artifact identity does not match its digest.",
                     details={"artifactId": artifact_id},
                 )
+            if (
+                payload.get("artifactId") != artifact_id
+                or payload.get("jobId") != job_id
+                or payload.get("digest") != digest
+            ):
+                raise DurableStoreError(
+                    "artifact_payload_identity_mismatch",
+                    "Artifact payload identity does not match its database key.",
+                    details={"jobId": job_id, "artifactId": artifact_id},
+                )
             stored_size = int(row["byte_size"])
             if int(payload.get("byteSize", -1)) != stored_size:
                 raise DurableStoreError(
@@ -120,15 +130,62 @@ class DurableLoadingMixin:
             str(row["job_id"]): dict(row)
             for row in self._connection.execute("SELECT * FROM work_queue")
         }
+        orphaned = sorted(set(queue_rows) - set(jobs))
+        if orphaned:
+            raise DurableStoreError(
+                "orphan_queue_record",
+                "Work-queue metadata references a missing job.",
+                details={"jobIds": orphaned},
+            )
         current = datetime.now(UTC)
         for job_id, job in jobs.items():
             queue = queue_rows.get(job_id)
-            active = bool(
-                queue
-                and queue.get("lease_token")
-                and queue.get("lease_expires_at")
-                and parse_iso(str(queue["lease_expires_at"])) > current
+            queued = job.get("state") in {"UPLOADED", "READY_FOR_PROCESSING"}
+            if queued and queue is None:
+                raise DurableStoreError(
+                    "queue_record_missing",
+                    "A queued job is missing its durable work record.",
+                    details={"jobId": job_id},
+                )
+            if not queued and queue is not None:
+                raise DurableStoreError(
+                    "unexpected_queue_record",
+                    "A non-queued job has a durable work record.",
+                    details={"jobId": job_id, "state": job.get("state")},
+                )
+            if queue is None:
+                job["processingClaimed"] = False
+                job.pop("processingLease", None)
+                continue
+            if str(queue.get("attempt_id")) != str(job.get("currentAttemptId")):
+                raise DurableStoreError(
+                    "queue_attempt_mismatch",
+                    "Work-queue attempt does not match the current job attempt.",
+                    details={"jobId": job_id},
+                )
+            lease_values = (
+                queue.get("lease_owner"),
+                queue.get("lease_token"),
+                queue.get("lease_expires_at"),
             )
+            if any(value is not None for value in lease_values) and not all(
+                value is not None for value in lease_values
+            ):
+                raise DurableStoreError(
+                    "queue_lease_incomplete",
+                    "Work-queue lease metadata is incomplete.",
+                    details={"jobId": job_id},
+                )
+            active = False
+            if all(value is not None for value in lease_values):
+                try:
+                    active = parse_iso(str(queue["lease_expires_at"])) > current
+                except (TypeError, ValueError) as error:
+                    raise DurableStoreError(
+                        "queue_lease_timestamp_invalid",
+                        "Work-queue lease expiry is invalid.",
+                        details={"jobId": job_id},
+                    ) from error
             if active:
                 job["processingClaimed"] = True
                 job["processingLease"] = {

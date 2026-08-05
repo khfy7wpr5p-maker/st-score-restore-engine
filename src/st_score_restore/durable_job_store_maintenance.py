@@ -60,15 +60,23 @@ class DurableMaintenanceMixin:
                 "INSERT INTO store_meta(key, value) VALUES('schema_version', ?)",
                 (str(STORE_SCHEMA_VERSION),),
             )
-        elif int(row["value"]) != STORE_SCHEMA_VERSION:
-            raise DurableStoreError(
-                "unsupported_store_schema",
-                "The durable store schema version is not supported.",
-                details={
-                    "found": int(row["value"]),
-                    "supported": STORE_SCHEMA_VERSION,
-                },
-            )
+        else:
+            try:
+                found_version = int(row["value"])
+            except (TypeError, ValueError) as error:
+                raise DurableStoreError(
+                    "invalid_store_schema_version",
+                    "The durable store schema version is malformed.",
+                ) from error
+            if found_version != STORE_SCHEMA_VERSION:
+                raise DurableStoreError(
+                    "unsupported_store_schema",
+                    "The durable store schema version is not supported.",
+                    details={
+                        "found": found_version,
+                        "supported": STORE_SCHEMA_VERSION,
+                    },
+                )
 
     def _discard_uncommitted_blobs(self) -> DurableStoreError | None:
         first_error: DurableStoreError | None = None

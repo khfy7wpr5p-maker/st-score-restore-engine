@@ -39,10 +39,23 @@ class DurableStoreError(RuntimeError):
 
 
 def validate_audit_chain(job: dict[str, Any]) -> None:
-    """Verify contiguous sequence numbers and every SHA-256 audit link."""
+    """Verify non-empty contiguous audit history and every SHA-256 link."""
 
+    audit = job.get("audit")
+    if not isinstance(audit, list) or not audit:
+        raise DurableStoreError(
+            "audit_history_missing",
+            "A persisted job must retain a non-empty audit history.",
+            details={"jobId": job.get("jobId")},
+        )
     previous = None
-    for expected_sequence, event in enumerate(job.get("audit", []), 1):
+    for expected_sequence, event in enumerate(audit, 1):
+        if not isinstance(event, dict):
+            raise DurableStoreError(
+                "audit_event_invalid",
+                "Audit history contains a non-object event.",
+                details={"jobId": job.get("jobId"), "sequence": expected_sequence},
+            )
         if event.get("sequence") != expected_sequence:
             raise DurableStoreError(
                 "audit_sequence_corrupt",
