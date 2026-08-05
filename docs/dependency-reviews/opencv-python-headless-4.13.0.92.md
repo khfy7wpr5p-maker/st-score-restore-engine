@@ -36,4 +36,4 @@ Mitigations include byte limits from input inspection, malformed-file checks, no
 
 ## Removal and fallback
 
-Removing `safe_restoration.py`, its CLI, schemas, and dependencies restores the standard-library input inspection boundary. Digital PDF preservation and immutable source manifests remain independent of OpenCV.
+Removing the `safe_restoration`, `restoration_geometry`, `restoration_photometric`, `restoration_encoding`, and `restoration_types` modules together with their CLI, schemas, and dependencies restores the standard-library input-inspection boundary. Digital PDF preservation and immutable source manifests remain independent of OpenCV.
