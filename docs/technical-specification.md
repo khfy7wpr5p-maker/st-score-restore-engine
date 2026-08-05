@@ -1,9 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline  
-**Version:** 0.1.1-draft  
+**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2  
+**Version:** 0.2.0-aligned  
 **Date:** 2026-08-05  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
+**Roadmap authority:** `docs/roadmap.md` v0.2.0 and PR #33  
 **Primary language:** English identifiers and API contracts; Turkish-first teacher-facing messages may be added by clients.
 
 ---
@@ -12,9 +13,9 @@
 
 ST Score Restore Engine is an independent, safety-first service for improving scanned or photographed music documents without changing their musical meaning.
 
-The engine accepts PDF documents, JPG/JPEG images, PNG images, and phone-captured score or guitar-TAB photos. It analyzes document quality, executes one or more restoration strategies, compares the results, validates preservation of music notation and guitar TAB structures, and requires teacher approval when a result is not provably low risk.
+The engine is not an OMR system and does not convert notation to MusicXML. It does not provide MIDI playback, speech narration, pitch interpretation, rhythm interpretation, or music-theory correction. It prepares and validates visual document derivatives before an OMR, accessibility, or music-application workflow consumes them.
 
-The engine is designed to become a shared preprocessing service for:
+The long-term service boundary is intended to support:
 
 - SesliTab Guitar Reader,
 - MusicXML-to-Guitar TAB Engine,
@@ -22,203 +23,551 @@ The engine is designed to become a shared preprocessing service for:
 - ScoreMosaic / Scremosaik,
 - future accessible-music and OMR applications.
 
-The engine is not an OMR system and does not convert notation to MusicXML. It prepares and validates visual documents before an OMR or accessibility workflow consumes them.
+Those application integrations are deferred to Roadmap Stage 12. Their repositories are not part of this service and must not be modified by work in this repository unless Stage 12 receives separate approval.
 
 ---
 
-## 2. Core safety objective
+## 2. Authority, status vocabulary, and scope
+
+This specification describes both the implemented baseline and the approved future target architecture. It does not authorize work outside the binding order in `docs/roadmap.md`.
+
+The following status labels are normative in this document:
+
+- **CURRENT:** implemented on `main` and covered by the current repository contracts.
+- **PARTIAL:** a safe bounded subset exists, but the complete capability is not implemented.
+- **DEFERRED — STAGE N:** approved future target architecture that may not begin before the preceding roadmap gates are accepted.
+- **NOT AUTHORIZED:** not approved as a current or future trusted-path behavior.
+
+A future component described here is not an implemented feature merely because its responsibilities are specified.
+
+### 2.1 Binding development order
+
+The Roadmap v0.2 order is binding:
+
+```text
+Stage 1  Real and explicitly authorized test dataset
+      ↓
+Stage 2  Complete quality-analysis system
+      ↓
+Stage 3  Multi-page PDF pipeline
+      ↓
+Stage 4  Safety calibration with real data
+      ↓
+Stage 5  Accessible teacher review interface
+      ↓
+Stage 6  Identity, network and production infrastructure
+      ↓
+Stage 7  Preview release
+      ↓
+Stage 8  DocRes optional candidate
+      ↓
+Stage 9  Multi-engine comparator
+      ↓
+Stage 10 ST Restore Selector
+      ↓
+Stage 11 ST Restore image model
+      ↓
+Stage 12 Music-application integrations
+```
+
+Each stage requires explicit approval before work begins and separate approval before merge. A later stage may not begin until the previous stage's exit evidence is published and accepted.
+
+**Issue #32 is the only eligible next implementation issue. It remains planned and has not started.** This maintenance revision does not start Stage 1, collect data, create dataset artifacts, or change fixture permissions.
+
+---
+
+## 3. Core safety objective
 
 The primary objective is not visual beauty. The primary objective is preservation of musical information.
 
-A restoration is acceptable only when it improves readability or downstream recognition while preserving, within defined tolerances:
+The following invariants apply to every current and future stage:
 
-- page count and page order,
-- page dimensions and orientation,
+1. The original input is immutable.
+2. Every output is a separate derivative artifact with a separate SHA-256 identity.
+3. Music-score and guitar-TAB safety has veto priority over visual improvement.
+4. A candidate rejected by the safety validator cannot be selected or approved.
+5. Teacher approval, dataset inclusion, calibration permission, and model-training permission are separate decisions.
+6. User documents are not dataset or training data without explicit, purpose-specific authorization.
+7. Missing, unsupported, or uncertain analysis must not be reported as safe.
+8. Digital vector PDFs must not be rasterized implicitly.
+9. Real student, teacher, private, or copyrighted document bytes must not be committed to ordinary Git.
+10. DocRes and ST Restore models may only become optional candidates in their approved future stages; they may not replace the OpenCV baseline by implication.
+
+A restoration is acceptable only when it improves readability or downstream recognition while preserving, within documented tolerances:
+
+- page identity, page order, dimensions, and orientation,
 - staff and TAB system geometry,
 - staff-line and TAB-line counts,
-- noteheads, stems, flags, beams, dots, ties, slurs and rests,
-- accidentals, clefs, key signatures and time signatures,
-- barlines, repeat marks and volta brackets,
-- TAB numbers and their positions,
+- noteheads, stems, flags, beams, augmentation dots, ties, slurs, and rests,
+- accidentals, clefs, key signatures, and time signatures,
+- barlines, repeat marks, and volta brackets,
+- TAB digits and their positions,
 - guitar technique markings,
-- lyrics, fingering, dynamics and instructional text,
+- lyrics, fingering, dynamics, chord symbols, and instructional text,
 - relationships between notation and TAB systems.
 
-The original input is immutable. Every processed output is a new derivative artifact.
+No current component claims semantic certainty about pitch, rhythm, fingering, or TAB digit identity.
 
 ---
 
-## 3. Non-goals
+## 4. Repository and service boundary
 
-The first production line shall not:
-
-- invent or reconstruct missing notes,
-- guess unreadable TAB numbers,
-- perform generative inpainting inside notation regions,
-- correct music theory,
-- modify pitches, durations or fingering,
-- convert PDF to MusicXML,
-- provide MIDI playback or speech narration,
-- replace teacher review for medium- or high-risk pages,
-- continuously retrain itself from unreviewed production data,
-- overwrite or destructively edit the source file.
-
-Future experimental reconstruction features, if ever introduced, must be isolated from the trusted restoration pipeline and must never be enabled by default.
-
----
-
-## 4. System context and repository boundary
-
-ST Score Restore Engine remains a separate repository and deployable service.
+ST Score Restore Engine remains a separate repository and future deployable service.
 
 ```text
 SesliTab Guitar Reader ───────┐
 MusicXML-to-Guitar Engine ────┤
-Cloud OMR Gateway ────────────┼── REST/JSON API ── ST Score Restore Engine
+Cloud OMR Gateway ────────────┼── versioned API ── ST Score Restore Engine
 ScoreMosaic / Scremosaik ─────┘
 ```
 
-Client applications submit documents and retrieve approved outputs. They do not import the restoration implementation directly.
+Client applications will submit documents and retrieve approved derivatives through versioned contracts. They must not import or copy restoration implementation details.
 
 This boundary isolates:
 
-- heavy computer-vision and AI dependencies,
-- GPU/CPU execution requirements,
-- model licensing and model versioning,
-- temporary storage and document privacy controls,
-- failures caused by experimental restoration models.
+- computer-vision and future model dependencies,
+- CPU/GPU execution requirements,
+- model licensing and versioning,
+- storage and retention controls,
+- experimental candidate failures,
+- document privacy and audit responsibilities.
 
-A client may use synchronous analysis for small images, but document restoration jobs are asynchronous.
+The current built-in HTTP adapter is a non-production local development boundary. It is not approved for exposure to an untrusted network.
 
 ---
 
-## 5. Approved high-level pipeline
+## 5. Current implemented baseline
+
+The following capabilities are implemented on `main`.
+
+### 5.1 Immutable input inspection — CURRENT
+
+- PDF, JPEG/JPG, and PNG content-signature detection,
+- immutable SHA-256 source identity,
+- bounded byte-size handling,
+- malformed, encrypted, unsupported, symlinked, and changing-input rejection,
+- limited PDF structural evidence and conservative digital/scanned/hybrid/unknown classification,
+- JPEG/PNG dimensions, density evidence, and EXIF-orientation metadata,
+- explicit `not_assessed` quality states when approved pixel analysis is unavailable,
+- vector-PDF preservation recommendation rather than implicit rasterization.
+
+The current inspector is not a complete PDF parser, renderer, or quality-analysis engine.
+
+### 5.2 Deterministic OpenCV safe restoration — CURRENT FOR JPEG/PNG RASTER INPUTS
+
+- deterministic, non-generative image restoration,
+- separate source and candidate identities,
+- bounded decoding and decoded-pixel limits,
+- EXIF-orientation normalization in the derivative coordinate system,
+- confidence-gated geometry operations,
+- conservative illumination, denoise, contrast, and optional binarization profiles,
+- dark-structure preservation checks,
+- operation manifest and audit evidence,
+- immutable-original fallback.
+
+The OpenCV engine does not render arbitrary PDF pages. Digital PDFs are not silently rasterized. Scanned and hybrid PDF restoration remains blocked until Stage 3.
+
+### 5.3 Music-score and guitar-TAB safety validator — CURRENT
+
+- deterministic source/candidate registration,
+- separate staff and TAB geometry checks,
+- expected five-line staff and six-line TAB checks,
+- system-count and line-break risk detection,
+- local dark-pixel loss and invention measurements,
+- component loss, invention, and movement checks,
+- page-region findings with `semanticCertainty: not_claimed`,
+- `pass`, `review_required`, and `reject` verdicts,
+- unknown or unrecognized geometry routed to review rather than reported safe,
+- rejected candidates excluded from selection,
+- immutable-original fallback.
+
+The validator is not OMR, OCR, MusicXML interpretation, or semantic notation recognition.
+
+### 5.4 Candidate selection baseline — CURRENT, NOT STAGE 9
+
+The current workflow can compare validated candidates that share the same immutable source and can order them using validator verdict and measured risk. This bounded safety-oriented ordering exists to prevent caller-supplied ranking from bypassing validation.
+
+It is **not** the Roadmap Stage 9 multi-engine comparator. It does not yet provide:
+
+- calibrated cross-engine visual-quality normalization,
+- OpenCV-versus-DocRes benchmarking,
+- multi-engine recommendation confidence,
+- complete disagreement handling,
+- Stage 4 real-data-calibrated ranking,
+- a production recommendation policy.
+
+Stage 9 remains deferred until Stage 8 supplies versioned DocRes candidate results after the preview baseline.
+
+### 5.5 Versioned job and teacher-review workflow — CURRENT, NON-PRODUCTION
+
+- `/api/v1`, current API version `0.5.0`,
+- asynchronous job states and immutable retry attempts,
+- idempotent ordered uploaded-page records,
+- page analysis, candidate, safety-report, artifact, status, and audit access,
+- page-level approve, reject, and reprocess decisions,
+- immutable-original fallback,
+- teacher approval separated from training-consent records,
+- retention expiry and audit tombstones,
+- immutable reviewer evidence bundles,
+- stale-screen evidence binding on teacher decisions.
+
+The normative current HTTP contract is `api/openapi.v1.json` together with `docs/job-api-and-teacher-review.md` and `docs/review-evidence-contract.md`. Historical examples in this document must not override those files.
+
+No automatic teacher approval is implemented or authorized. A machine safety verdict may constrain or reject a candidate, but it does not substitute for teacher approval in the current workflow.
+
+### 5.6 Local persistence and worker safety — CURRENT, NON-PRODUCTION
+
+- in-memory storage by default,
+- optional local SQLite metadata and audit storage,
+- content-addressed local blob storage,
+- transaction rollback and startup integrity verification,
+- attempt-bound worker leases and fencing,
+- expired in-flight recovery from immutable source bytes,
+- bounded local concurrency regressions,
+- idempotent cleanup and pending-deletion recovery.
+
+This is not encrypted cloud object storage, an external broker, a production database, a backup system, or distributed production coordination.
+
+### 5.7 Local HTTP and multipart boundary — CURRENT, NON-PRODUCTION
+
+- strict bounded HTTP/1.1 request grammar,
+- duplicate and ambiguous framing rejection,
+- route-specific body limits,
+- strict multipart parsing and binary-byte preservation,
+- connection timeout and concurrency limits,
+- structured errors without document-content leakage,
+- one request per connection.
+
+TLS, trusted-proxy policy, production rate limiting, WAF compatibility, penetration testing, and public exposure remain Stage 6 work.
+
+### 5.8 Immutable review evidence — CURRENT, UI DEFERRED
+
+- deterministic source/candidate grayscale crops for validator findings,
+- source-space and normalized overlay coordinates,
+- transform provenance,
+- reviewer-only evidence access,
+- evidence-bundle identity required for teacher decisions,
+- stale-screen conflict handling,
+- retry and retention behavior.
+
+A complete accessible browser interface, screen-reader verification, keyboard-only usability testing, color-management validation, and display QA remain Stage 5 work.
+
+---
+
+## 6. Current trusted processing flow
+
+The implemented trusted path is intentionally narrower than the future target architecture.
 
 ```text
-PDF / JPG / JPEG / PNG / Phone photo
+PDF / JPEG / PNG immutable source
       ↓
-Input integrity and file-type validation
+Read-only input inspection and SHA-256 identity
       ↓
-Document and quality analysis
+┌──────────────────────────────────────────────────────────────┐
+│ Digital vector PDF: preserve; do not rasterize implicitly    │
+│ JPEG/PNG raster page: eligible for deterministic OpenCV      │
+│ Scanned/hybrid PDF: no full renderer; review/defer safely    │
+└──────────────────────────────────────────────────────────────┘
       ↓
-Page classification: vector / scanned / hybrid / photo
-      ↓
-Music-structure protection mask
-      ↓
-┌─────────────────────────────────────────────┐
-│ OpenCV safe restoration                    │
-│ DocRes adapter                             │
-│ ST Restore engine                          │
-└─────────────────────────────────────────────┘
-      ↓
-Candidate normalization and comparison
+Deterministic OpenCV candidate when supported
       ↓
 Music-score and TAB safety validation
+      ├── reject: candidate cannot be used
+      └── pass/review_required: evidence remains available
       ↓
-Risk decision
-  ├── low risk: eligible for auto-approval policy
-  ├── medium risk: teacher review required
-  └── high risk: reject or restore with safer profile
+Immutable review-evidence bundle
       ↓
-Teacher approval
+Explicit teacher approve / reject / reprocess decision
       ↓
-Enhanced PDF and/or approved image / manifest / audit report
+Separate derivative artifact or immutable-original fallback
+      ↓
+Append-only audit evidence
 ```
+
+There is no DocRes candidate, ST Restore candidate, Stage 9 multi-engine comparator, automatic teacher approval, full multi-page PDF export assembly, production identity, or production deployment in this flow.
 
 ---
 
-## 6. Input support
+## 7. Input support and document classes
 
-### 6.1 Accepted formats
-
-Initial supported formats:
+### 7.1 Current accepted inspection formats
 
 - PDF,
-- JPG and JPEG,
-- PNG,
-- TIFF, including multipage TIFF when supported by the chosen decoder.
+- JPG/JPEG,
+- PNG.
 
-Phone-captured photographs are first-class inputs, not an experimental afterthought. A phone photo may be supplied as JPG/JPEG or PNG and may contain perspective distortion, EXIF rotation, shadows, glare, page curvature, surrounding desk/background content, or partial page boundaries.
+Phone-captured photographs are represented as JPEG or PNG inputs.
 
-### 6.2 Input limits
+### 7.2 TIFF status
 
-Limits are deployment configuration, not hard-coded business logic. A deployment must define:
+TIFF and multi-page TIFF are **DEFERRED**. They are not current accepted formats and are not authorized merely by this target specification. Supporting TIFF would require a separately approved decoder, dependency/license review, resource limits, security review, and roadmap placement.
+
+### 7.3 Current document classification limits
+
+The current inspector can emit conservative evidence-based classifications for PDF input and metadata for image input. It does not yet provide the complete calibrated page classifier defined for Stage 2.
+
+Target page classes remain:
+
+- `VECTOR_DIGITAL`,
+- `SCANNED_RASTER`,
+- `HYBRID`,
+- `CAMERA_PHOTO`,
+- `UNKNOWN`.
+
+Until Stage 2 calibration is complete, uncertain or unsupported classification must remain explicit and must not be treated as safe.
+
+### 7.4 Input limits
+
+Current code enforces bounded upload, request, image-byte, and decoded-pixel limits. Production deployments must later define and test:
 
 - maximum file size,
 - maximum page count,
 - maximum rendered pixel count per page,
 - maximum decompressed image size,
 - permitted MIME types,
-- job retention duration,
-- concurrent CPU and GPU job limits.
+- retention duration,
+- concurrent CPU/GPU limits,
+- tenant and abuse quotas.
 
-Files must be validated by content signature as well as filename extension. JPG and JPEG are treated as the same media family. EXIF orientation and embedded color-profile metadata must be read safely and normalized without altering the immutable source file.
-
-### 6.3 Document classes
-
-Each page receives one class:
-
-- `VECTOR_DIGITAL`: digitally generated page dominated by vector notation,
-- `SCANNED_RASTER`: page dominated by a raster scan,
-- `HYBRID`: meaningful vector and raster content coexist,
-- `CAMERA_PHOTO`: a phone/camera image with perspective, illumination, page-boundary, glare, curvature or surrounding-background characteristics,
-- `UNKNOWN`: classification confidence below threshold.
-
-Default behavior:
-
-- vector-digital pages are passed through unchanged unless explicit processing is requested,
-- scanned pages are eligible for restoration,
-- hybrid pages must preserve vector objects and process only eligible raster regions where technically safe,
-- camera-photo pages are eligible for page-boundary detection, EXIF-orientation normalization, conservative crop, perspective correction, illumination/shadow correction and dewarping only when confidence thresholds are satisfied,
-- unknown pages require conservative processing or teacher review.
-
-
-### 6.4 Phone-photo acceptance requirements
-
-Phone-captured notation and TAB photos are a first-class use case. The initial implementation must be tested with representative JPG/JPEG and PNG images from common phone cameras.
-
-A phone-photo job must preserve the following invariants:
-
-- the original image remains immutable,
-- EXIF orientation is applied only to the derivative coordinate system,
-- page crop and perspective transforms are reversible through recorded transform matrices,
-- no finger, desk, stand or background removal may alter notation regions,
-- glare or shadow removal must not erase dots, accidentals, beams, staff lines or TAB digits,
-- a partially missing page edge must not be invented,
-- the approved master derivative should be PNG when lossless preservation is required,
-- JPEG export is a compatibility derivative and must record its quality setting.
-
-Minimum phone-photo test classes:
-
-- overhead photo with mild rotation,
-- oblique photo with keystone perspective,
-- uneven indoor lighting and page shadow,
-- mild glare on glossy paper,
-- curved book page near the binding,
-- surrounding desk/background visible,
-- motion blur or autofocus failure,
-- cropped or partially missing page boundary,
-- combined standard notation and six-line guitar TAB.
+Production limits and enforcement are Stage 6 responsibilities.
 
 ---
 
-## 7. Main components
+## 8. Binding future stages and target components
 
-### 7.1 API Gateway
+### 8.1 Stage 1 — Real and explicitly authorized test dataset
 
-Responsibilities:
+**Status: PLANNED, NOT STARTED. Issue #32 is the only eligible next implementation issue.**
 
-- authentication and authorization,
-- request validation,
-- idempotency handling,
-- rate and quota enforcement,
-- job creation,
-- signed or authenticated artifact delivery,
-- API version negotiation.
+Required target outcomes include:
 
-### 7.2 Job Manager
+- provenance and rights record for every source,
+- separate evaluation, calibration, and training permissions,
+- privacy classification and de-identification review,
+- retention, deletion, and revocation procedures,
+- immutable digests and acquisition metadata,
+- frozen evaluation/calibration/held-out split policy,
+- dataset card, bias report, and coverage-gap report,
+- real bytes stored outside ordinary Git,
+- metadata-only fixture references in the repository,
+- controlled synthetic mutations kept separate from real documents.
 
-Canonical job states:
+This technical-specification maintenance work performs none of those activities.
+
+### 8.2 Stage 2 — Complete quality-analysis system
+
+**Status: DEFERRED — STAGE 2.**
+
+The complete `QualityAnalysis` target includes:
+
+- vector/scanned/hybrid/photo classification confidence,
+- page count, dimensions, orientation, and DPI evidence,
+- skew and perspective estimates with uncertainty,
+- page-boundary confidence,
+- motion and defocus blur,
+- glare and specular highlights,
+- shadow and illumination non-uniformity,
+- local/global contrast,
+- background and paper-aging indicators,
+- compression artifacts,
+- noise density,
+- clipping and saturation,
+- notation scale and staff/TAB line-thickness indicators,
+- deterministic metric versions and failure states,
+- per-page and document-level reports,
+- calibration and confusion reports on the authorized Stage 1 corpus.
+
+Current metadata checks and `not_assessed` findings do not satisfy Stage 2.
+
+### 8.3 Stage 3 — Multi-page PDF renderer and export assembly
+
+**Status: DEFERRED — STAGE 3. Issue #15.**
+
+Target responsibilities include:
+
+- reviewed `PdfBackend` and explicit renderer dependency/license decision,
+- bounded PDF parsing and deterministic rendering,
+- encrypted, malformed, recursive, and oversized PDF handling,
+- stable page identity and page order,
+- vector/scanned/hybrid per-page policy,
+- vector pass-through unless explicit rasterization is authorized,
+- page-level analysis, restoration, validation, and evidence lifecycle,
+- partial-page failure with immutable-original fallback,
+- deterministic PDF reassembly,
+- page box, orientation, size, and order preservation,
+- multi-page retry, cancellation, retention, and audit behavior.
+
+The current API's ordered `UploadedPage` abstraction is not a complete multi-page PDF renderer or export-assembly implementation.
+
+Potential renderer/writer technologies remain candidates only. No `pypdfium2`, `pikepdf`, QPDF, PyMuPDF, or equivalent dependency is selected or approved by this document revision.
+
+### 8.4 Stage 4 — Safety calibration with real data
+
+**Status: DEFERRED — STAGE 4.**
+
+Target responsibilities include:
+
+- separate staff and TAB evaluation,
+- controlled deletion, insertion, shift, line-break, and digit-risk mutations,
+- unchanged real pairs and known-safe transformations,
+- false-negative, false-positive, and mandatory-review measurement,
+- degradation/page-class stratification,
+- held-out evaluation isolated from threshold selection,
+- versioned, reproducible, rollbackable threshold reports,
+- no automatic approval.
+
+Current synthetic regressions prove bounded behavior but do not constitute real-data safety calibration.
+
+### 8.5 Stage 5 — Accessible teacher review interface
+
+**Status: DEFERRED — STAGE 5. Issue #16.**
+
+Target responsibilities include:
+
+- source/candidate comparison and risk overlays,
+- page and finding navigation,
+- bounded zoom and actual-pixel inspection,
+- keyboard-only approve/reject/reprocess workflow,
+- screen-reader names, roles, states, and announcements,
+- focus order and error recovery,
+- stale-screen recovery,
+- contrast and responsive behavior,
+- display-integrity and color-management validation,
+- recorded accessibility test results.
+
+Current evidence bundles are backend review evidence, not a complete accessible browser UI.
+
+### 8.6 Stage 6 — Identity, network, and production infrastructure
+
+**Status: DEFERRED — STAGE 6. Issues #13, #14, #17, and #18.**
+
+Target responsibilities include:
+
+- approved production identity provider and token validation,
+- client, teacher, operator, and service roles,
+- job and artifact ownership authorization,
+- TLS and trusted-proxy policy,
+- secret management and rotation,
+- encrypted object storage,
+- production database and external durable queue,
+- distributed worker coordination,
+- backup/restore and disaster-recovery drills,
+- observability and alerting,
+- quotas, abuse controls, and production HTTP security review,
+- deployment, rollback, and incident runbooks.
+
+The current development API keys, local SQLite store, built-in HTTP adapter, and local worker coordination must not be described as production controls.
+
+### 8.7 Stage 7 — Preview release
+
+**Status: DEFERRED — STAGE 7.**
+
+The initial preview uses the deterministic OpenCV baseline and explicit teacher review. It must not include DocRes, ST Restore Selector, or the ST Restore image model.
+
+Required target evidence includes bounded users and inputs, privacy/retention controls, monitoring, incident response, feature flags, kill switches, rollback, original fallback, release notes, and accepted known limitations.
+
+### 8.8 Stage 8 — DocRes optional candidate
+
+**Status: DEFERRED — STAGE 8.**
+
+DocRes may be evaluated only after the deterministic Stage 7 preview baseline is frozen.
+
+The future adapter must:
+
+- isolate third-party code and model weights,
+- record exact code, model checksum, and runtime versions,
+- complete explicit code/weight license review,
+- expose only approved tasks,
+- enforce input, output, memory, and timeout limits,
+- support complete disablement,
+- normalize output as an immutable candidate,
+- pass through the same safety validator and teacher-review boundary as OpenCV.
+
+DocRes output is never automatically authoritative and never replaces OpenCV by default.
+
+### 8.9 Stage 9 — Multi-engine comparator
+
+**Status: DEFERRED — STAGE 9.**
+
+The future comparator may rank the immutable original, OpenCV, and enabled Stage 8 candidates using:
+
+- normalized quality metrics,
+- structural-change metrics,
+- protected-region differences,
+- calibrated hard safety vetoes,
+- deterministic ranking,
+- explainable recommendations,
+- disagreement and no-safe-candidate outcomes,
+- teacher override evidence.
+
+No candidate may win solely because it looks cleaner. The immutable original may win. Medium/high-risk results cannot bypass teacher review.
+
+As stated in Section 5.4, the current same-source safety ordering is not this component.
+
+### 8.10 Stage 10 — ST Restore Selector
+
+**Status: DEFERRED — STAGE 10.**
+
+The Selector is a project-owned learning component that recommends engines and parameter profiles without generating pixels directly.
+
+Future requirements include:
+
+- heuristic routing baseline,
+- explicit training permission,
+- offline reproducible training,
+- shadow-mode evaluation,
+- model registry and model card,
+- rollback,
+- disagreement reports against the heuristic and Stage 9 comparator,
+- no online self-training,
+- safe deterministic routing for uncertain cases.
+
+### 8.11 Stage 11 — ST Restore image model
+
+**Status: DEFERRED — STAGE 11.**
+
+The project-owned image model may research:
+
+- shadow reduction,
+- illumination normalization,
+- conservative deblurring,
+- paper-background cleanup,
+- noise reduction,
+- bounded thin-line enhancement.
+
+It must not:
+
+- fill missing notation,
+- guess unreadable TAB digits,
+- perform generative reconstruction in symbol regions,
+- correct music theory,
+- change symbol placement.
+
+Future training and evaluation must penalize changes to staff/TAB topology, symbol contours, connected components, TAB digits, notehead/stem/beam geometry, dots, and accidentals. The model remains an optional candidate behind the existing validator and teacher-review boundary.
+
+### 8.12 Stage 12 — Music-application integrations
+
+**Status: DEFERRED — STAGE 12.**
+
+Target applications integrate through versioned contracts and feature flags. Restoration logic is not copied into client repositories. OMR effectiveness, when measured by an authorized downstream integration, must be reported separately from visual quality and safety.
+
+---
+
+## 9. Target component architecture
+
+This section preserves the future architecture while explicitly marking non-current components.
+
+### 9.1 API gateway
+
+- **CURRENT:** bounded non-production `/api/v1` adapter with static development roles and strict local HTTP/multipart handling.
+- **DEFERRED — STAGE 6:** production identity, ownership, TLS, proxy policy, quotas, signed/authenticated delivery, and operational controls.
+
+### 9.2 Job manager
+
+- **CURRENT:** append-only job states, immutable attempts, retry, cancellation, review, expiry, local persistence, and local worker fencing.
+- **DEFERRED — STAGE 6:** external durable queue, production database, distributed claims, failover, and production recovery objectives.
+
+Canonical current/future states remain:
 
 ```text
 UPLOADED
@@ -233,7 +582,7 @@ UPLOADED
   → COMPLETED
 ```
 
-Terminal or alternate states:
+Alternate or terminal states:
 
 ```text
 REJECTED
@@ -242,677 +591,297 @@ CANCELLED
 EXPIRED
 ```
 
-State transitions must be append-only in the audit log. A cancelled or failed job cannot silently return to processing; retry creates a new attempt identifier.
+A cancelled or failed attempt cannot silently resume; retry creates a new attempt identity.
 
-### 7.3 Input Integrity Service
+### 9.3 Input integrity service
 
-Responsibilities:
+- **CURRENT:** SHA-256 identity, signature checks, metadata inspection, bounded reads, stable rejection codes, and conservative PDF evidence.
+- **DEFERRED — STAGE 3/6:** full renderer-backed PDF structure handling, production malware controls, tenant storage policy, and deployment-scale decompression defenses.
 
-- calculate SHA-256 of the original file,
-- store immutable input metadata,
-- reject encrypted or unsupported PDFs unless an approved decryption flow exists,
-- detect malformed, truncated or suspiciously recursive documents,
-- prevent zip bombs, image bombs and path traversal,
-- record page dimensions and page count before processing,
-- record image dimensions, color space, bit depth, EXIF orientation and decoder identity for JPG/JPEG/PNG inputs,
-- ignore or strip unsafe metadata from derivatives while preserving required provenance in the audit manifest.
+### 9.4 PDF inspector, renderer, and exporter
 
-### 7.4 PDF Inspector and Renderer
+- **CURRENT:** read-only limited PDF inspection and vector-preservation recommendation.
+- **DEFERRED — STAGE 3:** approved `PdfBackend`, deterministic page rendering, page lifecycle, vector pass-through, and PDF reassembly/export.
 
-Preferred initial implementation:
+No PDF dependency is selected by this maintenance change.
 
-- `pypdfium2` / PDFium for permissively licensed PDF rendering and inspection,
-- `pikepdf` / QPDF for low-level PDF structure, repair and writing,
-- an internal `PdfBackend` interface so alternatives can be replaced without affecting the pipeline.
+### 9.5 Document quality analyzer
 
-PyMuPDF must not be a default dependency until the project makes an explicit AGPL/commercial-license decision.
+- **PARTIAL:** metadata-derived and explicitly unassessed findings.
+- **DEFERRED — STAGE 2:** complete deterministic metrics, uncertainty, calibration, and document-level reports.
 
-Required capabilities:
+### 9.6 Music structure and protection logic
 
-- inspect page object composition,
-- render page regions at deterministic DPI,
-- preserve page boxes and rotation,
-- extract or identify embedded raster images,
-- produce a new PDF without modifying the source,
-- preserve vector pages whenever no restoration is required.
+- **CURRENT:** conservative staff/TAB geometry and component-risk measurements in the safety validator; dark-structure preservation in OpenCV processing.
+- **FUTURE:** richer versioned protection masks may be added only in the applicable approved stage and may not weaken validator vetoes.
 
-Default render target for scanned notation evaluation: configurable, initially 300–400 DPI. Rendering must be deterministic for a fixed backend version and profile.
+### 9.7 Restoration engines
 
-### 7.5 Document Quality Analyzer
+- **CURRENT:** deterministic OpenCV safe restoration.
+- **DEFERRED — STAGE 8:** DocRes optional candidate.
+- **DEFERRED — STAGE 11:** ST Restore image model optional candidate.
 
-Produces page-level measurements:
+### 9.8 Candidate comparator and selector
 
-- skew angle,
-- perspective distortion estimate,
-- page-boundary confidence,
-- EXIF-orientation status,
-- camera rotation and horizon estimate,
-- page-curvature estimate,
-- glare/specular-highlight score,
-- surrounding-background and crop confidence,
-- motion-blur and defocus-blur scores,
-- local and global contrast,
-- illumination nonuniformity,
-- shadow score,
-- background color and paper aging score,
-- compression artifact score,
-- noise density,
-- clipping and saturation,
-- estimated notation scale,
-- estimated staff/TAB line thickness,
-- vector/raster/hybrid confidence.
+- **CURRENT:** bounded same-source validator-based safety ordering only.
+- **DEFERRED — STAGE 9:** calibrated multi-engine comparator.
+- **DEFERRED — STAGE 10:** learned ST Restore Selector.
 
-Output is a structured `QualityAnalysis` object and not only a single quality score.
+### 9.9 Teacher review and evidence
 
-### 7.6 Music Structure Detector
+- **CURRENT:** backend review service, immutable evidence bundles, stale-screen binding, separate training-consent records, append-only audit.
+- **DEFERRED — STAGE 5:** accessible browser UI and display QA.
+- **DEFERRED — STAGE 6:** production identity and resource ownership.
 
-Detects and describes protected content:
+### 9.10 Storage and cleanup
 
-- staff systems and five-line groups,
-- TAB systems and expected six-line groups,
-- barlines and system connectors,
-- dense symbol regions,
-- text and lyric regions,
-- thin-line regions,
-- uncertain regions requiring conservative treatment.
-
-The first version may use classical computer vision. Later versions may add trained detectors.
-
-### 7.7 Protection Mask Builder
-
-Produces masks with at least three levels:
-
-- `LOCKED`: no generative or destructive transformation permitted,
-- `CONSERVATIVE`: only bounded contrast/denoise operations permitted,
-- `BACKGROUND`: background-focused restoration permitted.
-
-Music symbols and TAB numbers are `LOCKED` or `CONSERVATIVE` by default. Background areas may receive stronger deshadowing and normalization.
-
-Masks must be versioned and retained with the job for auditability.
-
-### 7.8 OpenCV Safe Restoration Engine
-
-This is the deterministic baseline and must exist before AI restoration is enabled.
-
-Supported operations may include:
-
-- orientation correction,
-- bounded deskew,
-- EXIF-orientation normalization for image inputs,
-- page-boundary crop when confidence is high,
-- perspective correction when page boundaries are reliable,
-- conservative camera-lens distortion correction when calibrated or strongly supported,
-- page dewarping when geometry confidence is sufficient,
-- illumination normalization,
-- shadow and mild glare reduction outside protected notation regions,
-- background whitening,
-- conservative denoising,
-- local contrast enhancement,
-- adaptive binarization for preview or OMR-specific derivatives,
-- border cleanup outside protected notation areas,
-- resolution normalization without hallucinated detail.
-
-Every operation is profile-driven and records parameters in the manifest.
-
-The safe engine must support a `dry_run` mode that reports planned operations without generating a final derivative.
-
-### 7.9 DocRes Adapter
-
-DocRes is an optional third-party AI candidate engine for document restoration tasks such as dewarping, deshadowing, appearance enhancement, deblurring and binarization.
-
-The adapter must:
-
-- isolate third-party model code and weights,
-- record exact repository commit, model checksum and runtime version,
-- verify license terms before distribution or hosted use,
-- expose only approved tasks,
-- enforce input and output size limits,
-- apply protection masks where technically possible,
-- prevent DocRes output from becoming trusted without comparison and validation,
-- support complete disablement by configuration.
-
-The adapter output is always a candidate, never an automatically authoritative result.
-
-### 7.10 ST Restore Engine
-
-ST Restore is the project-owned model family.
-
-It is divided into two products:
-
-1. **ST Restore Selector** — recommends the safest engine and parameter profile.
-2. **ST Restore Image Model** — performs project-owned restoration after sufficient approved training data exists.
-
-The selector should be delivered before the image model because it can improve routing without changing notation pixels directly.
-
-The image model must be trained with losses and evaluation criteria that explicitly penalize changes to:
-
-- staff/TAB line topology,
-- symbol contours,
-- connected components in protected regions,
-- TAB digit identity,
-- notehead/stem/beam geometry,
-- dot and accidental preservation,
-- OMR structural consistency.
-
-### 7.11 Candidate Result Comparator
-
-Inputs:
-
-- original normalized page,
-- OpenCV candidate,
-- DocRes candidate when enabled,
-- ST Restore candidate when enabled.
-
-Outputs:
-
-- quality-improvement measurements,
-- structural-change measurements,
-- protected-region differences,
-- candidate ranking,
-- rejection reasons,
-- recommended candidate and confidence.
-
-No candidate can win solely because it looks cleaner. Structural safety has veto power over visual quality.
-
-### 7.12 Music and TAB Safety Validator
-
-The validator applies hard and soft checks.
-
-Hard-fail examples:
-
-- page count changed unexpectedly,
-- page dimensions changed outside tolerance,
-- a five-line staff becomes four or six lines,
-- a six-line TAB system changes line count,
-- protected-region connected components disappear or are added beyond threshold,
-- alignment transform exceeds approved bounds,
-- TAB digit classifier detects an identity change with high confidence,
-- the output contains generated pixels in a forbidden region,
-- a vector-only page was rasterized without explicit authorization.
-
-Soft-risk examples:
-
-- local symbol contour difference,
-- uncertain dot preservation,
-- possible beam merge or split,
-- text degradation,
-- remaining shadow or blur,
-- ambiguous perspective correction.
-
-The validator produces:
-
-- page risk score,
-- document risk score,
-- categorized findings,
-- region coordinates,
-- before/after crops,
-- machine-readable evidence.
-
-### 7.13 Teacher Review Service
-
-Review actions:
-
-- approve document,
-- approve selected pages and reject others,
-- choose a different candidate per page,
-- request reprocessing with a safer or stronger profile,
-- annotate a risk region,
-- mark output as too light, too dark, blurred, altered or correct,
-- allow or deny use as approved training data.
-
-Teacher approval must record:
-
-- reviewer identity,
-- timestamp,
-- selected candidate and profile,
-- reviewed pages,
-- findings acknowledged,
-- training-data consent state.
-
-The service must never infer consent from approval alone.
-
-### 7.14 Artifact Exporter
-
-Required outputs:
-
-- enhanced PDF for PDF jobs or when an image-to-PDF derivative is explicitly requested,
-- approved PNG derivative for lossless image delivery,
-- optional JPEG derivative only when the user requests JPEG compatibility,
-- optional page PNG/TIFF derivatives,
-- comparison preview,
-- risk map,
-- processing manifest,
-- audit report.
-
-The exporter must:
-
-- preserve page order and dimensions for PDF jobs,
-- preserve the original image aspect ratio unless an approved page-boundary crop or perspective transform is recorded,
-- avoid repeated lossy JPEG recompression and prefer PNG for validated master image derivatives,
-- retain vector pages when unchanged,
-- avoid unnecessary recompression,
-- embed only approved page candidates,
-- label experimental outputs in metadata,
-- produce a unique derivative hash,
-- never overwrite the source object.
-
-### 7.15 Storage and Cleanup
-
-Logical storage classes:
-
-- immutable input,
-- working pages,
-- candidate outputs,
-- approved outputs,
-- audit manifests,
-- optional approved training examples.
-
-Retention periods are independent. Working files should expire sooner than approved outputs. Training-data copies require separate consent and policy.
-
-Cleanup must be idempotent and auditable.
+- **CURRENT:** in-memory default plus optional local SQLite metadata and local content-addressed blobs.
+- **DEFERRED — STAGE 6:** encrypted object storage, production database, backup/restore, data residency, secure deletion, and operational monitoring.
 
 ---
 
-## 8. API contract baseline
+## 10. API contract boundary
 
-All endpoints are versioned under `/api/v1`.
+All current endpoints are versioned under `/api/v1`; the current API version is `0.5.0`.
 
-### 8.1 Create restoration job
+The normative current contract is:
 
-```http
-POST /api/v1/restoration-jobs
-Content-Type: multipart/form-data
-Idempotency-Key: <unique-client-key>
-```
+- `api/openapi.v1.json`,
+- `docs/job-api-and-teacher-review.md`,
+- `docs/review-evidence-contract.md`,
+- `docs/http-transport-and-multipart-security.md`.
 
-Form fields:
+This specification does not introduce new endpoints, request fields, response fields, or automatic-approval options.
 
-- `file`: required,
-- `profile`: `safe | balanced | experimental`, default `safe`,
-- `document_hint`: `auto | score | tab | score_and_tab | handwritten`, default `auto`,
-- `auto_approve_low_risk`: boolean, default `false`,
-- `training_consent`: boolean, default `false`.
+Current API safety rules include:
 
-Response:
+- original artifacts remain immutable,
+- uploaded pages retain stable order and identity,
+- candidate and report artifacts have separate identities,
+- rejected candidates cannot be approved,
+- reviewer evidence is required for teacher decisions,
+- stale evidence causes a conflict rather than a decision,
+- approved-candidate download is blocked before approval,
+- training consent is recorded separately,
+- expiry deletes bytes according to current retention behavior while retaining the audit tombstone.
 
-```json
-{
-  "job_id": "rst_01...",
-  "status": "UPLOADED",
-  "input_sha256": "...",
-  "created_at": "2026-08-05T09:00:00Z"
-}
-```
-
-### 8.2 Read job
-
-```http
-GET /api/v1/restoration-jobs/{job_id}
-```
-
-Returns status, progress, page counts, active processing attempt and risk summary.
-
-### 8.3 Read analysis
-
-```http
-GET /api/v1/restoration-jobs/{job_id}/analysis
-```
-
-Returns document classification, quality findings and proposed processing plan.
-
-### 8.4 List candidates
-
-```http
-GET /api/v1/restoration-jobs/{job_id}/candidates
-```
-
-Returns page-level candidates with engine, profile, metrics and preview identifiers.
-
-### 8.5 Read safety report
-
-```http
-GET /api/v1/restoration-jobs/{job_id}/safety-report
-```
-
-### 8.6 Submit review
-
-```http
-POST /api/v1/restoration-jobs/{job_id}/review
-Content-Type: application/json
-```
-
-Example:
-
-```json
-{
-  "decision": "approve",
-  "page_selections": [
-    {"page": 1, "candidate_id": "cand_01"},
-    {"page": 2, "candidate_id": "cand_07"}
-  ],
-  "acknowledged_finding_ids": ["finding_12"],
-  "training_consent": false,
-  "notes": "TAB digits verified at 400% zoom."
-}
-```
-
-### 8.7 Reprocess
-
-```http
-POST /api/v1/restoration-jobs/{job_id}/attempts
-```
-
-Creates a new immutable attempt with a different profile or bounded parameter overrides.
-
-### 8.8 Download approved artifacts
-
-```http
-GET /api/v1/restoration-jobs/{job_id}/artifacts/enhanced-pdf
-GET /api/v1/restoration-jobs/{job_id}/artifacts/enhanced-image
-GET /api/v1/restoration-jobs/{job_id}/artifacts/audit-report
-GET /api/v1/restoration-jobs/{job_id}/artifacts/manifest
-```
-
-Approved PDF or image download is unavailable before the job reaches `APPROVED` or `COMPLETED`. For JPG/JPEG/PNG inputs, `enhanced-image` returns the approved master image derivative; an enhanced PDF is optional.
-
-### 8.9 Cancel and delete
-
-```http
-POST   /api/v1/restoration-jobs/{job_id}/cancel
-DELETE /api/v1/restoration-jobs/{job_id}
-```
-
-Deletion follows retention and audit policy; it does not rewrite history silently.
+The ordered multi-page upload abstraction must not be described as arbitrary multi-page PDF rendering or PDF export assembly.
 
 ---
 
-## 9. Core data objects
+## 11. Data, learning, and model governance
 
-### 9.1 Processing manifest
+### 11.1 Dataset purposes
 
-Minimum fields:
+Evaluation, calibration, and training are distinct purposes. Permission for one purpose does not imply permission for another.
 
-```json
-{
-  "schema_version": "1.0",
-  "job_id": "rst_01...",
-  "attempt_id": "att_01...",
-  "input": {
-    "sha256": "...",
-    "mime_type": "application/pdf",
-    "source_format": "pdf",
-    "capture_class": "scanned_raster",
-    "page_count": 12
-  },
-  "engines": [
-    {
-      "name": "opencv-safe",
-      "version": "...",
-      "parameters": {}
-    }
-  ],
-  "models": [],
-  "pages": [],
-  "review": null,
-  "output": null
-}
-```
+Teacher approval of a restoration does not imply:
 
-### 9.2 Safety finding
+- dataset inclusion,
+- calibration permission,
+- training permission,
+- publication permission,
+- demonstration permission.
 
-```json
-{
-  "finding_id": "finding_12",
-  "page": 2,
-  "severity": "medium",
-  "category": "possible_tab_digit_change",
-  "region": {"x": 121, "y": 884, "width": 63, "height": 48},
-  "evidence": {
-    "original_crop_id": "...",
-    "candidate_crop_id": "...",
-    "metric": 0.78
-  },
-  "requires_review": true
-}
-```
+### 11.2 Current fixture state
 
----
+The repository fixture catalog is metadata-only. Real document bytes are not present in ordinary Git. Existing in-memory synthetic tests do not constitute the authorized Stage 1 corpus.
 
-## 10. Risk policy
+### 11.3 Future learning loop
 
-Suggested normalized document risk bands:
-
-- `0–19 LOW`: no hard failure; eligible for explicit deployment policy allowing auto-approval,
-- `20–49 MEDIUM`: teacher review required,
-- `50–79 HIGH`: default reject; manual override requires reason,
-- `80–100 CRITICAL`: candidate cannot be approved.
-
-The exact scoring model must be calibrated on music documents. A raw visual similarity score is not sufficient.
-
-Any hard-fail condition sets minimum risk to `CRITICAL` regardless of aggregate score.
-
----
-
-## 11. Learning and model governance
-
-### 11.1 Learning principle
-
-Production use collects feedback, not uncontrolled live model updates.
-
-Approved learning loop:
+Any future learning loop is offline, versioned, and human-approved:
 
 ```text
-Production examples
+Purpose-authorized examples
       ↓
-Explicit teacher annotation and training consent
-      ↓
-Curated versioned dataset
+Curated versioned dataset and frozen splits
       ↓
 Offline training
       ↓
-Regression and safety evaluation
+Independent regression and safety evaluation
       ↓
 Shadow deployment
       ↓
-Human release approval
+Explicit release approval
       ↓
-Versioned model release with rollback
+Immutable model release with rollback
 ```
 
-### 11.2 Dataset categories
+Prohibited behavior:
 
-- clean source pages,
-- synthetic degradations with known clean target,
-- teacher-approved real restorations,
-- rejected or failure examples,
-- notation/TAB safety crops,
-- scanner/camera/device profiles.
-
-### 11.3 Prohibited learning behavior
-
-- no online weight updates in the production request path,
-- no training on files without explicit consent,
-- no replacement of old models without regression comparison,
-- no deletion of prior model versions needed for rollback,
-- no use of copyrighted documents outside the approved legal/data policy,
-- no use of teacher approval as implicit blanket training consent.
-
-### 11.4 Model registry fields
-
-- model identifier and semantic version,
-- training code commit,
-- dataset versions,
-- model checksum,
-- framework and runtime versions,
-- supported tasks,
-- evaluation report,
-- known limitations,
-- approval identity and date,
-- rollback predecessor.
+- online weight updates in the production request path,
+- training on files without explicit training permission,
+- using teacher approval as blanket training consent,
+- tuning on the held-out set,
+- replacing model versions without regression evidence and rollback,
+- autonomous learning from user uploads.
 
 ---
 
-## 12. Security and privacy
+## 12. Security and privacy status
 
-Required controls:
+### 12.1 Current local controls
 
-- encrypted transport,
-- encrypted storage where deployment supports it,
-- access control per project/user/organization,
-- short-lived artifact access URLs or authenticated downloads,
-- file signature and decompression-limit checks,
-- sandboxed third-party model execution,
-- no outbound network access from model workers by default,
-- secrets separated from job data,
-- structured audit logs without unnecessary document content,
-- configurable data residency and retention,
-- explicit deletion workflow,
-- malware and malformed-document defenses.
+- bounded request and image sizes,
+- strict multipart parsing,
+- static development client/reviewer keys,
+- local artifact-role checks,
+- append-only audit evidence,
+- local private file modes where supported,
+- no document content in ordinary structured errors,
+- no implicit outbound model network access because no model worker exists.
+
+### 12.2 Deferred production controls
+
+The following are target Stage 6 controls, not current claims:
+
+- encrypted transport and trusted-proxy policy,
+- approved identity provider,
+- cross-tenant ownership enforcement,
+- encrypted object storage,
+- secret manager and rotation,
+- external durable queue,
+- production database,
+- backups and disaster recovery,
+- WAF/reverse-proxy validation,
+- penetration testing,
+- production dependency scanning,
+- operational logging, metrics, traces, and alerting,
+- public exposure approval.
 
 Document contents must not appear in ordinary application logs.
 
 ---
 
-## 13. Observability
+## 13. Testing and evidence strategy
 
-Metrics:
+### 13.1 Current repository verification
 
-- jobs by status and document class,
-- page latency by engine,
-- CPU/GPU memory and utilization,
-- candidate rejection rates,
-- teacher approval and override rates,
-- safety findings by category,
-- PDF export failures,
-- model-version performance,
-- OMR improvement metrics when an authorized integration supplies them.
+The current repository contract is verified with:
 
-Logs must carry:
+```bash
+python tools/validate_dependency_lock.py
+python tools/validate_repository.py
+python tools/validate_fixture_catalog.py
+python -m unittest discover -s tests -p "test_*.py" -v
+python -m compileall -q src tools tests
+```
 
-- job ID,
-- attempt ID,
-- page number,
-- engine/model version,
-- operation name,
-- result code.
+CI validates supported Python 3.11 and 3.12 environments.
 
-They must not carry full page images or extracted confidential text.
+### 13.2 Current test-data boundary
 
----
+- generated in-memory synthetic inputs are permitted for deterministic unit/regression tests,
+- the fixture catalog remains metadata-only,
+- no real student, teacher, private, or copyrighted document bytes are committed,
+- current synthetic regressions are not a replacement for Stage 1 authorization or Stage 4 calibration.
 
-## 14. Testing strategy
+### 13.3 Future corpus and calibration evidence
 
-### 14.1 Unit tests
+After Stage 1 approval, the authorized corpus must cover representative formats, notation types, and degradation classes. Stage 4 must measure controlled mutation detection, false negatives, false positives, and mandatory-review rates on frozen splits.
 
-- quality metrics,
-- page classification,
-- transforms and coordinate mapping,
-- mask generation,
-- state-machine transitions,
-- risk scoring,
-- manifest serialization,
-- API validation.
-
-### 14.2 Golden-image regression tests
-
-A fixed corpus must include:
-
-- clean vector scores,
-- clean scans,
-- low-resolution scans,
-- shadows,
-- skew and perspective,
-- yellowed paper,
-- staff-only notation,
-- TAB-only pages,
-- combined score and TAB,
-- dense beams and tuplets,
-- dotted notes and accidentals,
-- fingerings and guitar techniques,
-- pages known to break denoisers.
-
-Every engine/model release is compared with approved golden outputs and structural metrics.
-
-### 14.3 Safety mutation tests
-
-Create controlled forbidden changes:
-
-- change TAB `3` to `8`,
-- remove a rhythm dot,
-- merge two beams,
-- delete a staff line segment,
-- add a notehead-like speck,
-- shift a barline,
-- rasterize a vector page.
-
-The validator must detect these at required recall thresholds before release.
-
-### 14.4 Integration tests
-
-- PDF upload to approved artifact,
-- cancellation and cleanup,
-- retry with new attempt,
-- mixed vector/raster PDF,
-- multi-page selection during teacher review,
-- client integration using API contract fixtures.
-
-### 14.5 Performance tests
-
-- large page dimensions,
-- multi-page jobs,
-- concurrent CPU processing,
-- optional GPU queue,
-- memory-bound malformed inputs,
-- deterministic output checks.
+Golden-image or real-reference claims must not be made before the relevant source rights, split, and retention evidence exists.
 
 ---
 
-## 15. Definition of done for the first trusted release
+## 14. Release boundaries
 
-The first trusted release is complete only when:
+### 14.1 Current baseline
 
-- original inputs are immutable and hash-verified,
-- vector/scanned/hybrid classification works on the reference corpus,
-- OpenCV safe restoration is deterministic,
-- page geometry is preserved within documented tolerances,
-- staff and TAB line validation is operational,
-- result comparison produces machine-readable evidence,
-- teacher review can approve per-page candidates,
-- export produces a separate approved PDF and/or image derivative plus an audit manifest,
-- all hard-fail safety mutation tests pass,
-- no AI engine is required for the baseline release,
-- integration API fixtures are published,
-- retention and deletion are documented and tested.
+The current baseline is a non-production development system. It is suitable for repository-level deterministic testing and bounded local workflow validation only.
+
+### 14.2 Preview release — Stage 7
+
+The first bounded preview is authorized only after Stages 1–6 are accepted. It uses the deterministic OpenCV baseline and explicit teacher review. DocRes and ST Restore components are excluded from the initial preview.
+
+### 14.3 AI candidate releases
+
+- DocRes begins only at Stage 8.
+- The multi-engine comparator begins only at Stage 9.
+- ST Restore Selector begins only at Stage 10.
+- ST Restore image model begins only at Stage 11.
+
+Every AI component remains optional, disableable, versioned, reversible, and subordinate to safety validation and teacher review.
 
 ---
 
-## 16. Technology baseline and licensing notes
+## 15. Technology and licensing status
 
-Proposed baseline, subject to repository license review:
+### 15.1 Current runtime dependencies
 
-- Python for orchestration and initial computer-vision implementation,
-- OpenCV for deterministic image processing,
-- pypdfium2/PDFium for rendering and inspection,
-- pikepdf/QPDF for PDF structure and export support,
-- FastAPI or equivalent typed HTTP framework,
-- PostgreSQL or equivalent durable job metadata store,
-- object storage for immutable inputs and generated artifacts,
-- ONNX Runtime for portable ST Restore inference when the model is exported to ONNX,
-- DocRes behind an optional adapter.
+The current runtime baseline is limited to the repository's exact locked dependencies, including:
 
-Licensing must be reviewed before distribution:
+- Python 3.12 primary runtime with Python 3.11 compatibility validation,
+- NumPy,
+- `opencv-python-headless`.
 
-- current OpenCV releases use Apache-2.0,
-- pypdfium2 is Apache-2.0/BSD-3-Clause and PDFium uses a BSD-style license with third-party notices,
-- pikepdf uses MPL-2.0,
-- PyMuPDF is dual licensed under AGPL or a commercial license and is therefore not the default,
-- DocRes code and weights require a separate, explicit license review before product use.
+Exact versions are controlled by `requirements.lock` and repository validators.
+
+### 15.2 Deferred technology candidates
+
+The following remain future candidates and are not selected by this document revision:
+
+- `pypdfium2` / PDFium for Stage 3 rendering,
+- `pikepdf` / QPDF for Stage 3 PDF structure/export,
+- PyMuPDF only after an explicit AGPL/commercial-license decision,
+- a typed production HTTP framework in Stage 6,
+- PostgreSQL or equivalent production metadata storage in Stage 6,
+- encrypted object storage and external queue services in Stage 6,
+- ONNX Runtime or another approved runtime for Stage 10/11 models,
+- DocRes code and weights in Stage 8.
+
+No new dependency may be added without explicit scope approval, license review, security review, version pinning, and repository validation.
 
 This section is an engineering constraint and not legal advice.
 
 ---
 
+## 16. Non-goals and prohibited trusted-path behavior
+
+The trusted path shall not:
+
+- invent or reconstruct missing notes,
+- guess unreadable TAB digits,
+- perform generative inpainting inside notation regions,
+- correct music theory,
+- modify pitches, durations, or fingering,
+- convert PDF to MusicXML,
+- act as an OMR engine,
+- provide MIDI playback or speech narration,
+- infer teacher approval from a machine verdict,
+- infer training consent from teacher approval,
+- continuously retrain from production data,
+- overwrite the source,
+- rasterize digital vector PDFs implicitly,
+- use rejected candidates,
+- treat unsupported analysis as safe,
+- expose the built-in HTTP adapter publicly,
+- activate DocRes, the Stage 9 comparator, ST Restore Selector, or ST Restore image model before their roadmap gates.
+
+Future experimental research, if separately approved, must remain isolated from the trusted restoration path and disabled by default.
+
+---
+
 ## 17. References
+
+Repository-authoritative references:
+
+- `README.md`
+- `docs/roadmap.md`
+- `CONTRIBUTING.md`
+- `api/openapi.v1.json`
+- `docs/job-api-and-teacher-review.md`
+- `docs/review-evidence-contract.md`
+- `docs/durable-local-persistence.md`
+- `docs/multi-worker-concurrency-and-recovery.md`
+- `docs/http-transport-and-multipart-security.md`
+- `docs/fixture-governance.md`
+- `docs/input-inspection-contract.md`
+- `docs/safe-restoration-baseline.md`
+- `docs/music-safety-validator.md`
+- Issue #32
+
+External references are informative only and do not authorize dependencies or implementation:
 
 - OpenCV repository and license: https://github.com/opencv/opencv
 - pypdfium2 documentation and licensing: https://pypdfium2.readthedocs.io/en/stable/readme.html
@@ -921,5 +890,3 @@ This section is an engineering constraint and not legal advice.
 - ONNX Runtime documentation: https://onnxruntime.ai/docs/
 - DocRes paper: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_DocRes_A_Generalist_Model_Toward_Unifying_Document_Image_Restoration_Tasks_CVPR_2024_paper.html
 - DocRes implementation: https://github.com/ZZZHANG-jx/DocRes
-
-
