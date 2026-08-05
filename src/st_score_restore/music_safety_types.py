@@ -58,6 +58,8 @@ class MusicSafetyConfig:
     min_component_area: int = 2
     region_grid_rows: int = 6
     region_grid_columns: int = 6
+    max_input_bytes: int = 50_000_000
+    max_decode_pixels: int = 80_000_000
 
     def __post_init__(self) -> None:
         if self.expected_staff_lines < 1 or self.expected_tab_lines < 1:
@@ -97,6 +99,10 @@ class MusicSafetyConfig:
             self._invalid("component area limits")
         if not 1 <= self.region_grid_rows <= 20 or not 1 <= self.region_grid_columns <= 20:
             self._invalid("region grid")
+        if not 1 <= self.max_input_bytes <= 250_000_000:
+            self._invalid("max_input_bytes")
+        if not 1 <= self.max_decode_pixels <= 200_000_000:
+            self._invalid("max_decode_pixels")
 
     @staticmethod
     def _invalid(name: str) -> None:
