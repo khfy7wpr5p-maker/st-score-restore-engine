@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Virtual environments and local configuration
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# IDE and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Runtime and generated artifacts
+artifacts/
+outputs/
+uploads/
+tmp/
+
+# Private or unapproved data
+fixtures/private/
+fixtures/incoming/
+
+# Model weights are never committed without an approved ADR and distribution review
+models/weights/
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors
