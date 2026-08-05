@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import asdict
 import hashlib
+import json
 import math
 import re
 from typing import Any, Iterable, Mapping
@@ -11,6 +12,7 @@ from typing import Any, Iterable, Mapping
 import cv2
 import numpy as np
 
+from .input_inspection import InputInspectionError, inspect_bytes
 from .music_safety_types import (
     MusicSafetyConfig,
     MusicSafetyValidationError,
@@ -32,15 +34,20 @@ def validate_candidate(
     """Compare a source image with a restoration candidate and return a veto-capable report."""
 
     resolved = config if isinstance(config, MusicSafetyConfig) else MusicSafetyConfig.from_mapping(config)
-    source = _decode_image(source_bytes, role="source")
-    candidate = _decode_image(candidate_bytes, role="candidate")
+    _preflight_bytes(source_bytes, role="source", config=resolved)
+    _preflight_bytes(candidate_bytes, role="candidate", config=resolved)
+    source = _decode_image(source_bytes, role="source", config=resolved)
+    candidate = _decode_image(candidate_bytes, role="candidate", config=resolved)
     source_digest = hashlib.sha256(source_bytes).hexdigest()
     candidate_digest = hashlib.sha256(candidate_bytes).hexdigest()
     integrity_findings = _validate_candidate_manifest(candidate_manifest, source_digest, candidate_digest)
 
     registered, registration = _register_candidate(source, candidate, resolved)
-    source_dark, source_threshold = _dark_mask(source, resolved)
-    candidate_dark, candidate_threshold = _dark_mask(registered, resolved)
+    source_threshold = _estimate_dark_threshold(source, resolved)
+    candidate_threshold = _estimate_dark_threshold(registered, resolved)
+    comparison_threshold = source_threshold
+    source_dark = source <= comparison_threshold
+    candidate_dark = registered <= comparison_threshold
 
     source_lines = _detect_horizontal_systems(source_dark, resolved)
     candidate_lines = _detect_horizontal_systems(candidate_dark, resolved)
@@ -48,8 +55,9 @@ def validate_candidate(
 
     source_line_mask = _line_mask(source_dark.shape, source_lines)
     candidate_line_mask = _line_mask(candidate_dark.shape, candidate_lines)
-    source_symbols = source_dark & ~source_line_mask
-    candidate_symbols = candidate_dark & ~candidate_line_mask
+    shared_line_mask = source_line_mask | candidate_line_mask
+    source_symbols = source_dark & ~shared_line_mask
+    candidate_symbols = candidate_dark & ~shared_line_mask
 
     symbol_metrics, symbol_findings = _compare_symbol_pixels(source_symbols, candidate_symbols, resolved)
     component_metrics, component_findings = _compare_components(source_symbols, candidate_symbols, resolved)
@@ -61,6 +69,10 @@ def validate_candidate(
 
     if not registration["reliable"]:
         review_reasons.append("registration_uncertain")
+    if geometry["unknownSystems"]["source"] or geometry["unknownSystems"]["candidate"]:
+        review_reasons.append("unknown_system_geometry")
+    if geometry["staff"]["sourceSystemCount"] + geometry["tab"]["sourceSystemCount"] == 0:
+        review_reasons.append("no_recognized_music_systems")
     if geometry["rejectReasons"]:
         reject_reasons.extend(geometry["rejectReasons"])
     review_reasons.extend(geometry["reviewReasons"])
@@ -138,17 +150,25 @@ def compare_candidate_reports(reports: Iterable[Mapping[str, Any]]) -> dict[str,
     items = [dict(item) for item in reports]
     if not items:
         raise MusicSafetyValidationError("no_candidate_reports", "At least one report is required.")
+    normalized: list[dict[str, Any]] = []
+    source_ids: set[str] = set()
     for item in items:
-        if item.get("status") != "completed" or item.get("verdict") not in {"pass", "review_required", "reject"}:
+        verdict = item.get("verdict")
+        if item.get("status") != "completed" or verdict not in {"pass", "review_required", "reject"}:
             raise MusicSafetyValidationError("invalid_candidate_report", "Every comparator input must be a completed validator report.")
-    ranked = sorted(
-        items,
-        key=lambda item: (
-            item["comparator"]["tier"],
-            float(item["comparator"]["riskScore"]),
-            item["candidate"]["artifactId"],
-        ),
-    )
+        if item.get("automaticApproval") is not False:
+            raise MusicSafetyValidationError("invalid_candidate_report", "Candidate reports must prohibit automatic approval.")
+        source_id = ((item.get("source") or {}).get("artifactId"))
+        candidate_id = ((item.get("candidate") or {}).get("artifactId"))
+        risk_score = ((item.get("metrics") or {}).get("riskScore"))
+        if not isinstance(source_id, str) or not isinstance(candidate_id, str) or not isinstance(risk_score, (int, float)) or not 0 <= float(risk_score) <= 100:
+            raise MusicSafetyValidationError("invalid_candidate_report", "Candidate report identity or risk score is invalid.")
+        source_ids.add(source_id)
+        normalized.append({"report": item, "tier": {"pass": 0, "review_required": 1, "reject": 2}[verdict], "riskScore": float(risk_score), "candidateId": candidate_id})
+    if len(source_ids) != 1:
+        raise MusicSafetyValidationError("candidate_source_mismatch", "All compared candidates must derive from the same source artifact.")
+    ranked_entries = sorted(normalized, key=lambda entry: (entry["tier"], entry["riskScore"], entry["candidateId"]))
+    ranked = [entry["report"] for entry in ranked_entries]
     eligible = [item for item in ranked if item["verdict"] != "reject"]
     recommended = eligible[0] if eligible else None
     return {
@@ -163,8 +183,8 @@ def compare_candidate_reports(reports: Iterable[Mapping[str, Any]]) -> dict[str,
             {
                 "candidateArtifactId": item["candidate"]["artifactId"],
                 "verdict": item["verdict"],
-                "riskScore": item["comparator"]["riskScore"],
-                "eligible": item["comparator"]["eligible"],
+                "riskScore": item["metrics"]["riskScore"],
+                "eligible": item["verdict"] != "reject",
             }
             for item in ranked
         ],
@@ -180,6 +200,8 @@ def record_teacher_review(
 ) -> dict[str, Any]:
     """Record review without producing a training label or training consent."""
 
+    if report.get("status") != "completed" or report.get("automaticApproval") is not False:
+        raise MusicSafetyValidationError("invalid_candidate_report", "Teacher review requires a completed non-approving validator report.")
     if decision not in {"approved", "rejected", "reprocess"}:
         raise MusicSafetyValidationError("invalid_teacher_decision", "Unsupported teacher decision.")
     if not reviewer_id.strip():
@@ -195,14 +217,44 @@ def record_teacher_review(
     return updated
 
 
-def _decode_image(data: bytes, *, role: str) -> np.ndarray:
+def _decode_image(data: bytes, *, role: str, config: MusicSafetyConfig) -> np.ndarray:
     if not isinstance(data, bytes) or not data:
         raise MusicSafetyValidationError(f"invalid_{role}", f"A non-empty {role} byte sequence is required.")
     payload = _extract_pdf_jpeg(data) if data.startswith(b"%PDF-") else data
     image = cv2.imdecode(np.frombuffer(payload, np.uint8), cv2.IMREAD_GRAYSCALE)
     if image is None:
         raise MusicSafetyValidationError(f"{role}_decode_failed", f"The {role} could not be decoded.")
+    decoded_pixels = int(image.shape[0]) * int(image.shape[1])
+    if decoded_pixels > config.max_decode_pixels:
+        raise MusicSafetyValidationError(f"{role}_decoded_image_too_large", f"The decoded {role} exceeds the configured pixel limit.", details={"decodedPixels": decoded_pixels, "maxDecodePixels": config.max_decode_pixels})
     return image
+
+
+def _preflight_bytes(data: bytes, *, role: str, config: MusicSafetyConfig) -> None:
+    if not isinstance(data, bytes) or not data:
+        raise MusicSafetyValidationError(f"invalid_{role}", f"A non-empty {role} byte sequence is required.")
+    if len(data) > config.max_input_bytes:
+        raise MusicSafetyValidationError(f"{role}_input_too_large", f"The {role} exceeds the configured byte limit.", details={"byteSize": len(data), "maxInputBytes": config.max_input_bytes})
+    if data.startswith(b"%PDF-"):
+        image_count = len(re.findall(rb"/Subtype\s*/Image\b", data))
+        if image_count != 1:
+            raise MusicSafetyValidationError("unsupported_candidate_pdf", "Only one-image deterministic PDF artifacts are supported.", details={"imageCount": image_count})
+        dimensions = re.search(rb"/Width\s+(\d+)\s+/Height\s+(\d+)", data)
+        if not dimensions:
+            raise MusicSafetyValidationError("malformed_candidate_pdf", "Candidate PDF image dimensions are missing.")
+        declared_pixels = int(dimensions.group(1)) * int(dimensions.group(2))
+        if declared_pixels > config.max_decode_pixels:
+            raise MusicSafetyValidationError(f"{role}_decoded_image_too_large", f"The declared PDF image exceeds the configured pixel limit.", details={"declaredPixels": declared_pixels, "maxDecodePixels": config.max_decode_pixels})
+        return
+    try:
+        inspected = inspect_bytes(data, source_name=f"{role}.bin", max_bytes=config.max_input_bytes)
+    except InputInspectionError as error:
+        raise MusicSafetyValidationError(f"{role}_inspection_failed", f"The {role} failed structural inspection.", details={"inspectionCode": error.code}) from error
+    metadata = inspected["analysis"].get("imageMetadata") or {}
+    width = metadata.get("encodedWidthPixels")
+    height = metadata.get("encodedHeightPixels")
+    if width and height and int(width) * int(height) > config.max_decode_pixels:
+        raise MusicSafetyValidationError(f"{role}_decoded_image_too_large", f"The declared {role} dimensions exceed the configured pixel limit.", details={"declaredPixels": int(width) * int(height), "maxDecodePixels": config.max_decode_pixels})
 
 
 def _extract_pdf_jpeg(data: bytes) -> bytes:
@@ -242,10 +294,9 @@ def _register_candidate(source: np.ndarray, candidate: np.ndarray, config: Music
     }
 
 
-def _dark_mask(image: np.ndarray, config: MusicSafetyConfig) -> tuple[np.ndarray, int]:
+def _estimate_dark_threshold(image: np.ndarray, config: MusicSafetyConfig) -> int:
     otsu, _ = cv2.threshold(cv2.GaussianBlur(image, (3, 3), 0), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    threshold = int(min(config.dark_threshold_ceiling, max(60, otsu)))
-    return image <= threshold, threshold
+    return int(min(config.dark_threshold_ceiling, max(60, otsu)))
 
 
 def _detect_horizontal_systems(mask: np.ndarray, config: MusicSafetyConfig) -> list[dict[str, Any]]:
