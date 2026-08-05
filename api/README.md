@@ -2,11 +2,12 @@
 
 The future versioned HTTP API will expose restoration jobs, candidate results, risk reports, teacher approval, and audit records.
 
-Milestone M1 now defines a transport-neutral, read-only input-inspection contract:
+Current transport-neutral boundaries:
 
-- immutable source artifacts: `schemas/artifact-manifest.schema.json`
-- structural analysis: `schemas/input-analysis.schema.json`
-- Python boundary: `st_score_restore.inspect_path` and `inspect_bytes`
-- CLI boundary: `python tools/inspect_input.py <path>`
+- immutable source inspection: `st_score_restore.input_inspection`,
+- deterministic candidate engine: `st_score_restore.safe_restoration`,
+- source schemas: `schemas/artifact-manifest.schema.json` and `schemas/input-analysis.schema.json`,
+- candidate schemas: `schemas/restoration-config.schema.json` and `schemas/restoration-candidate.schema.json`,
+- CLIs: `tools/inspect_input.py` and `tools/restore_image.py`.
 
-No HTTP endpoint, upload service, persistence layer, restoration operation, or derived-output download is implemented yet. Public HTTP contracts still require an ADR and compatibility plan.
+No HTTP endpoint, upload service, persistence layer, teacher-review endpoint, or derived-output download is implemented yet. Public HTTP contracts still require an ADR and compatibility plan.

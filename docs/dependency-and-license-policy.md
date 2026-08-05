@@ -1,50 +1,47 @@
 # Dependency and license policy
 
-**Status:** Milestone M0 baseline
+**Status:** Milestone M2 runtime baseline
 
 ## 1. Default rule
 
-No library, service SDK, model adapter or model weight is added merely because it is technically convenient. Each addition must be necessary, bounded and independently reviewable.
+No library, service SDK, model adapter, or model weight is added merely because it is technically convenient. Each addition must be necessary, bounded, and independently reviewable.
 
 ## 2. Required review fields
 
-Every proposed dependency or model must record:
-
-- name, exact version and purpose,
-- canonical project and download source,
-- code license,
-- model-weight license when separate,
-- redistribution and commercial-use terms,
-- patent or field-of-use restrictions where stated,
-- transitive dependencies and native binaries,
-- supported platforms and Python versions,
-- security and maintenance considerations,
-- data sent outside the engine, if any,
-- fallback and removal plan,
-- approving pull request and ADR when architecturally significant.
+Every proposed dependency or model records its exact version and purpose, canonical source, code and weight licenses, redistribution/commercial terms, bundled and transitive components, native binaries, supported platforms and Python versions, security considerations, external data transfer, fallback/removal plan, and approving ADR or pull request.
 
 ## 3. Lock strategy
 
-`pyproject.toml` records dependency intent. The repository currently declares no third-party runtime dependency, so there is no non-empty lock graph to freeze.
+`pyproject.toml` records exact dependency intent. `requirements.lock` records the complete runtime graph for Python 3.11–3.12. The graph currently contains only NumPy and the headless OpenCV wheel package.
 
-The first dependency-bearing pull request must select a reproducible lock tool and commit its generated lock artifact. Thereafter:
+CI must:
 
-- dependency resolution must not occur implicitly in production,
-- CI and deployment must install from the frozen lock,
-- lock changes must be reviewed with manifest changes,
-- hashes or equivalent integrity data must be retained where supported,
-- separate platform locks may be used only when native packages require them and the reason is documented.
+- validate that the lock and project metadata match,
+- install exact binary wheels with dependency resolution disabled,
+- verify installed versions before tests,
+- reject implicit source builds.
+
+Deployment may use a reviewed platform-specific wheel mirror, but must retain exact filenames, versions, hashes, and bundled license notices. Any dependency or lock change requires review with the manifest change.
 
 ## 4. Models and large artifacts
 
-Model files are not committed to ordinary Git history by default. Approved weights require a manifest containing source, version, checksum, license, storage location, evaluation status and rollback target.
+Model files are not committed to ordinary Git history by default. Approved weights require a manifest containing source, version, checksum, license, storage location, evaluation status, and rollback target.
 
-No model may learn online from production documents. Training data use requires explicit consent separate from teacher approval.
+No model may learn online from production documents. Training-data use requires explicit consent separate from teacher approval.
 
-## 5. Candidate technologies
+## 5. Approved and candidate technologies
 
-OpenCV, PDF backends, DocRes, ONNX Runtime and future ML frameworks remain candidates until a dependency review approves exact packages and versions. Mention in architecture documents is not dependency approval.
+Approved for the M2 candidate baseline:
 
-## 6. Removal
+- `opencv-python-headless==4.13.0.92`,
+- `numpy==2.3.5`.
 
-A dependency must be removable behind a narrow adapter or contract where practical. Unmaintained, unsafe or license-incompatible dependencies must have a documented replacement or rollback path.
+PDF renderers, DocRes, ONNX Runtime, and future ML frameworks remain candidates until a separate dependency review approves exact packages and versions.
+
+## 6. Native-binary and license handling
+
+OpenCV and NumPy wheels include native and bundled components. The repository keeps dependency-review and license records under `docs/dependency-reviews/` and `LICENSES/`. Distributors must preserve the notices shipped inside installed wheels.
+
+## 7. Removal
+
+OpenCV remains behind `st_score_restore.safe_restoration`. Removing that module, its CLI, schemas, and locked dependencies returns the repository to the standard-library input-inspection baseline without changing source artifact identities.

@@ -26,54 +26,56 @@ Enhanced PDF and/or image + audit report
 
 ## Repository boundary
 
-This repository remains an independent service. It accepts PDF, JPG/JPEG, PNG, and phone-captured score/TAB photos. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik will integrate through a versioned API; their repositories are not merged into this engine.
-
-## Initial documents
-
-- [Technical Specification](docs/technical-specification.md)
-- [Roadmap](docs/roadmap.md)
+This repository remains an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik will integrate through a versioned API; their repositories are not merged into this engine.
 
 ## Current status
 
-Architecture, Milestone M0 repository foundation, and the fixture permission/privacy contract are approved. The read-only input inspection and immutable artifact-manifest contract is under review. No restoration behavior has been implemented.
+Architecture, governance, fixture permissions, immutable input inspection, and the deterministic OpenCV candidate baseline are implemented. The OpenCV result is only a reviewable candidate; production restoration, teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled.
 
 ## Development baseline
 
 - Primary runtime: Python 3.12
 - Compatibility validation: Python 3.11 and 3.12
-- Package layout: `src/st_score_restore`
-- Third-party runtime dependencies: none
-- Production restoration behavior: not implemented
+- Runtime lock: `requirements.lock`
+- OpenCV backend: `opencv-python-headless==4.13.0.92`
+- NumPy runtime: `numpy==2.3.5`
 - Fixture artifact bytes: not included; current catalog is metadata-only
-- Input inspection: read-only PDF/JPEG/PNG structural analysis
 - Source identity: deterministic SHA-256 artifact manifest
-- Pixel quality analysis: deliberately unassessed until an approved decoder exists
+- Candidate identity: separate SHA-256 digest and audit manifest
+- Digital PDFs: preserved as vector; never implicitly rasterized
+- Teacher approval: always separate from candidate generation
 
 Validate the repository contracts with:
 
 ```bash
+python tools/validate_dependency_lock.py
 python tools/validate_repository.py
 python tools/validate_fixture_catalog.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-Inspect a local source without modifying it:
+Inspect a source without modifying it:
 
 ```bash
 python tools/inspect_input.py path/to/score.pdf
 ```
 
+Create a separate candidate and audit report:
+
+```bash
+python tools/restore_image.py source.png candidate.png --audit candidate.audit.json
+```
+
 See:
 
-- [Development environment](docs/development-environment.md)
+- [Technical Specification](docs/technical-specification.md)
+- [Roadmap](docs/roadmap.md)
 - [Dependency and license policy](docs/dependency-and-license-policy.md)
 - [Fixture, permission, and usage governance](docs/fixture-governance.md)
 - [Immutable input inspection contract](docs/input-inspection-contract.md)
-- [Fixture catalog](fixtures/catalog.v1.json)
-- [Fixture manifest schema](schemas/fixture-manifest.schema.json)
-- [Artifact manifest schema](schemas/artifact-manifest.schema.json)
-- [Input analysis schema](schemas/input-analysis.schema.json)
-- [ADR 0002: Python runtime and repository layout](docs/adr/0002-python-runtime-and-repository-layout.md)
-- [ADR 0003: Fixture permission and usage governance](docs/adr/0003-fixture-consent-and-usage-governance.md)
-- [ADR 0004: Immutable input inspection](docs/adr/0004-immutable-input-inspection.md)
+- [OpenCV safe-restoration baseline](docs/safe-restoration-baseline.md)
+- [Dependency review](docs/dependency-reviews/opencv-python-headless-4.13.0.92.md)
+- [Restoration configuration schema](schemas/restoration-config.schema.json)
+- [Restoration candidate schema](schemas/restoration-candidate.schema.json)
+- [ADR 0005](docs/adr/0005-opencv-safe-restoration-baseline.md)
