@@ -36,6 +36,42 @@ Architecture, governance, fixture permissions, immutable input inspection, deter
 
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
+## Binding development order
+
+The project uses a data-first, measurement-first sequence. Later stages may not be pulled forward merely because implementation appears possible.
+
+```text
+Roadmap update
+      ↓
+Real and explicitly authorized test dataset
+      ↓
+Complete quality-analysis system
+      ↓
+Multi-page PDF pipeline
+      ↓
+Safety calibration with real data
+      ↓
+Accessible teacher review interface
+      ↓
+Identity, network and production infrastructure
+      ↓
+Preview release
+      ↓
+DocRes optional candidate
+      ↓
+Multi-engine comparator
+      ↓
+ST Restore Selector
+      ↓
+ST Restore image model
+      ↓
+Music-application integrations
+```
+
+Each stage requires explicit approval before work begins and separate approval before merge. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
+
+**Next eligible stage after the roadmap update:** real and explicitly authorized test dataset. That stage is not started by the roadmap change.
+
 ## Development baseline
 
 - Primary runtime: Python 3.12
