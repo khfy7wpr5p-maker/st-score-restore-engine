@@ -16,7 +16,9 @@ from st_score_restore.dataset_manifest import (  # noqa: E402
     SNAPSHOT_SCHEMA_VERSION,
     DatasetManifestError,
     load_dataset_catalog,
-    load_dataset_snapshot,
+)
+from st_score_restore.dataset_snapshot_policy import (  # noqa: E402
+    validate_authorized_dataset_snapshot,
 )
 
 
@@ -55,7 +57,9 @@ def validate_repository_contract() -> None:
         / "adr"
         / "0012-stage-1a-purpose-bound-dataset-governance.md",
         ROOT / "src" / "st_score_restore" / "dataset_manifest.py",
+        ROOT / "src" / "st_score_restore" / "dataset_snapshot_policy.py",
         ROOT / "tests" / "test_dataset_manifest.py",
+        ROOT / "tests" / "test_dataset_snapshot_policy.py",
     )
     missing = [
         str(path.relative_to(ROOT))
@@ -130,7 +134,11 @@ def main() -> None:
         validate_repository_contract()
         catalog = load_dataset_catalog(args.catalog)
         if args.snapshot is not None:
-            load_dataset_snapshot(args.snapshot, catalog=catalog)
+            snapshot = _load_object(args.snapshot)
+            validate_authorized_dataset_snapshot(
+                snapshot,
+                catalog=catalog,
+            )
     except (
         OSError,
         json.JSONDecodeError,
