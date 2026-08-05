@@ -39,6 +39,8 @@ REQUIRED_FILES = (
     "tests/test_safe_restoration.py", "tests/test_music_safety_validator.py",
     "tests/test_music_safety_hardening.py", "tests/test_job_api.py",
     "tests/test_job_review_atomicity.py", "tests/test_durable_job_store.py",
+    "tests/test_durable_store_hardening.py", "tests/test_multi_worker_concurrency.py",
+    "tests/test_worker_fencing_guard.py",
     "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
@@ -51,6 +53,7 @@ REQUIRED_FILES = (
     "docs/fixture-governance.md", "docs/input-inspection-contract.md",
     "docs/safe-restoration-baseline.md", "docs/music-safety-validator.md",
     "docs/job-api-and-teacher-review.md", "docs/durable-local-persistence.md",
+    "docs/multi-worker-concurrency-and-recovery.md",
     "docs/adr/0001-independent-safety-first-engine.md",
     "docs/adr/0002-python-runtime-and-repository-layout.md",
     "docs/adr/0003-fixture-consent-and-usage-governance.md",
@@ -59,6 +62,7 @@ REQUIRED_FILES = (
     "docs/adr/0006-music-tab-safety-validator.md",
     "docs/adr/0007-in-process-job-api-and-review-workflow.md",
     "docs/adr/0008-durable-local-persistence.md",
+    "docs/adr/0009-attempt-bound-worker-fencing-and-recovery.md",
     "tools/validate_fixture_catalog.py", "tools/validate_dependency_lock.py",
     "tools/inspect_input.py", "tools/restore_image.py", "tools/validate_music_safety.py",
     "tools/run_api.py", ".github/workflows/repository-validation.yml",
@@ -114,6 +118,7 @@ def validate_pyproject() -> None:
         "job_api_enabled": True,
         "in_memory_store_only": False,
         "durable_local_store_enabled": True,
+        "multi_worker_fencing_enabled": True,
         "production_deployment_enabled": False,
     }
     for key, expected_value in expected_flags.items():

@@ -35,6 +35,14 @@ class RestorationJobService(
             lambda prefix: f"{prefix}_{uuid4().hex}"
         )
 
+    def process_job(self, job_id: str, *, actor: str = "worker") -> dict[str, Any]:
+        """Reject durable processing that bypasses the worker-claim boundary."""
+
+        require_claim = getattr(self.store, "require_processing_claim", None)
+        if callable(require_claim):
+            require_claim(job_id)
+        return super().process_job(job_id, actor=actor)
+
     def run_pending(
         self,
         *,
@@ -61,7 +69,7 @@ class RestorationJobService(
                     self._validate_claimed_attempt_locked(job, claim)
                     if job["state"] not in {"UPLOADED", "READY_FOR_PROCESSING"}:
                         self._recover_claimed_attempt_locked(job, claim, actor)
-                super().process_job(claim.job_id, actor=actor)
+                self.process_job(claim.job_id, actor=actor)
             return claim.job_id
         finally:
             self.store.release_claim(claim)

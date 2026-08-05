@@ -150,6 +150,16 @@ class SQLiteJobStore(
             self._claim_context.claim = None
             self._claim_context.now_provider = None
 
+    def require_processing_claim(self, job_id: str) -> WorkClaim:
+        """Require the current thread to hold a claim for the requested job."""
+
+        claim = getattr(self._claim_context, "claim", None)
+        if not isinstance(claim, WorkClaim) or claim.job_id != job_id:
+            raise StaleWorkClaimError(
+                "Durable processing requires the current job's active worker claim."
+            )
+        return claim
+
     def claim_next_job(
         self,
         *,

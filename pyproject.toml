@@ -18,4 +18,5 @@ music_safety_validator_enabled = true
 job_api_enabled = true
 in_memory_store_only = false
 durable_local_store_enabled = true
+multi_worker_fencing_enabled = true
 production_deployment_enabled = false
