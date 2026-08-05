@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/artifact-manifest.schema.json",
+  "title": "ST Score Restore immutable source artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactId",
+    "role",
+    "immutable",
+    "sourceName",
+    "byteSize",
+    "digest",
+    "detectedMediaType",
+    "detectedKind",
+    "derivedFrom"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "artifactId": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "role": {
+      "const": "source"
+    },
+    "immutable": {
+      "const": true
+    },
+    "sourceName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "byteSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "detectedMediaType": {
+      "enum": [
+        "application/pdf",
+        "image/jpeg",
+        "image/png"
+      ]
+    },
+    "detectedKind": {
+      "enum": [
+        "pdf",
+        "jpeg",
+        "png"
+      ]
+    },
+    "derivedFrom": {
+      "type": "null"
+    }
+  }
+}
