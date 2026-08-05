@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+import json
+import sqlite3
+from pathlib import Path
 import tempfile
 import unittest
+
+import cv2
+import numpy as np
 
 from st_score_restore.durable_job_store import SQLiteJobStore, StaleWorkClaimError
 from st_score_restore.job_api_types import JobApiConfig, UploadedPage
@@ -17,6 +23,18 @@ class WorkerFencingGuardTests(unittest.TestCase):
             retention_seconds=3_600,
         )
         return store, RestorationJobService(store, config)
+
+    @staticmethod
+    def _valid_page() -> bytes:
+        image = np.full((500, 800), 248, np.uint8)
+        for base in (80, 250):
+            for line in range(5):
+                cv2.line(image, (50, base + line * 12), (750, base + line * 12), 20, 1)
+        for line in range(6):
+            cv2.line(image, (50, 390 + line * 14), (750, 390 + line * 14), 30, 1)
+        ok, payload = cv2.imencode(".png", image, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+        assert ok
+        return bytes(payload)
 
     def test_direct_durable_process_job_requires_claim_context(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -62,4 +80,34 @@ class WorkerFencingGuardTests(unittest.TestCase):
                     service.process_job(other_job_id, actor="worker-a")
             self.assertEqual("UPLOADED", service.get_job(other_job_id)["state"])
             store.release_claim(claim)
+            store.close()
+
+    def test_terminal_snapshot_does_not_retain_internal_lease_metadata(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store, service = self._service(directory)
+            created, _ = service.create_job(
+                [UploadedPage("page.png", "image/png", self._valid_page())],
+                idempotency_key="terminal-lease-normalization-0001",
+                actor="client",
+            )
+            job_id = created["jobId"]
+            self.assertEqual(
+                job_id,
+                service.run_pending(actor="worker", lease_owner="worker-a"),
+            )
+            self.assertNotIn(service.get_job(job_id)["state"], {
+                "UPLOADED", "ANALYZING", "READY_FOR_PROCESSING",
+                "PROCESSING", "COMPARING", "VALIDATING",
+            })
+            self.assertFalse(store.jobs[job_id].get("processingClaimed", False))
+            self.assertNotIn("processingLease", store.jobs[job_id])
+            database = sqlite3.connect(Path(directory) / "store.sqlite3")
+            payload = json.loads(
+                database.execute(
+                    "SELECT payload_json FROM jobs WHERE job_id = ?", (job_id,)
+                ).fetchone()[0]
+            )
+            database.close()
+            self.assertFalse(payload.get("processingClaimed", False))
+            self.assertNotIn("processingLease", payload)
             store.close()

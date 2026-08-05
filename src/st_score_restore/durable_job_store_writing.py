@@ -20,6 +20,7 @@ from .job_store import ACTIVE_WORK_STATES
 
 class DurableWritingMixin:
     def _flush_locked(self) -> None:
+        self._normalize_processing_metadata()
         self._validate_memory_state()
         previous_live_digests = {
             str(row["digest"])
@@ -47,6 +48,16 @@ class DurableWritingMixin:
                 "INSERT OR IGNORE INTO pending_blob_deletions(digest) VALUES(?)",
                 (digest,),
             )
+
+    def _normalize_processing_metadata(self) -> None:
+        """Persist lease metadata only while the job still owns active work."""
+
+        for job in self.jobs.values():
+            if job.get("state") not in ACTIVE_WORK_STATES or not job.get(
+                "processingClaimed", False
+            ):
+                job["processingClaimed"] = False
+                job.pop("processingLease", None)
 
     def _validate_memory_state(self) -> None:
         for job_id, job in self.jobs.items():
