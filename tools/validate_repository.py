@@ -2,6 +2,7 @@
 """Validate the repository contract using only approved runtime dependencies."""
 from __future__ import annotations
 import json
+import re
 import sys
 import tomllib
 from pathlib import Path
@@ -108,6 +109,20 @@ def validate_json_documents() -> None:
         fail("candidate manifest schema version does not match the engine")
     if candidate_schema.get("properties", {}).get("engine", {}).get("const") != "opencv_safe_baseline":
         fail("candidate manifest engine identifier is unexpected")
+    pixel_limit = config_schema.get("properties", {}).get("max_decode_pixels", {})
+    if pixel_limit.get("maximum") != 200_000_000:
+        fail("restoration config decoded-pixel ceiling is unexpected")
+    candidate_name_pattern = (
+        candidate_schema.get("properties", {})
+        .get("candidate", {})
+        .get("properties", {})
+        .get("candidateName", {})
+        .get("pattern")
+    )
+    try:
+        re.compile(candidate_name_pattern or "")
+    except re.error as error:
+        fail(f"candidateName schema pattern is invalid: {error}")
     if not INSPECTOR_VERSION or not ENGINE_VERSION:
         fail("runtime component versions must not be empty")
 

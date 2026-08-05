@@ -23,19 +23,31 @@ def main() -> int:
     if args.audit.exists():
         print(json.dumps(RestorationError("audit_output_exists", "The audit output already exists.").to_dict(), indent=2), file=sys.stderr)
         return 2
+    candidate_written = False
     try:
         config = json.loads(args.config.read_text(encoding="utf-8")) if args.config else None
         if config is not None and not isinstance(config, dict):
             raise RestorationError("invalid_configuration", "The configuration JSON root must be an object.")
         manifest = restore_path(args.source, args.output, config=config)
+        candidate_written = True
         args.audit.parent.mkdir(parents=True, exist_ok=True)
         with args.audit.open("x", encoding="utf-8", newline="\n") as handle:
             json.dump(manifest, handle, indent=2, sort_keys=True)
             handle.write("\n")
     except (RestorationError, InputInspectionError) as error:
+        if candidate_written:
+            try:
+                args.output.unlink(missing_ok=True)
+            except OSError:
+                pass
         print(json.dumps(error.to_dict(), indent=2, sort_keys=True), file=sys.stderr)
         return 2
     except (OSError, json.JSONDecodeError) as error:
+        if candidate_written:
+            try:
+                args.output.unlink(missing_ok=True)
+            except OSError:
+                pass
         wrapped = RestorationError("cli_io_error", "The candidate or configuration could not be processed.", details={"error": str(error)})
         print(json.dumps(wrapped.to_dict(), indent=2, sort_keys=True), file=sys.stderr)
         return 2

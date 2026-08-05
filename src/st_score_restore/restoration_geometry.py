@@ -204,7 +204,7 @@ def deskew(
         if confidence >= config.deskew_min_confidence:
             correction = -angle
             gray = _rotate(gray, correction, cv2.INTER_LINEAR, 255)
-            aligned = _rotate(aligned, correction, cv2.INTER_LINEAR, 255)
+            aligned = _rotate(aligned, correction, cv2.INTER_NEAREST, 255)
             protected = _rotate(
                 protected.astype(np.uint8) * 255,
                 correction,
@@ -355,7 +355,7 @@ def apply_perspective(
             and evidence["confidence"] >= config.perspective_min_confidence
         ):
             gray = _warp(gray, quad, cv2.INTER_LINEAR, 255)
-            aligned = _warp(aligned, quad, cv2.INTER_LINEAR, 255)
+            aligned = _warp(aligned, quad, cv2.INTER_NEAREST, 255)
             protected = _warp(
                 protected.astype(np.uint8) * 255,
                 quad,

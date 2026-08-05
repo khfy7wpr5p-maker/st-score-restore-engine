@@ -66,6 +66,7 @@ class RestorationConfig:
     max_protected_fraction: float = 0.55
     jpeg_quality: int = 95
     output_dpi: int = 300
+    max_decode_pixels: int = 80_000_000
 
     def __post_init__(self) -> None:
         if self.binarization_profile not in {"none", "otsu", "adaptive"}:
@@ -90,6 +91,8 @@ class RestorationConfig:
             self._invalid("protected_dilation")
         if not 80 <= self.jpeg_quality <= 100 or not 72 <= self.output_dpi <= 1200:
             self._invalid("output settings")
+        if not 1 <= self.max_decode_pixels <= 200_000_000:
+            self._invalid("max_decode_pixels")
 
     @staticmethod
     def _invalid(name: str) -> None:

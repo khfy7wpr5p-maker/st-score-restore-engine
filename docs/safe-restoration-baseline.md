@@ -24,7 +24,7 @@ The ordered pipeline is:
 7. conservative CLAHE contrast,
 8. optional review-required binarization.
 
-Every operation can be disabled. The audit manifest records whether it was enabled and applied, all parameters, evidence, warnings, and before/after pixel digests.
+Every operation can be disabled. A configured decoded-pixel ceiling is enforced before and after OpenCV decoding to limit decompression memory risk. The audit manifest records whether it was enabled and applied, all parameters, evidence, warnings, and before/after pixel digests.
 
 ## Notation protection
 
@@ -42,7 +42,7 @@ Deskew uses near-horizontal line evidence and applies only inside configured ang
 - JPEG: deterministic compatibility derivative with recorded quality.
 - PDF: deterministic single-page PDF containing the candidate image at configured DPI.
 
-Source and candidate have distinct content-addressed SHA-256 identities. `teacherApproved` is always `false` at generation time.
+Source and candidate have separately recorded content-addressed SHA-256 identities and distinct candidate names. `teacherApproved` is always `false` at generation time.
 
 ## CLI
 

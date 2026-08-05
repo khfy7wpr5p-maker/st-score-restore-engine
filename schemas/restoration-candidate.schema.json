@@ -18,9 +18,10 @@
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["artifactId", "role", "immutable", "derivedFrom", "mediaType", "byteSize", "digest", "widthPixels", "heightPixels", "teacherApproved"],
+      "required": ["artifactId", "candidateName", "role", "immutable", "derivedFrom", "mediaType", "byteSize", "digest", "widthPixels", "heightPixels", "teacherApproved"],
       "properties": {
         "artifactId": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "candidateName": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\]+$"},
         "role": {"const": "restoration_candidate"},
         "immutable": {"const": true},
         "derivedFrom": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},

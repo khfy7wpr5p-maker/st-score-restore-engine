@@ -28,6 +28,7 @@
     "protected_dilation": {"enum": [0, 1, 2]},
     "max_protected_fraction": {"type": "number", "minimum": 0, "maximum": 1},
     "jpeg_quality": {"type": "integer", "minimum": 80, "maximum": 100},
-    "output_dpi": {"type": "integer", "minimum": 72, "maximum": 1200}
+    "output_dpi": {"type": "integer", "minimum": 72, "maximum": 1200},
+    "max_decode_pixels": {"type": "integer", "minimum": 1, "maximum": 200000000}
   }
 }

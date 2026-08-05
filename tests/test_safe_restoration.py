@@ -69,6 +69,7 @@ class SafeRestorationTests(unittest.TestCase):
         self.assertTrue(op['enabled'])
         self.assertGreater(op['evidence']['lineCount'],0)
         self.assertLessEqual(abs(op['evidence']['estimatedAngleDegrees']),5.0)
+        self.assertEqual(0,candidate.manifest['safety']['protectedPixelsMadeLighter'])
 
     def test_ambiguous_perspective_requires_review(self):
         src=encode_png(synthetic_score())
@@ -151,6 +152,22 @@ class SafeRestorationTests(unittest.TestCase):
             source.write_bytes(src); output.write_bytes(b'existing')
             with self.assertRaises(RestorationError) as ctx: restore_path(source,output)
             self.assertEqual('derived_output_exists',ctx.exception.code)
+
+    def test_decode_pixel_limit_is_enforced_before_processing(self):
+        src=encode_png(synthetic_score(400,300))
+        with self.assertRaises(RestorationError) as ctx:
+            restore_bytes(src,config=RestorationConfig(max_decode_pixels=100000))
+        self.assertEqual('decoded_image_too_large',ctx.exception.code)
+
+    def test_candidate_name_is_separate_and_deterministic(self):
+        src=encode_png(synthetic_score(400,300))
+        candidate=restore_bytes(src,source_name='score.png')
+        self.assertEqual('score.restored.png',candidate.manifest['candidate']['candidateName'])
+        with tempfile.TemporaryDirectory() as td:
+            source=Path(td)/'score.png'; output=Path(td)/'teacher-copy.jpg'
+            source.write_bytes(src)
+            manifest=restore_path(source,output)
+            self.assertEqual('teacher-copy.jpg',manifest['candidate']['candidateName'])
 
     def test_invalid_config_is_rejected(self):
         with self.assertRaises(RestorationError): RestorationConfig(denoise_kernel=7)

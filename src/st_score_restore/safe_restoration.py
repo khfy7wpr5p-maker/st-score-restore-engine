@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 import hashlib
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any, Mapping
 
 import cv2
@@ -43,6 +43,7 @@ def restore_bytes(
     config: RestorationConfig | Mapping[str, Any] | None = None,
     output_format: str = "png",
     protected_mask: np.ndarray | None = None,
+    candidate_name: str | None = None,
 ) -> RestorationCandidate:
     """Create a deterministic candidate while preserving the immutable source."""
 
@@ -79,12 +80,37 @@ def restore_bytes(
             details={"classification": classification},
         )
 
+    image_metadata = analysis.get("imageMetadata") or {}
+    encoded_width = image_metadata.get("encodedWidthPixels")
+    encoded_height = image_metadata.get("encodedHeightPixels")
+    if encoded_width and encoded_height:
+        declared_pixels = int(encoded_width) * int(encoded_height)
+        if declared_pixels > resolved_config.max_decode_pixels:
+            raise RestorationError(
+                "decoded_image_too_large",
+                "The declared image dimensions exceed the configured pixel limit.",
+                details={
+                    "declaredPixels": declared_pixels,
+                    "maxDecodePixels": resolved_config.max_decode_pixels,
+                },
+            )
+
     flags = cv2.IMREAD_UNCHANGED | getattr(cv2, "IMREAD_IGNORE_ORIENTATION", 0)
     image = cv2.imdecode(np.frombuffer(data, np.uint8), flags)
     if image is None:
         raise RestorationError(
             "image_decode_failed",
             "OpenCV could not decode the accepted image.",
+        )
+    decoded_pixels = int(image.shape[0]) * int(image.shape[1])
+    if decoded_pixels > resolved_config.max_decode_pixels:
+        raise RestorationError(
+            "decoded_image_too_large",
+            "The decoded image exceeds the configured pixel limit.",
+            details={
+                "decodedPixels": decoded_pixels,
+                "maxDecodePixels": resolved_config.max_decode_pixels,
+            },
         )
 
     gray = to_gray(image)
@@ -193,6 +219,11 @@ def restore_bytes(
     protected_count = int(np.count_nonzero(protected))
     protected_fraction = protected_count / protected.size
 
+    resolved_candidate_name = _candidate_name(
+        candidate_name,
+        source.get("sourceName"),
+        output_format,
+    )
     manifest = {
         "schemaVersion": SCHEMA_VERSION,
         "engineVersion": ENGINE_VERSION,
@@ -208,6 +239,7 @@ def restore_bytes(
         },
         "candidate": {
             "artifactId": f"sha256:{output_digest}",
+            "candidateName": resolved_candidate_name,
             "role": "restoration_candidate",
             "immutable": True,
             "derivedFrom": source["artifactId"],
@@ -303,6 +335,7 @@ def restore_path(
         config=config,
         output_format=output_format_from_suffix(output.suffix),
         protected_mask=protected_mask,
+        candidate_name=output.name,
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -324,6 +357,22 @@ def restore_path(
             details={"osError": str(error)},
         ) from error
     return candidate.manifest
+
+
+def _candidate_name(
+    requested: str | None,
+    source_name: str | None,
+    output_format: str,
+) -> str:
+    suffix = {"png": ".png", "jpeg": ".jpg", "pdf": ".pdf"}[output_format]
+    if requested:
+        normalized = requested.replace("\\", "/")
+        name = PureWindowsPath(normalized).name
+        if name not in {"", ".", ".."}:
+            return name
+    source = source_name or "source"
+    stem = Path(source).stem or "source"
+    return f"{stem}.restored{suffix}"
 
 
 __all__ = [
