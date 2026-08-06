@@ -1,34 +1,25 @@
 # Stage 1A Dataset Governance and Metadata Contract
 
-**Status:** Stage 1A contract implementation  
+**Status:** Draft implementation in PR #35  
 **Issue:** #32  
+**Schema version:** `1.1.0`  
+**Entry decision:** `adr-0013-stage-1-entry-v1`  
 **Artifact policy:** Metadata only  
-**Runtime impact:** None
+**Runtime restoration impact:** None
 
 ## 1. Scope
 
-Stage 1A defines the metadata and validation boundary required before any real-data onboarding. It does not:
+Stage 1A defines the fail-closed metadata and validation boundary required
+before any real-data onboarding. It does not collect document bytes, select a
+storage provider, freeze a real split, run training, tune thresholds, start
+Stage 1B/1C/2 or add restoration engines.
 
-- create or collect document bytes,
-- select a cloud or local custody product,
-- activate an evaluation, calibration, or training permission,
-- freeze a real dataset split,
-- tune a quality or safety threshold,
-- start Stage 2,
-- add DocRes, a comparator, a selector, or an image model.
+The existing fixture catalog remains the regression-fixture planning contract.
+The Stage 1A dataset contract separately models custody references, purpose
+authorization, source-family isolation, frozen snapshots, privacy and
+revocation.
 
-## 2. Contract separation
-
-The existing fixture catalog remains the regression-fixture planning contract. The Stage 1A dataset contract is separate because dataset governance adds custody, purpose authorization, source-family isolation, frozen snapshots, and revocation semantics.
-
-| Contract | Responsibility |
-|---|---|
-| `fixtures/catalog.v1.json` | Metadata-only regression fixture coverage plan |
-| `dataset-catalog.schema.json` | Source/item, permission, privacy, lineage, split, retention, and review metadata |
-| `dataset-snapshot.schema.json` | Digest-bound, reviewed split snapshot |
-| `dataset_manifest.py` | Cross-field semantic enforcement |
-
-## 3. Purpose permissions
+## 2. Bound purposes
 
 All purposes are independent and deny-by-default:
 
@@ -38,135 +29,153 @@ All purposes are independent and deny-by-default:
 - `pdf_pipeline_evaluation`
 - `safety_calibration`
 - `held_out_evaluation`
+- `synthetic_derivation`
 - `model_training`
 - `publication`
 - `demonstration`
 
-A granted permission requires an authorization reference, authorizer, and authorization date. Expired and withdrawn permissions retain their original authorization evidence. Withdrawn permissions additionally require a revocation date and revocation reference.
+A granted permission carries an opaque authorization reference, a
+purpose-authorizer ID, authorization date, optional expiry and typed
+restrictions. Snapshot inclusion requires a split-relevant permission that is
+valid on the snapshot date. Expiry is fail-closed.
 
-Teacher approval cannot create any of these permissions.
+Teacher approval creates none of these permissions. Stage 1 records future
+training eligibility but cannot authorize training execution.
 
-## 4. Artifact states
+## 3. Opaque identity and evidence
 
-- `metadata_only`: no digest, byte size, or storage locator.
-- `external_available`: immutable SHA-256, byte size, and opaque custody locator are required.
-- `revoked`: the historical digest and byte size remain, but the storage locator must be absent.
+Git metadata accepts role-scoped opaque identifiers only:
 
-Ordinary Git remains metadata-only. Storage locators are opaque identifiers, not file paths, URLs containing credentials, or personal names.
+- rights verifier: `actor.rights:*`
+- privacy reviewer: `actor.privacy:*`
+- purpose authorizer: `actor.purpose:*`
+- dataset reviewer: `actor.dataset:*`
+- custodian: `actor.custodian:*`
+- rights subject: `subject:*`
+- evidence: `evidence:*`
+- policy: `policy:*`
+- custody locator: `custody:*`
+- deletion receipt: `receipt:*`
 
-## 5. Source families and synthetic lineage
+The external identity registry and real-person role-conflict checks remain
+Stage 1B work.
 
-Every source and all of its derivatives share one `sourceFamilyId`.
+## 4. Artifact and custody states
 
-A synthetic item must:
+- `metadata_only`: no digest, bytes or custody reference
+- `external_available`: digest, byte size, opaque locator, custody policy,
+  encryption policy and custodian required
+- `revoked`: historical digest/policies remain; active locator is absent and a
+  completed deletion receipt is required
 
-- reference a non-synthetic parent item,
-- use the same source family,
-- record generator name and version,
-- record generator commit SHA-256,
-- record a deterministic seed and parameters,
-- assert that the clean source was approved.
+Ordinary Git remains metadata-only. No credentials, personal names or personal
+paths are valid custody or identity fields.
 
-Synthetic-on-synthetic derivation is rejected to keep lineage and split isolation unambiguous.
+## 5. Rights, privacy and review
 
-## 6. Split policy
+An external or actively authorized item requires:
 
-Supported metadata states:
+- approved rights review,
+- acceptable privacy review,
+- approved dataset review,
+- immutable artifact SHA-256,
+- external custody metadata.
 
-- `unassigned`
-- `development`
-- `calibration`
-- `held_out`
-- `training_reserved`
+For `deidentified` data, the privacy-reviewed derivative SHA-256 must equal the
+artifact SHA-256 used in the dataset. Identifiable personal/student data cannot
+be trained, published, demonstrated or used for synthetic derivation.
 
-Rules:
+## 6. Source families and synthetic lineage
 
-1. Unassigned items cannot activate any purpose.
-2. A source family may occupy only one assigned split.
-3. Held-out items may grant only `held_out_evaluation`.
-4. Development and calibration items cannot grant held-out or training use.
-5. Training-reserved items may grant only explicit model-training use.
-6. Stage 1A snapshot metadata always keeps `trainingUseActivated=false`.
-7. Assignments are sorted and digest-bound for deterministic review.
+Every source and derivative shares one `sourceFamilyId` and one assigned split.
 
-No repository example assigns a split. Real split proportions and access separation remain an architectural decision for later Stage 1 work.
+A synthetic item requires an approved, available, non-synthetic parent; a
+synthetic-derivation authorization valid on `generatedOn`; matching
+authorization reference; generator name, semantic version, commit SHA-256,
+seed and parameters. Synthetic-on-synthetic derivation is rejected. Child
+retention cannot exceed parent retention.
 
-## 7. Privacy boundary
+## 7. Split policy
 
-Privacy classifications are:
+- `unassigned`: no active purpose
+- `development`: fixture, quality-evaluation and PDF-pipeline evaluation
+- `calibration`: quality and safety calibration
+- `held_out`: held-out evaluation only
+- `training_reserved`: future model-training eligibility only
 
-- `none`
-- `deidentified`
-- `personal`
-- `student`
+Held-out and training-reserved items cannot enable active synthetic derivation.
+Stage 1A snapshots keep `trainingUseActivated=false`.
 
-Deidentified data requires an approved privacy review, a documented method, and a distinct derivative SHA-256. Identifiable personal or student data cannot be used for training, publication, or demonstration. Pending or rejected privacy review cannot support an active purpose.
+## 8. Typed restrictions
 
-User-provided material cannot be used for model training unless it is deidentified and the model-training purpose is explicitly granted.
+Supported restrictions are:
 
-## 8. Retention and revocation
+- `split_allowlist`
+- `storage_class_allowlist`
+- `environment_allowlist`
+- `external_export`
+- `retention_not_after`
 
-Metadata-only items have no custody class. External items require an external custody class and a deletion policy. Revoked items require deletion and cannot retain an active locator.
+Unknown or contradictory restrictions fail closed. The Stage 1 snapshot
+environment is `stage1_offline`.
 
-A snapshot lists all revoked item IDs represented by its catalog and cannot assign a revoked item. Revocation operations and deletion receipts remain Stage 1B custody procedures; Stage 1A defines only the metadata contract.
+## 9. Revocation and deletion evidence
 
-## 9. Snapshot integrity
+Revoked items cannot appear in snapshots. Their active locator is removed.
+Completed revocation requires:
 
-A snapshot records:
+- revocation date and opaque evidence reference,
+- `deletionStatus=completed`,
+- opaque deletion receipt reference,
+- deletion receipt SHA-256.
 
-- catalog identity and canonical SHA-256,
-- semantic snapshot version,
-- sorted item assignments,
-- per-item canonical SHA-256,
+The operational deletion drill across storage and backups remains Stage 1B.
+
+## 10. Snapshot integrity and authorization
+
+A snapshot binds:
+
+- ADR 0013 decision ID,
+- catalog canonical SHA-256,
+- each item canonical SHA-256,
 - source family and split,
+- UTC creation time and environment,
 - held-out freeze state,
-- revoked item IDs,
-- separate real and synthetic counts,
-- coverage-gap notes,
-- approved review evidence.
+- revoked-item tombstones,
+- separate real/synthetic counts,
+- approved opaque dataset-review evidence.
 
-Changing catalog metadata or an item changes its digest and invalidates the snapshot.
+`validate_dataset_snapshot` is the only public safe boundary. It includes
+integrity, split-purpose, temporal and restriction checks. The compatibility
+wrapper delegates to it.
 
-## 10. Repository example
+## 11. Schema parity
 
-`examples/dataset-catalog.metadata-only.v1.json` demonstrates structure only:
+CI compares JSON Schema and Python constants for versions, entry decision,
+required fields, purpose/state enums, split/source/privacy values, typed
+restriction kinds and opaque-ID patterns. Drift fails repository validation.
+Cross-field and temporal rules remain Python responsibilities.
 
-- no bytes,
-- no digest,
-- no storage locator,
-- no active permission,
-- no assigned split,
-- no completed review.
+## 12. Repository example
 
-It is not a dataset and cannot satisfy the Stage 1 exit gate.
+`examples/dataset-catalog.metadata-only.v1.json` contains no artifact bytes,
+digest, locator, active permission, assigned split or completed review. It is
+not a dataset and cannot satisfy the Stage 1 exit gate.
 
-## 11. Validation
+## 13. Validation
 
 ```bash
-python tools/validate_dataset_manifest.py \
-  examples/dataset-catalog.metadata-only.v1.json
-
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
 python tools/validate_fixture_catalog.py
+python tools/validate_dataset_manifest.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-The semantic validator rejects unknown fields and enforces purpose evidence, privacy, artifact state, lineage, source-family split isolation, snapshot digest binding, held-out separation, revocation, and Stage 1A training prohibition.
+## 14. Deferred work
 
-## 12. Deferred decisions
-
-Stage 1A does not select:
-
-- custody storage technology,
-- encryption provider or key custodian,
-- data-custodian identities,
-- reviewer identities,
-- backup deletion behavior,
-- real corpus composition,
-- split proportions,
-- coverage acceptance thresholds,
-- revocation operational tooling.
-
-Those decisions require separate approval before Stage 1B or Stage 1C.
+Stage 1B must separately select and approve storage, encryption/key ownership,
+IAM, external identity registry, audit and deletion operations. Stage 1C must
+separately authorize real and controlled-synthetic onboarding, split freeze,
+dataset card, bias/coverage evidence and Stage 1 exit acceptance.

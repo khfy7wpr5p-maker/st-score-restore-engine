@@ -4,181 +4,146 @@ import unittest
 
 from st_score_restore.dataset_manifest import (
     DatasetManifestError,
-    canonical_sha256,
+    validate_dataset_snapshot,
 )
 from st_score_restore.dataset_snapshot_policy import (
     validate_authorized_dataset_snapshot,
 )
-
-
-PURPOSES = (
-    "fixture_validation",
-    "quality_evaluation",
-    "quality_calibration",
-    "pdf_pipeline_evaluation",
-    "safety_calibration",
-    "held_out_evaluation",
-    "model_training",
-    "publication",
-    "demonstration",
-)
-
-
-def permission(status: str = "not_requested") -> dict:
-    value = {
-        "status": status,
-        "authorizationReference": None,
-        "authorizedBy": None,
-        "authorizedOn": None,
-        "expiresOn": None,
-        "restrictions": [],
-        "revokedOn": None,
-        "revocationReference": None,
-    }
-    if status == "granted":
-        value.update(
-            {
-                "authorizationReference": "auth:purpose-001",
-                "authorizedBy": "dataset-reviewer",
-                "authorizedOn": "2026-08-06",
-            }
-        )
-    return value
-
-
-def approved_item(*, split: str, granted_purpose: str | None) -> dict:
-    permissions = {name: permission() for name in PURPOSES}
-    if granted_purpose is not None:
-        permissions[granted_purpose] = permission("granted")
-    return {
-        "datasetItemId": "dataset.item.snapshot-policy.v1",
-        "sourceFamilyId": "source.family.snapshot-policy.v1",
-        "parentItemId": None,
-        "artifact": {
-            "state": "external_available",
-            "sha256": "a" * 64,
-            "byteSize": 1000,
-            "storageLocator": "custody:object-001",
-        },
-        "provenance": {
-            "sourceKind": "public_domain",
-            "sourceReference": "rights:source-001",
-            "rightsHolder": "Public domain",
-            "licenseId": "Public-Domain-1.0",
-            "usageBasis": "Stage 1A snapshot policy test.",
-        },
-        "privacy": {
-            "classification": "none",
-            "reviewStatus": "not_required",
-            "deidentificationMethod": None,
-            "deidentifiedArtifactSha256": None,
-        },
-        "input": {
-            "kind": "digital_pdf",
-            "mediaType": "application/pdf",
-            "notationKinds": ["staff"],
-            "pageCount": 1,
-            "degradations": ["none"],
-        },
-        "permissions": permissions,
-        "split": split,
-        "retention": {
-            "policy": "delete_after_validation",
-            "expiresOn": None,
-            "storageClass": "custody_external",
-            "deletionRequired": True,
-        },
-        "syntheticGeneration": None,
-        "review": {
-            "status": "approved",
-            "reviewedBy": "dataset-reviewer",
-            "reviewedOn": "2026-08-06",
-            "notes": "Contract test.",
-        },
-        "assertions": {
-            "teacherApprovalImpliedDatasetPermission": False,
-            "teacherApprovalImpliedTrainingPermission": False,
-            "originalBytesInGit": False,
-        },
-    }
-
-
-def catalog_with(item: dict) -> dict:
-    return {
-        "schemaVersion": "1.0.0",
-        "catalogId": "dataset.catalog.snapshot-policy.v1",
-        "description": "Snapshot authorization test.",
-        "items": [item],
-    }
-
-
-def snapshot_for(catalog: dict, item: dict) -> dict:
-    return {
-        "schemaVersion": "1.0.0",
-        "snapshotId": "dataset.snapshot.snapshot-policy.v1",
-        "datasetId": catalog["catalogId"],
-        "version": "1.0.0",
-        "createdAt": "2026-08-06T00:00:00Z",
-        "catalogSha256": canonical_sha256(catalog),
-        "assignments": [
-            {
-                "datasetItemId": item["datasetItemId"],
-                "sourceFamilyId": item["sourceFamilyId"],
-                "split": item["split"],
-                "itemSha256": canonical_sha256(item),
-            }
-        ],
-        "heldOutFrozen": item["split"] == "held_out",
-        "trainingUseActivated": False,
-        "revokedItemIds": [],
-        "coverage": {
-            "realItemCount": 1,
-            "syntheticItemCount": 0,
-            "gapNotes": [],
-        },
-        "review": {
-            "status": "approved",
-            "reviewedBy": "dataset-reviewer",
-            "reviewedOn": "2026-08-06",
-            "notes": "Contract test.",
-        },
-    }
+try:
+    from .dataset_test_item_helpers import item, permission
+    from .dataset_test_snapshot_helpers import catalog, snapshot_for
+except ImportError:  # unittest discover adds tests/ directly to sys.path
+    from dataset_test_item_helpers import item, permission
+    from dataset_test_snapshot_helpers import catalog, snapshot_for
 
 
 class DatasetSnapshotPolicyTests(unittest.TestCase):
-    def test_development_snapshot_requires_development_purpose(self) -> None:
-        item = approved_item(split="development", granted_purpose=None)
-        catalog = catalog_with(item)
+    def test_public_snapshot_boundary_cannot_bypass_purpose_authorization(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose=None,
+        )
+        source_catalog = catalog([source])
+        value = snapshot_for(source_catalog, [source])
         with self.assertRaisesRegex(
-            DatasetManifestError,
-            "not authorized for its split",
+            DatasetManifestError, "not validly authorized at snapshot time"
+        ):
+            validate_dataset_snapshot(value, catalog=source_catalog)
+        with self.assertRaisesRegex(
+            DatasetManifestError, "not validly authorized at snapshot time"
         ):
             validate_authorized_dataset_snapshot(
-                snapshot_for(catalog, item), catalog=catalog
+                value, catalog=source_catalog
             )
 
-    def test_publication_permission_does_not_authorize_calibration(self) -> None:
-        item = approved_item(
-            split="calibration", granted_purpose="publication"
+    def test_future_authorization_is_rejected_at_snapshot_time(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
         )
-        catalog = catalog_with(item)
+        source["permissions"]["quality_evaluation"] = permission(
+            "granted", authorized_on="2026-08-07"
+        )
+        source_catalog = catalog([source])
         with self.assertRaisesRegex(
-            DatasetManifestError,
-            "not authorized for its split",
+            DatasetManifestError, "not validly authorized at snapshot time"
         ):
-            validate_authorized_dataset_snapshot(
-                snapshot_for(catalog, item), catalog=catalog
+            validate_dataset_snapshot(
+                snapshot_for(source_catalog, [source]),
+                catalog=source_catalog,
             )
 
-    def test_calibration_snapshot_accepts_safety_calibration_grant(self) -> None:
-        item = approved_item(
-            split="calibration", granted_purpose="safety_calibration"
+    def test_expiry_date_is_fail_closed(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
         )
-        catalog = catalog_with(item)
-        result = validate_authorized_dataset_snapshot(
-            snapshot_for(catalog, item), catalog=catalog
+        source["permissions"]["quality_evaluation"] = permission(
+            "granted",
+            authorized_on="2026-08-01",
+            expires_on="2026-08-06",
         )
-        self.assertEqual(result["assignments"][0]["split"], "calibration")
+        source_catalog = catalog([source])
+        with self.assertRaisesRegex(
+            DatasetManifestError, "not validly authorized at snapshot time"
+        ):
+            validate_dataset_snapshot(
+                snapshot_for(source_catalog, [source]),
+                catalog=source_catalog,
+            )
+
+    def test_permission_is_valid_before_expiry(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+        )
+        source["permissions"]["quality_evaluation"] = permission(
+            "granted",
+            authorized_on="2026-08-01",
+            expires_on="2026-08-07",
+            restrictions=[
+                {
+                    "type": "environment_allowlist",
+                    "values": ["stage1_offline"],
+                }
+            ],
+        )
+        source_catalog = catalog([source])
+        result = validate_dataset_snapshot(
+            snapshot_for(source_catalog, [source]),
+            catalog=source_catalog,
+        )
+        self.assertEqual(result["assignments"][0]["split"], "development")
+
+    def test_held_out_cannot_be_authorized_by_calibration(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="held_out",
+            granted_purpose="held_out_evaluation",
+        )
+        source["permissions"]["held_out_evaluation"] = permission()
+        source["permissions"]["safety_calibration"] = permission("granted")
+        with self.assertRaisesRegex(
+            DatasetManifestError, "held_out item may grant only"
+        ):
+            catalog_value = catalog([source])
+            validate_dataset_snapshot(
+                snapshot_for(catalog_value, [source]),
+                catalog=catalog_value,
+            )
+
+    def test_publication_does_not_authorize_calibration_snapshot(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="calibration",
+            granted_purpose="publication",
+        )
+        source_catalog = catalog([source])
+        with self.assertRaisesRegex(
+            DatasetManifestError, "not validly authorized at snapshot time"
+        ):
+            validate_dataset_snapshot(
+                snapshot_for(source_catalog, [source]),
+                catalog=source_catalog,
+            )
+
+    def test_stage1_snapshot_never_activates_training(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="training_reserved",
+            granted_purpose="model_training",
+        )
+        source_catalog = catalog([source])
+        value = snapshot_for(source_catalog, [source])
+        value["trainingUseActivated"] = True
+        with self.assertRaisesRegex(
+            DatasetManifestError, "cannot activate model training"
+        ):
+            validate_dataset_snapshot(value, catalog=source_catalog)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
   "catalogId": "dataset.catalog.metadata-contract-example.v1",
   "description": "Metadata-only Stage 1A contract example. No artifact bytes, active permissions, storage locator, or frozen split are included.",
   "items": [
@@ -11,27 +12,43 @@
         "state": "metadata_only",
         "sha256": null,
         "byteSize": null,
-        "storageLocator": null
+        "storageLocator": null,
+        "custodyProfileId": null,
+        "encryptionProfileId": null,
+        "custodianId": null
       },
       "provenance": {
         "sourceKind": "public_domain",
-        "sourceReference": "Metadata-only public-domain candidate; exact artifact not selected.",
-        "rightsHolder": "Public domain",
+        "sourceReference": "evidence:source-selection-pending-001",
+        "rightsHolderId": "subject:public-domain-001",
         "licenseId": "Public-Domain-1.0",
-        "usageBasis": "Stage 1A contract example only."
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "pending",
+          "verifiedBy": null,
+          "verifiedOn": null,
+          "evidenceReference": null
+        }
       },
       "privacy": {
         "classification": "none",
         "reviewStatus": "not_required",
-        "deidentificationMethod": null,
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
         "deidentifiedArtifactSha256": null
       },
       "input": {
         "kind": "digital_pdf",
         "mediaType": "application/pdf",
-        "notationKinds": ["staff"],
+        "notationKinds": [
+          "staff"
+        ],
         "pageCount": 1,
-        "degradations": ["none"]
+        "degradations": [
+          "none"
+        ]
       },
       "permissions": {
         "fixture_validation": {
@@ -94,6 +111,16 @@
           "revokedOn": null,
           "revocationReference": null
         },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
         "model_training": {
           "status": "not_requested",
           "authorizationReference": null,
@@ -130,19 +157,31 @@
         "policy": "metadata_only",
         "expiresOn": null,
         "storageClass": "not_assigned",
-        "deletionRequired": false
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
       },
       "syntheticGeneration": null,
       "review": {
         "status": "planned",
         "reviewedBy": null,
         "reviewedOn": null,
-        "notes": "No artifact, permission, storage, or split is active."
+        "evidenceReference": null,
+        "noteCodes": [
+          "metadata-contract-only"
+        ]
       },
       "assertions": {
         "teacherApprovalImpliedDatasetPermission": false,
         "teacherApprovalImpliedTrainingPermission": false,
-        "originalBytesInGit": false
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
       }
     }
   ]
