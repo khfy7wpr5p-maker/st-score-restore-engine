@@ -14,7 +14,7 @@ implementation must satisfy before the project may onboard real or
 controlled-synthetic score, TAB or mixed-layout artifacts.
 
 It is not a deployment guide and does not select a storage vendor, cloud region,
-KMS/HSM product or production identity provider.
+KMS/HSM product, production account or production identity provider.
 
 ## 2. Safety boundary
 
@@ -39,11 +39,17 @@ Stage 1B must not:
 | Zone | May contain | Must not contain | Key rule |
 |---|---|---|---|
 | Repository metadata | schemas, policies, opaque IDs, validators, tests | artifact bytes, secrets, real identity maps | ordinary Git remains metadata-only |
-| Control | policy decisions, state versions, idempotency records | raw encryption keys | all operations fail closed |
-| Quarantine | untrusted test/runtime bytes | processing eligibility | no restoration or dataset use |
-| Approved artifacts | encrypted approved objects | quarantined or revoked objects | digest and policy must match |
-| Audit/evidence | hash-chained events, receipts, tombstones | payload bytes, credentials, names/emails | append-only and redacted |
-| Backup/recovery | encrypted copies and tombstone indexes | ungoverned restore copies | tombstones load before data |
+| Control and policy | policy decisions, state versions, CAS/idempotency/fencing records | raw keys, real identity administration | all operations fail closed |
+| Identity and authorization registry | real-identity mapping, active roles, conflict and staleness state | artifact bytes, key material | opaque tokens are resolved outside Git |
+| Key management and recovery material | wrapping-key policy, key versions, recovery controls | artifact payloads, broad read grants | separate from storage and identity administration |
+| Quarantine and inspection | untrusted test/runtime bytes, inspection results | processing eligibility | isolated, bounded and network-denied |
+| Approved artifacts | encrypted approved objects | quarantined, revoked or unknown objects | digest and current policy must match |
+| Audit and evidence | hash-chained events, checkpoints, receipts, tombstones | payload bytes, credentials, names/emails | append-only, fork-detecting and redacted |
+| Backup and recovery | encrypted copies, audit checkpoints, tombstone indexes | ungoverned restore copies | evidence restores before payloads |
+
+A physical component may host multiple logical zones only when access controls,
+separate credentials, audit evidence and role separation prove equivalent
+isolation. A zone cannot implicitly grant another zone broader rights.
 
 ## 4. Required custody record
 
@@ -60,9 +66,11 @@ A provider adapter must expose a logical custody record with at least:
 - created, retained-until and state-transition timestamps,
 - revocation and deletion status,
 - legal/policy hold status,
-- last audit-event digest,
+- last audit-event digest and partition sequence,
+- minimum accepted audit checkpoint reference,
 - backup/tombstone status,
-- deletion receipt reference when completed.
+- pending-backup receipt reference where applicable,
+- final deletion completion receipt reference where applicable.
 
 Names, personal email addresses, student/teacher identifiers, local personal
 paths, provider URLs, bucket names, account IDs and credentials are invalid in
@@ -73,11 +81,11 @@ repository-visible fields.
 | Current state | Allowed next state | Required evidence | Processing eligibility |
 |---|---|---|---|
 | `absent` | `quarantined` | intake request, digest, size | no |
-| `quarantined` | `available` | inspection, policy binding, independent promotion | no until transition completes |
+| `quarantined` | `available` | isolated inspection, policy binding, independent promotion | no until transition completes |
 | `quarantined` | `deletion_pending` | rejection or withdrawal decision | no |
 | `available` | `deletion_pending` | expiry, revocation, incident or approved deletion | no immediately |
-| `deletion_pending` | `revoked` | active-copy removal plus backup tombstone evidence | no |
-| `revoked` | `tombstoned` | all completion conditions and receipt validation | no |
+| `deletion_pending` | `revoked` | active-copy unavailability plus valid backup tombstone and pending-backup receipt | no |
+| `revoked` | `tombstoned` | final deletion completion receipt | no |
 
 All other transitions are rejected. In particular:
 
@@ -85,24 +93,39 @@ All other transitions are rejected. In particular:
 - `tombstoned` cannot be reactivated,
 - `deletion_pending` cannot be read,
 - restore cannot bypass the state machine,
-- an unknown state cannot be interpreted as available.
+- an unknown state cannot be interpreted as available,
+- rollback to an older record version is invalid.
 
-## 6. Role matrix
+## 6. Role matrix and prohibited conflicts
 
 | Operation | Initiates | Independently authorizes | Executes | Verifies |
 |---|---|---|---|---|
 | quarantine intake | custody operator | access authorizer | custody operator | audit reviewer |
 | promotion to available | custody operator | rights/privacy/dataset gates plus access authorizer | custody operator | audit reviewer |
 | ordinary read grant | requester | access authorizer | custody service | audit reviewer |
-| key rotation | key custodian | separate key-policy approver | key custodian | audit reviewer |
+| key rotation | key custodian | key-policy approver | key custodian | audit reviewer |
 | revocation | rights/privacy/purpose authority | access authorizer | custody operator | audit reviewer |
 | physical deletion | custody operator | deletion authority | deletion executor | audit reviewer |
-| receipt finalization | deletion executor | independent deletion authority | control service | audit reviewer |
-| emergency access | requester | two-person emergency approval | custody service | mandatory post-event review |
+| pending-backup receipt | deletion executor | deletion authority | control service | deletion receipt verifier |
+| final deletion receipt | deletion executor | deletion authority | control service | deletion receipt verifier |
+| emergency access | emergency requester | two independent emergency approvers | custody service | mandatory post-event audit reviewer |
 
 The external identity registry must reject stale, disabled or conflicting role
-mappings. A person must not independently authorize purpose, grant access and
-finalize deletion for the same artifact.
+mappings using real-person identity, not opaque-token equality.
+
+For the same artifact, one real person must not hold both roles in any of these
+pairs:
+
+- access authorizer and custody operator,
+- key custodian and artifact access operator,
+- key-policy approver and key-operation executor,
+- deletion authority and deletion executor,
+- deletion executor and deletion receipt verifier,
+- audit reviewer and executor of the reviewed operation,
+- emergency requester and emergency approver.
+
+A person must not independently authorize purpose, grant access and finalize
+deletion evidence for the same artifact.
 
 ## 7. Authorization decision
 
@@ -111,38 +134,70 @@ condition passes:
 
 1. the record exists and is `available`,
 2. requested digest and byte size match,
-3. identity and role are active,
+3. identity and role are active and non-conflicting,
 4. purpose is explicitly allowed by Stage 1A metadata,
 5. environment and storage-class restrictions match,
-6. retention is valid,
+6. retention is valid under authoritative service time,
 7. no hold rule blocks the requested purpose,
 8. no revocation, deletion or incident lock is active,
-9. the grant is short-lived and bound to one artifact/purpose/environment,
-10. an audit event can be durably recorded.
+9. the grant is short-lived and bound to one artifact, purpose and environment,
+10. a durable audit event can be committed before access becomes effective.
 
-An audit-write failure denies the operation. Missing or ambiguous policy also
-denies the operation.
+An audit-write failure, missing policy, ambiguous policy, stale identity or
+unknown state denies the operation.
 
-## 8. Quarantine contract
+## 8. Emergency access contract
 
-Before promotion, the system must bind the exact received bytes to a digest and
-perform format-appropriate inspection. Inspection produces codes, not free-text
-personal descriptions.
+Emergency access uses a separate request and event type, a narrow expiry, two
+active independent approvers and mandatory post-event review.
+
+Emergency access may never bypass:
+
+- a state other than `available`,
+- digest or byte-size mismatch,
+- expired retention,
+- missing, expired or revoked purpose authorization,
+- rights or privacy denial,
+- deletion, revocation or incident lock,
+- storage-class or environment prohibition,
+- failed audit durability,
+- role-conflict rules.
+
+Emergency approval cannot be supplied by the requester, the executing custody
+operator or a stale/disabled identity.
+
+## 9. Quarantine and inspection contract
+
+Before promotion, the system binds the exact received bytes to digest and size
+and runs format-appropriate inspection in an isolated, low-privilege process or
+equivalent boundary.
+
+The inspection boundary requires:
+
+- no outbound network access,
+- read-only access to the immutable input,
+- no permission to replace or modify the source object,
+- minimum writable temporary storage,
+- explicit CPU, memory, wall-clock and output limits,
+- source-byte, decoded-pixel and decompression limits,
+- recursive archive rejection or a fixed tested depth and expansion ratio,
+- fail-closed handling of parser crash, timeout and ambiguous output,
+- structured result codes rather than free-text personal descriptions.
 
 Promotion requires all of:
 
-- digest and size verification,
-- supported-format structural inspection,
+- digest and size verification after inspection,
+- supported-format structural decision,
 - unsafe-container/malware decision,
 - rights, privacy and dataset gate references,
 - encryption-policy binding,
 - independent promotion authorization,
-- successful append-only audit event.
+- successful durable audit event.
 
-Failure leaves the object unavailable. A retry uses the same idempotency key or
-creates a new explicitly linked attempt.
+Failure leaves the object unavailable. A retry uses the same canonical request
+fingerprint or creates a new explicitly linked attempt.
 
-## 9. Encryption contract
+## 10. Encryption contract
 
 The logical contract assumes envelope encryption:
 
@@ -152,49 +207,88 @@ The logical contract assumes envelope encryption:
 - key references are opaque,
 - key versions and rotation events are audited,
 - application logs never contain key material,
-- recovery keys are subject to narrower roles and dual control.
+- recovery keys are subject to narrower roles and dual control,
+- key custodian and artifact access operator are separate real people,
+- key-policy approver and key-operation executor are separate real people.
 
 The contract must be testable with a non-production reference adapter without
 claiming production cryptographic assurance.
 
-## 10. Audit-event contract
+## 11. Audit event, ordering and checkpoint contract
 
-Every security-relevant operation emits an event with:
+Every security-relevant operation emits a canonical event with:
 
 - opaque event ID,
 - custody record ID and record version,
 - artifact SHA-256,
-- operation code,
-- result code,
+- operation code and result code,
 - opaque actor, role and authorization references,
-- UTC timestamp,
+- authoritative UTC timestamp,
 - previous-event digest,
-- idempotency/request reference,
+- monotonically increasing partition sequence,
+- canonical request fingerprint,
+- idempotency reference,
 - policy-decision code,
-- failure code where applicable.
+- redacted failure code where applicable.
 
 Audit validation must reject:
 
 - duplicate event IDs,
 - broken previous-event digests,
-- non-monotonic record versions,
-- replay with different parameters,
-- unknown actors or roles,
+- non-monotonic record versions or partition sequences,
+- replay with different canonical parameters,
+- rollback to an older custody version,
+- unknown, stale or conflicting actors/roles,
 - free-text identity or secret-bearing fields,
 - an `allow` result without a durable event.
 
-## 11. Retention and holds
+The audit system periodically creates an integrity-protected checkpoint with the
+accepted partition sequence and chain head. Validation must detect and reject:
+
+- forks from an accepted sequence,
+- chain truncation below the minimum accepted checkpoint,
+- a checkpoint inconsistent with its event chain,
+- restoration from a chain head older than the configured minimum checkpoint.
+
+## 12. Atomic transition, CAS, fencing and time contract
+
+Security-sensitive state changes require compare-and-swap against the expected
+record version. A conflicting version returns a deterministic conflict and does
+not partially apply the operation.
+
+For `available → deletion_pending`, one fail-closed security transaction must:
+
+1. verify expected state and record version,
+2. write the new state and version,
+3. invalidate active and cached grants,
+4. fence queued and in-flight work,
+5. record tombstone intent,
+6. durably append the audit event.
+
+No success response is allowed when audit durability or fencing is unknown. If a
+backend cannot provide one physical transaction, a documented protocol must
+make access unavailable first and prove crash recovery cannot reopen it.
+
+Authorization and expiry use authoritative service time in UTC. Client
+timestamps are evidence only and never control authorization. The implementation
+must define maximum accepted clock skew and fail closed outside it.
+
+Idempotency binds request ID to canonical request fingerprint, artifact ID,
+expected record version and operation code. A different fingerprint under the
+same request ID is a conflicting replay.
+
+## 13. Retention and holds
 
 Retention expiry blocks access before deletion completes.
 
-A legal or policy hold must include an opaque authority reference, reason code,
-start time and review/expiry rule. A hold may prevent physical deletion but may
-not restore evaluation, calibration, derivation, publication, demonstration or
-training eligibility.
+A legal or policy hold includes an opaque authority reference, typed reason
+code, start time and review/expiry rule. A hold may prevent physical deletion
+but may not restore evaluation, calibration, derivation, publication,
+demonstration or training eligibility.
 
-Expired or malformed holds fail closed and require independent review.
+Expired, stale or malformed holds fail closed and require independent review.
 
-## 12. Revocation and deletion workflow
+## 14. Revocation and deletion workflow
 
 Deletion is a multi-boundary workflow:
 
@@ -203,99 +297,129 @@ Deletion is a multi-boundary workflow:
 3. stop and fence queued/in-flight work,
 4. remove primary object data,
 5. remove replicas and caches,
-6. remove or expire temporary/derived transient material,
+6. remove or expire temporary and derived transient material,
 7. record backup tombstone and maximum backup expiry,
 8. dispose or revoke the object key envelope as policy requires,
-9. validate audit continuity,
-10. issue a deletion receipt only for completed boundaries.
+9. validate audit continuity and checkpoint state,
+10. issue only the evidence type whose completion conditions are met.
 
 A partial failure remains `deletion_pending`. Retrying with the same request is
 idempotent; a conflicting replay is rejected.
 
-## 13. Deletion receipt
+## 15. Two deletion evidence types
 
-A valid receipt includes:
+### 15.1 Revocation / pending-backup receipt
+
+This receipt proves that active use is blocked and records:
 
 - opaque receipt and request IDs,
 - artifact digest and custody record version,
 - revocation authority reference,
-- start and completion times,
-- disposition for primary, replicas, caches, temporary objects, queued work,
-  backup tombstone and key envelope,
-- maximum remaining backup expiry where physical deletion is delayed,
+- transition time to `deletion_pending`,
+- active-grant invalidation and work-fencing result,
+- disposition of primary, replicas, caches and transient objects,
+- backup tombstone status and maximum remaining backup expiry,
+- key-envelope disposition,
 - executor and independent verifier references,
-- final audit-event digest,
+- final audit-event digest and checkpoint reference,
 - canonical receipt SHA-256.
 
-No successful receipt is issued when any required boundary is unknown,
-unverified or failed.
+It must be explicitly typed `revocation_pending_backup` and must not set deletion
+status to `completed`.
 
-## 14. Backup and restore contract
+### 15.2 Final deletion completion receipt
 
-Backups must include or be paired with an integrity-protected tombstone index.
+This receipt is allowed only when every required boundary, including backup
+expiry or verified destruction, is complete. It includes all pending-backup
+fields plus final backup disposition and completion time.
+
+Only this receipt may be typed `final_deletion_complete`, set deletion status to
+`completed` and authorize transition from `revoked` to `tombstoned`.
+
+No receipt is successful when a required boundary is unknown, unverifiable or
+failed.
+
+## 16. Backup and restore contract
+
+Backups must include or be paired with integrity-protected policy, audit
+checkpoint and tombstone indexes.
+
 Restore order is mandatory:
 
-1. restore and validate policy/audit/tombstone evidence,
-2. identify revoked, expired, deletion-pending or unknown artifact digests,
-3. quarantine those payloads,
-4. restore only records still eligible under current policy,
-5. audit every disposition.
+1. restore and validate policy, audit checkpoints and tombstones,
+2. reject a source below the minimum accepted checkpoint,
+3. identify revoked, expired, deletion-pending or unknown artifact digests,
+4. quarantine those payloads,
+5. restore only records still eligible under current policy,
+6. audit every disposition.
 
-A backup payload without matching policy and tombstone evidence is quarantined,
-not made available.
+A backup payload without matching policy, tombstone and checkpoint evidence is
+quarantined, not made available. Restore cannot reduce a record version or
+replace a newer tombstone with older evidence.
 
-## 15. Non-sensitive reference drill
+## 17. Non-sensitive reference drill
 
-The Stage 1B Draft PR may implement a provider-neutral in-memory or temporary
-local reference adapter solely for operational testing. It uses test-run-created
-bytes such as a fixed project-authored marker; it does not commit music-score or
-TAB artifacts.
+A future Stage 1B Draft PR may implement a provider-neutral in-memory or
+temporary local reference adapter solely for operational testing. It uses
+run-created, project-authored, non-musical marker bytes and does not commit
+score/TAB artifacts.
 
 Required positive tests:
 
-- quarantine then authorized promotion,
+- isolated quarantine then authorized promotion,
 - narrowly scoped read grant,
-- idempotent deletion request,
-- complete receipt and tombstone generation,
-- valid restore of a still-eligible test object.
+- idempotent revocation request,
+- pending-backup receipt generation,
+- final deletion completion receipt generation after backup completion,
+- valid restore of a still-eligible test object from a current checkpoint.
 
 Required negative tests:
 
-- role collision,
-- stale/disabled identity,
+- every prohibited role collision,
+- stale or disabled identity,
+- emergency access attempting each non-bypassable denial,
 - unauthorized environment or storage class,
 - read during `deletion_pending`,
-- duplicate event and broken hash chain,
+- inspection timeout, crash, expansion limit and network-attempt failure,
+- compare-and-swap version conflict,
+- state change with audit failure,
+- state change with incomplete work fencing,
+- duplicate event, broken hash chain and non-monotonic sequence,
+- audit fork, truncation and checkpoint rollback,
 - conflicting idempotency replay,
 - incomplete replica/cache deletion,
 - missing backup tombstone,
-- restore that attempts to resurrect revoked data,
-- audit failure during an otherwise valid operation,
-- receipt finalization by the deletion executor without independent verification.
+- pending-backup receipt incorrectly claiming completion,
+- final receipt before backup completion,
+- restore attempting to resurrect revoked data,
+- restore from a stale or missing checkpoint,
+- receipt finalization by deletion executor without independent verification.
 
-## 16. CI and repository gates
+## 18. CI and repository gates
 
 A future Stage 1B implementation PR must prove:
 
 - ordinary Git contains no artifact payloads or secrets,
-- no provider-specific account/region/resource appears,
+- no provider-specific account, region or resource appears,
 - no active Stage 1A permission or real split is introduced,
-- all custody schemas and Python validators remain in parity,
+- custody schemas and Python validators remain in parity,
 - Python 3.11 and 3.12 tests pass,
 - repository, fixture and Stage 1A dataset validators continue to pass,
-- Stage 1B operational negative tests pass,
+- Stage 1B operational positive and negative tests pass,
 - compile validation passes,
 - the exact PR head is independently audited.
 
-## 17. Exit gate
+## 19. Exit gate
 
 Stage 1B is not complete until:
 
 - ADR 0014 and this contract are accepted,
 - machine-enforceable contracts and reference drill pass,
-- deletion receipt and tombstone behavior are demonstrated,
+- role conflicts and emergency non-bypass rules are negatively tested,
+- audit fork, rollback and truncation detection are demonstrated,
+- atomic revocation and fencing behavior are demonstrated,
+- pending-backup and final deletion receipts are distinguished and validated,
 - restore cannot resurrect revoked test objects,
-- role conflicts and replay paths are negatively tested,
 - no real/private artifact, credential or provider resource exists,
 - independent security review passes,
 - separate Ready and merge approvals are completed.

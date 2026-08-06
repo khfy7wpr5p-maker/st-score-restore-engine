@@ -20,39 +20,52 @@ quarantined, encrypted, accessed, audited, retained, revoked, deleted and
 restored. The boundary must remain testable without placing real/private music
 artifacts or production secrets in ordinary Git.
 
-This ADR defines the provider-neutral decisions required for Stage 1B. It does
-not select a cloud vendor, region, KMS/HSM product or production account.
+This ADR defines provider-neutral decisions only. It does not select a cloud
+vendor, region, KMS/HSM product, production account or identity provider.
 
 ## Decision
 
 ### 1. Provider-neutral control contract
 
-Stage 1B defines required behavior rather than a vendor configuration. A future
-provider adapter must prove that it implements the same state transitions,
-access policy, audit events, deletion evidence and restore safeguards.
+Stage 1B defines required behavior rather than vendor configuration. A future
+provider adapter must prove that it implements the same trust boundaries, state
+transitions, access policy, audit integrity, deletion evidence and restore
+safeguards.
 
 Provider-specific resources, credentials and infrastructure definitions are not
 permitted in this ADR or its first Draft PR.
 
 ### 2. Trust zones
 
-The custody system has six separate trust zones:
+The custody system has eight separate trust zones:
 
 1. **Repository metadata zone** — schemas, policies, opaque references and test
    code only; no document bytes, credentials or personal identity mapping.
-2. **Control zone** — validates authorization, state transitions, idempotency and
-   policy. It does not expose raw key material.
-3. **Quarantine zone** — receives untrusted bytes. Quarantined objects cannot be
-   used by restoration, evaluation, calibration, derivation or training.
-4. **Approved artifact zone** — contains only objects that passed required
+2. **Control and policy zone** — evaluates policy, state versions, compare-and-
+   swap transitions, idempotency and fencing. It holds no raw key material and
+   cannot independently assign real identities.
+3. **Identity and authorization registry zone** — maps opaque actor tokens to
+   real identities and active roles, enforces role conflicts, staleness,
+   disabling and emergency-approval requirements. The real identity map remains
+   outside ordinary Git and outside artifact storage.
+4. **Key management and recovery-material zone** — governs wrapping keys,
+   recovery material, rotation and key-policy approval. It is separated from
+   object storage, artifact read execution and identity administration.
+5. **Quarantine and inspection zone** — receives untrusted bytes and runs
+   isolated inspection. Quarantined objects cannot be used by restoration,
+   evaluation, calibration, derivation or training.
+6. **Approved artifact zone** — contains only encrypted objects that passed
    custody, rights, privacy and dataset gates.
-5. **Audit and evidence zone** — append-only operational events, deletion
-   receipts and tombstones; no artifact payloads or secret values.
-6. **Backup and recovery zone** — isolated copies governed by expiry and
-   tombstone rules. Restore must apply revocation state before making any object
-   available.
+7. **Audit and evidence zone** — append-only events, checkpoints, deletion
+   receipts and tombstones; no artifact payloads, real identities or secret
+   values.
+8. **Backup and recovery zone** — isolated copies governed by expiry,
+   checkpoint and tombstone rules. Restore must validate policy, audit and
+   revocation evidence before making any object available.
 
-No zone may silently grant another zone broader rights.
+No zone may silently grant another zone broader rights. A single implementation
+may host multiple logical zones only when access control, audit and
+separation-of-duty evidence proves equivalent isolation.
 
 ### 3. Custody states
 
@@ -87,18 +100,22 @@ provider URLs.
 Future storage implementations must use encryption in transit and at rest.
 Envelope encryption is the required conceptual model:
 
-- each object is protected by an object data-encryption key,
+- each object is protected by an object data-encryption key or equivalently
+  isolated cryptographic scope,
 - data-encryption keys are wrapped by a separately governed key-encryption key,
 - raw key material is never stored in ordinary Git, audit events or application
   logs,
 - key policy and key-version references are opaque identifiers,
 - key rotation re-wraps or re-encrypts under an audited operation,
-- recovery material has stricter access than ordinary custody operations.
+- recovery material has stricter access than ordinary custody operations,
+- key custodian and artifact access operator cannot be the same real person for
+  the same artifact,
+- key-policy approval is independent from key-operation execution.
 
 Cryptographic erasure may be supporting evidence but is not, by itself, proof
 that replicas, caches and backups were handled correctly.
 
-### 6. Roles and separation of duty
+### 6. Roles and non-bypassable separation of duty
 
 Stage 1B distinguishes these roles:
 
@@ -109,19 +126,35 @@ Stage 1B distinguishes these roles:
 - custody operator,
 - access authorizer,
 - key custodian,
+- key-policy approver,
 - audit reviewer,
-- deletion executor.
+- deletion authority,
+- deletion executor,
+- deletion receipt verifier,
+- emergency requester,
+- emergency approver.
 
-The external identity registry maps opaque repository tokens to real identities
-and enforces role-conflict rules. That registry is outside ordinary Git.
+The identity registry maps opaque repository tokens to real identities and
+enforces conflicts outside ordinary Git.
+
+For the same artifact, the following role pairs are prohibited for one real
+person:
+
+- access authorizer and custody operator,
+- key custodian and artifact access operator,
+- deletion authority and deletion executor,
+- deletion executor and deletion receipt verifier,
+- audit reviewer and executor of the reviewed operation,
+- emergency requester and emergency approver,
+- key-policy approver and key-operation executor.
 
 No single real person may independently authorize purpose, grant access and
-finalize deletion evidence for the same artifact. Emergency access requires a
-separate event type, narrow duration, independent approval and post-event audit.
+finalize deletion evidence for the same artifact. Conflict checks use real
+identity, not opaque token equality, and stale or disabled mappings fail closed.
 
-### 7. Deny-by-default access
+### 7. Deny-by-default and emergency access
 
-Access is denied unless all of the following are true:
+Ordinary access is denied unless all of the following are true:
 
 - custody state is `available`,
 - artifact identity matches the requested digest and size,
@@ -129,83 +162,149 @@ Access is denied unless all of the following are true:
 - the role and purpose are explicitly permitted,
 - environment and storage-class restrictions match,
 - retention has not expired,
-- no deletion, revocation or incident lock is active,
-- the access grant is short-lived and independently auditable.
+- no deletion, revocation, hold-based purpose block or incident lock is active,
+- the access grant is short-lived and independently auditable,
+- the durable audit event can be committed before access becomes effective.
+
+Emergency access requires a distinct event type, narrow duration, two active
+independent approvers and mandatory post-event review. It may never bypass:
+
+- any state other than `available`,
+- digest or byte-size mismatch,
+- expired retention,
+- revoked or missing purpose authorization,
+- rights or privacy denial,
+- deletion, revocation or incident lock,
+- environment or storage-class prohibition,
+- failed audit durability.
 
 Static credentials, broad shared accounts and credentials stored in the
 repository are prohibited.
 
-### 8. Quarantine boundary
+### 8. Quarantine and inspection isolation
 
-New bytes enter only the quarantine zone. Promotion to `available` requires:
+New bytes enter only the quarantine zone. Inspection must run in a separate,
+low-privilege process or equivalent isolation with:
 
-- exact digest and size calculation,
-- type and structural inspection,
-- malware or unsafe-container inspection appropriate to the format,
-- rights, privacy and dataset eligibility evidence,
-- encryption and custody policy binding,
-- independent promotion authorization.
+- no outbound network access,
+- read-only input and no ability to alter the source object,
+- minimum writable temporary storage,
+- explicit CPU, memory, wall-clock and output limits,
+- byte-size, decoded-pixel and decompression limits,
+- recursive archive rejection or a fixed, tested depth and expansion limit,
+- parser crash, timeout or ambiguous result treated as failure,
+- no restoration, evaluation or dataset consumer access.
 
-Inspection failure leaves the object quarantined or moves it directly into the
-deletion workflow. No parser or restoration engine consumes quarantined bytes.
+Promotion to `available` additionally requires exact digest and size
+verification, supported-format structural inspection, unsafe-container/malware
+decision, rights/privacy/dataset evidence, encryption-policy binding,
+independent promotion authorization and a durable audit event.
 
-### 9. Audit integrity
+Inspection failure leaves the object quarantined or moves it into the deletion
+workflow.
 
-Every security-relevant operation produces an append-only event containing:
+### 9. Audit integrity, fork resistance and checkpoints
+
+Every security-relevant operation produces a canonical append-only event with:
 
 - opaque event ID,
 - artifact digest and custody record version,
 - operation type and result,
-- opaque actor and authorization references,
-- UTC timestamp,
+- opaque actor, role and authorization references,
+- authoritative UTC timestamp,
 - previous-event digest,
-- request/idempotency reference,
+- monotonically increasing partition sequence,
+- canonical request fingerprint and idempotency reference,
 - policy decision code,
 - redacted failure code where applicable.
 
-Events are hash chained per custody record. Duplicate request IDs must return
-the existing result; conflicting replay attempts fail closed. Audit records may
-not include artifact bytes, credentials, key material, names, emails or free-text
-personal data.
+Events are hash chained per custody record and ordered within an audit
+partition. Duplicate request IDs with the same canonical fingerprint return the
+existing result; conflicting replay attempts fail closed.
 
-### 10. Retention, hold and revocation
+The audit system must periodically produce an integrity-protected checkpoint
+containing the accepted partition sequence and chain head. Validation rejects:
+
+- a fork from an already accepted sequence,
+- truncation below the minimum accepted checkpoint,
+- rollback to an older custody version,
+- a chain head inconsistent with the checkpoint,
+- an event with a non-canonical request fingerprint.
+
+Restore sources must include a checkpoint at or above the configured minimum
+accepted checkpoint. Audit records may not include artifact bytes, credentials,
+key material, names, emails or free-text personal data.
+
+### 10. Atomic state transitions, fencing and time
+
+A security-sensitive transition is one compare-and-swap operation over the
+expected custody record version. For `available → deletion_pending`, the
+following effects form one fail-closed security transaction:
+
+- verify expected state and version,
+- write the new state/version,
+- invalidate active and cached access grants,
+- fence queued and in-flight work,
+- record tombstone intent,
+- durably append the audit event.
+
+If durable audit commit or fencing cannot be proven, no access may continue and
+the operation remains denied or recoverably `deletion_pending`; it must never
+return success with an unrecorded state.
+
+Client-provided timestamps are untrusted. Authorization and expiry decisions use
+an authoritative service time source, UTC normalization and a documented
+maximum clock-skew policy. Idempotency is bound to the canonical request
+fingerprint, artifact ID and expected record version.
+
+### 11. Retention, hold and revocation
 
 Retention expiry immediately blocks new use. A policy or legal hold may delay
 physical deletion only when represented by an explicit, independently approved
 hold record. A hold never restores processing eligibility.
 
-Revocation starts by changing the object to `deletion_pending`, invalidating
-access grants and recording a tombstone intent. Physical deletion then
+Revocation starts with the atomic transition to `deletion_pending`, access-grant
+invalidation, work fencing and tombstone intent. Physical deletion then
 propagates through active storage, replicas, caches and backup schedules.
 
-### 11. Deletion evidence
+### 12. Two-stage deletion evidence
 
-A deletion operation is complete only when the receipt records the disposition
-of every required boundary:
+Deletion evidence has two distinct types:
+
+1. **Revocation / pending-backup receipt** — proves active use is blocked,
+   primary/replica/cache/transient handling is complete or explicitly pending,
+   a backup tombstone is active, and the maximum remaining backup expiry is
+   recorded. It does not claim final physical deletion.
+2. **Final deletion completion receipt** — proves every required boundary,
+   including backup expiry or verified destruction, is complete. Only this
+   receipt may set deletion status to `completed` and allow `tombstoned`.
+
+Required boundaries are:
 
 - primary object,
 - replicas,
 - caches and temporary material,
 - queued work and derived transient copies,
-- backup tombstone and maximum expiry date,
+- backup tombstone and maximum expiry,
 - key-envelope disposition,
 - audit and metadata tombstone retention.
 
-An incomplete boundary produces `deletion_pending`, never a successful receipt.
-The final state is `revoked` while backup expiry remains outstanding and
-`tombstoned` only after the contract's completion conditions are met.
+An unknown, failed or unverifiable boundary keeps the object
+`deletion_pending`. The state may become `revoked` only when active copies are
+unavailable and backup tombstone evidence is valid; `tombstoned` requires the
+final completion receipt.
 
-### 12. Recovery cannot resurrect revoked data
+### 13. Recovery cannot resurrect revoked data
 
-Recovery and restore operations must load and validate tombstones before
-restoring artifact availability. Any restored copy whose digest is revoked,
-expired, deletion-pending or absent from the approved custody catalog is
-quarantined and scheduled for deletion.
+Recovery and restore operations must first restore and validate policy, audit
+checkpoints and tombstones. Any copy whose digest is revoked, expired,
+`deletion_pending`, absent from the approved custody catalog or backed by a
+stale/forked audit checkpoint is quarantined and scheduled for deletion.
 
-A backup snapshot without its corresponding tombstone/audit evidence is not a
-valid restore source.
+A backup snapshot without corresponding tombstone, audit and minimum-checkpoint
+evidence is not a valid restore source.
 
-### 13. Non-sensitive operational drill
+### 14. Non-sensitive operational drill
 
 Stage 1B may use only project-authored, non-musical, non-personal test objects
 generated during the test run. Test object bytes are not committed as dataset
@@ -214,15 +313,20 @@ artifacts.
 The drill must demonstrate:
 
 - quarantine and promotion,
+- sandbox-limit failure remaining unavailable,
 - least-privilege read authorization,
+- role-conflict rejection,
+- emergency-access non-bypass conditions,
+- compare-and-swap conflict rejection,
+- atomic revocation and work fencing,
 - idempotent revocation,
-- deletion propagation evidence,
+- audit fork, truncation and replay rejection,
+- pending-backup and final-completion receipt distinction,
 - partial deletion failure remaining fail closed,
-- replay rejection,
 - restore after revocation remaining unavailable,
-- deterministic receipt and tombstone validation.
+- deterministic receipt, checkpoint and tombstone validation.
 
-### 14. Stage boundaries
+### 15. Stage boundaries
 
 Stage 1B may add provider-neutral documentation, schemas, validators, reference
 interfaces and non-sensitive operational tests. It may not create production
@@ -237,9 +341,9 @@ The project gains an auditable and testable operational boundary before any
 artifact onboarding. Provider selection and deployment can later be evaluated
 against an explicit contract rather than becoming the source of policy.
 
-The cost is additional metadata, role separation, deletion evidence and restore
-complexity. That complexity is intentional because silent reuse or resurrection
-of revoked music documents is unacceptable.
+The additional identity, key, audit-checkpoint, transaction and deletion-proof
+complexity is intentional because silent reuse or resurrection of revoked music
+documents is unacceptable.
 
 ## Rejected alternatives
 
@@ -253,6 +357,10 @@ of revoked music documents is unacceptable.
   approval is independent from dataset and storage authorization.
 - **Use deletion of a locator as deletion proof:** rejected because replicas,
   caches, backups and recovery paths could still contain the object.
+- **Use a per-record hash chain without checkpoints:** rejected because chain
+  truncation, rollback and fork may remain undetected.
+- **Use one generic deletion receipt:** rejected because it can misrepresent a
+  backup-tombstoned but not yet physically expired copy as fully deleted.
 
 ## Review and merge gates
 
