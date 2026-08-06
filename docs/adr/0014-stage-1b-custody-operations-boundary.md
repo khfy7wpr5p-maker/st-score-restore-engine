@@ -1,6 +1,6 @@
 # ADR 0014: Stage 1B Provider-Neutral Custody and Operations Boundary
 
-- **Status:** Proposed for independent Stage 1B review
+- **Status:** Proposed for renewed independent Stage 1B review
 - **Date:** 2026-08-06
 - **Decision ID:** `adr-0014-stage-1b-custody-operations-v1`
 - **Roadmap stage:** Stage 1B only
@@ -174,6 +174,7 @@ independent approvers and mandatory post-event review. It may never bypass:
 - expired retention,
 - revoked or missing purpose authorization,
 - rights or privacy denial,
+- an active legal or policy hold that blocks the requested purpose,
 - deletion, revocation or incident lock,
 - environment or storage-class prohibition,
 - failed audit durability.
@@ -231,9 +232,17 @@ containing the accepted partition sequence and chain head. Validation rejects:
 - a chain head inconsistent with the checkpoint,
 - an event with a non-canonical request fingerprint.
 
-Restore sources must include a checkpoint at or above the configured minimum
-accepted checkpoint. Audit records may not include artifact bytes, credentials,
-key material, names, emails or free-text personal data.
+Each accepted checkpoint must also be verifiable through an independent
+anti-rollback anchor outside the audit partition and outside any backup snapshot.
+The anchor must use a separately governed signing key or independent witness and
+must monotonically bind the accepted partition sequence and chain head. The
+minimum accepted checkpoint used during authorization or restore must come from
+the live anti-rollback anchor, never from the snapshot being restored. Missing,
+stale, forked or mismatched anchor evidence fails closed.
+
+Restore sources must include a checkpoint at or above the independently anchored
+minimum accepted checkpoint. Audit records may not include artifact bytes,
+credentials, key material, names, emails or free-text personal data.
 
 ### 10. Atomic state transitions, fencing and time
 
@@ -262,6 +271,13 @@ fingerprint, artifact ID and expected record version.
 Retention expiry immediately blocks new use. A policy or legal hold may delay
 physical deletion only when represented by an explicit, independently approved
 hold record. A hold never restores processing eligibility.
+
+A valid rights, privacy or purpose revocation, retention expiry or incident lock
+is an immediate control event. It does not require access-authorizer approval and
+cannot be delayed or vetoed by an access authorizer. The control zone must
+atomically block access, invalidate grants, fence work and begin the
+`deletion_pending` workflow. Independent audit verification occurs after the
+security effect and may not re-enable the artifact.
 
 Revocation starts with the atomic transition to `deletion_pending`, access-grant
 invalidation, work fencing and tombstone intent. Physical deletion then
@@ -296,13 +312,14 @@ final completion receipt.
 
 ### 13. Recovery cannot resurrect revoked data
 
-Recovery and restore operations must first restore and validate policy, audit
-checkpoints and tombstones. Any copy whose digest is revoked, expired,
-`deletion_pending`, absent from the approved custody catalog or backed by a
-stale/forked audit checkpoint is quarantined and scheduled for deletion.
+Recovery and restore operations must first obtain the live independent
+anti-rollback anchor and then validate policy, audit checkpoints and tombstones.
+Any copy whose digest is revoked, expired, `deletion_pending`, absent from the
+approved custody catalog or backed by a stale, forked or unanchored audit
+checkpoint is quarantined and scheduled for deletion.
 
-A backup snapshot without corresponding tombstone, audit and minimum-checkpoint
-evidence is not a valid restore source.
+A backup snapshot without corresponding tombstone, audit and independently
+anchored minimum-checkpoint evidence is not a valid restore source.
 
 ### 14. Non-sensitive operational drill
 
@@ -316,15 +333,18 @@ The drill must demonstrate:
 - sandbox-limit failure remaining unavailable,
 - least-privilege read authorization,
 - role-conflict rejection,
+- immediate revocation without access-authorizer approval,
+- emergency-access rejection under an active purpose-blocking hold,
 - emergency-access non-bypass conditions,
 - compare-and-swap conflict rejection,
 - atomic revocation and work fencing,
 - idempotent revocation,
 - audit fork, truncation and replay rejection,
+- independent checkpoint-anchor mismatch and rollback rejection,
 - pending-backup and final-completion receipt distinction,
 - partial deletion failure remaining fail closed,
 - restore after revocation remaining unavailable,
-- deterministic receipt, checkpoint and tombstone validation.
+- deterministic receipt, checkpoint, anchor and tombstone validation.
 
 ### 15. Stage boundaries
 
@@ -341,9 +361,9 @@ The project gains an auditable and testable operational boundary before any
 artifact onboarding. Provider selection and deployment can later be evaluated
 against an explicit contract rather than becoming the source of policy.
 
-The additional identity, key, audit-checkpoint, transaction and deletion-proof
-complexity is intentional because silent reuse or resurrection of revoked music
-documents is unacceptable.
+The additional identity, key, audit-checkpoint, anti-rollback-anchor,
+transaction and deletion-proof complexity is intentional because silent reuse
+or resurrection of revoked music documents is unacceptable.
 
 ## Rejected alternatives
 
@@ -359,6 +379,10 @@ documents is unacceptable.
   caches, backups and recovery paths could still contain the object.
 - **Use a per-record hash chain without checkpoints:** rejected because chain
   truncation, rollback and fork may remain undetected.
+- **Store the minimum accepted checkpoint only inside the backup:** rejected
+  because the backup and its rollback boundary could be restored together.
+- **Require access-authorizer approval before revocation takes effect:** rejected
+  because an access-control role must not delay or veto a valid safety removal.
 - **Use one generic deletion receipt:** rejected because it can misrepresent a
   backup-tombstoned but not yet physically expired copy as fully deleted.
 

@@ -68,6 +68,7 @@ A provider adapter must expose a logical custody record with at least:
 - legal/policy hold status,
 - last audit-event digest and partition sequence,
 - minimum accepted audit checkpoint reference,
+- independent anti-rollback anchor reference,
 - backup/tombstone status,
 - pending-backup receipt reference where applicable,
 - final deletion completion receipt reference where applicable.
@@ -104,7 +105,7 @@ All other transitions are rejected. In particular:
 | promotion to available | custody operator | rights/privacy/dataset gates plus access authorizer | custody operator | audit reviewer |
 | ordinary read grant | requester | access authorizer | custody service | audit reviewer |
 | key rotation | key custodian | key-policy approver | key custodian | audit reviewer |
-| revocation | rights/privacy/purpose authority | access authorizer | custody operator | audit reviewer |
+| revocation | rights/privacy/purpose authority, retention policy or incident authority | none before effect; immediate policy action | custody control service | independent audit reviewer after effect |
 | physical deletion | custody operator | deletion authority | deletion executor | audit reviewer |
 | pending-backup receipt | deletion executor | deletion authority | control service | deletion receipt verifier |
 | final deletion receipt | deletion executor | deletion authority | control service | deletion receipt verifier |
@@ -126,6 +127,11 @@ pairs:
 
 A person must not independently authorize purpose, grant access and finalize
 deletion evidence for the same artifact.
+
+A valid rights, privacy or purpose revocation, retention expiry or incident lock
+takes effect immediately and cannot require, await or be vetoed by an access
+authorizer. The independent audit reviewer verifies the event after access is
+blocked; review failure cannot re-enable the artifact.
 
 ## 7. Authorization decision
 
@@ -158,6 +164,7 @@ Emergency access may never bypass:
 - expired retention,
 - missing, expired or revoked purpose authorization,
 - rights or privacy denial,
+- an active legal or policy hold that blocks the requested purpose,
 - deletion, revocation or incident lock,
 - storage-class or environment prohibition,
 - failed audit durability,
@@ -214,7 +221,7 @@ The logical contract assumes envelope encryption:
 The contract must be testable with a non-production reference adapter without
 claiming production cryptographic assurance.
 
-## 11. Audit event, ordering and checkpoint contract
+## 11. Audit event, ordering, checkpoint and anti-rollback contract
 
 Every security-relevant operation emits a canonical event with:
 
@@ -243,12 +250,25 @@ Audit validation must reject:
 - an `allow` result without a durable event.
 
 The audit system periodically creates an integrity-protected checkpoint with the
-accepted partition sequence and chain head. Validation must detect and reject:
+accepted partition sequence and chain head. Each accepted checkpoint must be
+verifiable through an independent anti-rollback anchor outside the audit
+partition and outside any backup snapshot. The anchor must use a separately
+governed signing key or independent witness and monotonically bind the accepted
+partition sequence and chain head.
+
+Validation must detect and reject:
 
 - forks from an accepted sequence,
-- chain truncation below the minimum accepted checkpoint,
+- chain truncation below the independently anchored minimum checkpoint,
 - a checkpoint inconsistent with its event chain,
-- restoration from a chain head older than the configured minimum checkpoint.
+- a checkpoint whose signature or witness evidence is missing or invalid,
+- a checkpoint whose sequence or chain head conflicts with the live anchor,
+- restoration from a chain head older than the independently anchored minimum.
+
+The minimum accepted checkpoint is read from the live anti-rollback anchor. It
+must never be derived from, lowered by or replaced with a value inside the
+snapshot being restored. Missing, stale, forked or mismatched anchor evidence
+fails closed.
 
 ## 12. Atomic transition, CAS, fencing and time contract
 
@@ -277,7 +297,7 @@ Idempotency binds request ID to canonical request fingerprint, artifact ID,
 expected record version and operation code. A different fingerprint under the
 same request ID is a conflicting replay.
 
-## 13. Retention and holds
+## 13. Retention, holds and immediate revocation
 
 Retention expiry blocks access before deletion completes.
 
@@ -287,6 +307,13 @@ but may not restore evaluation, calibration, derivation, publication,
 demonstration or training eligibility.
 
 Expired, stale or malformed holds fail closed and require independent review.
+
+A valid rights, privacy or purpose revocation, retention expiry or incident lock
+is an immediate control event. The custody control service must atomically move
+or recoverably fence the record into `deletion_pending`, invalidate active and
+cached grants, stop queued/in-flight work, record tombstone intent and durably
+audit the event. No access-authorizer approval is required before this security
+effect, and an access authorizer cannot delay or veto it.
 
 ## 14. Revocation and deletion workflow
 
@@ -300,7 +327,7 @@ Deletion is a multi-boundary workflow:
 6. remove or expire temporary and derived transient material,
 7. record backup tombstone and maximum backup expiry,
 8. dispose or revoke the object key envelope as policy requires,
-9. validate audit continuity and checkpoint state,
+9. validate audit continuity, checkpoint state and independent anchor,
 10. issue only the evidence type whose completion conditions are met.
 
 A partial failure remains `deletion_pending`. Retrying with the same request is
@@ -321,7 +348,7 @@ This receipt proves that active use is blocked and records:
 - backup tombstone status and maximum remaining backup expiry,
 - key-envelope disposition,
 - executor and independent verifier references,
-- final audit-event digest and checkpoint reference,
+- final audit-event digest, checkpoint and anchor references,
 - canonical receipt SHA-256.
 
 It must be explicitly typed `revocation_pending_backup` and must not set deletion
@@ -342,20 +369,23 @@ failed.
 ## 16. Backup and restore contract
 
 Backups must include or be paired with integrity-protected policy, audit
-checkpoint and tombstone indexes.
+checkpoint and tombstone indexes. The independently maintained anti-rollback
+anchor is not restored from the backup and remains authoritative across restore.
 
 Restore order is mandatory:
 
-1. restore and validate policy, audit checkpoints and tombstones,
-2. reject a source below the minimum accepted checkpoint,
-3. identify revoked, expired, deletion-pending or unknown artifact digests,
-4. quarantine those payloads,
-5. restore only records still eligible under current policy,
-6. audit every disposition.
+1. obtain and validate the live independent anti-rollback anchor,
+2. restore and validate policy, audit checkpoints and tombstones,
+3. reject a source below or inconsistent with the anchored minimum checkpoint,
+4. identify revoked, expired, deletion-pending or unknown artifact digests,
+5. quarantine those payloads,
+6. restore only records still eligible under current policy,
+7. audit every disposition.
 
-A backup payload without matching policy, tombstone and checkpoint evidence is
-quarantined, not made available. Restore cannot reduce a record version or
-replace a newer tombstone with older evidence.
+A backup payload without matching policy, tombstone, checkpoint and independent
+anchor evidence is quarantined, not made available. Restore cannot reduce a
+record version, lower the anchored checkpoint or replace a newer tombstone with
+older evidence.
 
 ## 17. Non-sensitive reference drill
 
@@ -368,16 +398,19 @@ Required positive tests:
 
 - isolated quarantine then authorized promotion,
 - narrowly scoped read grant,
+- immediate revocation while the access authorizer is unavailable,
 - idempotent revocation request,
 - pending-backup receipt generation,
 - final deletion completion receipt generation after backup completion,
-- valid restore of a still-eligible test object from a current checkpoint.
+- valid restore of a still-eligible test object from a current anchored checkpoint.
 
 Required negative tests:
 
 - every prohibited role collision,
 - stale or disabled identity,
-- emergency access attempting each non-bypassable denial,
+- access authorizer attempting to delay or veto valid revocation,
+- emergency access attempting to bypass an active purpose-blocking hold,
+- emergency access attempting each other non-bypassable denial,
 - unauthorized environment or storage class,
 - read during `deletion_pending`,
 - inspection timeout, crash, expansion limit and network-attempt failure,
@@ -386,13 +419,16 @@ Required negative tests:
 - state change with incomplete work fencing,
 - duplicate event, broken hash chain and non-monotonic sequence,
 - audit fork, truncation and checkpoint rollback,
+- checkpoint with missing or invalid independent signature/witness evidence,
+- checkpoint whose sequence or chain head conflicts with the live anchor,
+- restore snapshot attempting to lower or replace the anchored minimum,
 - conflicting idempotency replay,
 - incomplete replica/cache deletion,
 - missing backup tombstone,
 - pending-backup receipt incorrectly claiming completion,
 - final receipt before backup completion,
 - restore attempting to resurrect revoked data,
-- restore from a stale or missing checkpoint,
+- restore from a stale, missing or unanchored checkpoint,
 - receipt finalization by deletion executor without independent verification.
 
 ## 18. CI and repository gates
@@ -416,7 +452,9 @@ Stage 1B is not complete until:
 - ADR 0014 and this contract are accepted,
 - machine-enforceable contracts and reference drill pass,
 - role conflicts and emergency non-bypass rules are negatively tested,
+- valid revocation is proven immediate and independent of access-authorizer approval,
 - audit fork, rollback and truncation detection are demonstrated,
+- independent checkpoint anti-rollback anchoring is demonstrated,
 - atomic revocation and fencing behavior are demonstrated,
 - pending-backup and final deletion receipts are distinguished and validated,
 - restore cannot resurrect revoked test objects,
