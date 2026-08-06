@@ -63,6 +63,7 @@ jobs:
               "jsonschema-specifications": "2025.9.1",
               "referencing": "0.37.0",
               "rpds-py": "2026.5.1",
+              "typing-extensions": "4.15.0",
           }
           for package, wanted in expected.items():
               assert version(package) == wanted, (package, version(package), wanted)

@@ -83,6 +83,7 @@ def main() -> None:
         "jsonschema-specifications": "2025.9.1",
         "referencing": "0.37.0",
         "rpds-py": "2026.5.1",
+        "typing-extensions": "4.15.0",
     }
     if validation_lock != expected_validation:
         fail(f"unexpected approved validation dependency graph: {validation_lock}")

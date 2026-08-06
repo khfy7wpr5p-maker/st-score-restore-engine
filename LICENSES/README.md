@@ -19,6 +19,7 @@ Approved offline validation/test graph:
 - `jsonschema-specifications==2025.9.1`
 - `referencing==0.37.0`
 - `rpds-py==2026.5.1`
+- `typing-extensions==4.15.0`
 
 The validation graph is not part of restoration runtime behavior and cannot
 read document artifacts or external custody storage.

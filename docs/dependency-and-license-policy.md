@@ -48,6 +48,7 @@ Stage 1A offline validation/test only:
 - `jsonschema-specifications==2025.9.1`
 - `referencing==0.37.0`
 - `rpds-py==2026.5.1`
+- `typing-extensions==4.15.0`
 
 PDF renderers, DocRes, ONNX Runtime and future ML frameworks remain candidates
 until separate dependency reviews approve exact packages and versions.

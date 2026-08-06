@@ -22,6 +22,7 @@ not imported by restoration, API, persistence or job-processing modules.
 | `jsonschema-specifications` | `2025.9.1` | packaged meta-schemas/vocabularies | MIT |
 | `referencing` | `0.37.0` | local schema registry and references | MIT |
 | `rpds-py` | `2026.5.1` | persistent data structures used by referencing | MIT |
+| `typing-extensions` | `4.15.0` | TypeVar default support required by referencing on Python <3.13 | PSF-2.0 |
 
 The complete graph is exact-pinned in `requirements.validation.lock`. CI uses
 `--only-binary=:all:` and `--no-deps`; implicit dependency resolution and source
@@ -47,9 +48,10 @@ builds are rejected.
 
 ## Redistribution and bundled components
 
-All packages use the MIT license. `rpds-py` contains native Rust code and may
-bundle third-party notices in its wheel. Redistributors must retain license and
-notice material shipped with the exact wheels.
+`jsonschema`, `attrs`, `jsonschema-specifications`, `referencing`, and `rpds-py`
+use the MIT license. `typing-extensions` uses PSF-2.0. `rpds-py` contains native
+Rust code and may bundle third-party notices in its wheel. Redistributors must
+retain license and notice material shipped with the exact wheels.
 
 ## Removal and fallback
 
