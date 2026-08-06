@@ -1,6 +1,6 @@
 # Stage 1A Dataset Governance and Metadata Contract
 
-**Status:** Draft implementation in PR #35  
+**Status:** Ready for final merge review in PR #35  
 **Issue:** #32  
 **Schema version:** `1.2.0`  
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
