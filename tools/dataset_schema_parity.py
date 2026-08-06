@@ -33,7 +33,13 @@ def _at(value: Any, path: Path, label: str) -> Any:
 def _field(schema: dict[str, Any], path: Path, key: str, expected: Any, label: str) -> None:
     actual = _at(schema, path, label)
     if not isinstance(actual, dict) or actual.get(key) != expected:
-        suffix = "constant drift" if key == "const" else f"{key} drift"
+        suffix = (
+            "constant drift"
+            if key == "const"
+            else "reference drift"
+            if key == "$ref"
+            else f"{key} drift"
+        )
         raise DatasetManifestError(f"{label} {suffix}")
 
 
@@ -53,10 +59,9 @@ def _assert_closed(value: Any, label: str = "schema") -> None:
     if not isinstance(value, dict):
         return
     if value.get("type") == "object":
-        dynamic = (
-            value.get("propertyNames", {}).get("pattern") == CODE.pattern
-            and value.get("additionalProperties") == {"$ref": "#/$defs/parameterValue"}
-        )
+        dynamic = value.get("additionalProperties") == {
+            "$ref": "#/$defs/parameterValue"
+        }
         if not dynamic and value.get("additionalProperties") is not False:
             raise DatasetManifestError(f"{label} object must set additionalProperties=false")
     for key, item in value.items():
