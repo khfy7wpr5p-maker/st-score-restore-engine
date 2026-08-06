@@ -20,11 +20,14 @@ approving ADR or pull request.
 
 `pyproject.toml` records exact dependency intent. `requirements.lock` records
 the complete restoration runtime graph. `requirements.validation.lock` records
-the separate offline validation/test graph for Python 3.11–3.12.
+the separate offline validation/test graph for Python 3.11–3.12 and the exact
+approved wheel SHA-256 values used by the Ubuntu x86_64 CI matrix.
 
 CI must validate both locks, install exact binary wheels with dependency
-resolution disabled, verify installed versions, run `pip check` and reject implicit source
-builds. Any dependency or lock change requires review with the manifest change.
+resolution disabled, require approved hashes for the validation graph, verify
+installed versions, run `pip check` and reject implicit source builds. Any
+dependency, version, platform or hash change requires review with the manifest
+change.
 
 ## 4. Models and large artifacts
 

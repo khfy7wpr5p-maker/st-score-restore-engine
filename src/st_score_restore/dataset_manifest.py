@@ -2,45 +2,35 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
 from .dataset_catalog_validation import validate_dataset_catalog
-from .dataset_contract_common import canonical_sha256
+from .dataset_contract_common import (
+    _strict_json_load,
+    canonical_sha256,
+)
 from .dataset_contract_constants import (
-    ARTIFACT_STATES,
-    CATALOG_FIELDS,
     CATALOG_SCHEMA_VERSION,
-    CUSTODIAN_ACTOR_ID,
-    CUSTODY_ID,
-    DATASET_ACTOR_ID,
     DatasetManifestError,
     ENTRY_DECISION_ID,
-    EVIDENCE_ID,
-    ITEM_FIELDS,
-    PERMISSION_STATES,
-    POLICY_ID,
-    PRIVACY_ACTOR_ID,
-    PRIVACY_CLASSES,
-    PURPOSES,
-    PURPOSE_ACTOR_ID,
-    RECEIPT_ID,
-    RESTRICTION_TYPES,
-    RIGHTS_ACTOR_ID,
-    SNAPSHOT_FIELDS,
     SNAPSHOT_SCHEMA_VERSION,
-    SOURCE_KINDS,
-    SPLITS,
-    STAGE1_ENVIRONMENT,
-    SUBJECT_ID,
 )
 from .dataset_snapshot_validation import validate_dataset_snapshot
 
 
+def load_json_object(path: str | Path) -> dict[str, Any]:
+    """Load one strict JSON object with duplicate-key and finite-number checks."""
+    resolved = Path(path)
+    with resolved.open("r", encoding="utf-8") as handle:
+        value = _strict_json_load(handle, str(resolved))
+    if not isinstance(value, dict):
+        raise DatasetManifestError(f"{resolved} must contain a JSON object")
+    return value
+
+
 def load_dataset_catalog(path: str | Path) -> dict[str, Any]:
-    with Path(path).open("r", encoding="utf-8") as handle:
-        return validate_dataset_catalog(json.load(handle))
+    return validate_dataset_catalog(load_json_object(path))
 
 
 def load_dataset_snapshot(
@@ -48,8 +38,7 @@ def load_dataset_snapshot(
     *,
     catalog: dict[str, Any],
 ) -> dict[str, Any]:
-    with Path(path).open("r", encoding="utf-8") as handle:
-        return validate_dataset_snapshot(json.load(handle), catalog=catalog)
+    return validate_dataset_snapshot(load_json_object(path), catalog=catalog)
 
 
 __all__ = [
@@ -58,6 +47,7 @@ __all__ = [
     "ENTRY_DECISION_ID",
     "DatasetManifestError",
     "canonical_sha256",
+    "load_json_object",
     "validate_dataset_catalog",
     "validate_dataset_snapshot",
     "load_dataset_catalog",

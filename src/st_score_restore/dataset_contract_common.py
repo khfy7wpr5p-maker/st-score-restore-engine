@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from datetime import date, datetime, timezone
-from typing import Any
+from typing import Any, TextIO
 
 from .dataset_contract_constants import (
     ASSIGNED_SPLITS,
@@ -89,6 +90,8 @@ def _int(value: Any, where: str, minimum: int = 0) -> int:
 def _number(value: Any, where: str) -> int | float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise DatasetManifestError(f"{where} must be a number")
+    if isinstance(value, float) and not math.isfinite(value):
+        raise DatasetManifestError(f"{where} must be a finite JSON number")
     return value
 
 
@@ -149,14 +152,59 @@ def _parameter_tree(value: Any, where: str) -> Any:
     )
 
 
+def _strict_json_load(handle: TextIO, where: str) -> Any:
+    """Load standards-compliant JSON while rejecting duplicate object keys."""
+
+    def reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise DatasetManifestError(
+                    f"{where} contains duplicate JSON object key: {key}"
+                )
+            result[key] = value
+        return result
+
+    def reject_non_finite(token: str) -> Any:
+        raise DatasetManifestError(
+            f"{where} contains non-standard non-finite JSON number: {token}"
+        )
+
+    def parse_finite_float(token: str) -> float:
+        value = float(token)
+        if not math.isfinite(value):
+            raise DatasetManifestError(
+                f"{where} contains out-of-range non-finite JSON number: {token}"
+            )
+        return value
+
+    try:
+        return json.load(
+            handle,
+            object_pairs_hook=reject_duplicate_keys,
+            parse_constant=reject_non_finite,
+            parse_float=parse_finite_float,
+        )
+    except json.JSONDecodeError as error:
+        raise DatasetManifestError(
+            f"{where} is not valid JSON: {error.msg}"
+        ) from error
+
+
 def canonical_sha256(value: Any) -> str:
-    """Return a deterministic digest for JSON-compatible metadata."""
-    encoded = json.dumps(
-        value,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
+    """Return the repository's deterministic, finite-number JSON digest."""
+    try:
+        encoded = json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as error:
+        raise DatasetManifestError(
+            "canonical JSON contains unsupported or non-finite value"
+        ) from error
     return hashlib.sha256(encoded).hexdigest()
 
 
@@ -294,7 +342,15 @@ def _permission(raw: Any, where: str) -> dict[str, Any]:
                 f"{where} withdrawn permission requires authorization and revocation evidence"
             )
     elif (
-        any(item is not None for item in (*authorization, expires_on, revoked_on, revocation_reference))
+        any(
+            item is not None
+            for item in (
+                *authorization,
+                expires_on,
+                revoked_on,
+                revocation_reference,
+            )
+        )
         or restrictions
     ):
         raise DatasetManifestError(
