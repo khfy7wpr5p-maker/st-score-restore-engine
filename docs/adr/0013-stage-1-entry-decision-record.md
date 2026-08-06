@@ -5,7 +5,7 @@
 - **Decision ID:** `adr-0013-stage-1-entry-v1`
 - **Roadmap stage:** Stage 1 only
 - **Issue:** #32
-- **Pull request:** #35 remains draft
+- **Pull request:** #35 is ready for review; merge requires separate explicit authorization
 - **Dataset schema version:** `1.2.0`
 
 ## Context
@@ -167,6 +167,6 @@ Stage 2 remains blocked until Stage 1 exit evidence is separately accepted.
 
 ## Consequences
 
-PR #35 may harden the Stage 1A contract to implement this record. It must remain
-draft until a separate ready-for-review approval. No merge is authorized by
-this ADR.
+PR #35 may harden the Stage 1A contract to implement this record. It remained
+draft until the separate ready-for-review approval was granted. No merge is
+authorized by this ADR.
