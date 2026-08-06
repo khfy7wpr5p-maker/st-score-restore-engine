@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "1.2.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.metadata-contract-example.v1",
+  "descriptionCode": "metadata-contract-only",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.example-clean-staff.v1",
+      "sourceFamilyId": "source.family.example-clean-staff.v1",
+      "parentItemId": null,
+      "artifact": {
+        "state": "metadata_only",
+        "sha256": null,
+        "byteSize": null,
+        "storageLocator": null,
+        "custodyProfileId": null,
+        "encryptionProfileId": null,
+        "custodianId": null
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_00000000000000000000000000000001",
+        "rightsHolderId": "subject:opq_00000000000000000000000000000002",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "pending",
+          "verifiedBy": null,
+          "verifiedOn": null,
+          "evidenceReference": null
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "digital_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": [
+          "staff"
+        ],
+        "pageCount": 1,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "unassigned",
+      "retention": {
+        "policy": "metadata_only",
+        "expiresOn": null,
+        "storageClass": "not_assigned",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "planned",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "noteCodes": [
+          "metadata-contract-only"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}
