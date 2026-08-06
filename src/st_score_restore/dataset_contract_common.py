@@ -11,7 +11,6 @@ from typing import Any
 from .dataset_contract_constants import (
     ASSIGNED_SPLITS,
     CODE,
-    DATASET_ACTOR_ID,
     DATE,
     DatasetManifestError,
     EVIDENCE_ID,
@@ -20,9 +19,9 @@ from .dataset_contract_constants import (
     RESTRICTION_TYPES,
     SHA,
     STAGE1_ENVIRONMENT,
-    STORAGE_CLASSES,
     UTC,
 )
+
 
 def _obj(value: Any, where: str) -> dict[str, Any]:
     if not isinstance(value, dict):
@@ -87,6 +86,12 @@ def _int(value: Any, where: str, minimum: int = 0) -> int:
     return value
 
 
+def _number(value: Any, where: str) -> int | float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise DatasetManifestError(f"{where} must be a number")
+    return value
+
+
 def _date(value: Any, where: str, *, null: bool = False) -> date | None:
     text = _match(value, DATE, where, null=null)
     if text is None:
@@ -119,6 +124,29 @@ def _code_array(value: Any, where: str, *, empty: bool = True) -> list[str]:
     if len(set(result)) != len(result):
         raise DatasetManifestError(f"{where} must contain unique codes")
     return result
+
+
+def _parameter_tree(value: Any, where: str) -> Any:
+    """Validate generator parameters without free-text or identity channels."""
+    if value is None or isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return _number(value, where)
+    if isinstance(value, list):
+        return [
+            _parameter_tree(item, f"{where}[{index}]")
+            for index, item in enumerate(value)
+        ]
+    if isinstance(value, dict):
+        result: dict[str, Any] = {}
+        for key, item in value.items():
+            code = _match(key, CODE, f"{where}.key")
+            assert code is not None
+            result[code] = _parameter_tree(item, f"{where}.{code}")
+        return result
+    raise DatasetManifestError(
+        f"{where} cannot contain free-text strings or unsupported values"
+    )
 
 
 def canonical_sha256(value: Any) -> str:

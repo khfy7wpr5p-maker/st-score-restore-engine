@@ -6,6 +6,7 @@
 - **Roadmap stage:** Stage 1 only
 - **Issue:** #32
 - **Pull request:** #35 remains draft
+- **Dataset schema version:** `1.2.0`
 
 ## Context
 
@@ -59,21 +60,23 @@ period remain Stage 1B decisions.
 
 ### Role separation and opaque identity
 
-Repository metadata uses role-scoped opaque identifiers:
+Repository identity and evidence fields use role-scoped, non-semantic tokens:
 
-- `actor.rights:*`
-- `actor.privacy:*`
-- `actor.purpose:*`
-- `actor.dataset:*`
-- `actor.custodian:*`
-- `subject:*`
-- `evidence:*`
-- `policy:*`
-- `custody:*`
-- `receipt:*`
+- `actor.rights:opq_<32 lowercase hex>`
+- `actor.privacy:opq_<32 lowercase hex>`
+- `actor.purpose:opq_<32 lowercase hex>`
+- `actor.dataset:opq_<32 lowercase hex>`
+- `actor.custodian:opq_<32 lowercase hex>`
+- `subject:opq_<32 lowercase hex>`
+- `evidence:opq_<32 lowercase hex>`
+- `policy:opq_<32 lowercase hex>`
+- `custody:opq_<32 lowercase hex>`
+- `receipt:opq_<32 lowercase hex>`
 
-Names, personal email addresses, phone numbers, student/teacher identities and
-personal paths are not valid identity or evidence fields. The external identity
+Names, personal email addresses, phone numbers, student/teacher identities,
+personal paths and semantic identity aliases are invalid in those fields.
+Catalog descriptions and license values are code fields, not free text.
+Synthetic generator parameters cannot contain strings. The external identity
 registry must enforce real-person conflict checks between rights verifier,
 privacy reviewer, custodian, purpose authorizer and dataset reviewer.
 
@@ -84,7 +87,8 @@ privacy reviewer, custodian, purpose authorizer and dataset reviewer.
 - `held_out`: held-out evaluation only; no tuning
 - `training_reserved`: future model-training eligibility only
 
-All originals and derivatives in one source family remain in one split. Split
+All originals and derivatives in one source family remain in one assigned
+split. A synthetic child must equal its parent's non-`unassigned` split. Split
 changes require a new catalog/snapshot version. Held-out freeze and access
 separation are mandatory before Stage 1 exit.
 
@@ -107,10 +111,11 @@ cannot be trained, published, demonstrated or used as a synthetic parent.
 ### Synthetic derivation
 
 A synthetic item must use an available, rights/privacy/dataset-approved
-non-synthetic parent in the same source family. The parent must have a
-synthetic-derivation authorization valid at generation time. Generator version,
-commit, date, authorization reference, seed and parameters are immutable
-lineage evidence. Synthetic-on-synthetic derivation is rejected.
+non-synthetic parent in the same source family and assigned split. The parent
+must have a synthetic-derivation authorization valid at generation time.
+Generator version, commit, date, authorization reference, seed and numeric or
+boolean parameter values are immutable lineage evidence. Synthetic-on-synthetic
+derivation is rejected.
 
 ### Retention, revocation and deletion
 
@@ -121,10 +126,16 @@ replica, cache and backup boundaries before Stage 1C may start.
 
 ### Schema and validator parity
 
-JSON Schema is the structural contract. Python enforces cross-field, temporal,
-role, restriction, lineage and snapshot rules. CI must compare schema enums,
-required fields, constants and opaque-ID patterns with Python constants and
-must fail on drift.
+JSON Schema Draft 2020-12 is the structural contract. The exact
+`jsonschema==4.26.0` validation stack is test-only and offline. Python enforces
+cross-field, temporal, role, restriction, lineage and snapshot rules. CI must:
+
+1. validate both schemas with `Draft202012Validator.check_schema`,
+2. compare all contract versions, required fields, enums, constants and patterns
+   with Python constants,
+3. run shared valid, structural-invalid and semantic-invalid examples through
+   the JSON Schema and Python validators,
+4. fail on drift, including timestamp patterns and opaque-ID formats.
 
 ### Only safe snapshot boundary
 

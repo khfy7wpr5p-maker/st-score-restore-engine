@@ -2,7 +2,7 @@
 
 **Status:** Draft implementation in PR #35  
 **Issue:** #32  
-**Schema version:** `1.1.0`  
+**Schema version:** `1.2.0`  
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
 **Artifact policy:** Metadata only  
 **Runtime restoration impact:** None
@@ -44,19 +44,23 @@ training eligibility but cannot authorize training execution.
 
 ## 3. Opaque identity and evidence
 
-Git metadata accepts role-scoped opaque identifiers only:
+Git metadata accepts role-scoped opaque identifiers with the exact suffix
+`opq_<32 lowercase hex>`:
 
-- rights verifier: `actor.rights:*`
-- privacy reviewer: `actor.privacy:*`
-- purpose authorizer: `actor.purpose:*`
-- dataset reviewer: `actor.dataset:*`
-- custodian: `actor.custodian:*`
-- rights subject: `subject:*`
-- evidence: `evidence:*`
-- policy: `policy:*`
-- custody locator: `custody:*`
-- deletion receipt: `receipt:*`
+- rights verifier: `actor.rights:opq_...`
+- privacy reviewer: `actor.privacy:opq_...`
+- purpose authorizer: `actor.purpose:opq_...`
+- dataset reviewer: `actor.dataset:opq_...`
+- custodian: `actor.custodian:opq_...`
+- rights subject: `subject:opq_...`
+- evidence: `evidence:opq_...`
+- policy: `policy:opq_...`
+- custody locator: `custody:opq_...`
+- deletion receipt: `receipt:opq_...`
 
+Semantic aliases such as person names, email addresses, student identifiers or
+personal paths are invalid. Catalog description and license fields are
+restricted code values. Synthetic parameter objects cannot contain strings.
 The external identity registry and real-person role-conflict checks remain
 Stage 1B work.
 
@@ -73,13 +77,9 @@ paths are valid custody or identity fields.
 
 ## 5. Rights, privacy and review
 
-An external or actively authorized item requires:
-
-- approved rights review,
-- acceptable privacy review,
-- approved dataset review,
-- immutable artifact SHA-256,
-- external custody metadata.
+An external or actively authorized item requires approved rights review,
+acceptable privacy review, approved dataset review, immutable artifact SHA-256
+and external custody metadata.
 
 For `deidentified` data, the privacy-reviewed derivative SHA-256 must equal the
 artifact SHA-256 used in the dataset. Identifiable personal/student data cannot
@@ -88,12 +88,13 @@ be trained, published, demonstrated or used for synthetic derivation.
 ## 6. Source families and synthetic lineage
 
 Every source and derivative shares one `sourceFamilyId` and one assigned split.
+A synthetic child must exactly equal its parent's non-`unassigned` split.
 
 A synthetic item requires an approved, available, non-synthetic parent; a
 synthetic-derivation authorization valid on `generatedOn`; matching
 authorization reference; generator name, semantic version, commit SHA-256,
-seed and parameters. Synthetic-on-synthetic derivation is rejected. Child
-retention cannot exceed parent retention.
+seed and non-text parameter values. Synthetic-on-synthetic derivation is
+rejected. Child retention cannot exceed parent retention.
 
 ## 7. Split policy
 
@@ -108,42 +109,24 @@ Stage 1A snapshots keep `trainingUseActivated=false`.
 
 ## 8. Typed restrictions
 
-Supported restrictions are:
-
-- `split_allowlist`
-- `storage_class_allowlist`
-- `environment_allowlist`
-- `external_export`
-- `retention_not_after`
-
+Supported restrictions are `split_allowlist`, `storage_class_allowlist`,
+`environment_allowlist`, `external_export` and `retention_not_after`.
 Unknown or contradictory restrictions fail closed. The Stage 1 snapshot
 environment is `stage1_offline`.
 
 ## 9. Revocation and deletion evidence
 
 Revoked items cannot appear in snapshots. Their active locator is removed.
-Completed revocation requires:
-
-- revocation date and opaque evidence reference,
-- `deletionStatus=completed`,
-- opaque deletion receipt reference,
-- deletion receipt SHA-256.
-
-The operational deletion drill across storage and backups remains Stage 1B.
+Completed revocation requires a revocation date and opaque evidence reference,
+`deletionStatus=completed`, an opaque deletion receipt reference and deletion
+receipt SHA-256. The operational deletion drill remains Stage 1B.
 
 ## 10. Snapshot integrity and authorization
 
-A snapshot binds:
-
-- ADR 0013 decision ID,
-- catalog canonical SHA-256,
-- each item canonical SHA-256,
-- source family and split,
-- UTC creation time and environment,
-- held-out freeze state,
-- revoked-item tombstones,
-- separate real/synthetic counts,
-- approved opaque dataset-review evidence.
+A snapshot binds ADR 0013, catalog and item canonical SHA-256 values, source
+family and split, a valid UTC creation timestamp, held-out freeze state,
+revoked-item tombstones, separate real/synthetic counts and approved opaque
+review evidence.
 
 `validate_dataset_snapshot` is the only public safe boundary. It includes
 integrity, split-purpose, temporal and restriction checks. The compatibility
@@ -151,10 +134,12 @@ wrapper delegates to it.
 
 ## 11. Schema parity
 
-CI compares JSON Schema and Python constants for versions, entry decision,
-required fields, purpose/state enums, split/source/privacy values, typed
-restriction kinds and opaque-ID patterns. Drift fails repository validation.
-Cross-field and temporal rules remain Python responsibilities.
+CI uses the exact offline Draft 2020-12 validation stack in
+`requirements.validation.lock`. It validates the schemas themselves, executes
+shared instances through JSON Schema and Python, and compares all versions,
+required fields, enums, constants and patterns. Structural invalid data must be
+rejected by both engines; semantic invalid data may pass JSON Schema but must be
+rejected by Python.
 
 ## 12. Repository example
 

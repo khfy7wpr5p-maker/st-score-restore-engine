@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "1.1.0",
+  "schemaVersion": "1.2.0",
   "entryDecisionId": "adr-0013-stage-1-entry-v1",
   "catalogId": "dataset.catalog.metadata-contract-example.v1",
-  "description": "Metadata-only Stage 1A contract example. No artifact bytes, active permissions, storage locator, or frozen split are included.",
+  "descriptionCode": "metadata-contract-only",
   "items": [
     {
       "datasetItemId": "dataset.item.example-clean-staff.v1",
@@ -19,9 +19,9 @@
       },
       "provenance": {
         "sourceKind": "public_domain",
-        "sourceReference": "evidence:source-selection-pending-001",
-        "rightsHolderId": "subject:public-domain-001",
-        "licenseId": "Public-Domain-1.0",
+        "sourceReference": "evidence:opq_00000000000000000000000000000001",
+        "rightsHolderId": "subject:opq_00000000000000000000000000000002",
+        "licenseId": "public-domain-1.0",
         "usageBasisCode": "public_domain",
         "rightsReview": {
           "status": "pending",

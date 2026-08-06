@@ -41,9 +41,32 @@ jobs:
             --no-deps \
             -r requirements.lock
 
+      - name: Install exact offline validation stack
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.validation.lock
+
       - name: Verify installed dependency versions
         run: |
-          python -c "import cv2, numpy; assert cv2.__version__ == '4.13.0'; assert numpy.__version__ == '2.3.5'"
+          python - <<'PY'
+          from importlib.metadata import version
+          import cv2
+          import numpy
+          assert cv2.__version__ == "4.13.0"
+          assert numpy.__version__ == "2.3.5"
+          expected = {
+              "attrs": "26.1.0",
+              "jsonschema": "4.26.0",
+              "jsonschema-specifications": "2025.9.1",
+              "referencing": "0.37.0",
+              "rpds-py": "2026.5.1",
+          }
+          for package, wanted in expected.items():
+              assert version(package) == wanted, (package, version(package), wanted)
+          PY
 
       - name: Validate repository contract
         run: python tools/validate_repository.py

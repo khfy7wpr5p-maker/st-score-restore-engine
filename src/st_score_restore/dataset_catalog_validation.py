@@ -11,17 +11,18 @@ from .dataset_contract_common import (
     _match,
     _obj,
     _restriction_by_type,
-    _text,
 )
 from .dataset_contract_constants import (
     CATALOG_FIELDS,
     CATALOG_SCHEMA_VERSION,
+    CODE,
     DatasetManifestError,
     ENTRY_DECISION_ID,
     ID,
     STAGE1_ENVIRONMENT,
 )
 from .dataset_item_validation import _item
+
 
 def validate_dataset_catalog(data: Any) -> dict[str, Any]:
     """Validate a complete Stage 1A dataset catalog."""
@@ -36,7 +37,7 @@ def validate_dataset_catalog(data: Any) -> dict[str, Any]:
             f"catalog.entryDecisionId must be {ENTRY_DECISION_ID}"
         )
     _match(catalog["catalogId"], ID, "catalog.catalogId")
-    _text(catalog["description"], "catalog.description")
+    _match(catalog["descriptionCode"], CODE, "catalog.descriptionCode")
     items = [
         _item(raw, index)
         for index, raw in enumerate(_arr(catalog["items"], "catalog.items"))
@@ -73,6 +74,10 @@ def validate_dataset_catalog(data: Any) -> dict[str, Any]:
         if parent["family"] != item["family"]:
             raise DatasetManifestError(
                 f"{item['id']} must share sourceFamilyId with parent"
+            )
+        if parent["split"] == "unassigned" or item["split"] != parent["split"]:
+            raise DatasetManifestError(
+                f"{item['id']} synthetic child must share the parent's assigned split"
             )
         if (
             parent["artifact"] != "external_available"
@@ -115,7 +120,8 @@ def validate_dataset_catalog(data: Any) -> dict[str, Any]:
             )
         ):
             raise DatasetManifestError(
-                f"{item['id']} parent synthetic-derivation authorization or approval was not valid at generation time"
+                f"{item['id']} parent synthetic-derivation authorization or "
+                "approval was not valid at generation time"
             )
 
         split_rule = _restriction_by_type(

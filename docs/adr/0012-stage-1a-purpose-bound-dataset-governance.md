@@ -35,9 +35,9 @@ for the Stage 1 exit gate.
 10. Retain revoked digests as tombstones while removing active locators.
 11. Validate synthetic parent eligibility from parent metadata rather than a
     child assertion.
-12. Use JSON Schema for structure and a standard-library Python validator for
-    semantic, temporal and policy enforcement.
-13. Bind schema version `1.1.0` to ADR 0013.
+12. Use JSON Schema for structure and a Python validator for semantic,
+    temporal and policy enforcement.
+13. Bind schema version `1.2.0` to ADR 0013.
 
 ## Consequences
 

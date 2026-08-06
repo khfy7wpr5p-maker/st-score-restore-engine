@@ -4,27 +4,28 @@ from __future__ import annotations
 
 import re
 
-CATALOG_SCHEMA_VERSION = "1.1.0"
-SNAPSHOT_SCHEMA_VERSION = "1.1.0"
+CATALOG_SCHEMA_VERSION = "1.2.0"
+SNAPSHOT_SCHEMA_VERSION = "1.2.0"
 ENTRY_DECISION_ID = "adr-0013-stage-1-entry-v1"
 STAGE1_ENVIRONMENT = "stage1_offline"
 
+OPAQUE_TOKEN_TEXT = r"opq_[0-9a-f]{32}"
 ID = re.compile(r"^[a-z0-9][a-z0-9._-]{2,79}$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
-EVIDENCE_ID = re.compile(r"^evidence:[a-z0-9][a-z0-9._-]{2,127}$")
-SUBJECT_ID = re.compile(r"^subject:[a-z0-9][a-z0-9._-]{2,127}$")
-RIGHTS_ACTOR_ID = re.compile(r"^actor\.rights:[a-z0-9][a-z0-9._-]{2,127}$")
-PRIVACY_ACTOR_ID = re.compile(r"^actor\.privacy:[a-z0-9][a-z0-9._-]{2,127}$")
-PURPOSE_ACTOR_ID = re.compile(r"^actor\.purpose:[a-z0-9][a-z0-9._-]{2,127}$")
-DATASET_ACTOR_ID = re.compile(r"^actor\.dataset:[a-z0-9][a-z0-9._-]{2,127}$")
-CUSTODIAN_ACTOR_ID = re.compile(r"^actor\.custodian:[a-z0-9][a-z0-9._-]{2,127}$")
-POLICY_ID = re.compile(r"^policy:[a-z0-9][a-z0-9._-]{2,127}$")
-CUSTODY_ID = re.compile(r"^custody:[a-z0-9][a-z0-9._:-]{2,127}$")
-RECEIPT_ID = re.compile(r"^receipt:[a-z0-9][a-z0-9._-]{2,127}$")
 CODE = re.compile(r"^[a-z0-9][a-z0-9._-]{2,79}$")
+EVIDENCE_ID = re.compile(rf"^evidence:{OPAQUE_TOKEN_TEXT}$")
+SUBJECT_ID = re.compile(rf"^subject:{OPAQUE_TOKEN_TEXT}$")
+RIGHTS_ACTOR_ID = re.compile(rf"^actor\.rights:{OPAQUE_TOKEN_TEXT}$")
+PRIVACY_ACTOR_ID = re.compile(rf"^actor\.privacy:{OPAQUE_TOKEN_TEXT}$")
+PURPOSE_ACTOR_ID = re.compile(rf"^actor\.purpose:{OPAQUE_TOKEN_TEXT}$")
+DATASET_ACTOR_ID = re.compile(rf"^actor\.dataset:{OPAQUE_TOKEN_TEXT}$")
+CUSTODIAN_ACTOR_ID = re.compile(rf"^actor\.custodian:{OPAQUE_TOKEN_TEXT}$")
+POLICY_ID = re.compile(rf"^policy:{OPAQUE_TOKEN_TEXT}$")
+CUSTODY_ID = re.compile(rf"^custody:{OPAQUE_TOKEN_TEXT}$")
+RECEIPT_ID = re.compile(rf"^receipt:{OPAQUE_TOKEN_TEXT}$")
 
 PURPOSES = (
     "fixture_validation",
@@ -110,7 +111,7 @@ SPLIT_PURPOSES = {
     "training_reserved": frozenset({"model_training"}),
 }
 
-CATALOG_FIELDS = {"schemaVersion", "entryDecisionId", "catalogId", "description", "items"}
+CATALOG_FIELDS = {"schemaVersion", "entryDecisionId", "catalogId", "descriptionCode", "items"}
 ITEM_FIELDS = {
     "datasetItemId",
     "sourceFamilyId",
