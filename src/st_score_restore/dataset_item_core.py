@@ -80,10 +80,16 @@ def validate_item_core(raw: Any, index: int) -> tuple[dict[str, Any], dict[str, 
         if privacy_review not in {"not_required", "approved"} or method is not None or deid_sha is not None:
             raise DatasetManifestError(f"{where}.privacy none classification is inconsistent")
     elif privacy_class == "deidentified":
-        if privacy_review != "approved" or method is None or deid_sha is None:
-            raise DatasetManifestError(f"{where}.privacy deidentified data requires approved method and digest")
-        if state in {"external_available", "revoked"} and deid_sha != digest:
-            raise DatasetManifestError(f"{where}.privacy de-identification digest must match artifact digest")
+        if (
+            privacy_review != "approved"
+            or method is None
+            or deid_sha is None
+            or state not in {"external_available", "revoked"}
+            or deid_sha != digest
+        ):
+            raise DatasetManifestError(
+                f"{where}.privacy de-identification digest must match an available or revoked artifact digest"
+            )
     elif privacy_review == "not_required" or method is not None or deid_sha is not None:
         raise DatasetManifestError(f"{where}.privacy identifiable data requires review and cannot claim de-identification")
 

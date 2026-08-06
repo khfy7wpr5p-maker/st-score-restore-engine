@@ -28,6 +28,11 @@ class DatasetManifestTests(unittest.TestCase):
         with self.assertRaisesRegex(DatasetManifestError, "de-identification digest"):
             validate_dataset_catalog(catalog([value]))
 
+    def test_metadata_only_item_cannot_claim_deidentified_artifact_digest(self) -> None:
+        value = item(privacy_class="deidentified")
+        with self.assertRaisesRegex(DatasetManifestError, "available or revoked artifact digest"):
+            validate_dataset_catalog(catalog([value]))
+
     def test_opaque_actor_and_subject_ids_are_required(self) -> None:
         value = item(artifact_state="external_available", split="development", granted_purpose="quality_evaluation")
         value["permissions"]["quality_evaluation"]["authorizedBy"] = "Jane Doe"
