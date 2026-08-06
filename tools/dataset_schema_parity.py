@@ -78,11 +78,15 @@ def validate_schema_parity(catalog_schema: dict[str, Any], snapshot_schema: dict
     pattern(provenanceproperties['licenseId'], CODE.pattern, 'provenance.licenseId')
     rights_review = provenanceproperties['rightsReview']
     rightsproperties = properties(rights_review, 'rightsReview')
+    if required(rights_review, 'rightsReview') != {'status', 'verifiedBy', 'verifiedOn', 'evidenceReference'}:
+        raise DatasetManifestError('rights-review required-field drift')
     if enum(rightsproperties['status'], 'rightsReview.status') != RIGHTS_REVIEW_STATES:
         raise DatasetManifestError('rights-review state drift')
     pattern(rightsproperties['verifiedBy'], RIGHTS_ACTOR_ID.pattern, 'rightsReview.verifiedBy')
     privacy = itemproperties['privacy']
     privacyproperties = properties(privacy, 'item.privacy')
+    if required(privacy, 'item.privacy') != {'classification', 'reviewStatus', 'reviewedBy', 'reviewedOn', 'evidenceReference', 'deidentificationMethodCode', 'deidentifiedArtifactSha256'}:
+        raise DatasetManifestError('privacy required-field drift')
     if enum(privacyproperties['classification'], 'privacy.classification') != PRIVACY_CLASSES:
         raise DatasetManifestError('privacy-class drift')
     if enum(privacyproperties['reviewStatus'], 'privacy.reviewStatus') != PRIVACY_REVIEW_STATES:
@@ -92,6 +96,8 @@ def validate_schema_parity(catalog_schema: dict[str, Any], snapshot_schema: dict
     pattern(privacyproperties['reviewedBy'], PRIVACY_ACTOR_ID.pattern, 'privacy.reviewedBy')
     input_schema = itemproperties['input']
     inputproperties = properties(input_schema, 'item.input')
+    if required(input_schema, 'item.input') != {'kind', 'mediaType', 'notationKinds', 'pageCount', 'degradations'}:
+        raise DatasetManifestError('input required-field drift')
     if enum(inputproperties['kind'], 'input.kind') != set(INPUT_MEDIA):
         raise DatasetManifestError('input-kind drift')
     if enum(inputproperties['mediaType'], 'input.mediaType') != set(INPUT_MEDIA.values()):
@@ -107,6 +113,8 @@ def validate_schema_parity(catalog_schema: dict[str, Any], snapshot_schema: dict
         raise DatasetManifestError('dataset purpose property drift')
     permission = definitions['permission']
     permissionproperties = properties(permission, 'permission')
+    if required(permission, 'permission') != {'status', 'authorizationReference', 'authorizedBy', 'authorizedOn', 'expiresOn', 'restrictions', 'revokedOn', 'revocationReference'}:
+        raise DatasetManifestError('permission required-field drift')
     if enum(permissionproperties['status'], 'permission.status') != PERMISSION_STATES:
         raise DatasetManifestError('permission-state drift')
     pattern(permissionproperties['authorizedBy'], PURPOSE_ACTOR_ID.pattern, 'permission.authorizedBy')
@@ -114,6 +122,8 @@ def validate_schema_parity(catalog_schema: dict[str, Any], snapshot_schema: dict
         raise DatasetManifestError('dataset split drift')
     retention = itemproperties['retention']
     retentionproperties = properties(retention, 'item.retention')
+    if required(retention, 'item.retention') != {'policy', 'expiresOn', 'storageClass', 'deletionRequired', 'deletionStatus', 'deletionReceiptReference', 'deletionReceiptSha256'}:
+        raise DatasetManifestError('retention required-field drift')
     if enum(retentionproperties['policy'], 'retention.policy') != RETENTION_POLICIES:
         raise DatasetManifestError('retention-policy drift')
     if enum(retentionproperties['storageClass'], 'retention.storageClass') != STORAGE_CLASSES:
@@ -121,33 +131,56 @@ def validate_schema_parity(catalog_schema: dict[str, Any], snapshot_schema: dict
     if enum(retentionproperties['deletionStatus'], 'retention.deletionStatus') != DELETION_STATES:
         raise DatasetManifestError('deletion-state drift')
     pattern(retentionproperties['deletionReceiptReference'], RECEIPT_ID.pattern, 'retention.deletionReceiptReference')
-    revocationproperties = properties(itemproperties['revocation'], 'item.revocation')
+    revocation = itemproperties['revocation']
+    revocationproperties = properties(revocation, 'item.revocation')
+    if required(revocation, 'item.revocation') != {'status', 'effectiveOn', 'reference'}:
+        raise DatasetManifestError('revocation required-field drift')
     if enum(revocationproperties['status'], 'revocation.status') != REVOCATION_STATES:
         raise DatasetManifestError('revocation-state drift')
     synthetic_variants = itemproperties['syntheticGeneration']['oneOf']
     synthetic_object = next((variant for variant in synthetic_variants if variant.get('type') == 'object'))
     syntheticproperties = properties(synthetic_object, 'syntheticGeneration')
+    if required(synthetic_object, 'syntheticGeneration') != {'generator', 'generatorVersion', 'generatorCommit', 'generatedOn', 'derivationAuthorizationReference', 'seed', 'parameters'}:
+        raise DatasetManifestError('synthetic-generation required-field drift')
     pattern(syntheticproperties['derivationAuthorizationReference'], EVIDENCE_ID.pattern, 'syntheticGeneration.derivationAuthorizationReference')
     parameter_variants = definitions['parameterValue']['oneOf']
     parameter_types = {variant.get('type') for variant in parameter_variants}
     if parameter_types != {'null', 'boolean', 'number', 'array', 'object'}:
         raise DatasetManifestError('synthetic parameter type drift or free-text enabled')
-    reviewproperties = properties(itemproperties['review'], 'item.review')
+    review = itemproperties['review']
+    reviewproperties = properties(review, 'item.review')
+    if required(review, 'item.review') != {'status', 'reviewedBy', 'reviewedOn', 'evidenceReference', 'noteCodes'}:
+        raise DatasetManifestError('dataset-review required-field drift')
     if enum(reviewproperties['status'], 'review.status') != DATASET_REVIEW_STATES:
         raise DatasetManifestError('dataset-review state drift')
     pattern(reviewproperties['reviewedBy'], DATASET_ACTOR_ID.pattern, 'review.reviewedBy')
-    assertions = properties(itemproperties['assertions'], 'item.assertions')
-    for name in ('teacherApprovalImpliedDatasetPermission', 'teacherApprovalImpliedTrainingPermission', 'originalBytesInGit', 'stage1TrainingExecutionAuthorized'):
+    assertion_schema = itemproperties['assertions']
+    assertions = properties(assertion_schema, 'item.assertions')
+    assertion_names = {'teacherApprovalImpliedDatasetPermission', 'teacherApprovalImpliedTrainingPermission', 'originalBytesInGit', 'stage1TrainingExecutionAuthorized'}
+    if required(assertion_schema, 'item.assertions') != assertion_names:
+        raise DatasetManifestError('assertion required-field drift')
+    for name in assertion_names:
         const(assertions[name], False, f'assertions.{name}')
     restriction_variants = definitions['restriction']['oneOf']
     restriction_types = {variant['properties']['type']['const'] for variant in restriction_variants}
+    for variant in restriction_variants:
+        restriction_type = variant['properties']['type']['const']
+        expected_required = {'type', 'allowed'} if restriction_type == 'external_export' else {'type', 'date'} if restriction_type == 'retention_not_after' else {'type', 'values'}
+        if required(variant, f'restriction.{restriction_type}') != expected_required:
+            raise DatasetManifestError('typed-restriction required-field drift')
     if restriction_types != RESTRICTION_TYPES:
         raise DatasetManifestError('typed-restriction drift')
     snapshot_assignment = snapshotproperties['assignments']['items']
     if required(snapshot_assignment, 'snapshot.assignment') != {'datasetItemId', 'sourceFamilyId', 'split', 'itemSha256'}:
         raise DatasetManifestError('snapshot assignment required-field drift')
+    coverage = snapshotproperties['coverage']
+    if required(coverage, 'snapshot.coverage') != {'realItemCount', 'syntheticItemCount', 'gapCodes'}:
+        raise DatasetManifestError('snapshot coverage required-field drift')
     snapshot_review = snapshotproperties['review']
     snapshot_reviewproperties = properties(snapshot_review, 'snapshot.review')
+    if required(snapshot_review, 'snapshot.review') != {'status', 'reviewedBy', 'reviewedOn', 'evidenceReference', 'noteCodes'}:
+        raise DatasetManifestError('snapshot review required-field drift')
     const(snapshot_reviewproperties['status'], 'approved', 'snapshot.review.status')
     pattern(snapshot_reviewproperties['reviewedBy'], DATASET_ACTOR_ID.pattern, 'snapshot.review.reviewedBy')
     pattern(snapshot_reviewproperties['evidenceReference'], EVIDENCE_ID.pattern, 'snapshot.review.evidenceReference')
+

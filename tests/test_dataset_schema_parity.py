@@ -42,6 +42,12 @@ class DatasetSchemaParityTests(unittest.TestCase):
         with self.assertRaisesRegex(DatasetManifestError, 'constant drift'):
             validate_schema_parity(self.catalog_schema, snapshot_schema)
 
+    def test_nested_required_drift_is_detected(self) -> None:
+        catalog_schema = copy.deepcopy(self.catalog_schema)
+        catalog_schema['$defs']['item']['properties']['privacy']['required'].remove('reviewedBy')
+        with self.assertRaisesRegex(DatasetManifestError, 'privacy required-field drift'):
+            validate_schema_parity(catalog_schema, self.snapshot_schema)
+
     def test_created_at_pattern_drift_is_detected(self) -> None:
         snapshot_schema = copy.deepcopy(self.snapshot_schema)
         snapshot_schema['properties']['createdAt']['pattern'] = '^\\d{4}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$'

@@ -26,7 +26,7 @@ not imported by restoration, API, persistence or job-processing modules.
 
 The complete graph is exact-pinned in `requirements.validation.lock`. CI uses
 `--only-binary=:all:` and `--no-deps`; implicit dependency resolution and source
-builds are rejected.
+builds are rejected. CI also runs `pip check` to prove that the exact graph is complete.
 
 ## Canonical sources
 
@@ -34,6 +34,7 @@ builds are rejected.
 - `attrs`: Python attrs project on PyPI/GitHub
 - `jsonschema-specifications` and `referencing`: Python JSON Schema project
 - `rpds-py`: crate-py/rpds project
+- `typing-extensions`: Python typing-extensions project
 
 ## Security and privacy
 
@@ -48,10 +49,9 @@ builds are rejected.
 
 ## Redistribution and bundled components
 
-`jsonschema`, `attrs`, `jsonschema-specifications`, `referencing`, and `rpds-py`
-use the MIT license. `typing-extensions` uses PSF-2.0. `rpds-py` contains native
-Rust code and may bundle third-party notices in its wheel. Redistributors must
-retain license and notice material shipped with the exact wheels.
+`jsonschema`, `attrs`, `jsonschema-specifications`, `referencing`, and `rpds-py` use the MIT license. `typing-extensions` uses PSF-2.0. `rpds-py` contains native Rust code and may
+bundle third-party notices in its wheel. Redistributors must retain license and
+notice material shipped with the exact wheels.
 
 ## Removal and fallback
 

@@ -23,7 +23,7 @@ the complete restoration runtime graph. `requirements.validation.lock` records
 the separate offline validation/test graph for Python 3.11–3.12.
 
 CI must validate both locks, install exact binary wheels with dependency
-resolution disabled, verify installed versions and reject implicit source
+resolution disabled, verify installed versions, run `pip check` and reject implicit source
 builds. Any dependency or lock change requires review with the manifest change.
 
 ## 4. Models and large artifacts
