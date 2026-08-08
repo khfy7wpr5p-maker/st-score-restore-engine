@@ -6,6 +6,7 @@ import unittest
 from st_score_restore.stage1b_exit_contract import (
     Stage1BExitContractError,
     canonical_portability_digest,
+    canonical_security_state_digest,
     validate_exit_schema_contract,
     validate_provider_rollback,
     validate_security_evidence_retention,
@@ -61,13 +62,28 @@ def exit_evidence() -> dict:
         "schemaVersion": "1.0.0",
         "portabilityPackage": package,
         "destinationValidation": {
+            "validatedPackageDigest": package["packageDigest"],
             "artifactSha256": package["artifactSha256"],
             "custodyRecordId": package["custodyRecordId"],
+            "state": package["state"],
             "recordVersion": 9,
+            "purposeDecisionRef": package["purposeDecisionRef"],
+            "environmentRef": package["environmentRef"],
+            "storageClassRef": package["storageClassRef"],
+            "retentionPolicyRef": package["retentionPolicyRef"],
+            "holdDecisionRef": package["holdDecisionRef"],
+            "revocationStatus": package["revocationStatus"],
+            "deletionStatus": package["deletionStatus"],
+            "auditChainHeadDigest": package["auditChainHeadDigest"],
+            "checkpointRef": package["checkpointRef"],
             "checkpointSequence": 9,
+            "liveAnchorRef": package["liveAnchorRef"],
             "barrierSequence": 12,
+            "barrierDigest": package["barrierDigest"],
             "antiResurrectionHorizon": "2026-09-09T00:00:00Z",
             "tombstoneStatus": "final",
+            "pendingBackupReceiptRef": package["pendingBackupReceiptRef"],
+            "finalDeletionReceiptRef": package["finalDeletionReceiptRef"],
             "trustZoneEquivalent": True,
             "denyByDefault": True,
             "auditDurable": True,
@@ -108,6 +124,49 @@ def exit_evidence() -> dict:
 
 def redigest(value: dict) -> dict:
     value["portabilityPackage"]["packageDigest"] = canonical_portability_digest(value["portabilityPackage"])
+    value["destinationValidation"]["validatedPackageDigest"] = value["portabilityPackage"]["packageDigest"]
+    return value
+
+
+def trusted_live_state(evidence: dict) -> dict:
+    destination = evidence["destinationValidation"]
+    state = {
+        "source": "live_independent",
+        "fresh": True,
+        "controlDigest": "0" * 64,
+        "artifactSha256": destination["artifactSha256"],
+        "custodyRecordId": destination["custodyRecordId"],
+        "state": destination["state"],
+        "recordVersion": destination["recordVersion"],
+        "purposeDecisionRef": destination["purposeDecisionRef"],
+        "environmentRef": destination["environmentRef"],
+        "storageClassRef": destination["storageClassRef"],
+        "retentionPolicyRef": destination["retentionPolicyRef"],
+        "holdDecisionRef": destination["holdDecisionRef"],
+        "revocationStatus": destination["revocationStatus"],
+        "deletionStatus": destination["deletionStatus"],
+        "auditChainHeadDigest": destination["auditChainHeadDigest"],
+        "checkpointRef": destination["checkpointRef"],
+        "checkpointSequence": destination["checkpointSequence"],
+        "liveAnchorRef": destination["liveAnchorRef"],
+        "barrierSequence": destination["barrierSequence"],
+        "barrierDigest": destination["barrierDigest"],
+        "tombstoneStatus": destination["tombstoneStatus"],
+        "antiResurrectionHorizon": destination["antiResurrectionHorizon"],
+        "pendingBackupReceiptRef": destination["pendingBackupReceiptRef"],
+        "finalDeletionReceiptRef": destination["finalDeletionReceiptRef"],
+    }
+    state["controlDigest"] = canonical_security_state_digest(state)
+    return state
+
+
+def rollback_candidate(evidence: dict) -> dict:
+    trusted = trusted_live_state(evidence)
+    return {key: value for key, value in trusted.items() if key not in {"source", "fresh"}}
+
+
+def redigest_security_state(value: dict) -> dict:
+    value["controlDigest"] = canonical_security_state_digest(value)
     return value
 
 
@@ -143,6 +202,24 @@ class Stage1BExitContractTests(unittest.TestCase):
             "barrierSequence": 11,
             "antiResurrectionHorizon": "2026-09-08T23:59:59Z",
             "tombstoneStatus": "active",
+        }
+        for field, value in mutations.items():
+            with self.subTest(field=field):
+                evidence = exit_evidence()
+                evidence["destinationValidation"][field] = value
+                with self.assertRaises(Stage1BExitContractError):
+                    validate_stage1b_exit_evidence(evidence)
+
+    def test_destination_is_bound_to_package_policy_and_live_evidence(self) -> None:
+        mutations = {
+            "validatedPackageDigest": "d" * 64,
+            "purposeDecisionRef": opaque("policy", "d"),
+            "retentionPolicyRef": opaque("policy", "d"),
+            "auditChainHeadDigest": "d" * 64,
+            "checkpointRef": opaque("checkpoint", "d"),
+            "liveAnchorRef": opaque("anchor", "d"),
+            "barrierDigest": "d" * 64,
+            "pendingBackupReceiptRef": opaque("receipt", "d"),
         }
         for field, value in mutations.items():
             with self.subTest(field=field):
@@ -226,45 +303,82 @@ class Stage1BExitContractTests(unittest.TestCase):
             evidence["receiptRetention"][field] = "2026-11-01T00:00:00Z"
         validate_security_evidence_retention(evidence)
 
-    def test_stale_provider_rollback_is_rejected(self) -> None:
+    def test_rollback_requires_independently_authenticated_live_state(self) -> None:
         evidence = exit_evidence()
         evidence["sourceProviderExit"]["complete"] = False
-        current = {
-            "recordVersion": 9,
-            "checkpointSequence": 9,
-            "barrierSequence": 12,
-            "currentWithLiveBarrier": True,
-            "currentWithCheckpoint": True,
-            "currentWithPolicy": True,
-            "currentWithCustodyVersion": True,
-        }
-        validate_provider_rollback(evidence, current)
-
-        for field, stale in (("recordVersion", 8), ("checkpointSequence", 8), ("barrierSequence", 11)):
-            with self.subTest(field=field):
-                candidate = dict(current)
-                candidate[field] = stale
-                with self.assertRaisesRegex(Stage1BExitContractError, "stale"):
-                    validate_provider_rollback(evidence, candidate)
-
-        candidate = dict(current)
-        candidate["currentWithLiveBarrier"] = False
-        with self.assertRaises(Stage1BExitContractError):
+        candidate = rollback_candidate(evidence)
+        with self.assertRaisesRegex(Stage1BExitContractError, "independently authenticated"):
             validate_provider_rollback(evidence, candidate)
+
+        trusted = trusted_live_state(evidence)
+        trusted["source"] = "snapshot"
+        with self.assertRaises(Stage1BExitContractError):
+            validate_provider_rollback(evidence, candidate, trusted_live_state=trusted)
+
+    def test_stale_provider_rollback_is_bound_to_every_live_security_control(self) -> None:
+        evidence = exit_evidence()
+        evidence["sourceProviderExit"]["complete"] = False
+        trusted = trusted_live_state(evidence)
+        current = rollback_candidate(evidence)
+        validate_provider_rollback(evidence, current, trusted_live_state=trusted)
+
+        mutations = {
+            "recordVersion": 8,
+            "state": "revoked",
+            "purposeDecisionRef": opaque("policy", "d"),
+            "environmentRef": opaque("policy", "d"),
+            "storageClassRef": opaque("policy", "d"),
+            "retentionPolicyRef": opaque("policy", "d"),
+            "holdDecisionRef": opaque("policy", "d"),
+            "revocationStatus": "pending",
+            "deletionStatus": "active_boundaries_complete",
+            "auditChainHeadDigest": "d" * 64,
+            "checkpointRef": opaque("checkpoint", "d"),
+            "checkpointSequence": 8,
+            "liveAnchorRef": opaque("anchor", "d"),
+            "barrierSequence": 11,
+            "barrierDigest": "d" * 64,
+            "tombstoneStatus": "active",
+            "antiResurrectionHorizon": "2026-09-08T23:59:59Z",
+            "pendingBackupReceiptRef": opaque("receipt", "d"),
+            "finalDeletionReceiptRef": opaque("receipt", "e"),
+        }
+        for field, stale in mutations.items():
+            with self.subTest(field=field):
+                candidate = copy.deepcopy(current)
+                candidate[field] = stale
+                redigest_security_state(candidate)
+                with self.assertRaisesRegex(Stage1BExitContractError, "does not match"):
+                    validate_provider_rollback(evidence, candidate, trusted_live_state=trusted)
+
+    def test_rollback_candidate_cannot_forge_or_reuse_live_control_digest(self) -> None:
+        evidence = exit_evidence()
+        evidence["sourceProviderExit"]["complete"] = False
+        trusted = trusted_live_state(evidence)
+        candidate = rollback_candidate(evidence)
+
+        candidate["auditChainHeadDigest"] = "d" * 64
+        with self.assertRaisesRegex(Stage1BExitContractError, "digest"):
+            validate_provider_rollback(evidence, candidate, trusted_live_state=trusted)
+
+        candidate = rollback_candidate(evidence)
+        candidate["controlDigest"] = "d" * 64
+        with self.assertRaisesRegex(Stage1BExitContractError, "digest"):
+            validate_provider_rollback(evidence, candidate, trusted_live_state=trusted)
+
+        trusted = trusted_live_state(evidence)
+        trusted["controlDigest"] = "d" * 64
+        with self.assertRaisesRegex(Stage1BExitContractError, "digest"):
+            validate_provider_rollback(evidence, rollback_candidate(evidence), trusted_live_state=trusted)
 
     def test_completed_source_provider_cannot_become_authoritative_again(self) -> None:
         evidence = exit_evidence()
-        candidate = {
-            "recordVersion": 9,
-            "checkpointSequence": 9,
-            "barrierSequence": 12,
-            "currentWithLiveBarrier": True,
-            "currentWithCheckpoint": True,
-            "currentWithPolicy": True,
-            "currentWithCustodyVersion": True,
-        }
         with self.assertRaisesRegex(Stage1BExitContractError, "completed source exit"):
-            validate_provider_rollback(evidence, candidate)
+            validate_provider_rollback(
+                evidence,
+                rollback_candidate(evidence),
+                trusted_live_state=trusted_live_state(evidence),
+            )
 
     def test_schema_rejects_missing_receipt_retention_fields(self) -> None:
         evidence = exit_evidence()
