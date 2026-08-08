@@ -1,12 +1,14 @@
 # ADR 0014: Stage 1B Provider-Neutral Custody and Operations Boundary
 
-- **Status:** Proposed for renewed independent Stage 1B review
+- **Status:** Accepted as the Stage 1B technical decision
 - **Date:** 2026-08-06
 - **Decision ID:** `adr-0014-stage-1b-custody-operations-v1`
 - **Roadmap stage:** Stage 1B only
 - **Parent issue:** #32
 - **Implementation issue:** #36
 - **Base commit:** `a7e4e2b715194a0671cea2657d973b01b0fede79`
+
+> Closure note: this ADR is accepted as the Stage 1B technical decision after the Stage 1B implementation and operational evidence were merged through PR #41. Issue #36 remains subject to its remaining closure evidence, including the independent exact-head security-audit record. This acceptance does not authorize Stage 1C.
 
 ## Context
 
@@ -388,8 +390,9 @@ or resurrection of revoked music documents is unacceptable.
 
 ## Review and merge gates
 
-This ADR is proposed, not accepted merely because it exists. Its Draft PR must
-receive:
+This ADR is accepted as the Stage 1B technical decision. Acceptance of this decision does not by itself satisfy every Issue #36 closure gate. The remaining closure evidence, including the independent exact-head security-audit record, remains separately enforceable.
+
+The Stage 1B review process requires:
 
 1. complete diff and CI evidence,
 2. independent security review,
