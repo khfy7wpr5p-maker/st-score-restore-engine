@@ -1,7 +1,7 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved development sequence, Stage 1 substage status aligned after formal Stage 1B closure  
-**Version:** 0.2.1  
+**Document status:** Approved development sequence, Stage 1 substage status aligned through Stage 1C G4 and the current real-artifact custody blocker  
+**Version:** 0.2.2  
 **Date:** 2026-08-08  
 **Decision record:** Issue #31  
 **Dependency:** `docs/technical-specification.md`
@@ -46,7 +46,7 @@ The following foundation is already present on `main` and is treated as the star
 
 This baseline is not a production service. It has not yet passed the complete Stage 1 real-data corpus, complete quality-analysis, multi-page PDF, safety-calibration, accessible-UI, production-infrastructure or preview gates below.
 
-Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation, hardening, exact-head audit evidence and post-merge CI are complete; Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C artifact onboarding has not started and remains unauthorized until a separate explicit Stage 1C start approval is recorded.
+Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation, hardening, exact-head audit evidence and post-merge CI are complete; Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C is active under dedicated Issue #47 after separate start authorization. G4 is complete as the pre-byte purpose/storage policy binding, but it creates no item-level permission and onboarded no artifact bytes. A local V2 host/vault assessment found the inspected Windows 7 host unsuitable for real/private artifact custody because the operating system is unsupported and the inspected disks are unencrypted. A local V3 non-sensitive basic marker drill passed create/size/SHA-256/delete/post-delete-absence checks; that result is local terminal evidence only, not GitHub-hosted CI and not proof of a Stage 1B-compliant real artifact vault. Real or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes Stage 1B operational verification and every item passes its independent rights/privacy/review/purpose gates.
 
 ## 4. Binding delivery sequence
 
@@ -105,9 +105,11 @@ Make the approved sequence unambiguous in repository documentation and issue pla
 
 - **Stage 1A — metadata governance:** complete and merged.
 - **Stage 1B — provider-neutral custody and operations boundary:** complete and formally closed. Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI.
-- **Stage 1C — authorized artifact onboarding and corpus realization:** not started and not authorized. Formal Stage 1B closure is now satisfied, but Stage 1C still requires a separate explicit start approval before any artifact onboarding begins.
+- **Stage 1C — authorized artifact onboarding and corpus realization:** active under Issue #47 after separate explicit start approval. G4 is complete with the purpose allowlist `quality_evaluation` and `held_out_evaluation`, environment `stage1_offline`, storage class `custody_external`, and a dedicated encrypted offline Stage 1 custody-vault policy outside ordinary Git and automatic cloud-sync folders. G4 creates no item-level permission and onboarded no artifact bytes. Real/private and controlled-synthetic artifact onboarding remains blocked until the selected custody environment passes Stage 1B operational verification.
 
-Completion of Stage 1B is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
+The local V2 assessment of the currently inspected Windows 7 host failed the real-artifact custody gate because the operating system is unsupported and the inspected disks are unencrypted. The local V3 non-sensitive basic marker drill passed basic create/size/SHA-256/delete/post-delete-absence checks. V2/V3 are local terminal observations, not GitHub-hosted CI evidence, and V3 does not establish a compliant real vault.
+
+Completion of Stage 1B or G4 is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
 
 ### Goal
 
@@ -132,7 +134,8 @@ Create a trustworthy evaluation corpus before expanding quality analysis, PDF pr
 
 - Stage 0 is merged and accepted,
 - dataset purpose and storage location are explicitly approved,
-- no private or copyrighted bytes are committed to Git.
+- no private or copyrighted bytes are committed to Git,
+- before any artifact becomes `external_available`, the selected custody environment passes the accepted Stage 1B operational controls and the item independently passes rights, privacy, dataset-review and purpose authorization.
 
 ### Exit gate
 
@@ -579,8 +582,8 @@ Every stage-completion report must include:
 
 ## 20. Immediate next gate
 
-The active roadmap stage remains Stage 1 under parent Issue #32.
+The active roadmap stage remains Stage 1 under parent Issue #32, with Stage 1C as the active implementation substage under Issue #47.
 
-> **Stage 1A is complete. Stage 1B is formally closed. Stage 1C has not started and is not authorized.**
+> **Stage 1A is complete. Stage 1B is formally closed. Stage 1C is active and G4 is complete, but real/private and controlled-synthetic artifact onboarding is blocked pending a compliant operational vault.**
 
-The next eligible implementation action is Stage 1C authorized artifact onboarding, but it may begin only after a separate explicit Stage 1C start approval is recorded. This documentation housekeeping does not constitute that approval and does not onboard artifacts. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
+The next eligible work is Stage 1C metadata-only onboarding-gate/checklist work and operational verification of a supported encrypted custody environment against the accepted Stage 1B controls. The local V2 failure on the inspected Windows 7 host and the local V3 non-sensitive basic marker PASS do not authorize real artifact onboarding and are not GitHub-hosted CI evidence. No artifact byte may be made `external_available` until the custody environment and item-level rights/privacy/review/purpose gates pass. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
