@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2.1 and formal Stage 1B closure  
-**Version:** 0.2.1-aligned  
+**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2.2 and the current Stage 1C G4/custody gate  
+**Version:** 0.2.2-aligned  
 **Date:** 2026-08-08  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Roadmap authority:** `docs/roadmap.md` v0.2.1 and PR #33 sequence authority  
+**Roadmap authority:** `docs/roadmap.md` v0.2.2 and PR #33 sequence authority  
 **Primary language:** English identifiers and API contracts; Turkish-first teacher-facing messages may be added by clients.
 
 ---
@@ -72,7 +72,7 @@ Stage 12 Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. A later stage may not begin until the previous stage's exit evidence is published and accepted.
 
-**Stage 1 is active under parent Issue #32 through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B custody/operations is formally closed: Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI. Stage 1C artifact onboarding has not started and is not authorized; it still requires a separate explicit start approval.** This maintenance revision does not collect data, create dataset artifacts, change fixture permissions, or authorize Stage 1C.
+**Stage 1 is active under parent Issue #32 through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B custody/operations is formally closed: Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI. Stage 1C is active under dedicated Issue #47 after separate explicit start authorization. G4 is complete as the pre-byte purpose/storage policy binding: the current purpose allowlist is `quality_evaluation` plus `held_out_evaluation`, the environment is `stage1_offline`, the storage class is `custody_external`, and the approved storage-location policy is a dedicated encrypted offline Stage 1 custody vault outside ordinary Git and automatic cloud-sync folders. G4 creates no item-level permission and onboarded no artifact bytes. Real or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes the accepted Stage 1B operational controls and each item independently passes rights, privacy, dataset-review and purpose authorization.** This maintenance revision records status only; it does not collect data, create a storage resource or dataset artifact, change fixture permissions, schemas, runtime behavior, or authorize Stage 2.
 
 ---
 
@@ -337,7 +337,7 @@ Production limits and enforcement are Stage 6 responsibilities.
 
 ### 8.1 Stage 1 — Real and explicitly authorized test dataset
 
-**Status: ACTIVE IN GATED SUBSTAGES. Stage 1A is complete. Stage 1B is formally closed with Issue #36 completed at 11/11 PASS. Stage 1C artifact onboarding is NOT AUTHORIZED and has not started.**
+**Status: ACTIVE IN GATED SUBSTAGES. Stage 1A is complete. Stage 1B is formally closed with Issue #36 completed at 11/11 PASS. Stage 1C is active under Issue #47 and G4 is complete, but real/private and controlled-synthetic artifact onboarding is blocked pending a compliant operational custody environment.**
 
 Required target outcomes include:
 
@@ -352,7 +352,7 @@ Required target outcomes include:
 - metadata-only fixture references in the repository,
 - controlled synthetic mutations kept separate from real documents.
 
-The Stage 1A/1B governance and custody work does not itself create the authorized Stage 1 corpus. Formal Stage 1B closure is satisfied, but Stage 1C still requires a separate explicit start approval before any artifact onboarding.
+The Stage 1A/1B governance and custody work does not itself create the authorized Stage 1 corpus. Stage 1C has separate start authorization and G4 binds the current Stage 1 purposes to `quality_evaluation` and `held_out_evaluation`, environment `stage1_offline`, storage class `custody_external`, and a dedicated encrypted offline custody-vault policy. G4 creates no item-level grant. No real or controlled-synthetic artifact may become `external_available` until a supported encrypted custody environment passes the Stage 1B access, audit, revocation, deletion, backup/restore anti-resurrection and real-person role-separation controls and the item independently passes rights, privacy, dataset-review and purpose authorization.
 
 ### 8.2 Stage 2 — Complete quality-analysis system
 
@@ -683,9 +683,11 @@ Teacher approval of a restoration does not imply:
 - publication permission,
 - demonstration permission.
 
-### 11.2 Current fixture state
+### 11.2 Current fixture and local drill state
 
 The repository fixture catalog is metadata-only. Real document bytes are not present in ordinary Git. Existing in-memory synthetic tests and Stage 1B project-authored non-musical drill objects do not constitute the authorized Stage 1 corpus.
+
+A local V2 assessment of the currently inspected Windows 7 host failed the real-artifact custody gate because the operating system is unsupported and the inspected disks are unencrypted. A separate local V3 non-sensitive basic marker drill passed create/size/SHA-256/delete/post-delete-absence checks using a project-authored non-musical marker. V2/V3 are local terminal observations only: they are not GitHub-hosted CI evidence, and V3 does not prove a Stage 1B-compliant real artifact vault. Real/private and controlled-synthetic artifact onboarding therefore remains blocked pending a supported encrypted custody environment and the full Stage 1B operational verification boundary.
 
 ### 11.3 Future learning loop
 
@@ -772,15 +774,16 @@ CI validates supported Python 3.11 and 3.12 environments.
 ### 13.2 Current test-data boundary
 
 - generated in-memory synthetic inputs are permitted for deterministic unit/regression tests,
+- project-authored non-sensitive marker bytes may be used for bounded local operational drills without constituting corpus data,
 - the fixture catalog remains metadata-only,
 - no real student, teacher, private, or copyrighted document bytes are committed,
-- current synthetic regressions are not a replacement for Stage 1 authorization or Stage 4 calibration.
+- current synthetic or non-sensitive drill evidence is not a replacement for Stage 1 item authorization, a compliant custody environment, or Stage 4 calibration.
 
 ### 13.3 Future corpus and calibration evidence
 
-After Stage 1C receives separate authorization and the approved Stage 1 corpus is realized, that corpus must cover representative formats, notation types, and degradation classes. Stage 4 must measure controlled mutation detection, false negatives, false positives, and mandatory-review rates on frozen splits.
+Stage 1C is separately authorized, but the approved Stage 1 corpus is not yet realized. After a supported encrypted custody environment passes the accepted Stage 1B operational controls and item-level rights, privacy, dataset-review and purpose gates pass, the realized corpus must cover representative formats, notation types, and degradation classes. Stage 4 must measure controlled mutation detection, false negatives, false positives, and mandatory-review rates on frozen splits.
 
-Golden-image or real-reference claims must not be made before the relevant source rights, split, and retention evidence exists.
+Golden-image or real-reference claims must not be made before the relevant source rights, split, retention and custody evidence exists.
 
 ---
 
@@ -885,6 +888,7 @@ Repository-authoritative references:
 - `docs/stage-1b-closure-evidence.md`
 - Issue #32
 - Issue #36
+- Issue #47
 
 External references are informative only and do not authorize dependencies or implementation:
 
