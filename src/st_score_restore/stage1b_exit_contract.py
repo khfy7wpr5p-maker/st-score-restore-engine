@@ -91,8 +91,14 @@ def _validate_schema(evidence: dict[str, Any]) -> None:
 def _validate_defined_object(value: dict[str, Any], definition: str, label: str) -> None:
     if not isinstance(value, dict):
         raise Stage1BExitContractError(f"{label} must be an object")
+    root = _schema()
+    wrapper = {
+        "$schema": root["$schema"],
+        "$defs": root["$defs"],
+        "$ref": f"#/$defs/{definition}",
+    }
     try:
-        Draft202012Validator(_schema()["$defs"][definition]).validate(value)
+        Draft202012Validator(wrapper).validate(value)
     except ValidationError as error:
         location = ".".join(str(part) for part in error.absolute_path) or "root"
         raise Stage1BExitContractError(
