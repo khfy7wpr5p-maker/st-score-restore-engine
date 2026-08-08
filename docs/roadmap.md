@@ -1,8 +1,8 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved development sequence  
-**Version:** 0.2.0  
-**Date:** 2026-08-05  
+**Document status:** Approved development sequence, Stage 1 substage status aligned  
+**Version:** 0.2.1  
+**Date:** 2026-08-08  
 **Decision record:** Issue #31  
 **Dependency:** `docs/technical-specification.md`
 
@@ -44,7 +44,9 @@ The following foundation is already present on `main` and is treated as the star
 - strict local HTTP and multipart boundary,
 - immutable reviewer evidence bundles and stale-screen decision binding.
 
-This baseline is not a production service. It has not yet passed the real-data, complete quality-analysis, multi-page PDF, safety-calibration, accessible-UI, production-infrastructure or preview gates below.
+This baseline is not a production service. It has not yet passed the complete Stage 1 real-data corpus, complete quality-analysis, multi-page PDF, safety-calibration, accessible-UI, production-infrastructure or preview gates below.
+
+Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation was merged through PR #41 and its ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains open until every Stage 1B exit-evidence item is satisfied. Stage 1C artifact onboarding has not started and requires both formal Stage 1B closure and a separate explicit start approval.
 
 ## 4. Binding delivery sequence
 
@@ -98,6 +100,14 @@ Make the approved sequence unambiguous in repository documentation and issue pla
 - Issue #31 is closed only by the approved roadmap pull request.
 
 ## 6. Stage 1 — Real and explicitly authorized test dataset
+
+### Current gated-substage status
+
+- **Stage 1A — metadata governance:** complete and merged.
+- **Stage 1B — provider-neutral custody and operations boundary:** implementation and acceptance-status changes are merged; Issue #36 remains the formal closure record until all stated exit evidence, including independent exact-head security-audit provenance, is satisfied.
+- **Stage 1C — authorized artifact onboarding and corpus realization:** not started and not authorized. It requires formal Stage 1B closure plus a separate explicit start approval.
+
+Completion of Stage 1B is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
 
 ### Goal
 
@@ -567,10 +577,10 @@ Every stage-completion report must include:
 - autonomous online learning,
 - destructive replacement of original documents.
 
-## 20. Immediate next stage
+## 20. Immediate next gate
 
-After this roadmap revision is merged and Issue #31 is closed, the only eligible next implementation stage is:
+The active roadmap stage remains Stage 1 under parent Issue #32.
 
-> **Stage 1 — Real and explicitly authorized test dataset**
+> **Stage 1A is complete. Stage 1B implementation and acceptance-status changes are merged, while Issue #36 remains the formal Stage 1B closure gate. Stage 1C has not started.**
 
-Stage 1 is not started by this document. It requires a focused issue, explicit scope approval and a separate branch/PR workflow.
+The next permitted action is to satisfy and verify every remaining Issue #36 exit-evidence item. Only after formal Stage 1B closure may Stage 1C be considered, and Stage 1C still requires a separate explicit start authorization. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
