@@ -487,6 +487,103 @@ class Stage1BReferenceDrillTests(unittest.TestCase):
                 backup_complete=True,
             )
 
+    def test_pending_removal_intent_survives_restart_and_retries_until_bound_ack(self) -> None:
+        adapter = available_adapter()
+        token = adapter.grant_read(
+            ACCESS,
+            purpose=adapter.allowed_purpose,
+            environment=adapter.allowed_environment,
+            storage_class=adapter.allowed_storage_class,
+        )
+        fingerprint = adapter.persist_removal_intent("request-crash-window-a")
+        adapter.publish_removal_barrier("request-crash-window-a")
+        with self.assertRaisesRegex(DrillError, "read is denied"):
+            adapter.read(token)
+
+        restarted = adapter.restart()
+        intent = restarted.pending_removal_intent("request-crash-window-a")
+        self.assertIsNotNone(intent)
+        self.assertFalse(intent["acknowledged"])
+        self.assertEqual(intent["publicationAttempts"], 1)
+        restarted.publish_removal_barrier("request-crash-window-a")
+        self.assertEqual(
+            restarted.pending_removal_intent("request-crash-window-a")["publicationAttempts"],
+            2,
+        )
+        with self.assertRaisesRegex(DrillError, "does not match"):
+            restarted.publish_removal_barrier(
+                "request-crash-window-a",
+                acknowledged_fingerprint="0" * 64,
+            )
+        self.assertFalse(restarted.pending_removal_intent("request-crash-window-a")["acknowledged"])
+        restarted.publish_removal_barrier(
+            "request-crash-window-a",
+            acknowledged_fingerprint=fingerprint,
+        )
+        self.assertTrue(restarted.pending_removal_intent("request-crash-window-a")["acknowledged"])
+        with self.assertRaisesRegex(DrillError, "not readable"):
+            restarted.grant_read(
+                ACCESS,
+                purpose=restarted.allowed_purpose,
+                environment=restarted.allowed_environment,
+                storage_class=restarted.allowed_storage_class,
+            )
+
+    def test_committed_removal_barrier_vetoes_available_state_after_restart(self) -> None:
+        adapter = available_adapter()
+        fingerprint = adapter.persist_removal_intent("request-crash-window-b")
+        adapter.publish_removal_barrier(
+            "request-crash-window-b",
+            acknowledged_fingerprint=fingerprint,
+        )
+
+        restarted = adapter.restart()
+        self.assertEqual(restarted.state, "available")
+        self.assertFalse(restarted.work_fenced)
+        with self.assertRaisesRegex(DrillError, "not readable"):
+            restarted.grant_read(
+                ACCESS,
+                purpose=restarted.allowed_purpose,
+                environment=restarted.allowed_environment,
+                storage_class=restarted.allowed_storage_class,
+            )
+        snapshot = adapter.create_snapshot()
+        with self.assertRaisesRegex(DrillError, "active removal control"):
+            restarted.restore(
+                snapshot,
+                live_anchor_sequence=restarted.anchor_sequence,
+                live_anchor_digest=restarted.anchor_digest,
+                retention_valid=True,
+            )
+
+    def test_checkpoint_lag_blocks_revoked_transition_across_restart(self) -> None:
+        adapter = available_adapter()
+        fingerprint = adapter.persist_removal_intent("request-crash-window-c")
+        adapter.publish_removal_barrier(
+            "request-crash-window-c",
+            acknowledged_fingerprint=fingerprint,
+        )
+        adapter.begin_revocation(
+            "request-crash-window-c",
+            expected_version=2,
+            authority_actor=AUTHORITY,
+            executor_actor=EXECUTOR,
+            verifier_actor=VERIFIER,
+            checkpoint_advanced=False,
+        )
+        self.assertEqual(adapter.state, "deletion_pending")
+        self.assertIsNone(adapter.removal_checkpoint)
+
+        restarted = adapter.restart()
+        self.assertEqual(restarted.state, "deletion_pending")
+        self.assertTrue(restarted.work_fenced)
+        with self.assertRaisesRegex(DrillError, "checkpoint has not advanced"):
+            restarted.confirm_revoked(expected_version=3)
+        self.assertEqual(restarted.state, "deletion_pending")
+        restarted.advance_removal_checkpoint("request-crash-window-c")
+        restarted.confirm_revoked(expected_version=3)
+        self.assertEqual(restarted.state, "revoked")
+
 
 if __name__ == "__main__":
     unittest.main()
