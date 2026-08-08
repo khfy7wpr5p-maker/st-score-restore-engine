@@ -5,10 +5,47 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
+import math
 from typing import Any, Literal, Mapping
 
 SCHEMA_VERSION = "1.0.0"
 ENGINE_VERSION = "0.2.0"
+
+_BOOLEAN_CONFIG_FIELDS = (
+    "orientation_enabled",
+    "deskew_enabled",
+    "perspective_enabled",
+    "crop_enabled",
+    "illumination_enabled",
+    "denoise_enabled",
+    "contrast_enabled",
+)
+
+_NUMBER_CONFIG_LIMITS = {
+    "max_deskew_degrees": (0, 15, True),
+    "min_deskew_degrees": (0, 15, True),
+    "deskew_min_confidence": (0, 1, True),
+    "perspective_min_confidence": (0, 1, True),
+    "min_page_area_ratio": (0, 1, True),
+    "max_page_area_ratio": (0, 1, True),
+    "illumination_kernel_fraction": (0, 0.25, False),
+    "illumination_strength": (0, 1, True),
+    "clahe_clip_limit": (0, 8, False),
+    "max_protected_fraction": (0, 1, True),
+}
+
+_INTEGER_CONFIG_LIMITS = {
+    "clahe_grid_size": (2, 32),
+    "protected_dark_threshold": (0, 255),
+    "jpeg_quality": (80, 100),
+    "output_dpi": (72, 1200),
+    "max_decode_pixels": (1, 200_000_000),
+}
+
+_INTEGER_CONFIG_ENUMS = {
+    "denoise_kernel": {1, 3, 5},
+    "protected_dilation": {0, 1, 2},
+}
 
 
 class RestorationError(ValueError):
@@ -69,30 +106,45 @@ class RestorationConfig:
     max_decode_pixels: int = 80_000_000
 
     def __post_init__(self) -> None:
-        if self.binarization_profile not in {"none", "otsu", "adaptive"}:
-            self._invalid("binarization_profile")
-        if not 0 <= self.min_deskew_degrees <= self.max_deskew_degrees <= 15:
-            self._invalid("deskew degree limits")
-        for name in (
-            "deskew_min_confidence",
-            "perspective_min_confidence",
-            "min_page_area_ratio",
-            "max_page_area_ratio",
-            "illumination_strength",
-            "max_protected_fraction",
-        ):
-            if not 0 <= float(getattr(self, name)) <= 1:
+        for name in _BOOLEAN_CONFIG_FIELDS:
+            if not isinstance(getattr(self, name), bool):
                 self._invalid(name)
+
+        if (
+            not isinstance(self.binarization_profile, str)
+            or self.binarization_profile not in {"none", "otsu", "adaptive"}
+        ):
+            self._invalid("binarization_profile")
+
+        for name, limits in _NUMBER_CONFIG_LIMITS.items():
+            minimum, maximum, minimum_is_inclusive = limits
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                self._invalid(name)
+            if isinstance(value, float) and not math.isfinite(value):
+                self._invalid(name)
+            minimum_is_valid = (
+                value >= minimum if minimum_is_inclusive else value > minimum
+            )
+            if not minimum_is_valid or value > maximum:
+                self._invalid(name)
+
+        for name, (minimum, maximum) in _INTEGER_CONFIG_LIMITS.items():
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int):
+                self._invalid(name)
+            if not minimum <= value <= maximum:
+                self._invalid(name)
+
+        for name, allowed in _INTEGER_CONFIG_ENUMS.items():
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value not in allowed:
+                self._invalid(name)
+
+        if self.min_deskew_degrees > self.max_deskew_degrees:
+            self._invalid("deskew degree limits")
         if self.min_page_area_ratio >= self.max_page_area_ratio:
             self._invalid("page area ratios")
-        if self.denoise_kernel not in {1, 3, 5}:
-            self._invalid("denoise_kernel")
-        if self.protected_dilation not in {0, 1, 2}:
-            self._invalid("protected_dilation")
-        if not 80 <= self.jpeg_quality <= 100 or not 72 <= self.output_dpi <= 1200:
-            self._invalid("output settings")
-        if not 1 <= self.max_decode_pixels <= 200_000_000:
-            self._invalid("max_decode_pixels")
 
     @staticmethod
     def _invalid(name: str) -> None:
@@ -102,7 +154,19 @@ class RestorationConfig:
     def from_mapping(cls, value: Mapping[str, Any] | None) -> "RestorationConfig":
         if value is None:
             return cls()
-        unknown = sorted(set(value) - set(cls.__dataclass_fields__))
+        if not isinstance(value, Mapping):
+            raise RestorationError(
+                "invalid_configuration",
+                "Configuration must be an object.",
+            )
+        known_fields = set(cls.__dataclass_fields__)
+        unknown = sorted(
+            (
+                key if isinstance(key, str) else repr(key)
+                for key in value
+                if key not in known_fields
+            )
+        )
         if unknown:
             raise RestorationError(
                 "invalid_configuration",
