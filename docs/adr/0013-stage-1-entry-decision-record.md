@@ -1,12 +1,13 @@
 # ADR 0013: Stage 1 Entry Decision Record
 
-- **Status:** Accepted for Stage 1A contract hardening
+- **Status:** Accepted; Stage 1A complete
 - **Date:** 2026-08-06
 - **Decision ID:** `adr-0013-stage-1-entry-v1`
 - **Roadmap stage:** Stage 1 only
 - **Issue:** #32
-- **Pull request:** #35 is ready for review; merge requires separate explicit authorization
+- **Pull request:** #35 merged as `a7e4e2b715194a0671cea2657d973b01b0fede79`
 - **Dataset schema version:** `1.2.0`
+- **Current substage state:** Stage 1B formally closed; Stage 1C not started or authorized
 
 ## Context
 
@@ -17,7 +18,7 @@ contract, but deliberately deferred the Stage 1 entry decisions for custody,
 role separation, time-bound authorization, restrictions, deletion evidence and
 real/synthetic handling.
 
-This record binds those decisions without selecting a storage product,
+This record bound those decisions without selecting a storage product,
 onboarding document bytes, freezing a real split, activating model training or
 starting Stage 1B, Stage 1C or Stage 2.
 
@@ -55,8 +56,15 @@ Document bytes remain outside ordinary Git. Any future external artifact must
 reference opaque custody, encryption-policy and custodian identifiers. Storage
 must be private-by-default, encrypted in transit and at rest, audit logged,
 backup-aware and able to propagate deletion. Held-out access must be narrower
-than development access. The storage product, region, KMS/HSM and key rotation
-period remain Stage 1B decisions.
+than development access.
+
+Stage 1B subsequently defined, implemented and formally closed the
+provider-neutral custody, encryption, key-separation, identity, audit,
+revocation, deletion and restore boundary. Stage 1C must separately approve and
+bind the concrete Stage 1 dataset purpose and storage location to those accepted
+controls before onboarding artifact bytes. Provider-specific production
+identity, network, secret-management, KMS/IAM and production storage/deployment
+architecture remain Stage 6 work.
 
 ### Role separation and opaque identity
 
@@ -76,9 +84,9 @@ Repository identity and evidence fields use role-scoped, non-semantic tokens:
 Names, personal email addresses, phone numbers, student/teacher identities,
 personal paths and semantic identity aliases are invalid in those fields.
 Catalog descriptions and license values are code fields, not free text.
-Synthetic generator parameters cannot contain strings. The external identity
-registry must enforce real-person conflict checks between rights verifier,
-privacy reviewer, custodian, purpose authorizer and dataset reviewer.
+Synthetic generator parameters cannot contain strings. Stage 1B established the
+provider-neutral real-person conflict and service-principal contract; any
+production identity-registry implementation remains Stage 6 work.
 
 ### Split policy
 
@@ -121,8 +129,10 @@ derivation is rejected.
 
 Revoked items retain historical digest and policy evidence but no active
 storage locator. Completed revocation requires an opaque deletion receipt
-reference and receipt digest. Stage 1B must demonstrate deletion across primary,
-replica, cache and backup boundaries before Stage 1C may start.
+reference and receipt digest. Stage 1B demonstrated the required provider-neutral
+revocation, deletion, backup anti-resurrection and crash/restart evidence and is
+formally closed. Stage 1C still requires separate start authorization and must
+bind onboarding to the accepted Stage 1B controls.
 
 ### Schema and validator parity
 
@@ -147,26 +157,32 @@ helper remains private. Compatibility wrappers delegate to the same boundary.
 
 ### Stage 1A
 
-Schema, metadata, ADRs, validators and tests only. No document bytes, storage
-account, active repository permission, real split freeze or model execution.
+Complete and merged. Schema, metadata, ADRs, validators and tests only; no
+document bytes, storage account, active repository permission, real split freeze
+or model execution were introduced by Stage 1A.
 
 ### Stage 1B
 
-Storage selection, encryption/key ownership, IAM, external identity registry,
-audit, quarantine, deletion and revocation drills using non-sensitive objects.
-Requires separate start approval.
+Complete and formally closed. The accepted implementation provides the
+provider-neutral custody/operations, role-separation, audit, quarantine,
+revocation/deletion and restore safety boundary using non-sensitive objects.
+Stage 1B did not authorize Stage 1C or production infrastructure.
 
 ### Stage 1C
 
-Rights/privacy-approved real onboarding, controlled synthetic derivation,
+Not started and not authorized. Its approved target scope is
+rights/privacy-approved real onboarding, controlled synthetic derivation,
 purpose activation, split freeze, dataset card, bias/coverage report and Stage 1
-exit evidence. Requires Stage 1B operational evidence and separate start
-approval.
+exit evidence. It requires a separate explicit start approval, and the concrete
+Stage 1 dataset purpose and storage location must be explicitly approved before
+artifact onboarding.
 
 Stage 2 remains blocked until Stage 1 exit evidence is separately accepted.
 
 ## Consequences
 
-PR #35 may harden the Stage 1A contract to implement this record. It remained
-draft until the separate ready-for-review approval was granted. No merge is
-authorized by this ADR.
+PR #35 implemented the Stage 1A contract and merged as
+`a7e4e2b715194a0671cea2657d973b01b0fede79`. Stage 1B subsequently completed
+and formally closed under its own provider-neutral contract and evidence. This
+status convergence changes no schema, validator, runtime behavior, permission or
+artifact state, and does not authorize or start Stage 1C.
