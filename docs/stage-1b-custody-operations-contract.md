@@ -1,13 +1,13 @@
 # Stage 1B Custody and Operations Contract
 
-**Status:** Accepted as the Stage 1B technical contract  
+**Status:** Accepted as the Stage 1B technical contract; Stage 1B formally closed  
 **Parent:** #32  
 **Decision:** `adr-0014-stage-1b-custody-operations-v1`  
 **Base:** `a7e4e2b715194a0671cea2657d973b01b0fede79`  
 **Artifact policy:** Provider-neutral and metadata-only in ordinary Git  
 **Stage 1C authorization:** None
 
-> Closure note: this contract is accepted as the Stage 1B technical contract after PR #41 merged its machine-enforceable and operational evidence. Issue #36 still requires the remaining independent exact-head security-audit record before formal issue closure. Stage 1C remains unauthorized.
+> Closure note: this contract is accepted as the Stage 1B technical contract. PR #41 merged the machine-enforceable and operational evidence, PR #44 closed the remaining removal crash/restart evidence gap, the required exact-head audit result was recorded, post-merge `main` CI passed, and Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C remains unauthorized.
 
 ## 1. Purpose
 
@@ -391,10 +391,7 @@ older evidence.
 
 ## 17. Non-sensitive reference drill
 
-A future Stage 1B Draft PR may implement a provider-neutral in-memory or
-temporary local reference adapter solely for operational testing. It uses
-run-created, project-authored, non-musical marker bytes and does not commit
-score/TAB artifacts.
+The Stage 1B implementation includes a provider-neutral in-memory reference adapter solely for operational testing. It uses run-created, project-authored, non-musical marker bytes and does not commit score/TAB artifacts.
 
 Required positive tests:
 
@@ -431,11 +428,14 @@ Required negative tests:
 - final receipt before backup completion,
 - restore attempting to resurrect revoked data,
 - restore from a stale, missing or unanchored checkpoint,
-- receipt finalization by deletion executor without independent verification.
+- receipt finalization by deletion executor without independent verification,
+- pending removal intent lost before live-barrier acknowledgement,
+- committed live barrier with local custody still `available`,
+- local deletion transition/audit committed before checkpoint advancement.
 
 ## 18. CI and repository gates
 
-A future Stage 1B implementation PR must prove:
+The Stage 1B implementation evidence proved:
 
 - ordinary Git contains no artifact payloads or secrets,
 - no provider-specific account, region or resource appears,
@@ -445,11 +445,13 @@ A future Stage 1B implementation PR must prove:
 - repository, fixture and Stage 1A dataset validators continue to pass,
 - Stage 1B operational positive and negative tests pass,
 - compile validation passes,
-- the exact PR head is independently audited.
+- the final exact PR head is covered by the recorded remediation-independent audit result.
+
+The final removal crash/restart hardening was merged through PR #44 at audited head `2c66f98f1d62c8727dddda5e5cbebfda034bf283`; post-merge Run #89 passed on `main` with 292 tests on both Python 3.11 and 3.12.
 
 ## 19. Exit gate
 
-Stage 1B is not complete until:
+Stage 1B completion required:
 
 - ADR 0014 and this contract are accepted,
 - machine-enforceable contracts and reference drill pass,
@@ -464,5 +466,4 @@ Stage 1B is not complete until:
 - independent security review passes,
 - separate Ready and merge approvals are completed.
 
-Issue #32 remains open after Stage 1B. Stage 1C requires separately accepted
-Stage 1B evidence and a separate explicit start authorization.
+All listed Stage 1B exit conditions are recorded as PASS and Issue #36 is closed as `completed`. Issue #32 remains open. Stage 1C has not started and requires a separate explicit start authorization.

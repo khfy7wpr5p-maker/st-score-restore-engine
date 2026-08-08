@@ -1,9 +1,9 @@
 # Stage 1B Decision Hardening Record
 
-**Status:** Accepted normative Stage 1B hardening record; implementation merged, independent exact-head closure audit provenance pending  
+**Status:** Accepted normative Stage 1B hardening record; Stage 1B formally closed  
 **Roadmap stage:** Stage 1B only  
 **Parent issue:** #32  
-**Implementation issue:** #36  
+**Implementation issue:** #36 — closed as `completed`  
 **Applies to:** ADR 0014 and `docs/stage-1b-custody-operations-contract.md`  
 **Base main commit:** `daeb3052fec5b03cd568bfa2c9deb29a25c9a5ed`  
 **Stage 1C authorization:** None
@@ -12,7 +12,7 @@
 
 This record closes decision-level findings identified by the independent Stage 1B security audit after PR #37 was merged. It is normative for Stage 1B and remains the stricter rule wherever an older Stage 1B document is less specific.
 
-The machine-enforceable Stage 1B implementation and operational drill were subsequently merged through PR #41, and ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains open until every exit-evidence item is satisfied, including the independent exact-head security-audit provenance requirement. This record does not onboard artifact bytes, create provider resources or credentials, or authorize Stage 1C or any later stage.
+The machine-enforceable Stage 1B implementation and operational drill were subsequently merged through PR #41, and ADR/technical-contract acceptance status was synchronized through PR #42. Final removal crash/restart evidence was added through PR #44, the required exact-head audit result was recorded, post-merge `main` CI passed, and Issue #36 closed as `completed` with an 11/11 exit matrix. This record does not onboard artifact bytes, create provider resources or credentials, or authorize Stage 1C or any later stage.
 
 ## 2. Threat model
 
@@ -171,7 +171,7 @@ The corrective governance rules were retained for subsequent Stage 1B work:
 - machine-enforceable Stage 1B contracts and the non-sensitive operational drill require direct evidence,
 - Stage 1C stays blocked until formal Stage 1B closure and a separate Stage 1C start authorization.
 
-PR #41 followed separate Ready and merge gates and was merged at accepted exact head `92c6fbccc8eb4d04e1959f206794b21ccc344db8`. PR #42 subsequently synchronized ADR/contract acceptance status through separate Ready and merge gates. These later actions do not erase the PR #37 nonconformity, and they do not waive Issue #36's remaining independent-audit requirement.
+PR #41 followed separate Ready and merge gates and was merged at accepted exact head `92c6fbccc8eb4d04e1959f206794b21ccc344db8`. PR #42 subsequently synchronized ADR/contract acceptance status through separate Ready and merge gates. PR #44 then closed the remaining removal crash/restart evidence gap, passed exact-head CI, received the recorded remediation-independent exact-head audit PASS, followed separate Ready and merge gates, and merged as `e47907d6dabe604a7f7877d48959fc50b4b74d1e`; post-merge Run #89 passed. Issue #36 then closed as `completed`. These later actions do not erase the PR #37 nonconformity and do not authorize Stage 1C.
 
 ## 8. Required implementation evidence before Stage 1B exit
 
@@ -186,6 +186,6 @@ The machine-enforceable Stage 1B implementation must provide deterministic tests
 - source-provider exit remaining incomplete while any deletion boundary is unresolved,
 - exact role/authority/service-principal taxonomy and conflict enforcement.
 
-These implementation and operational requirements were added and exercised through the Stage 1B implementation culminating in PR #41, with Python 3.11/3.12 CI passing on the accepted exact head and after merge. The consolidated evidence is recorded in `docs/stage-1b-closure-evidence.md`.
+These implementation and operational requirements were exercised through PR #41 and the final removal crash/restart hardening in PR #44. PR #44 exact head `2c66f98f1d62c8727dddda5e5cbebfda034bf283` received the recorded remediation-independent audit PASS, was merged, and post-merge `main` Run #89 passed on Python 3.11 and 3.12 with 292 tests on each version.
 
-Formal Issue #36 closure remains blocked only by requirements that are still genuinely unsatisfied. At the time of this convergence update, the independent exact-head security-audit provenance item remains pending; it must not be inferred from the technical final audit performed by an assistant that participated in remediation. Stage 1C remains unauthorized until Issue #36 is formally closed and a separate explicit start approval is recorded.
+Issue #36 is formally closed with an 11/11 PASS exit matrix. The accepted controls in this record remain binding. Stage 1C remains unauthorized and has not started; it requires a separate explicit start approval under the roadmap gate.

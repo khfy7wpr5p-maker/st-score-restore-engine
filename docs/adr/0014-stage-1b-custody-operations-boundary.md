@@ -1,14 +1,14 @@
 # ADR 0014: Stage 1B Provider-Neutral Custody and Operations Boundary
 
-- **Status:** Accepted as the Stage 1B technical decision
+- **Status:** Accepted as the Stage 1B technical decision; Stage 1B formally closed
 - **Date:** 2026-08-06
 - **Decision ID:** `adr-0014-stage-1b-custody-operations-v1`
 - **Roadmap stage:** Stage 1B only
 - **Parent issue:** #32
-- **Implementation issue:** #36
+- **Implementation issue:** #36 — closed as `completed`
 - **Base commit:** `a7e4e2b715194a0671cea2657d973b01b0fede79`
 
-> Closure note: this ADR is accepted as the Stage 1B technical decision after the Stage 1B implementation and operational evidence were merged through PR #41. Issue #36 remains subject to its remaining closure evidence, including the independent exact-head security-audit record. This acceptance does not authorize Stage 1C.
+> Closure note: this ADR is accepted as the Stage 1B technical decision. The machine-enforceable implementation and operational evidence were merged through PR #41, final removal crash/restart evidence was merged through PR #44, the required exact-head audit result was recorded, post-merge `main` CI passed, and Issue #36 closed as `completed` with an 11/11 exit matrix. This closure does not authorize Stage 1C.
 
 ## Context
 
@@ -354,8 +354,7 @@ Stage 1B may add provider-neutral documentation, schemas, validators, reference
 interfaces and non-sensitive operational tests. It may not create production
 infrastructure or onboard real/controlled-synthetic music artifacts.
 
-Stage 1C remains blocked until Stage 1B evidence is independently audited,
-accepted and merged, followed by a separate Stage 1C start approval.
+Stage 1B is now formally closed. Stage 1C remains blocked until a separate explicit Stage 1C start approval is recorded; the Stage 1B closure itself does not authorize onboarding.
 
 ## Consequences
 
@@ -390,9 +389,7 @@ or resurrection of revoked music documents is unacceptable.
 
 ## Review and merge gates
 
-This ADR is accepted as the Stage 1B technical decision. Acceptance of this decision does not by itself satisfy every Issue #36 closure gate. The remaining closure evidence, including the independent exact-head security-audit record, remains separately enforceable.
-
-The Stage 1B review process requires:
+This ADR is accepted as the Stage 1B technical decision, and all Issue #36 closure gates have been satisfied. The Stage 1B review process required:
 
 1. complete diff and CI evidence,
 2. independent security review,
@@ -400,5 +397,5 @@ The Stage 1B review process requires:
 4. final exact-head merge review,
 5. separate merge authorization.
 
-Merging a Stage 1B decision package does not close #32 and does not authorize
+Merging and closing Stage 1B did not close #32 and did not authorize
 Stage 1C.
