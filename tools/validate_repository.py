@@ -11,6 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from st_score_restore.durable_job_store import STORE_SCHEMA_VERSION  # noqa: E402
+from st_score_restore.custody_contract import (  # noqa: E402
+    CustodyContractError,
+    validate_schema_contracts,
+)
 from st_score_restore.fixture_manifest import FixtureCatalogError, load_catalog  # noqa: E402
 from st_score_restore.input_inspection import INSPECTOR_VERSION, SCHEMA_VERSION as INPUT_SCHEMA_VERSION  # noqa: E402
 from st_score_restore.job_api_types import API_VERSION  # noqa: E402
@@ -42,6 +46,7 @@ REQUIRED_FILES = (
     "src/st_score_restore/review_evidence_access.py",
     "src/st_score_restore/review_evidence_review.py",
     "src/st_score_restore/review_evidence_service.py",
+    "src/st_score_restore/custody_contract.py",
     "tests/README.md", "tests/test_fixture_manifest.py", "tests/test_input_inspection.py",
     "tests/test_safe_restoration.py", "tests/test_music_safety_validator.py",
     "tests/test_music_safety_hardening.py", "tests/test_job_api.py",
@@ -50,11 +55,15 @@ REQUIRED_FILES = (
     "tests/test_worker_fencing_guard.py", "tests/test_http_security.py",
     "tests/test_http_server_security.py", "tests/test_http_api_security_compat.py",
     "tests/test_review_evidence.py", "tests/test_review_evidence_workflow.py",
+    "tests/test_custody_contract.py",
     "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
     "schemas/restoration-candidate.schema.json", "schemas/music-safety-report.schema.json",
     "schemas/review-evidence-bundle.schema.json",
+    "schemas/custody-record.schema.json", "schemas/custody-audit-evidence.schema.json",
+    "schemas/deletion-receipt.schema.json",
+    "schemas/live-removal-barrier.schema.json", "schemas/restore-source-retention.schema.json",
     "models/README.md", "api/README.md", "api/openapi.v1.json",
     "examples/README.md", "LICENSES/README.md",
     "LICENSES/opencv-python-headless-4.13.0.92.md", "LICENSES/numpy-2.3.5.md",
@@ -162,6 +171,11 @@ def validate_json_documents() -> None:
     candidate_schema = load_json(Path("schemas/restoration-candidate.schema.json"))
     safety_schema = load_json(Path("schemas/music-safety-report.schema.json"))
     evidence_schema = load_json(Path("schemas/review-evidence-bundle.schema.json"))
+    load_json(Path("schemas/custody-record.schema.json"))
+    load_json(Path("schemas/custody-audit-evidence.schema.json"))
+    load_json(Path("schemas/deletion-receipt.schema.json"))
+    load_json(Path("schemas/live-removal-barrier.schema.json"))
+    load_json(Path("schemas/restore-source-retention.schema.json"))
     openapi = load_json(Path("api/openapi.v1.json"))
     if fixture_schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
         fail("fixture manifest must use JSON Schema Draft 2020-12")
@@ -241,6 +255,10 @@ def validate_json_documents() -> None:
         fail("runtime component versions must not be empty")
     if STORE_SCHEMA_VERSION != 1:
         fail("unexpected durable local store schema version")
+    try:
+        validate_schema_contracts()
+    except CustodyContractError as error:
+        fail(f"Stage 1B custody contract validation failed: {error}")
 
 
 def validate_fixture_contract() -> None:
