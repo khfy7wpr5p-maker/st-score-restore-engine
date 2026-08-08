@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2  
-**Version:** 0.2.0-aligned  
-**Date:** 2026-08-05  
+**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2.1  
+**Version:** 0.2.1-aligned  
+**Date:** 2026-08-08  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Roadmap authority:** `docs/roadmap.md` v0.2.0 and PR #33  
+**Roadmap authority:** `docs/roadmap.md` v0.2.1 and PR #33 sequence authority  
 **Primary language:** English identifiers and API contracts; Turkish-first teacher-facing messages may be added by clients.
 
 ---
@@ -72,7 +72,7 @@ Stage 12 Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. A later stage may not begin until the previous stage's exit evidence is published and accepted.
 
-**Issue #32 is the only eligible next implementation issue. It remains planned and has not started.** This maintenance revision does not start Stage 1, collect data, create dataset artifacts, or change fixture permissions.
+**Stage 1 is active under parent Issue #32 through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B custody/operations implementation and acceptance-status changes are merged, while Issue #36 remains the formal closure record until all stated exit evidence is satisfied. Stage 1C artifact onboarding has not started and is not authorized.** This maintenance revision does not collect data, create dataset artifacts, change fixture permissions, or authorize Stage 1C.
 
 ---
 
@@ -337,7 +337,7 @@ Production limits and enforcement are Stage 6 responsibilities.
 
 ### 8.1 Stage 1 — Real and explicitly authorized test dataset
 
-**Status: PLANNED, NOT STARTED. Issue #32 is the only eligible next implementation issue.**
+**Status: ACTIVE IN GATED SUBSTAGES. Stage 1A is complete. Stage 1B implementation and acceptance-status changes are merged, with Issue #36 closure evidence still pending. Stage 1C artifact onboarding is NOT AUTHORIZED and has not started.**
 
 Required target outcomes include:
 
@@ -352,7 +352,7 @@ Required target outcomes include:
 - metadata-only fixture references in the repository,
 - controlled synthetic mutations kept separate from real documents.
 
-This technical-specification maintenance work performs none of those activities.
+The Stage 1A/1B governance and custody work does not itself create the authorized Stage 1 corpus. Stage 1C requires formal Stage 1B closure plus separate explicit start approval before any artifact onboarding.
 
 ### 8.2 Stage 2 — Complete quality-analysis system
 
@@ -685,7 +685,7 @@ Teacher approval of a restoration does not imply:
 
 ### 11.2 Current fixture state
 
-The repository fixture catalog is metadata-only. Real document bytes are not present in ordinary Git. Existing in-memory synthetic tests do not constitute the authorized Stage 1 corpus.
+The repository fixture catalog is metadata-only. Real document bytes are not present in ordinary Git. Existing in-memory synthetic tests and Stage 1B project-authored non-musical drill objects do not constitute the authorized Stage 1 corpus.
 
 ### 11.3 Future learning loop
 
@@ -778,7 +778,7 @@ CI validates supported Python 3.11 and 3.12 environments.
 
 ### 13.3 Future corpus and calibration evidence
 
-After Stage 1 approval, the authorized corpus must cover representative formats, notation types, and degradation classes. Stage 4 must measure controlled mutation detection, false negatives, false positives, and mandatory-review rates on frozen splits.
+After Stage 1C receives separate authorization and the approved Stage 1 corpus is realized, that corpus must cover representative formats, notation types, and degradation classes. Stage 4 must measure controlled mutation detection, false negatives, false positives, and mandatory-review rates on frozen splits.
 
 Golden-image or real-reference claims must not be made before the relevant source rights, split, and retention evidence exists.
 
@@ -879,7 +879,12 @@ Repository-authoritative references:
 - `docs/input-inspection-contract.md`
 - `docs/safe-restoration-baseline.md`
 - `docs/music-safety-validator.md`
+- `docs/adr/0014-stage-1b-custody-operations-boundary.md`
+- `docs/stage-1b-custody-operations-contract.md`
+- `docs/stage-1b-decision-hardening-record.md`
+- `docs/stage-1b-closure-evidence.md`
 - Issue #32
+- Issue #36
 
 External references are informative only and do not authorize dependencies or implementation:
 
