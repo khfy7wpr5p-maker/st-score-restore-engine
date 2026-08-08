@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/stage1b-exit-evidence.schema.json",
+  "title": "Stage 1B provider-neutral portability, provider-exit, rollback and receipt-retention evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "portabilityPackage", "destinationValidation", "sourceProviderExit", "receiptRetention"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "portabilityPackage": {"$ref": "#/$defs/portabilityPackage"},
+    "destinationValidation": {"$ref": "#/$defs/destinationValidation"},
+    "sourceProviderExit": {"$ref": "#/$defs/sourceProviderExit"},
+    "receiptRetention": {"$ref": "#/$defs/receiptRetention"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "timestamp": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "opaque": {"type": "string", "pattern": "^[a-z][a-z._-]*:opq_[0-9a-f]{32}$"},
+    "policyRef": {"type": "string", "pattern": "^policy:opq_[0-9a-f]{32}$"},
+    "receiptRef": {"type": "string", "pattern": "^receipt:opq_[0-9a-f]{32}$"},
+    "sourceClass": {"enum": ["primary_replica", "replica", "cache", "transient_store", "backup", "archive"]},
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceClass", "expiresAt", "disposition", "verified"],
+      "properties": {
+        "sourceClass": {"$ref": "#/$defs/sourceClass"},
+        "expiresAt": {"$ref": "#/$defs/timestamp"},
+        "disposition": {"enum": ["present", "pending_expiry", "removed", "not_present", "expired", "verified_destroyed"]},
+        "verified": {"const": true}
+      }
+    },
+    "portabilityPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageDigest", "artifactSha256", "byteSize", "custodyRecordId", "state", "recordVersion", "purposeDecisionRef", "environmentRef", "storageClassRef", "retentionPolicyRef", "holdDecisionRef", "revocationStatus", "deletionStatus", "auditChainHeadDigest", "checkpointRef", "checkpointSequence", "liveAnchorRef", "barrierSequence", "barrierDigest", "tombstoneStatus", "pendingBackupReceiptRef", "finalDeletionReceiptRef", "restoreSourceEvidence", "antiResurrectionHorizon", "encryptionPolicyRef", "keyPolicyRef"],
+      "properties": {
+        "packageDigest": {"$ref": "#/$defs/sha256"},
+        "artifactSha256": {"$ref": "#/$defs/sha256"},
+        "byteSize": {"type": "integer", "minimum": 1},
+        "custodyRecordId": {"type": "string", "pattern": "^custody:opq_[0-9a-f]{32}$"},
+        "state": {"enum": ["quarantined", "available", "deletion_pending", "revoked", "tombstoned"]},
+        "recordVersion": {"type": "integer", "minimum": 1},
+        "purposeDecisionRef": {"$ref": "#/$defs/policyRef"},
+        "environmentRef": {"$ref": "#/$defs/policyRef"},
+        "storageClassRef": {"$ref": "#/$defs/policyRef"},
+        "retentionPolicyRef": {"$ref": "#/$defs/policyRef"},
+        "holdDecisionRef": {"$ref": "#/$defs/policyRef"},
+        "revocationStatus": {"enum": ["not_revoked", "pending", "effective"]},
+        "deletionStatus": {"enum": ["not_started", "pending", "active_boundaries_complete", "completed"]},
+        "auditChainHeadDigest": {"$ref": "#/$defs/sha256"},
+        "checkpointRef": {"type": "string", "pattern": "^checkpoint:opq_[0-9a-f]{32}$"},
+        "checkpointSequence": {"type": "integer", "minimum": 1},
+        "liveAnchorRef": {"type": "string", "pattern": "^anchor:opq_[0-9a-f]{32}$"},
+        "barrierSequence": {"type": "integer", "minimum": 1},
+        "barrierDigest": {"$ref": "#/$defs/sha256"},
+        "tombstoneStatus": {"enum": ["none", "intent_recorded", "active", "final"]},
+        "pendingBackupReceiptRef": {"type": ["string", "null"], "pattern": "^receipt:opq_[0-9a-f]{32}$"},
+        "finalDeletionReceiptRef": {"type": ["string", "null"], "pattern": "^receipt:opq_[0-9a-f]{32}$"},
+        "restoreSourceEvidence": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/sourceEvidence"}},
+        "antiResurrectionHorizon": {"$ref": "#/$defs/timestamp"},
+        "encryptionPolicyRef": {"$ref": "#/$defs/policyRef"},
+        "keyPolicyRef": {"$ref": "#/$defs/policyRef"}
+      }
+    },
+    "destinationValidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactSha256", "custodyRecordId", "recordVersion", "checkpointSequence", "barrierSequence", "antiResurrectionHorizon", "tombstoneStatus", "trustZoneEquivalent", "denyByDefault", "auditDurable", "removalBarrierEquivalent", "restoreSafeguardsEquivalent", "deletionEvidenceEquivalent", "currentPolicyValidated", "liveControlsValidated"],
+      "properties": {
+        "artifactSha256": {"$ref": "#/$defs/sha256"},
+        "custodyRecordId": {"type": "string", "pattern": "^custody:opq_[0-9a-f]{32}$"},
+        "recordVersion": {"type": "integer", "minimum": 1},
+        "checkpointSequence": {"type": "integer", "minimum": 1},
+        "barrierSequence": {"type": "integer", "minimum": 1},
+        "antiResurrectionHorizon": {"$ref": "#/$defs/timestamp"},
+        "tombstoneStatus": {"enum": ["none", "intent_recorded", "active", "final"]},
+        "trustZoneEquivalent": {"const": true},
+        "denyByDefault": {"const": true},
+        "auditDurable": {"const": true},
+        "removalBarrierEquivalent": {"const": true},
+        "restoreSafeguardsEquivalent": {"const": true},
+        "deletionEvidenceEquivalent": {"const": true},
+        "currentPolicyValidated": {"const": true},
+        "liveControlsValidated": {"const": true}
+      }
+    },
+    "exitBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceClass", "disposition", "verified"],
+      "properties": {
+        "sourceClass": {"$ref": "#/$defs/sourceClass"},
+        "disposition": {"enum": ["removed", "not_present", "expired", "verified_destroyed"]},
+        "verified": {"const": true}
+      }
+    },
+    "sourceProviderExit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["complete", "boundaries", "pendingBackupReceiptRef", "finalDeletionReceiptRef"],
+      "properties": {
+        "complete": {"type": "boolean"},
+        "boundaries": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/exitBoundary"}},
+        "pendingBackupReceiptRef": {"type": ["string", "null"], "pattern": "^receipt:opq_[0-9a-f]{32}$"},
+        "finalDeletionReceiptRef": {"type": ["string", "null"], "pattern": "^receipt:opq_[0-9a-f]{32}$"}
+      }
+    },
+    "receiptRetention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["antiResurrectionHorizon", "establishedMinimumValidThrough", "policyMinimumValidThrough", "pendingReceiptRef", "pendingReceiptValidThrough", "finalReceiptRef", "finalReceiptValidThrough", "barrierValidThrough", "auditValidThrough", "checkpointValidThrough", "tombstoneValidThrough"],
+      "properties": {
+        "antiResurrectionHorizon": {"$ref": "#/$defs/timestamp"},
+        "establishedMinimumValidThrough": {"$ref": "#/$defs/timestamp"},
+        "policyMinimumValidThrough": {"$ref": "#/$defs/timestamp"},
+        "pendingReceiptRef": {"$ref": "#/$defs/receiptRef"},
+        "pendingReceiptValidThrough": {"$ref": "#/$defs/timestamp"},
+        "finalReceiptRef": {"$ref": "#/$defs/receiptRef"},
+        "finalReceiptValidThrough": {"$ref": "#/$defs/timestamp"},
+        "barrierValidThrough": {"$ref": "#/$defs/timestamp"},
+        "auditValidThrough": {"$ref": "#/$defs/timestamp"},
+        "checkpointValidThrough": {"$ref": "#/$defs/timestamp"},
+        "tombstoneValidThrough": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "rollbackCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordVersion", "checkpointSequence", "barrierSequence", "currentWithLiveBarrier", "currentWithCheckpoint", "currentWithPolicy", "currentWithCustodyVersion"],
+      "properties": {
+        "recordVersion": {"type": "integer", "minimum": 1},
+        "checkpointSequence": {"type": "integer", "minimum": 1},
+        "barrierSequence": {"type": "integer", "minimum": 1},
+        "currentWithLiveBarrier": {"const": true},
+        "currentWithCheckpoint": {"const": true},
+        "currentWithPolicy": {"const": true},
+        "currentWithCustodyVersion": {"const": true}
+      }
+    }
+  }
+}
