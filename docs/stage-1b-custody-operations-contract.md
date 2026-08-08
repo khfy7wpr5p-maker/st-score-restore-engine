@@ -1,11 +1,13 @@
 # Stage 1B Custody and Operations Contract
 
-**Status:** Draft decision package in Issue #36  
+**Status:** Accepted as the Stage 1B technical contract  
 **Parent:** #32  
 **Decision:** `adr-0014-stage-1b-custody-operations-v1`  
 **Base:** `a7e4e2b715194a0671cea2657d973b01b0fede79`  
 **Artifact policy:** Provider-neutral and metadata-only in ordinary Git  
 **Stage 1C authorization:** None
+
+> Closure note: this contract is accepted as the Stage 1B technical contract after PR #41 merged its machine-enforceable and operational evidence. Issue #36 still requires the remaining independent exact-head security-audit record before formal issue closure. Stage 1C remains unauthorized.
 
 ## 1. Purpose
 
