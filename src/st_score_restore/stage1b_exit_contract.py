@@ -29,6 +29,29 @@ _SOURCE_CLASSES = {
     "archive",
 }
 _TOMBSTONE_RANK = {"none": 0, "intent_recorded": 1, "active": 2, "final": 3}
+_SECURITY_STATE_FIELDS = (
+    "artifactSha256",
+    "custodyRecordId",
+    "state",
+    "recordVersion",
+    "purposeDecisionRef",
+    "environmentRef",
+    "storageClassRef",
+    "retentionPolicyRef",
+    "holdDecisionRef",
+    "revocationStatus",
+    "deletionStatus",
+    "auditChainHeadDigest",
+    "checkpointRef",
+    "checkpointSequence",
+    "liveAnchorRef",
+    "barrierSequence",
+    "barrierDigest",
+    "tombstoneStatus",
+    "antiResurrectionHorizon",
+    "pendingBackupReceiptRef",
+    "finalDeletionReceiptRef",
+)
 
 
 class Stage1BExitContractError(ValueError):
@@ -65,6 +88,18 @@ def _validate_schema(evidence: dict[str, Any]) -> None:
         ) from error
 
 
+def _validate_defined_object(value: dict[str, Any], definition: str, label: str) -> None:
+    if not isinstance(value, dict):
+        raise Stage1BExitContractError(f"{label} must be an object")
+    try:
+        Draft202012Validator(_schema()["$defs"][definition]).validate(value)
+    except ValidationError as error:
+        location = ".".join(str(part) for part in error.absolute_path) or "root"
+        raise Stage1BExitContractError(
+            f"{label} schema validation failed at {location}: {error.message}"
+        ) from error
+
+
 def canonical_portability_digest(package: dict[str, Any]) -> str:
     """Hash every portability-package field except the package digest itself."""
     if not isinstance(package, dict):
@@ -79,6 +114,24 @@ def canonical_portability_digest(package: dict[str, Any]) -> str:
         ).encode("utf-8")
     except (TypeError, ValueError) as error:
         raise Stage1BExitContractError("portability package is not canonical JSON encodable") from error
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def canonical_security_state_digest(state: dict[str, Any]) -> str:
+    """Bind all security-relevant rollback state to one canonical SHA-256 digest."""
+    if not isinstance(state, dict):
+        raise Stage1BExitContractError("security state must be an object")
+    try:
+        content = {field: state[field] for field in _SECURITY_STATE_FIELDS}
+        encoded = json.dumps(
+            content,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    except (KeyError, TypeError, ValueError) as error:
+        raise Stage1BExitContractError("security state is incomplete or not canonical JSON encodable") from error
     return hashlib.sha256(encoded).hexdigest()
 
 
@@ -110,10 +163,31 @@ def _validate_portability_package(evidence: dict[str, Any]) -> None:
 def _validate_destination(evidence: dict[str, Any]) -> None:
     package = evidence["portabilityPackage"]
     destination = evidence["destinationValidation"]
-    if destination["artifactSha256"] != package["artifactSha256"]:
-        raise Stage1BExitContractError("destination artifact digest differs from portability package")
-    if destination["custodyRecordId"] != package["custodyRecordId"]:
-        raise Stage1BExitContractError("destination custody identity differs from portability package")
+    if destination["validatedPackageDigest"] != package["packageDigest"]:
+        raise Stage1BExitContractError("destination validation is not bound to the canonical portability package")
+
+    exact_bindings = (
+        "artifactSha256",
+        "custodyRecordId",
+        "state",
+        "purposeDecisionRef",
+        "environmentRef",
+        "storageClassRef",
+        "retentionPolicyRef",
+        "holdDecisionRef",
+        "revocationStatus",
+        "deletionStatus",
+        "auditChainHeadDigest",
+        "checkpointRef",
+        "liveAnchorRef",
+        "barrierDigest",
+        "pendingBackupReceiptRef",
+        "finalDeletionReceiptRef",
+    )
+    for field in exact_bindings:
+        if destination[field] != package[field]:
+            raise Stage1BExitContractError(f"destination validation does not bind current {field}")
+
     if destination["recordVersion"] < package["recordVersion"]:
         raise Stage1BExitContractError("destination migration lowers the custody record version")
     if destination["checkpointSequence"] < package["checkpointSequence"]:
@@ -193,27 +267,44 @@ def validate_source_provider_exit(evidence: dict[str, Any]) -> None:
             raise Stage1BExitContractError("source-provider exit has an unresolved deletion boundary")
 
 
-def validate_provider_rollback(evidence: dict[str, Any], rollback_candidate: dict[str, Any]) -> None:
-    """Allow rollback only to a provider still fully current with live controls."""
+def validate_provider_rollback(
+    evidence: dict[str, Any],
+    rollback_candidate: dict[str, Any],
+    *,
+    trusted_live_state: dict[str, Any] | None = None,
+) -> None:
+    """Allow rollback only when candidate state exactly matches independently trusted live controls."""
     _validate_schema(evidence)
     _validate_portability_package(evidence)
     _validate_destination(evidence)
     if evidence["sourceProviderExit"]["complete"]:
         raise Stage1BExitContractError("a provider with completed source exit cannot become authoritative again")
+    if trusted_live_state is None:
+        raise Stage1BExitContractError("independently authenticated live security state is required for rollback")
 
-    schema = _schema()["$defs"]["rollbackCandidate"]
-    try:
-        Draft202012Validator(schema).validate(rollback_candidate)
-    except ValidationError as error:
-        raise Stage1BExitContractError("rollback candidate is stale, unverified, or missing live controls") from error
+    _validate_defined_object(rollback_candidate, "rollbackCandidate", "rollback candidate")
+    _validate_defined_object(trusted_live_state, "trustedLiveState", "trusted live state")
+
+    trusted_digest = canonical_security_state_digest(trusted_live_state)
+    candidate_digest = canonical_security_state_digest(rollback_candidate)
+    if trusted_live_state["controlDigest"] != trusted_digest:
+        raise Stage1BExitContractError("trusted live security-state digest is invalid")
+    if rollback_candidate["controlDigest"] != candidate_digest:
+        raise Stage1BExitContractError("rollback candidate security-state digest is invalid")
+    if candidate_digest != trusted_digest:
+        raise Stage1BExitContractError("rollback candidate does not match independently authenticated live security state")
 
     destination = evidence["destinationValidation"]
-    if rollback_candidate["recordVersion"] < destination["recordVersion"]:
-        raise Stage1BExitContractError("rollback candidate has a stale custody record version")
-    if rollback_candidate["checkpointSequence"] < destination["checkpointSequence"]:
-        raise Stage1BExitContractError("rollback candidate has a stale checkpoint minimum")
-    if rollback_candidate["barrierSequence"] < destination["barrierSequence"]:
-        raise Stage1BExitContractError("rollback candidate has a stale live removal barrier")
+    for field in _SECURITY_STATE_FIELDS:
+        if trusted_live_state[field] != destination[field]:
+            raise Stage1BExitContractError(f"trusted live state differs from accepted destination {field}")
+
+    if trusted_live_state["recordVersion"] < evidence["portabilityPackage"]["recordVersion"]:
+        raise Stage1BExitContractError("trusted live state has a stale custody record version")
+    if trusted_live_state["checkpointSequence"] < evidence["portabilityPackage"]["checkpointSequence"]:
+        raise Stage1BExitContractError("trusted live state has a stale checkpoint minimum")
+    if trusted_live_state["barrierSequence"] < evidence["portabilityPackage"]["barrierSequence"]:
+        raise Stage1BExitContractError("trusted live state has a stale live removal barrier")
 
 
 def validate_stage1b_exit_evidence(evidence: dict[str, Any]) -> None:
