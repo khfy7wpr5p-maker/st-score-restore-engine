@@ -1,6 +1,6 @@
 # Stage 1B Decision Hardening Record
 
-**Status:** Proposed corrective decision record for independent review  
+**Status:** Accepted normative Stage 1B hardening record; implementation merged, independent exact-head closure audit provenance pending  
 **Roadmap stage:** Stage 1B only  
 **Parent issue:** #32  
 **Implementation issue:** #36  
@@ -10,9 +10,9 @@
 
 ## 1. Purpose and precedence
 
-This record closes decision-level findings identified by the independent Stage 1B security audit after PR #37 was merged. It is normative for Stage 1B. Until its rules are folded into ADR 0014 and the technical contract, any conflict is resolved in favor of the stricter rule in this record.
+This record closes decision-level findings identified by the independent Stage 1B security audit after PR #37 was merged. It is normative for Stage 1B and remains the stricter rule wherever an older Stage 1B document is less specific.
 
-This record does not implement machine-enforceable custody behavior, does not onboard artifact bytes, does not create provider resources or credentials and does not authorize Stage 1C or any later stage.
+The machine-enforceable Stage 1B implementation and operational drill were subsequently merged through PR #41, and ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains open until every exit-evidence item is satisfied, including the independent exact-head security-audit provenance requirement. This record does not onboard artifact bytes, create provider resources or credentials, or authorize Stage 1C or any later stage.
 
 ## 2. Threat model
 
@@ -161,19 +161,21 @@ A service principal is not silently treated as a human reviewer or approver. Hum
 
 PR #37 merged on 2026-08-07 even though its own text required the PR to remain Draft until separate Ready-for-review and merge approvals and described current-head CI as pending.
 
-That merge is recorded as a **governance nonconformity**. It does not retroactively prove that the Stage 1B decision package passed its stated gates and does not constitute Stage 1B exit acceptance.
+That merge remains recorded as a **governance nonconformity**. It did not retroactively prove Stage 1B exit acceptance.
 
-Corrective rule:
+The corrective governance rules were retained for subsequent Stage 1B work:
 
-- this decision-hardening change remains a Draft PR until fresh exact-head CI and independent security review are complete,
+- exact-head CI evidence is required before acceptance,
 - Ready-for-review requires separate explicit authorization,
 - merge requires a later separate explicit authorization tied to the exact head SHA,
-- machine-enforceable Stage 1B contracts and the non-sensitive operational drill remain separate later work,
-- Stage 1C stays blocked until all Stage 1B operational evidence is independently accepted and a separate Stage 1C start authorization is given.
+- machine-enforceable Stage 1B contracts and the non-sensitive operational drill require direct evidence,
+- Stage 1C stays blocked until formal Stage 1B closure and a separate Stage 1C start authorization.
+
+PR #41 followed separate Ready and merge gates and was merged at accepted exact head `92c6fbccc8eb4d04e1959f206794b21ccc344db8`. PR #42 subsequently synchronized ADR/contract acceptance status through separate Ready and merge gates. These later actions do not erase the PR #37 nonconformity, and they do not waive Issue #36's remaining independent-audit requirement.
 
 ## 8. Required implementation evidence before Stage 1B exit
 
-The later machine-enforceable Stage 1B implementation must add deterministic tests for all rules in this corrective record, including:
+The machine-enforceable Stage 1B implementation must provide deterministic tests for all rules in this corrective record, including:
 
 - live removal-barrier creation and monotonic validation,
 - authorization/restore denial when the barrier is unavailable, stale or mismatched,
@@ -184,4 +186,6 @@ The later machine-enforceable Stage 1B implementation must add deterministic tes
 - source-provider exit remaining incomplete while any deletion boundary is unresolved,
 - exact role/authority/service-principal taxonomy and conflict enforcement.
 
-Stage 1B remains incomplete until these tests, the existing required operational drill, Python 3.11/3.12 CI and an independent exact-head security audit all pass.
+These implementation and operational requirements were added and exercised through the Stage 1B implementation culminating in PR #41, with Python 3.11/3.12 CI passing on the accepted exact head and after merge. The consolidated evidence is recorded in `docs/stage-1b-closure-evidence.md`.
+
+Formal Issue #36 closure remains blocked only by requirements that are still genuinely unsatisfied. At the time of this convergence update, the independent exact-head security-audit provenance item remains pending; it must not be inferred from the technical final audit performed by an assistant that participated in remediation. Stage 1C remains unauthorized until Issue #36 is formally closed and a separate explicit start approval is recorded.
