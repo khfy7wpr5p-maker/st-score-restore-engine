@@ -7,6 +7,7 @@ or production resource.
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from dataclasses import dataclass
@@ -114,6 +115,11 @@ class InMemoryCustodyReference:
         self._idempotency: dict[str, tuple[str, str]] = {}
         self._pending_receipt: dict[str, Any] | None = None
         self._final_receipt: dict[str, Any] | None = None
+        self._removal_control: dict[str, Any] = {
+            "intents": {},
+            "barrier": None,
+            "checkpoint": None,
+        }
         self.allowed_environment = "environment_reference"
         self.allowed_storage_class = "storage_class_reference"
         self.allowed_purpose = "evaluation_reference"
@@ -139,6 +145,113 @@ class InMemoryCustodyReference:
     @property
     def final_receipt(self) -> dict[str, Any] | None:
         return None if self._final_receipt is None else dict(self._final_receipt)
+
+    @property
+    def removal_checkpoint(self) -> dict[str, Any] | None:
+        checkpoint = self._removal_control["checkpoint"]
+        return None if checkpoint is None else dict(checkpoint)
+
+    def pending_removal_intent(self, request_id: str) -> dict[str, Any] | None:
+        intent = self._removal_control["intents"].get(request_id)
+        return None if intent is None else dict(intent)
+
+    def restart(self) -> "InMemoryCustodyReference":
+        """Model a process restart while retaining durable security-control state."""
+        restarted = copy.deepcopy(self)
+        restarted._grants.clear()
+        return restarted
+
+    def _removal_fingerprint(self, request_id: str, trigger: str) -> str:
+        if not self.artifact_sha256:
+            raise DrillError("removal intent requires an artifact identity")
+        payload = {
+            "artifactSha256": self.artifact_sha256,
+            "requestId": request_id,
+            "trigger": trigger,
+        }
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def persist_removal_intent(self, request_id: str, *, trigger: str = "purpose_revocation") -> str:
+        fingerprint = self._removal_fingerprint(request_id, trigger)
+        known = self._removal_control["intents"].get(request_id)
+        if known is not None:
+            if known["fingerprint"] != fingerprint:
+                raise DrillError("conflicting pending removal intent")
+            return fingerprint
+        self._removal_control["intents"][request_id] = {
+            "requestId": request_id,
+            "artifactSha256": self.artifact_sha256,
+            "trigger": trigger,
+            "fingerprint": fingerprint,
+            "acknowledged": False,
+            "publicationAttempts": 0,
+            "localAuditSequence": None,
+            "localAuditDigest": None,
+        }
+        return fingerprint
+
+    def publish_removal_barrier(
+        self,
+        request_id: str,
+        *,
+        acknowledged_fingerprint: str | None = None,
+    ) -> str:
+        intent = self._removal_control["intents"].get(request_id)
+        if intent is None:
+            raise DrillError("pending removal intent is missing")
+        intent["publicationAttempts"] += 1
+        self._removal_control["barrier"] = {
+            "requestId": request_id,
+            "artifactSha256": intent["artifactSha256"],
+            "fingerprint": intent["fingerprint"],
+            "committed": True,
+        }
+        if acknowledged_fingerprint is None:
+            return intent["fingerprint"]
+        if acknowledged_fingerprint != intent["fingerprint"]:
+            raise DrillError("barrier acknowledgement does not match the pending removal intent")
+        intent["acknowledged"] = True
+        return intent["fingerprint"]
+
+    def _removal_control_blocks_access(self) -> bool:
+        for intent in self._removal_control["intents"].values():
+            if intent.get("artifactSha256") == self.artifact_sha256:
+                return True
+        barrier = self._removal_control["barrier"]
+        return bool(
+            barrier
+            and barrier.get("committed")
+            and barrier.get("artifactSha256") == self.artifact_sha256
+        )
+
+    def _require_acknowledged_barrier(self, request_id: str) -> dict[str, Any]:
+        intent = self._removal_control["intents"].get(request_id)
+        barrier = self._removal_control["barrier"]
+        if intent is None or not intent.get("acknowledged"):
+            raise DrillError("removal barrier has not acknowledged the pending intent")
+        if (
+            not barrier
+            or not barrier.get("committed")
+            or barrier.get("requestId") != request_id
+            or barrier.get("fingerprint") != intent.get("fingerprint")
+            or barrier.get("artifactSha256") != self.artifact_sha256
+        ):
+            raise DrillError("removal barrier does not match the pending intent")
+        return intent
+
+    def advance_removal_checkpoint(self, request_id: str) -> None:
+        intent = self._require_acknowledged_barrier(request_id)
+        sequence = intent.get("localAuditSequence")
+        digest = intent.get("localAuditDigest")
+        if not isinstance(sequence, int) or not isinstance(digest, str):
+            raise DrillError("removal audit event is not available for checkpoint advancement")
+        self._removal_control["checkpoint"] = {
+            "requestId": request_id,
+            "fingerprint": intent["fingerprint"],
+            "sequence": sequence,
+            "digest": digest,
+        }
 
     def register_identity(
         self,
@@ -259,7 +372,7 @@ class InMemoryCustodyReference:
         audit_durable: bool = True,
     ) -> str:
         self._require_role(actor_ref, "artifact_access_operator")
-        if self.state != "available" or self.work_fenced:
+        if self.state != "available" or self.work_fenced or self._removal_control_blocks_access():
             raise DrillError("artifact is not readable")
         if purpose != self.allowed_purpose:
             raise DrillError("purpose is not authorized")
@@ -273,7 +386,13 @@ class InMemoryCustodyReference:
         return token
 
     def read(self, token: str) -> bytes:
-        if self.state != "available" or self.work_fenced or token not in self._grants or self.primary is None:
+        if (
+            self.state != "available"
+            or self.work_fenced
+            or self._removal_control_blocks_access()
+            or token not in self._grants
+            or self.primary is None
+        ):
             raise DrillError("read is denied")
         return bytes(self.primary)
 
@@ -289,7 +408,7 @@ class InMemoryCustodyReference:
             "audit_durable",
         )
         required_false = ("purpose_blocking_hold", "deletion_or_revocation_active", "incident_lock_active")
-        if self.state != "available":
+        if self.state != "available" or self._removal_control_blocks_access():
             raise DrillError("emergency access cannot bypass custody state")
         if not all(conditions.get(name, False) for name in required_true):
             raise DrillError("emergency access cannot bypass an ordinary allow condition")
@@ -315,6 +434,7 @@ class InMemoryCustodyReference:
         remove_replica: bool = True,
         remove_cache: bool = True,
         backup_tombstone: bool = True,
+        checkpoint_advanced: bool = True,
     ) -> dict[str, Any]:
         del access_authorizer_allows  # Revocation is immediate and cannot be vetoed here.
         fingerprint = (trigger, self.artifact_sha256 or "")
@@ -335,6 +455,18 @@ class InMemoryCustodyReference:
         if executor.actor_ref == verifier.actor_ref or executor.person_ref == verifier.person_ref:
             raise DrillError("deletion executor and verifier are not independent")
 
+        intent = self._removal_control["intents"].get(request_id)
+        if intent is None:
+            intent_fingerprint = self.persist_removal_intent(request_id, trigger=trigger)
+            self.publish_removal_barrier(
+                request_id,
+                acknowledged_fingerprint=intent_fingerprint,
+            )
+        else:
+            if intent.get("trigger") != trigger or intent.get("artifactSha256") != self.artifact_sha256:
+                raise DrillError("pending removal intent conflicts with revocation request")
+            self._require_acknowledged_barrier(request_id)
+
         # Fail closed before any potentially fallible evidence or deletion step.
         self.record_version += 1
         self.state = "deletion_pending"
@@ -347,8 +479,13 @@ class InMemoryCustodyReference:
             self._append_audit("begin_deletion", durable=audit_durable)
         except DrillError:
             raise
+        intent = self._removal_control["intents"][request_id]
+        intent["localAuditSequence"] = self.anchor_sequence
+        intent["localAuditDigest"] = self.anchor_digest
         if not fencing_complete:
             raise DrillError("work fencing is incomplete")
+        if checkpoint_advanced:
+            self.advance_removal_checkpoint(request_id)
 
         self.primary = None
         if remove_replica:
@@ -393,6 +530,19 @@ class InMemoryCustodyReference:
             raise DrillError("active copies remain")
         if not self.tombstone_intent or not self.backup_tombstone or self._pending_receipt is None:
             raise DrillError("revocation evidence is incomplete")
+        request_id = self._pending_receipt.get("requestId")
+        if not isinstance(request_id, str):
+            raise DrillError("revocation receipt request binding is missing")
+        intent = self._require_acknowledged_barrier(request_id)
+        checkpoint = self._removal_control["checkpoint"]
+        if (
+            checkpoint is None
+            or checkpoint.get("requestId") != request_id
+            or checkpoint.get("fingerprint") != intent.get("fingerprint")
+            or checkpoint.get("sequence") != intent.get("localAuditSequence")
+            or checkpoint.get("digest") != intent.get("localAuditDigest")
+        ):
+            raise DrillError("removal checkpoint has not advanced to the deletion audit event")
         if not audit_durable:
             raise DrillError("audit durability failed")
         self.record_version += 1
@@ -478,6 +628,8 @@ class InMemoryCustodyReference:
             raise DrillError("restore requires a live independent anchor")
         if self.state != "available" or self.tombstone_intent or self.backup_tombstone:
             raise DrillError("restore cannot resurrect unavailable or revoked data")
+        if self._removal_control_blocks_access():
+            raise DrillError("restore cannot bypass active removal control")
         if snapshot.state != "available" or snapshot.record_version != self.record_version:
             raise DrillError("restore snapshot is stale")
         if snapshot.artifact_sha256 != self.artifact_sha256:
