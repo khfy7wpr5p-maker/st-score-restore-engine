@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/custody-audit-evidence.schema.json",
+  "title": "Stage 1B audit event, checkpoint and live-anchor evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "events", "checkpoint", "liveAnchor", "identities", "roleAssignments", "emergencyAccess"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/event"}},
+    "checkpoint": {"$ref": "#/$defs/checkpoint"},
+    "liveAnchor": {"$ref": "#/$defs/anchor"},
+    "identities": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/identity"}},
+    "roleAssignments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/assignment"}},
+    "emergencyAccess": {"type": ["object", "null"], "oneOf": [{"type": "null"}, {"$ref": "#/$defs/emergency"}]}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "timestamp": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "opaque": {"type": "string", "pattern": "^[a-z][a-z._-]*:opq_[0-9a-f]{32}$"},
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventId", "eventDigest", "custodyRecordId", "recordVersion", "artifactSha256", "operationCode", "resultCode", "actorRef", "roleCode", "authorizationRef", "occurredAt", "previousEventDigest", "partitionSequence", "requestFingerprint", "idempotencyRef", "policyDecisionCode", "failureCode"],
+      "properties": {
+        "eventId": {"type": "string", "pattern": "^event:opq_[0-9a-f]{32}$"}, "eventDigest": {"$ref": "#/$defs/sha256"},
+        "custodyRecordId": {"type": "string", "pattern": "^custody:opq_[0-9a-f]{32}$"}, "recordVersion": {"type": "integer", "minimum": 1}, "artifactSha256": {"$ref": "#/$defs/sha256"},
+        "operationCode": {"enum": ["quarantine", "promote", "authorize_read", "emergency_access", "begin_deletion", "revoke", "finalize_deletion", "checkpoint"]},
+        "resultCode": {"enum": ["allow", "deny", "success", "failure"]}, "actorRef": {"type": "string", "pattern": "^actor:opq_[0-9a-f]{32}$"},
+        "roleCode": {"$ref": "#/$defs/role"}, "authorizationRef": {"$ref": "#/$defs/opaque"}, "occurredAt": {"$ref": "#/$defs/timestamp"},
+        "previousEventDigest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}, "partitionSequence": {"type": "integer", "minimum": 1},
+        "requestFingerprint": {"$ref": "#/$defs/sha256"}, "idempotencyRef": {"type": "string", "pattern": "^request:opq_[0-9a-f]{32}$"},
+        "policyDecisionCode": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$"}, "failureCode": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]{2,63}$"}
+      }
+    },
+    "checkpoint": {"type": "object", "additionalProperties": false, "required": ["checkpointRef", "acceptedPartitionSequence", "chainHeadDigest", "custodyRecordVersion", "integrityEvidenceRef"], "properties": {"checkpointRef": {"type": "string", "pattern": "^checkpoint:opq_[0-9a-f]{32}$"}, "acceptedPartitionSequence": {"type": "integer", "minimum": 1}, "chainHeadDigest": {"$ref": "#/$defs/sha256"}, "custodyRecordVersion": {"type": "integer", "minimum": 1}, "integrityEvidenceRef": {"$ref": "#/$defs/opaque"}}},
+    "anchor": {"type": "object", "additionalProperties": false, "required": ["anchorRef", "minimumAcceptedSequence", "chainHeadDigest", "custodyRecordVersion", "witnessEvidenceRef", "source", "fresh", "valid"], "properties": {"anchorRef": {"type": "string", "pattern": "^anchor:opq_[0-9a-f]{32}$"}, "minimumAcceptedSequence": {"type": "integer", "minimum": 1}, "chainHeadDigest": {"$ref": "#/$defs/sha256"}, "custodyRecordVersion": {"type": "integer", "minimum": 1}, "witnessEvidenceRef": {"$ref": "#/$defs/opaque"}, "source": {"const": "live_independent"}, "fresh": {"const": true}, "valid": {"const": true}}},
+    "identity": {"type": "object", "additionalProperties": false, "required": ["actorRef", "personRef", "status", "fresh"], "properties": {"actorRef": {"type": "string", "pattern": "^actor:opq_[0-9a-f]{32}$"}, "personRef": {"type": "string", "pattern": "^person:opq_[0-9a-f]{32}$"}, "status": {"enum": ["active", "disabled", "revoked"]}, "fresh": {"type": "boolean"}}},
+    "assignment": {"type": "object", "additionalProperties": false, "required": ["actorRef", "roleCode"], "properties": {"actorRef": {"type": "string", "pattern": "^actor:opq_[0-9a-f]{32}$"}, "roleCode": {"$ref": "#/$defs/role"}}},
+    "role": {"enum": ["rights_verifier", "privacy_reviewer", "purpose_authorizer", "dataset_reviewer", "custody_operator", "artifact_access_operator", "access_authorizer", "key_custodian", "key_policy_approver", "key_operation_executor", "audit_reviewer", "reviewed_operation_executor", "deletion_authority", "deletion_executor", "deletion_receipt_verifier", "emergency_requester", "emergency_approver"]},
+    "emergency": {"type": "object", "additionalProperties": false, "required": ["requesterRef", "approverRefs", "state", "digestMatches", "byteSizeMatches", "retentionValid", "purposeAuthorized", "rightsApproved", "privacyApproved", "purposeBlockingHold", "deletionOrRevocationActive", "incidentLockActive", "environmentAllowed", "storageClassAllowed", "auditDurable", "postEventReviewRequired"], "properties": {"requesterRef": {"type": "string", "pattern": "^actor:opq_[0-9a-f]{32}$"}, "approverRefs": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^actor:opq_[0-9a-f]{32}$"}}, "state": {"enum": ["absent", "quarantined", "available", "deletion_pending", "revoked", "tombstoned"]}, "digestMatches": {"const": true}, "byteSizeMatches": {"const": true}, "retentionValid": {"const": true}, "purposeAuthorized": {"const": true}, "rightsApproved": {"const": true}, "privacyApproved": {"const": true}, "purposeBlockingHold": {"const": false}, "deletionOrRevocationActive": {"const": false}, "incidentLockActive": {"const": false}, "environmentAllowed": {"const": true}, "storageClassAllowed": {"const": true}, "auditDurable": {"const": true}, "postEventReviewRequired": {"const": true}}}
+  }
+}

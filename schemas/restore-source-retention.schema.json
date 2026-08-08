@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/restore-source-retention.schema.json",
+  "title": "Provider-neutral restore-source retention and anti-resurrection horizon evidence",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "observedAt", "validUntil", "restoreSources", "safetyMarginSeconds", "antiResurrectionHorizon", "barrierValidThrough", "auditValidThrough", "checkpointValidThrough", "tombstoneValidThrough"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"}, "observedAt": {"$ref": "#/$defs/time"}, "validUntil": {"$ref": "#/$defs/time"},
+    "restoreSources": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "object", "additionalProperties": false, "required": ["sourceClass", "expiresAt", "maximumLifetimeSeconds", "verified"], "properties": {"sourceClass": {"enum": ["primary_replica", "replica", "cache", "transient_store", "backup", "archive"]}, "expiresAt": {"$ref": "#/$defs/time"}, "maximumLifetimeSeconds": {"type": "integer", "minimum": 1}, "verified": {"const": true}}}},
+    "safetyMarginSeconds": {"const": 86400}, "antiResurrectionHorizon": {"$ref": "#/$defs/time"},
+    "barrierValidThrough": {"$ref": "#/$defs/time"}, "auditValidThrough": {"$ref": "#/$defs/time"}, "checkpointValidThrough": {"$ref": "#/$defs/time"}, "tombstoneValidThrough": {"$ref": "#/$defs/time"}
+  },
+  "$defs": {"time": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"}}
+}

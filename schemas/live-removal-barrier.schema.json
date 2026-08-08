@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.example/schemas/live-removal-barrier.schema.json",
+  "title": "Provider-neutral authenticated live security-removal barrier",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "artifactSha256", "custodyRecordId", "minimumForbiddenRecordVersion", "removalType", "authoritativeTime", "validUntil", "partitionSequence", "chainHeadDigest", "checkpointRef", "anchorRef", "barrierSequence", "barrierDigest", "source", "fresh", "valid", "independentlyAuthenticated"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "artifactSha256": {"$ref": "#/$defs/sha"},
+    "custodyRecordId": {"type": "string", "pattern": "^custody:opq_[0-9a-f]{32}$"},
+    "minimumForbiddenRecordVersion": {"type": ["integer", "null"], "minimum": 1},
+    "removalType": {"enum": ["none", "rights_revocation", "privacy_revocation", "purpose_revocation", "retention_expiry", "incident_lock", "deletion_tombstone"]},
+    "authoritativeTime": {"$ref": "#/$defs/time"}, "validUntil": {"$ref": "#/$defs/time"},
+    "partitionSequence": {"type": "integer", "minimum": 1}, "chainHeadDigest": {"$ref": "#/$defs/sha"},
+    "checkpointRef": {"type": "string", "pattern": "^checkpoint:opq_[0-9a-f]{32}$"},
+    "anchorRef": {"type": "string", "pattern": "^anchor:opq_[0-9a-f]{32}$"},
+    "barrierSequence": {"type": "integer", "minimum": 1}, "barrierDigest": {"$ref": "#/$defs/sha"},
+    "source": {"const": "live_independent"}, "fresh": {"const": true}, "valid": {"const": true}, "independentlyAuthenticated": {"const": true}
+  },
+  "allOf": [
+    {"if": {"properties": {"removalType": {"const": "none"}}, "required": ["removalType"]}, "then": {"properties": {"minimumForbiddenRecordVersion": {"type": "null"}}}},
+    {"if": {"properties": {"removalType": {"not": {"const": "none"}}}, "required": ["removalType"]}, "then": {"properties": {"minimumForbiddenRecordVersion": {"type": "integer"}}}}
+  ],
+  "$defs": {"sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "time": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"}}
+}
