@@ -1,6 +1,6 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2.1  
+**Document status:** Approved architecture baseline, maintenance-aligned with Roadmap v0.2.1 and formal Stage 1B closure  
 **Version:** 0.2.1-aligned  
 **Date:** 2026-08-08  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
@@ -72,7 +72,7 @@ Stage 12 Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. A later stage may not begin until the previous stage's exit evidence is published and accepted.
 
-**Stage 1 is active under parent Issue #32 through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B custody/operations implementation and acceptance-status changes are merged, while Issue #36 remains the formal closure record until all stated exit evidence is satisfied. Stage 1C artifact onboarding has not started and is not authorized.** This maintenance revision does not collect data, create dataset artifacts, change fixture permissions, or authorize Stage 1C.
+**Stage 1 is active under parent Issue #32 through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B custody/operations is formally closed: Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI. Stage 1C artifact onboarding has not started and is not authorized; it still requires a separate explicit start approval.** This maintenance revision does not collect data, create dataset artifacts, change fixture permissions, or authorize Stage 1C.
 
 ---
 
@@ -337,7 +337,7 @@ Production limits and enforcement are Stage 6 responsibilities.
 
 ### 8.1 Stage 1 — Real and explicitly authorized test dataset
 
-**Status: ACTIVE IN GATED SUBSTAGES. Stage 1A is complete. Stage 1B implementation and acceptance-status changes are merged, with Issue #36 closure evidence still pending. Stage 1C artifact onboarding is NOT AUTHORIZED and has not started.**
+**Status: ACTIVE IN GATED SUBSTAGES. Stage 1A is complete. Stage 1B is formally closed with Issue #36 completed at 11/11 PASS. Stage 1C artifact onboarding is NOT AUTHORIZED and has not started.**
 
 Required target outcomes include:
 
@@ -352,7 +352,7 @@ Required target outcomes include:
 - metadata-only fixture references in the repository,
 - controlled synthetic mutations kept separate from real documents.
 
-The Stage 1A/1B governance and custody work does not itself create the authorized Stage 1 corpus. Stage 1C requires formal Stage 1B closure plus separate explicit start approval before any artifact onboarding.
+The Stage 1A/1B governance and custody work does not itself create the authorized Stage 1 corpus. Formal Stage 1B closure is satisfied, but Stage 1C still requires a separate explicit start approval before any artifact onboarding.
 
 ### 8.2 Stage 2 — Complete quality-analysis system
 

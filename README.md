@@ -34,7 +34,7 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
-Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation was merged through PR #41, and its ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains the Stage 1B closure record until every stated exit-evidence item, including the independent exact-head security-audit record, is satisfied. Stage 1C artifact onboarding has not started and is not authorized by those merges.
+Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C artifact onboarding has not started and is not authorized; it still requires a separate explicit start approval.
 
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
@@ -72,7 +72,7 @@ Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
 
-**Current Stage 1 gate:** Stage 1A is complete; Stage 1B implementation and acceptance-status changes are merged, while Issue #36 closure evidence is still being finalized. Stage 1C requires formal Stage 1B closure plus a separate explicit start approval.
+**Current Stage 1 gate:** Stage 1A is complete and Stage 1B is formally closed. Stage 1C has not started and is not authorized. The next eligible implementation action is a separately approved Stage 1C start; Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
 
 ## Development baseline
 

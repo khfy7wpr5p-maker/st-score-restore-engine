@@ -1,6 +1,6 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved development sequence, Stage 1 substage status aligned  
+**Document status:** Approved development sequence, Stage 1 substage status aligned after formal Stage 1B closure  
 **Version:** 0.2.1  
 **Date:** 2026-08-08  
 **Decision record:** Issue #31  
@@ -46,7 +46,7 @@ The following foundation is already present on `main` and is treated as the star
 
 This baseline is not a production service. It has not yet passed the complete Stage 1 real-data corpus, complete quality-analysis, multi-page PDF, safety-calibration, accessible-UI, production-infrastructure or preview gates below.
 
-Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation was merged through PR #41 and its ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains open until every Stage 1B exit-evidence item is satisfied. Stage 1C artifact onboarding has not started and requires both formal Stage 1B closure and a separate explicit start approval.
+Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation, hardening, exact-head audit evidence and post-merge CI are complete; Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C artifact onboarding has not started and remains unauthorized until a separate explicit Stage 1C start approval is recorded.
 
 ## 4. Binding delivery sequence
 
@@ -104,8 +104,8 @@ Make the approved sequence unambiguous in repository documentation and issue pla
 ### Current gated-substage status
 
 - **Stage 1A — metadata governance:** complete and merged.
-- **Stage 1B — provider-neutral custody and operations boundary:** implementation and acceptance-status changes are merged; Issue #36 remains the formal closure record until all stated exit evidence, including independent exact-head security-audit provenance, is satisfied.
-- **Stage 1C — authorized artifact onboarding and corpus realization:** not started and not authorized. It requires formal Stage 1B closure plus a separate explicit start approval.
+- **Stage 1B — provider-neutral custody and operations boundary:** complete and formally closed. Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI.
+- **Stage 1C — authorized artifact onboarding and corpus realization:** not started and not authorized. Formal Stage 1B closure is now satisfied, but Stage 1C still requires a separate explicit start approval before any artifact onboarding begins.
 
 Completion of Stage 1B is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
 
@@ -581,6 +581,6 @@ Every stage-completion report must include:
 
 The active roadmap stage remains Stage 1 under parent Issue #32.
 
-> **Stage 1A is complete. Stage 1B implementation and acceptance-status changes are merged, while Issue #36 remains the formal Stage 1B closure gate. Stage 1C has not started.**
+> **Stage 1A is complete. Stage 1B is formally closed. Stage 1C has not started and is not authorized.**
 
-The next permitted action is to satisfy and verify every remaining Issue #36 exit-evidence item. Only after formal Stage 1B closure may Stage 1C be considered, and Stage 1C still requires a separate explicit start authorization. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
+The next eligible implementation action is Stage 1C authorized artifact onboarding, but it may begin only after a separate explicit Stage 1C start approval is recorded. This documentation housekeeping does not constitute that approval and does not onboard artifacts. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
