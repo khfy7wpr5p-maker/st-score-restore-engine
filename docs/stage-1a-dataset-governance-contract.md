@@ -6,7 +6,7 @@
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
 **Artifact policy:** Metadata only  
 **Runtime restoration impact:** None  
-**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C not started or authorized
+**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C active under Issue #47; G4 purpose/storage policy binding complete; real artifact onboarding blocked pending compliant vault verification
 
 ## 1. Scope
 
@@ -161,15 +161,38 @@ python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-## 14. Current deferred work
+## 14. Current Stage 1C boundary
 
 Stage 1B's provider-neutral custody, encryption, identity, audit, revocation,
-deletion and restore contract is complete and formally closed. Stage 1C must
-separately authorize real and controlled-synthetic onboarding, bind the concrete
-Stage 1 dataset purpose and storage location to the accepted Stage 1A/1B
-controls, activate only approved purposes, freeze the permitted splits, and
-produce dataset-card, bias/coverage and Stage 1 exit evidence.
+deletion and restore contract is complete and formally closed. Stage 1C received
+separate start authorization under Issue #47. G4 separately bound the current
+Stage 1 purpose allowlist to `quality_evaluation` and `held_out_evaluation`, the
+environment to `stage1_offline`, the storage class to `custody_external`, and
+the storage-location policy to a dedicated encrypted offline Stage 1 custody
+vault outside ordinary Git and automatic cloud-sync folders.
+
+G4 does not create artifact-specific permissions. Rights, privacy, dataset
+review and purpose authorization remain independent and deny-by-default for
+every item. `model_training`, publication, demonstration, calibration,
+PDF-pipeline evaluation and synthetic derivation remain unauthorized by the G4
+binding.
+
+A local host/vault assessment (V2) found the currently inspected Windows 7 host
+unsuitable for real/private artifact custody because the operating system is
+unsupported and its inspected disks are unencrypted. A separate local
+non-sensitive basic marker drill (V3) demonstrated create/size/SHA-256/delete
+and post-delete absence for a project-authored non-musical marker. These are
+local terminal observations only: they are not GitHub-hosted CI evidence and V3
+does not prove a Stage 1B-compliant real artifact vault.
+
+Real or controlled-synthetic artifact onboarding therefore remains blocked
+until a supported, encrypted custody environment passes the required
+operational controls, including the Stage 1B access, audit, revocation,
+deletion, backup/restore anti-resurrection and real-person role-separation
+boundaries. Artifact bytes onboarded through this status convergence remain
+zero.
 
 Provider-specific production identity, network, secret-management, encrypted
 production storage, production database/queue and deployment controls remain
-Stage 6 work. Stage 1C is not authorized by this status synchronization.
+Stage 6 work. This status convergence changes no schema, validator, runtime
+behavior, item-level permission or artifact state.

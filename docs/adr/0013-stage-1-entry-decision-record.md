@@ -7,7 +7,7 @@
 - **Issue:** #32
 - **Pull request:** #35 merged as `a7e4e2b715194a0671cea2657d973b01b0fede79`
 - **Dataset schema version:** `1.2.0`
-- **Current substage state:** Stage 1B formally closed; Stage 1C not started or authorized
+- **Current substage state:** Stage 1B formally closed; Stage 1C active under Issue #47; G4 purpose/storage policy binding complete; real artifact onboarding blocked pending compliant vault verification
 
 ## Context
 
@@ -60,11 +60,18 @@ than development access.
 
 Stage 1B subsequently defined, implemented and formally closed the
 provider-neutral custody, encryption, key-separation, identity, audit,
-revocation, deletion and restore boundary. Stage 1C must separately approve and
-bind the concrete Stage 1 dataset purpose and storage location to those accepted
-controls before onboarding artifact bytes. Provider-specific production
-identity, network, secret-management, KMS/IAM and production storage/deployment
-architecture remain Stage 6 work.
+revocation, deletion and restore boundary. Stage 1C is now separately authorized
+under Issue #47. G4 separately approved the Stage 1 purpose allowlist
+`quality_evaluation` and `held_out_evaluation`, environment `stage1_offline`,
+storage class `custody_external`, and a dedicated encrypted offline Stage 1
+custody vault outside ordinary Git and automatic cloud-sync folders as the
+storage-location policy.
+
+That G4 policy binding does not create a storage resource, item-level permission
+or artifact state. Before any artifact becomes `external_available`, the
+selected custody environment must pass the accepted Stage 1B operational
+controls. Provider-specific production identity, network, secret-management,
+KMS/IAM and production storage/deployment architecture remain Stage 6 work.
 
 ### Role separation and opaque identity
 
@@ -131,8 +138,9 @@ Revoked items retain historical digest and policy evidence but no active
 storage locator. Completed revocation requires an opaque deletion receipt
 reference and receipt digest. Stage 1B demonstrated the required provider-neutral
 revocation, deletion, backup anti-resurrection and crash/restart evidence and is
-formally closed. Stage 1C still requires separate start authorization and must
-bind onboarding to the accepted Stage 1B controls.
+formally closed. Stage 1C is active, but real/private artifact onboarding remains
+blocked until the selected custody environment passes the accepted Stage 1B
+operational controls, including real-person role separation.
 
 ### Schema and validator parity
 
@@ -170,12 +178,24 @@ Stage 1B did not authorize Stage 1C or production infrastructure.
 
 ### Stage 1C
 
-Not started and not authorized. Its approved target scope is
-rights/privacy-approved real onboarding, controlled synthetic derivation,
-purpose activation, split freeze, dataset card, bias/coverage report and Stage 1
-exit evidence. It requires a separate explicit start approval, and the concrete
-Stage 1 dataset purpose and storage location must be explicitly approved before
-artifact onboarding.
+Active under dedicated Issue #47 after separate explicit start authorization.
+G4 is complete as the pre-byte purpose/storage policy binding. The current G4
+purpose allowlist is `quality_evaluation` and `held_out_evaluation`; other
+purposes remain deny-by-default and no item-level permission is inferred.
+
+A local host/vault assessment (V2) found the inspected Windows 7 host unsuitable
+for real/private artifact custody because the operating system is unsupported
+and the inspected disks are unencrypted. A local non-sensitive basic marker
+drill (V3) passed create/size/SHA-256/delete/post-delete-absence checks using a
+project-authored non-musical marker. These are local terminal observations, not
+GitHub-hosted CI evidence, and V3 is not proof of a Stage 1B-compliant real
+artifact vault.
+
+Real and controlled-synthetic artifact onboarding therefore remains blocked
+until a supported encrypted custody environment passes Stage 1B operational
+verification and each item independently satisfies rights, privacy, dataset
+review and purpose authorization. Artifact bytes onboarded through this status
+convergence remain zero.
 
 Stage 2 remains blocked until Stage 1 exit evidence is separately accepted.
 
@@ -183,6 +203,8 @@ Stage 2 remains blocked until Stage 1 exit evidence is separately accepted.
 
 PR #35 implemented the Stage 1A contract and merged as
 `a7e4e2b715194a0671cea2657d973b01b0fede79`. Stage 1B subsequently completed
-and formally closed under its own provider-neutral contract and evidence. This
-status convergence changes no schema, validator, runtime behavior, permission or
-artifact state, and does not authorize or start Stage 1C.
+and formally closed under its own provider-neutral contract and evidence. Stage
+1C later received separate authorization under Issue #47 and G4 completed its
+purpose/storage policy binding. This status convergence changes no schema,
+validator, runtime behavior, storage resource, item-level permission or artifact
+state and does not authorize Stage 2.
