@@ -50,7 +50,7 @@ For each security-removal event the barrier monotonically binds at least:
 - canonical request fingerprint or event reference,
 - independently protected barrier sequence/digest.
 
-The authoritative producer of a valid security-removal event must publish the barrier before the custody service may acknowledge the event as durably received. The producer must retry until the live barrier acknowledges the monotonic record.
+The authoritative producer of a valid security-removal event must durably retain the pending removal intent outside the artifact backup/restore boundary before or while publishing the barrier. It must publish the barrier before the custody service may acknowledge the event as durably received, and it must retry until the live barrier acknowledges the monotonic record. A producer crash or restart must not discard an unacknowledged removal intent.
 
 Authorization and restore must query the live barrier before making an artifact available. A matching barrier always denies access regardless of older catalog, audit, snapshot or backup state. If the live barrier cannot be reached or validated, authorization and restore fail closed.
 
@@ -60,11 +60,12 @@ An object may not transition from `deletion_pending` to `revoked`, and no restor
 
 Required negative tests include crashes or recovery at each boundary:
 
-1. barrier committed before local custody transition,
-2. local transition/audit committed before checkpoint advancement,
-3. restore from a backup created before the removal event,
-4. live barrier unavailable or stale,
-5. barrier and checkpoint disagree.
+1. pending removal intent persisted but barrier not yet acknowledged,
+2. barrier committed before local custody transition,
+3. local transition/audit committed before checkpoint advancement,
+4. restore from a backup created before the removal event,
+5. live barrier unavailable or stale,
+6. barrier and checkpoint disagree.
 
 Every case must keep the artifact unavailable.
 
@@ -76,9 +77,10 @@ Define the **anti-resurrection horizon** as the latest known expiry or verified 
 
 At minimum:
 
+- audit chain segments needed to prove the relevant removal/deletion history are retained through the anti-resurrection horizon,
 - removal barriers and tombstone evidence are retained through the anti-resurrection horizon,
 - the checkpoint/anchor evidence needed to validate those barriers is retained through the same horizon,
-- deletion receipts remain available long enough to prove the final disposition of all relevant boundaries,
+- both `revocation_pending_backup` and `final_deletion_complete` receipts are retained through at least the anti-resurrection horizon and longer when audit/legal policy requires it,
 - an unknown backup expiry, unknown archive lifetime or unverified destruction extends retention and fails closed,
 - a legal/policy requirement that mandates longer evidence retention overrides the minimum horizon,
 - `final_deletion_complete` does not by itself authorize immediate deletion of anti-resurrection evidence.
@@ -175,6 +177,7 @@ The later machine-enforceable Stage 1B implementation must add deterministic tes
 
 - live removal-barrier creation and monotonic validation,
 - authorization/restore denial when the barrier is unavailable, stale or mismatched,
+- pending-removal intent durability across producer crash/restart,
 - every removal crash window listed above,
 - evidence-retention horizon calculation and unknown-expiry fail-closed behavior,
 - provider portability package validation and stale-provider rollback rejection,
