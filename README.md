@@ -34,7 +34,9 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
-Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C artifact onboarding has not started and is not authorized; it still requires a separate explicit start approval.
+Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C is now active under Issue #47 after separate start authorization. G4 is complete as the pre-byte purpose/storage policy binding: the current purpose allowlist is `quality_evaluation` plus `held_out_evaluation`, the environment is `stage1_offline`, the storage class is `custody_external`, and the approved storage-location policy is a dedicated encrypted offline Stage 1 custody vault outside ordinary Git and automatic cloud-sync folders.
+
+G4 creates no item-level permission and onboarded no artifact bytes. A local V2 host/vault assessment found the inspected Windows 7 host unsuitable for real/private artifact custody because the operating system is unsupported and the inspected disks are unencrypted. A separate local V3 non-sensitive basic marker drill passed create/size/SHA-256/delete/post-delete-absence checks using a project-authored non-musical marker. These are local terminal observations only; they are not GitHub-hosted CI evidence, and V3 does not prove a Stage 1B-compliant real artifact vault. Real or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes the accepted Stage 1B operational controls and each item independently satisfies rights, privacy, dataset-review and purpose authorization.
 
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
@@ -72,7 +74,7 @@ Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
 
-**Current Stage 1 gate:** Stage 1A is complete and Stage 1B is formally closed. Stage 1C has not started and is not authorized. The next eligible implementation action is a separately approved Stage 1C start; Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
+**Current Stage 1 gate:** Stage 1A is complete, Stage 1B is formally closed, and Stage 1C is active under Issue #47 with G4 complete. Metadata-only Stage 1C work may proceed within the approved purpose/storage boundary, but real/private or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes Stage 1B operational verification. Artifact bytes onboarded through the current governance/status work remain zero. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
 
 ## Development baseline
 
