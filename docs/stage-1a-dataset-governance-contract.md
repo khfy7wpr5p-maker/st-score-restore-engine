@@ -1,16 +1,17 @@
 # Stage 1A Dataset Governance and Metadata Contract
 
-**Status:** Ready for final merge review in PR #35  
+**Status:** Accepted and merged Stage 1A governance baseline  
 **Issue:** #32  
 **Schema version:** `1.2.0`  
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
 **Artifact policy:** Metadata only  
-**Runtime restoration impact:** None
+**Runtime restoration impact:** None  
+**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C not started or authorized
 
 ## 1. Scope
 
 Stage 1A defines the fail-closed metadata and validation boundary required
-before any real-data onboarding. It does not collect document bytes, select a
+before any real-data onboarding. It did not collect document bytes, select a
 storage provider, freeze a real split, run training, tune thresholds, start
 Stage 1B/1C/2 or add restoration engines.
 
@@ -61,8 +62,9 @@ Git metadata accepts role-scoped opaque identifiers with the exact suffix
 Semantic aliases such as person names, email addresses, student identifiers or
 personal paths are invalid. Catalog description and license fields are
 restricted code values. Synthetic parameter objects cannot contain strings.
-The external identity registry and real-person role-conflict checks remain
-Stage 1B work.
+Stage 1B subsequently defined and tested the provider-neutral external-identity
+and real-person role-conflict boundary. Production identity implementation
+remains deferred to Stage 6.
 
 ## 4. Artifact and custody states
 
@@ -119,7 +121,8 @@ environment is `stage1_offline`.
 Revoked items cannot appear in snapshots. Their active locator is removed.
 Completed revocation requires a revocation date and opaque evidence reference,
 `deletionStatus=completed`, an opaque deletion receipt reference and deletion
-receipt SHA-256. The operational deletion drill remains Stage 1B.
+receipt SHA-256. The provider-neutral operational deletion/revocation drill was
+completed under Stage 1B and remains binding evidence for later onboarding.
 
 ## 10. Snapshot integrity and authorization
 
@@ -158,9 +161,15 @@ python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-## 14. Deferred work
+## 14. Current deferred work
 
-Stage 1B must separately select and approve storage, encryption/key ownership,
-IAM, external identity registry, audit and deletion operations. Stage 1C must
-separately authorize real and controlled-synthetic onboarding, split freeze,
-dataset card, bias/coverage evidence and Stage 1 exit acceptance.
+Stage 1B's provider-neutral custody, encryption, identity, audit, revocation,
+deletion and restore contract is complete and formally closed. Stage 1C must
+separately authorize real and controlled-synthetic onboarding, bind the concrete
+Stage 1 dataset purpose and storage location to the accepted Stage 1A/1B
+controls, activate only approved purposes, freeze the permitted splits, and
+produce dataset-card, bias/coverage and Stage 1 exit evidence.
+
+Provider-specific production identity, network, secret-management, encrypted
+production storage, production database/queue and deployment controls remain
+Stage 6 work. Stage 1C is not authorized by this status synchronization.
