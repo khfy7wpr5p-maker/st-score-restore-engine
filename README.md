@@ -34,6 +34,8 @@ This repository remains an independent service. SesliTab Guitar Reader, MusicXML
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
+Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation was merged through PR #41, and its ADR/technical-contract acceptance status was synchronized through PR #42. Issue #36 remains the Stage 1B closure record until every stated exit-evidence item, including the independent exact-head security-audit record, is satisfied. Stage 1C artifact onboarding has not started and is not authorized by those merges.
+
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
 
 ## Binding development order
@@ -70,7 +72,7 @@ Music-application integrations
 
 Each stage requires explicit approval before work begins and separate approval before merge. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
 
-**Next eligible stage after the roadmap update:** real and explicitly authorized test dataset. That stage is not started by the roadmap change.
+**Current Stage 1 gate:** Stage 1A is complete; Stage 1B implementation and acceptance-status changes are merged, while Issue #36 closure evidence is still being finalized. Stage 1C requires formal Stage 1B closure plus a separate explicit start approval.
 
 ## Development baseline
 
@@ -138,6 +140,9 @@ See:
 
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
+- [Stage 1B closure evidence](docs/stage-1b-closure-evidence.md)
+- [Stage 1B custody and operations contract](docs/stage-1b-custody-operations-contract.md)
+- [Stage 1B decision hardening record](docs/stage-1b-decision-hardening-record.md)
 - [Job API and teacher-review baseline](docs/job-api-and-teacher-review.md)
 - [Immutable review evidence contract](docs/review-evidence-contract.md)
 - [Durable local persistence baseline](docs/durable-local-persistence.md)
@@ -154,3 +159,4 @@ See:
 - [ADR 0009](docs/adr/0009-attempt-bound-worker-fencing-and-recovery.md)
 - [ADR 0010](docs/adr/0010-strict-local-http-and-multipart-boundary.md)
 - [ADR 0011](docs/adr/0011-immutable-review-evidence-and-stale-screen-binding.md)
+- [ADR 0014](docs/adr/0014-stage-1b-custody-operations-boundary.md)
