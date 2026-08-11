@@ -6,39 +6,49 @@ AI-assisted, safety-first restoration and validation engine for music scores and
 
 ```text
 PDF / JPG / JPEG / PNG / Phone photo
-      ↓
-Document and quality analysis
-      ↓
-┌────────────────────────────────┐
-│ 1. OpenCV safe restoration     │
-│ 2. DocRes AI adapter           │
-│ 3. ST Restore engine           │
-└────────────────────────────────┘
-      ↓
-Result comparator
-      ↓
-Music-score and TAB safety validator
-      ↓
-Immutable review evidence
-      ↓
-Teacher approval
-      ↓
-Enhanced PDF and/or image + audit report
+              ↓
+Immutable source + document/quality analysis
+              ↓
+┌──────────────────────────────────────────────┐
+│ OpenCV        DocRes          ST Image AI    │
+│ current       future          future         │
+└──────────────────────────────────────────────┘
+              ↓
+Per-variant music-score / TAB safety validation
+              ↓
+Comparator
+(original always remains a selectable baseline)
+              ↓
+Selected source variant
+              ↓
+ScoreMosaic Safe Intake
+              ↓
+ScoreMosaic OMR
+              ↓
+MusicXML
 ```
+
+The target path above is architecture-locked by [ADR 0015](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md). A restoration derivative must be safety-validated before comparator eligibility; a rejected derivative cannot win; and the immutable original always remains selectable. The future ST Restore Selector may decide which optional engines or profiles to invoke, but it may not bypass or reorder the mandatory validation → comparator → original-aware selection sequence.
+
+This diagram records the target architecture only. It does not activate DocRes, ST Image AI, the Stage 9 comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
 
 ## Repository boundary
 
 This repository remains an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik will integrate through a versioned API; their repositories are not merged into this engine.
 
+ST Score Restore produces visual `restoration_variant` artifacts. It is not an OMR engine and its variants must not be confused with ScoreMosaic OMR candidates. A selected visual source variant must cross ScoreMosaic's own Safe Intake boundary before OMR processing.
+
 ## Current status
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
+
+The target multi-engine architecture is now explicitly locked as: restoration engines → per-variant safety validation → original-aware comparator → selected source variant → downstream ScoreMosaic Safe Intake/OMR. The current runtime is still OpenCV-only and has not been changed by this architecture decision.
 
 Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C is now active under Issue #47 after separate start authorization. G4 is complete as the pre-byte purpose/storage policy binding: the current purpose allowlist is `quality_evaluation` plus `held_out_evaluation`, the environment is `stage1_offline`, the storage class is `custody_external`, and the approved storage-location policy is a dedicated encrypted offline Stage 1 custody vault outside ordinary Git and automatic cloud-sync folders.
 
 G4 creates no item-level permission and onboarded no artifact bytes. A local V2 host/vault assessment found the inspected Windows 7 host unsuitable for real/private artifact custody because the operating system is unsupported and the inspected disks are unencrypted. A separate local V3 non-sensitive basic marker drill passed create/size/SHA-256/delete/post-delete-absence checks using a project-authored non-musical marker. These are local terminal observations only; they are not GitHub-hosted CI evidence, and V3 does not prove a Stage 1B-compliant real artifact vault. Real or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes the accepted Stage 1B operational controls and each item independently satisfies rights, privacy, dataset-review and purpose authorization.
 
-Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Restore, OMR, and MusicXML integration remain disabled or deferred.
+Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Image AI, OMR, and MusicXML integration remain disabled or deferred.
 
 ## Binding development order
 
@@ -142,6 +152,7 @@ See:
 
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
+- [ADR 0015 — Restoration pipeline validation, comparator, and OMR handoff](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md)
 - [Stage 1B closure evidence](docs/stage-1b-closure-evidence.md)
 - [Stage 1B custody and operations contract](docs/stage-1b-custody-operations-contract.md)
 - [Stage 1B decision hardening record](docs/stage-1b-decision-hardening-record.md)

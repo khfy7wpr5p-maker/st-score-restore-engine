@@ -316,19 +316,9 @@ class JobProcessingMixin:
             with self.store.lock:
                 job = self._job(job_id)
                 self._ensure_not_cancelled(job, actor)
-                self._transition(job, "COMPARING", actor)
-                self._append_event(
-                    job,
-                    "CANDIDATES_COMPARED",
-                    actor,
-                    {
-                        "candidateCount": len(candidates),
-                        "comparator": "single_opencv_candidate_per_page",
-                    },
-                    job["currentAttemptId"],
-                )
                 self._transition(job, "VALIDATING", actor)
 
+            validated_candidates: dict[int, tuple[str, dict[str, Any]]] = {}
             for page_number in target_pages:
                 source_bytes, source_name = source_inputs[page_number]
                 candidate_bytes, manifest, candidate_id = candidates[page_number]
@@ -369,10 +359,50 @@ class JobProcessingMixin:
                         },
                         job["currentAttemptId"],
                     )
+                validated_candidates[page_number] = (candidate_id, safety_report)
 
             with self.store.lock:
                 job = self._job(job_id)
                 self._ensure_not_cancelled(job, actor)
+                eligible_candidates = [
+                    (page_number, candidate_id)
+                    for page_number, (candidate_id, report) in validated_candidates.items()
+                    if report["verdict"] != "reject"
+                ]
+                rejected_candidates = [
+                    (page_number, candidate_id)
+                    for page_number, (candidate_id, report) in validated_candidates.items()
+                    if report["verdict"] == "reject"
+                ]
+                original_artifact_ids = [
+                    self._page(job, page_number)["sourceArtifactId"]
+                    for page_number in target_pages
+                ]
+                self._append_event(
+                    job,
+                    "CANDIDATES_COMPARED",
+                    actor,
+                    {
+                        "candidateCount": len(eligible_candidates),
+                        "generatedCandidateCount": len(validated_candidates),
+                        "rejectedCandidateCount": len(rejected_candidates),
+                        "comparator": "single_opencv_validated_candidate_per_page",
+                        "originalSelectable": True,
+                        "originalArtifactId": (
+                            original_artifact_ids[0]
+                            if len(original_artifact_ids) == 1
+                            else None
+                        ),
+                        "originalArtifactIds": original_artifact_ids,
+                        "eligibleCandidateArtifactIds": [
+                            candidate_id for _, candidate_id in eligible_candidates
+                        ],
+                        "rejectedCandidateArtifactIds": [
+                            candidate_id for _, candidate_id in rejected_candidates
+                        ],
+                    },
+                    job["currentAttemptId"],
+                )
                 attempt = self._current_attempt(job)
                 attempt["state"] = "AWAITING_REVIEW"
                 attempt["completedAt"] = _iso(self._now())
