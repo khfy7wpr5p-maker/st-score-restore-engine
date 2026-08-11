@@ -1,12 +1,12 @@
 # Job API and Teacher-Review Baseline
 
 **Status:** Milestone M4 API baseline with optional M4.1 local durability  
-**API:** `/api/v1`, version `0.4.0`  
+**API:** `/api/v1`, version `0.5.0`  
 **OpenAPI:** `api/openapi.v1.json`
 
 ## Purpose
 
-This layer exposes the existing immutable input inspector, deterministic OpenCV candidate engine, and music/TAB veto validator through a versioned service boundary. It adds job orchestration and teacher review without changing the safety rules of the underlying engines.
+This layer exposes the existing immutable input inspector, deterministic OpenCV candidate engine, and music/TAB veto validator through a versioned service boundary. It adds job orchestration and teacher review without weakening the safety rules of the underlying engines.
 
 The implementation uses:
 
@@ -31,18 +31,23 @@ Repeated image files model an ordered multi-page image document so page-level re
 
 ## Job states
 
+The current normal OpenCV processing path is:
+
 ```text
 UPLOADED
   → ANALYZING
   → READY_FOR_PROCESSING
   → PROCESSING
-  → COMPARING
   → VALIDATING
   → AWAITING_REVIEW
   → APPROVED
   → EXPORTING
   → COMPLETED
 ```
+
+During `VALIDATING`, each current restoration candidate is validated against its immutable source before comparator evidence is emitted. `PAGE_VALIDATED` therefore precedes `CANDIDATES_COMPARED`; candidates with verdict `reject` are excluded from comparator eligibility evidence, and the immutable original remains recorded as selectable. This is the bounded current OpenCV selection baseline described by ADR 0015, not the Roadmap Stage 9 multi-engine comparator.
+
+`COMPARING` remains a recognized state in the state-transition table for compatibility with existing state vocabulary, but the current normal OpenCV job path does not transition from `PROCESSING` into `COMPARING`.
 
 Alternate or terminal states: `REJECTED`, `FAILED`, `CANCELLED`, and `EXPIRED`.
 
