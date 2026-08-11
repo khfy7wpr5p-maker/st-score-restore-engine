@@ -1,11 +1,12 @@
 # ADR 0015: Restoration Variant Validation, Comparator, and OMR Handoff
 
-- **Status:** Accepted target architecture; implementation remains roadmap-gated
+- **Status:** Accepted; current OpenCV ordering invariant implemented; later multi-engine and handoff work remains roadmap-gated
 - **Date:** 2026-08-11
 - **Decision ID:** `adr-0015-restoration-pipeline-validation-comparator-handoff-v1`
 - **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`
-- **Base commit:** `5026ae49a3da6e1be1528482c30e38602f7401b8`
-- **Runtime impact:** none in this documentation-only decision
+- **Decision base commit:** `5026ae49a3da6e1be1528482c30e38602f7401b8`
+- **Current implementation evidence:** PR #50 merged as `e69ef6807fb48c315b322ea47027db236d7e67a8`
+- **Runtime impact:** the current OpenCV job flow is aligned to validate before comparator evidence; DocRes, ST Image AI, Roadmap Stage 9 comparator, and ScoreMosaic runtime integration remain unimplemented
 
 ## Context
 
@@ -20,6 +21,17 @@ The long-term engine set is intentionally plural:
 A previous high-level diagram placed the comparator before the music/TAB safety validator. That ordering is not acceptable for the multi-engine target architecture because an unsafe derivative must never become an eligible winner merely because it has an attractive visual score. The target architecture also requires the immutable original to remain a first-class selection option rather than only a last-resort error fallback.
 
 This ADR records the architecture path so later DocRes, selector, ST Image AI, ScoreMosaic, SesliTab, and MusicXML-to-Guitar-TAB integration work cannot silently drift away from it.
+
+### Current implementation status
+
+The initial architecture decision was recorded before runtime alignment. A separately approved regression-and-runtime package was subsequently merged in PR #50. The current OpenCV-only job path now enforces the bounded ordering invariant by:
+
+- entering validation directly after supported restoration processing,
+- emitting `PAGE_VALIDATED` before `CANDIDATES_COMPARED`,
+- excluding `reject` verdicts from comparator eligibility evidence,
+- recording the immutable original as selectable comparator baseline evidence.
+
+This is a current safety-ordering baseline only. It is **not** the Roadmap Stage 9 multi-engine comparator and does not activate any later roadmap stage.
 
 ## Decision
 
@@ -241,7 +253,7 @@ Changing any of these invariants requires a new explicit architecture decision a
 
 ### 14. Roadmap gates remain binding
 
-This ADR records target architecture only. It does not pull future implementation forward.
+This ADR records the target architecture and the implemented current OpenCV ordering invariant. It does not pull future implementation stages forward.
 
 In particular, it does not authorize:
 
@@ -278,6 +290,6 @@ Additional work will later be required for an engine-neutral variant schema, qua
 
 ## Verification boundary
 
-This ADR changes documentation only. It changes no runtime code, schema, test, dependency, model, workflow, API endpoint, data permission, storage resource, or downstream repository.
+The initial ADR record was documentation-only. A later separately approved package in PR #50 added three ordering/selection regressions and the minimum current OpenCV runtime alignment needed to satisfy them. That package did not implement DocRes, ST Image AI, the Roadmap Stage 9 multi-engine comparator, ScoreMosaic runtime dispatch, model training, schema expansion, dependency changes, or production infrastructure.
 
-The first implementation package after this architecture is separately approved should begin with regression evidence for the ordering and selection invariants before changing runtime behavior.
+This post-merge convergence update changes documentation only. It records the already-merged runtime state and does not authorize or implement any additional roadmap capability.

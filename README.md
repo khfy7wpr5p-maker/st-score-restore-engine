@@ -30,7 +30,7 @@ MusicXML
 
 The target path above is architecture-locked by [ADR 0015](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md). A restoration derivative must be safety-validated before comparator eligibility; a rejected derivative cannot win; and the immutable original always remains selectable. The future ST Restore Selector may decide which optional engines or profiles to invoke, but it may not bypass or reorder the mandatory validation → comparator → original-aware selection sequence.
 
-This diagram records the target architecture only. It does not activate DocRes, ST Image AI, the Stage 9 comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
+This diagram records the target architecture. The current OpenCV-only runtime now implements the validator-before-comparator ordering and records the immutable original as a selectable comparator baseline. It does not activate DocRes, ST Image AI, the Roadmap Stage 9 multi-engine comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
 
 ## Repository boundary
 
@@ -42,7 +42,7 @@ ST Score Restore produces visual `restoration_variant` artifacts. It is not an O
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
-The target multi-engine architecture is now explicitly locked as: restoration engines → per-variant safety validation → original-aware comparator → selected source variant → downstream ScoreMosaic Safe Intake/OMR. The current runtime is still OpenCV-only and has not been changed by this architecture decision.
+The target multi-engine architecture is explicitly locked as: restoration engines → per-variant safety validation → original-aware comparator → selected source variant → downstream ScoreMosaic Safe Intake/OMR. The current runtime remains OpenCV-only, but its processing order is aligned with ADR 0015: the OpenCV restoration variant is safety-validated before comparator evidence is emitted, rejected variants are excluded from comparator eligibility, and the immutable original remains selectable. This bounded current behavior is not the Roadmap Stage 9 multi-engine comparator.
 
 Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C is now active under Issue #47 after separate start authorization. G4 is complete as the pre-byte purpose/storage policy binding: the current purpose allowlist is `quality_evaluation` plus `held_out_evaluation`, the environment is `stage1_offline`, the storage class is `custody_external`, and the approved storage-location policy is a dedicated encrypted offline Stage 1 custody vault outside ordinary Git and automatic cloud-sync folders.
 

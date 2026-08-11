@@ -1,8 +1,9 @@
 # ADR 0001: Independent Safety-First Restoration Engine
 
-- **Status:** Accepted
+- **Status:** Accepted; processing-order detail superseded by ADR 0015
 - **Date:** 2026-08-05
 - **Decision owners:** Project owner and ST Score Restore maintainers
+- **Supersession note:** ADR 0015 is the normative authority for restoration-variant validation, comparator eligibility, original-aware selection, and ScoreMosaic handoff ordering.
 
 ## Context
 
@@ -12,7 +13,7 @@ The capability must later serve SesliTab Guitar Reader, MusicXML-to-Guitar TAB E
 
 ## Decision
 
-ST Score Restore Engine will remain an independent, versioned service with the approved processing flow:
+ST Score Restore Engine remains an independent, versioned service. The following diagram records the original 2026-08-05 high-level flow for historical context; its **comparator-before-validator ordering is superseded by ADR 0015 and is not the current normative processing order**:
 
 ```text
 PDF / JPG / JPEG / PNG / phone-captured photo
@@ -23,13 +24,27 @@ OpenCV safe restoration
 DocRes AI adapter
 ST Restore engine
       ↓
-Result comparator
+Result comparator                 # historical ordering; superseded
       ↓
 Music-score and TAB safety validator
       ↓
 Teacher approval when required
       ↓
 Enhanced PDF and/or image plus audit report
+```
+
+The current normative ordering is defined by ADR 0015:
+
+```text
+restoration variant
+      ↓
+Music-score / TAB safety validation
+      ↓
+Comparator eligibility and original-aware selection
+      ↓
+Selected source variant
+      ↓
+ScoreMosaic Safe Intake / downstream OMR when the roadmap permits
 ```
 
 The engine will apply these rules:
