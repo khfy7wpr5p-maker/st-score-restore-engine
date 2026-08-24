@@ -65,6 +65,28 @@ class DatasetSchemaParityTests(unittest.TestCase):
         with self.assertRaisesRegex(DatasetManifestError, "privacy required-field drift"):
             validate_schema_parity(schema, self.snapshot_schema)
 
+    def test_eligibility_class_drift_is_detected(self) -> None:
+        schema = copy.deepcopy(self.catalog_schema)
+        schema["$defs"]["item"]["properties"]["eligibilityClass"]["enum"].append(
+            "unknown_tier"
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "eligibility classes enum drift"):
+            validate_schema_parity(schema, self.snapshot_schema)
+
+    def test_storage_profile_restriction_drift_is_detected(self) -> None:
+        schema = copy.deepcopy(self.catalog_schema)
+        variants = schema["$defs"]["restriction"]["oneOf"]
+        storage_variant = next(
+            value
+            for value in variants
+            if value["properties"]["type"]["const"] == "storage_class_allowlist"
+        )
+        storage_variant["properties"]["values"]["items"]["enum"].append(
+            "custody_external"
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "storage restriction values enum drift"):
+            validate_schema_parity(schema, self.snapshot_schema)
+
     def test_created_at_pattern_drift_is_detected(self) -> None:
         schema = copy.deepcopy(self.snapshot_schema)
         schema["properties"]["createdAt"]["pattern"] = (
