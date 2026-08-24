@@ -1,10 +1,11 @@
 # ADR 0016: Stage 1C Risk-Tiered Artifact Custody
 
-- **Status:** Proposed by approved Stage 1C architecture change; pending PR acceptance
+- **Status:** Accepted on `main` through PR #55
 - **Date:** 2026-08-24
 - **Decision ID:** `adr-0016-stage-1c-risk-tiered-custody-v1`
 - **Roadmap stage:** Stage 1C only
 - **Parent issue:** #47
+- **Accepted merge commit:** `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
 - **Supersedes:** the universal-storage portion of the Stage 1C G4 pre-byte binding
 - **Does not supersede:** Stage 1A rights/privacy/purpose governance or the Stage 1B high-assurance custody contract
 
@@ -119,7 +120,7 @@ Stage 1B operational mechanisms may still be reused for lower tiers, but lower-r
 
 ### 6. Relationship to the existing Stage 1C G4 binding
 
-The prior G4 storage-location rule requiring one dedicated encrypted offline vault for every artifact is superseded by this risk-tiered decision once this ADR is accepted on `main`.
+The prior G4 storage-location rule requiring one dedicated encrypted offline vault for every artifact is superseded by this risk-tiered decision.
 
 The G4 purpose allowlist remains unchanged:
 
@@ -171,11 +172,15 @@ The follow-up implementation must be additive and migration-safe. Existing high-
 - provider configuration for managed storage still needs verification;
 - the project must prevent tier downgrade when rights/privacy state changes or is revoked.
 
-## Acceptance criteria for this architecture change
+## Acceptance evidence
 
-- the decision is documented before implementation;
-- the universal offline-vault rule is explicitly superseded rather than silently ignored;
-- C4 vault evidence is retained for `high_assurance_vault`;
-- low-risk storage never bypasses exact-artifact rights review;
-- no artifact bytes, provider credentials, real provider URLs, or account identifiers are added by the architecture PR;
-- no Stage 2 or later-stage implementation is started.
+- architecture accepted and merged through PR #55;
+- merge commit: `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`;
+- exact-head Repository validation Run #108 succeeded before merge;
+- Python 3.11 and 3.12 validation passed;
+- 311/311 unit tests passed on the recorded exact-head run;
+- no artifact bytes, provider credentials, real provider URLs, account identifiers, permissions, split assignments, or Stage 2 behavior were added by the architecture PR.
+
+## Next implementation boundary
+
+The next eligible implementation slice is the versioned Stage 1C machine-readable storage-profile migration. It must represent eligibility classes and storage profiles, add deterministic fail-closed validation and negative tests, preserve legacy high-assurance records without silent downgrade, and keep artifact onboarding blocked until the implementation itself is accepted and merged.

@@ -1,8 +1,8 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved development sequence, Stage 1 substage status aligned through Stage 1C G4 and the current real-artifact custody blocker  
-**Version:** 0.2.2  
-**Date:** 2026-08-08  
+**Document status:** Approved development sequence, Stage 1C aligned through accepted ADR 0016 risk-tiered custody; machine-readable storage-profile migration pending  
+**Version:** 0.2.3  
+**Date:** 2026-08-24  
 **Decision record:** Issue #31  
 **Dependency:** `docs/technical-specification.md`
 
@@ -46,7 +46,9 @@ The following foundation is already present on `main` and is treated as the star
 
 This baseline is not a production service. It has not yet passed the complete Stage 1 real-data corpus, complete quality-analysis, multi-page PDF, safety-calibration, accessible-UI, production-infrastructure or preview gates below.
 
-Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral custody/operations implementation, hardening, exact-head audit evidence and post-merge CI are complete; Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C is active under dedicated Issue #47 after separate start authorization. G4 is complete as the pre-byte purpose/storage policy binding, but it creates no item-level permission and onboarded no artifact bytes. A local V2 host/vault assessment found the inspected Windows 7 host unsuitable for real/private artifact custody because the operating system is unsupported and the inspected disks are unencrypted. A local V3 non-sensitive basic marker drill passed create/size/SHA-256/delete/post-delete-absence checks; that result is local terminal evidence only, not GitHub-hosted CI and not proof of a Stage 1B-compliant real artifact vault. Real or controlled-synthetic artifact onboarding remains blocked until a supported encrypted custody environment passes Stage 1B operational verification and every item passes its independent rights/privacy/review/purpose gates.
+Stage 1 is being delivered through explicit gated substages under parent Issue #32. Stage 1A metadata governance is complete. Stage 1B provider-neutral high-assurance custody/operations implementation, hardening, exact-head audit evidence and post-merge CI are complete; Issue #36 closed as `completed` with an 11/11 exit matrix. Stage 1C is active under dedicated Issue #47 after separate start authorization. G4's purpose allowlist remains `quality_evaluation` and `held_out_evaluation`, but its former universal offline-vault storage rule was superseded by accepted ADR 0016 through PR #55. Stage 1C now classifies the exact artifact before storage selection: verified low-risk `open_corpus` may use `managed_standard`; lawfully usable restricted artifacts may use `managed_restricted`; private/personal/student/consent-restricted material uses `high_assurance_vault`; unresolved governance is `blocked`. The machine-readable Stage 1A/1C schemas still represent legacy storage values, so no artifact may yet become `external_available` under the new profiles until the versioned schema/validator migration is accepted and merged.
+
+The earlier Windows 7 V2 assessment remains a failure for any proposed `high_assurance_vault` on that unsupported, unencrypted host. It is not a universal blocker for future verified `open_corpus` using a valid `managed_standard` profile. The V3 non-sensitive marker drill remains only basic local create/hash/delete evidence and does not prove high-assurance custody.
 
 ## 4. Binding delivery sequence
 
@@ -104,12 +106,14 @@ Make the approved sequence unambiguous in repository documentation and issue pla
 ### Current gated-substage status
 
 - **Stage 1A — metadata governance:** complete and merged.
-- **Stage 1B — provider-neutral custody and operations boundary:** complete and formally closed. Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI.
-- **Stage 1C — authorized artifact onboarding and corpus realization:** active under Issue #47 after separate explicit start approval. G4 is complete with the purpose allowlist `quality_evaluation` and `held_out_evaluation`, environment `stage1_offline`, storage class `custody_external`, and a dedicated encrypted offline Stage 1 custody-vault policy outside ordinary Git and automatic cloud-sync folders. G4 creates no item-level permission and onboarded no artifact bytes. Real/private and controlled-synthetic artifact onboarding remains blocked until the selected custody environment passes Stage 1B operational verification.
+- **Stage 1B — provider-neutral high-assurance custody and operations boundary:** complete and formally closed. Issue #36 closed as `completed` after the 11/11 exit matrix, final PR #44 exact-head audit evidence and successful post-merge `main` CI.
+- **Stage 1C — authorized artifact onboarding and corpus realization:** active under Issue #47. ADR 0016 is accepted through PR #55 and supersedes the old universal offline-vault storage rule while retaining the G4 purpose allowlist `quality_evaluation` and `held_out_evaluation`. Storage is now artifact-specific: `open_corpus` → `managed_standard`; `restricted_corpus` → `managed_restricted`; `sensitive_custody` → `high_assurance_vault`; unresolved/rejected governance → `blocked`.
 
-The local V2 assessment of the currently inspected Windows 7 host failed the real-artifact custody gate because the operating system is unsupported and the inspected disks are unencrypted. The local V3 non-sensitive basic marker drill passed basic create/size/SHA-256/delete/post-delete-absence checks. V2/V3 are local terminal observations, not GitHub-hosted CI evidence, and V3 does not establish a compliant real vault.
+ADR 0016 changes architecture before implementation. The current machine-readable Stage 1A/1C schemas still use legacy storage values. Therefore artifact onboarding under the new profile names remains fail-closed until the versioned storage-profile schema/validator migration is accepted and merged. Existing high-assurance `custody_external` records must not be silently downgraded or reinterpreted.
 
-Completion of Stage 1B or G4 is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
+The local V2 assessment of the inspected Windows 7 host failed as a candidate `high_assurance_vault` because the operating system is unsupported and the inspected disks are unencrypted. The local V3 non-sensitive marker drill passed basic create/size/SHA-256/delete/post-delete-absence checks but does not establish a compliant high-assurance vault. Neither result prevents a future exact-artifact `open_corpus` item from using a separately verified `managed_standard` profile after the machine-readable migration exists.
+
+Completion of Stage 1B, G4 or ADR 0016 is not completion of the whole Stage 1 corpus gate. Stage 2 remains blocked until the Stage 1 exit evidence below is fully satisfied.
 
 ### Goal
 
@@ -126,22 +130,24 @@ Create a trustworthy evaluation corpus before expanding quality analysis, PDF pr
 - representative score, guitar-TAB and mixed-layout categories,
 - representative degradation classes from scans and phone photographs,
 - train/calibration/held-out split policy without leakage,
-- secure storage outside ordinary Git,
+- artifact-appropriate managed or high-assurance storage outside ordinary Git,
 - metadata-only fixture references in the repository,
 - deliberate synthetic mutation set kept distinct from real documents.
 
 ### Entry gate
 
 - Stage 0 is merged and accepted,
-- dataset purpose and storage location are explicitly approved,
+- dataset purposes and ADR 0016 storage architecture are approved,
 - no private or copyrighted bytes are committed to Git,
-- before any artifact becomes `external_available`, the selected custody environment passes the accepted Stage 1B operational controls and the item independently passes rights, privacy, dataset-review and purpose authorization.
+- the versioned machine-readable storage-profile migration is accepted before any new ADR 0016 profile is recorded as available,
+- before any artifact becomes `external_available`, the exact artifact independently passes rights, privacy, dataset-review, purpose, retention and provenance gates,
+- the selected profile's operational controls pass; `high_assurance_vault` additionally requires the accepted Stage 1B/C4 high-assurance evidence.
 
 ### Exit gate
 
 - every included item has auditable authorization and provenance,
 - test and held-out splits are frozen and digest-addressed,
-- deletion and consent-revocation procedures are demonstrated,
+- deletion and consent-revocation procedures are demonstrated where applicable,
 - coverage gaps and biases are documented,
 - repository fixtures remain metadata-only,
 - no training permission is inferred from teacher approval.
@@ -584,6 +590,6 @@ Every stage-completion report must include:
 
 The active roadmap stage remains Stage 1 under parent Issue #32, with Stage 1C as the active implementation substage under Issue #47.
 
-> **Stage 1A is complete. Stage 1B is formally closed. Stage 1C is active and G4 is complete, but real/private and controlled-synthetic artifact onboarding is blocked pending a compliant operational vault.**
+> **Stage 1A is complete. Stage 1B is formally closed. ADR 0016 risk-tiered custody is accepted. Artifact onboarding remains blocked only because the new storage profiles are not yet machine-readable and no exact artifact has yet passed the applicable item/profile gates.**
 
-The next eligible work is Stage 1C metadata-only onboarding-gate/checklist work and operational verification of a supported encrypted custody environment against the accepted Stage 1B controls. The local V2 failure on the inspected Windows 7 host and the local V3 non-sensitive basic marker PASS do not authorize real artifact onboarding and are not GitHub-hosted CI evidence. No artifact byte may be made `external_available` until the custody environment and item-level rights/privacy/review/purpose gates pass. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
+The next eligible implementation work is the versioned Stage 1C storage-profile schema/validator migration. It must implement deterministic eligibility/profile validation, preserve legacy high-assurance records without silent downgrade, and keep unresolved governance fail-closed. After that migration is accepted, `managed_standard` verification may be used for exact artifacts classified as `open_corpus`; `managed_restricted` requires restriction-compatible controls; `high_assurance_vault` continues to require the accepted Stage 1B/C4 controls. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
