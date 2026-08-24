@@ -1,10 +1,11 @@
-"""Stage 1A dataset contract constants and opaque identifier patterns."""
+"""Stage 1A/1C dataset contract constants and opaque identifier patterns."""
 
 from __future__ import annotations
 
 import re
 
-CATALOG_SCHEMA_VERSION = "1.2.0"
+CATALOG_SCHEMA_VERSION = "1.3.0"
+LEGACY_CATALOG_SCHEMA_VERSION = "1.2.0"
 SNAPSHOT_SCHEMA_VERSION = "1.2.0"
 ENTRY_DECISION_ID = "adr-0013-stage-1-entry-v1"
 STAGE1_ENVIRONMENT = "stage1_offline"
@@ -57,7 +58,24 @@ PRIVACY_REVIEW_STATES = {"not_required", "pending", "approved", "rejected"}
 RIGHTS_REVIEW_STATES = {"pending", "approved", "rejected"}
 DATASET_REVIEW_STATES = {"planned", "pending", "approved", "rejected", "revoked"}
 RETENTION_POLICIES = {"metadata_only", "external_until_date", "delete_after_validation", "prohibited"}
-STORAGE_CLASSES = {"not_assigned", "custody_external"}
+ELIGIBILITY_CLASSES = {
+    "blocked",
+    "open_corpus",
+    "restricted_corpus",
+    "sensitive_custody",
+}
+STORAGE_CLASSES = {
+    "not_assigned",
+    "managed_standard",
+    "managed_restricted",
+    "high_assurance_vault",
+}
+LEGACY_STORAGE_CLASS = "custody_external"
+PROFILE_BY_ELIGIBILITY = {
+    "open_corpus": "managed_standard",
+    "restricted_corpus": "managed_restricted",
+    "sensitive_custody": "high_assurance_vault",
+}
 DELETION_STATES = {"not_required", "pending", "completed", "failed"}
 REVOCATION_STATES = {"not_revoked", "pending_deletion", "completed"}
 USAGE_BASIS_CODES = {
@@ -116,6 +134,7 @@ ITEM_FIELDS = {
     "datasetItemId",
     "sourceFamilyId",
     "parentItemId",
+    "eligibilityClass",
     "artifact",
     "provenance",
     "privacy",
@@ -147,4 +166,4 @@ SNAPSHOT_FIELDS = {
 
 
 class DatasetManifestError(ValueError):
-    """Dataset metadata violates the approved Stage 1A contract."""
+    """Dataset metadata violates the approved Stage 1A/1C contract."""
