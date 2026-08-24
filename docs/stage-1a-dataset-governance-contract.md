@@ -6,7 +6,7 @@
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
 **Artifact policy:** Metadata only  
 **Runtime restoration impact:** None  
-**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C active under Issue #47; G4 purpose/storage policy binding complete; real artifact onboarding blocked pending compliant vault verification
+**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C active under Issue #47; ADR 0016 introduces risk-tiered custody architecture, with machine-readable profile implementation still pending
 
 ## 1. Scope
 
@@ -77,11 +77,21 @@ remains deferred to Stage 6.
 Ordinary Git remains metadata-only. No credentials, personal names or personal
 paths are valid custody or identity fields.
 
+The schema version described by this document still exposes the original
+Stage 1A storage vocabulary. ADR 0016 changes the architecture before the
+machine-readable contract: no item may use a new custody-profile name until a
+follow-up versioned schema/validator change is merged and verified.
+
 ## 5. Rights, privacy and review
 
 An external or actively authorized item requires approved rights review,
 acceptable privacy review, approved dataset review, immutable artifact SHA-256
 and external custody metadata.
+
+Rights review applies to the exact artifact used by the project. The fact that
+a musical composition is public domain does not by itself establish that a
+particular modern edition, engraving, editorial layer, scan, photograph or
+acquired file is public domain or freely reusable.
 
 For `deidentified` data, the privacy-reviewed derivative SHA-256 must equal the
 artifact SHA-256 used in the dataset. Identifiable personal/student data cannot
@@ -113,8 +123,10 @@ Stage 1A snapshots keep `trainingUseActivated=false`.
 
 Supported restrictions are `split_allowlist`, `storage_class_allowlist`,
 `environment_allowlist`, `external_export` and `retention_not_after`.
-Unknown or contradictory restrictions fail closed. The Stage 1 snapshot
-environment is `stage1_offline`.
+Unknown or contradictory restrictions fail closed. The current schema version
+still uses the legacy Stage 1 snapshot environment `stage1_offline`; ADR 0016
+requires a versioned follow-up before additional managed-storage environments
+can be represented.
 
 ## 9. Revocation and deletion evidence
 
@@ -122,7 +134,8 @@ Revoked items cannot appear in snapshots. Their active locator is removed.
 Completed revocation requires a revocation date and opaque evidence reference,
 `deletionStatus=completed`, an opaque deletion receipt reference and deletion
 receipt SHA-256. The provider-neutral operational deletion/revocation drill was
-completed under Stage 1B and remains binding evidence for later onboarding.
+completed under Stage 1B and remains binding evidence for high-assurance
+onboarding and for any lower-tier profile that explicitly adopts those controls.
 
 ## 10. Snapshot integrity and authorization
 
@@ -163,36 +176,39 @@ python -m compileall -q src tools tests
 
 ## 14. Current Stage 1C boundary
 
-Stage 1B's provider-neutral custody, encryption, identity, audit, revocation,
-deletion and restore contract is complete and formally closed. Stage 1C received
-separate start authorization under Issue #47. G4 separately bound the current
-Stage 1 purpose allowlist to `quality_evaluation` and `held_out_evaluation`, the
-environment to `stage1_offline`, the storage class to `custody_external`, and
-the storage-location policy to a dedicated encrypted offline Stage 1 custody
-vault outside ordinary Git and automatic cloud-sync folders.
+Stage 1B's provider-neutral high-assurance custody, encryption, identity, audit,
+revocation, deletion and restore contract is complete and formally closed.
+Stage 1C received separate start authorization under Issue #47.
 
-G4 does not create artifact-specific permissions. Rights, privacy, dataset
-review and purpose authorization remain independent and deny-by-default for
-every item. `model_training`, publication, demonstration, calibration,
-PDF-pipeline evaluation and synthetic derivation remain unauthorized by the G4
-binding.
+The earlier G4 pre-byte decision bound all real/controlled-synthetic artifacts
+to one `stage1_offline` / `custody_external` encrypted offline vault. ADR 0016
+supersedes **that universal storage-location rule** with artifact-specific risk
+tiers while retaining G4's purpose allowlist and all independent Stage 1A
+governance gates.
 
-A local host/vault assessment (V2) found the currently inspected Windows 7 host
-unsuitable for real/private artifact custody because the operating system is
-unsupported and its inspected disks are unencrypted. A separate local
-non-sensitive basic marker drill (V3) demonstrated create/size/SHA-256/delete
-and post-delete absence for a project-authored non-musical marker. These are
-local terminal observations only: they are not GitHub-hosted CI evidence and V3
-does not prove a Stage 1B-compliant real artifact vault.
+The approved architecture now distinguishes:
 
-Real or controlled-synthetic artifact onboarding therefore remains blocked
-until a supported, encrypted custody environment passes the required
-operational controls, including the Stage 1B access, audit, revocation,
-deletion, backup/restore anti-resurrection and real-person role-separation
-boundaries. Artifact bytes onboarded through this status convergence remain
-zero.
+- `open_corpus` → `managed_standard` after exact-artifact rights, privacy,
+  purpose, retention and dataset-review approval;
+- `restricted_corpus` → `managed_restricted` only when artifact-specific terms
+  allow the selected provider/environment;
+- `sensitive_custody` → `high_assurance_vault`, using the accepted Stage 1B
+  boundary and C4 vault-verification evidence;
+- `blocked` → no onboarding when rights/privacy/purpose/review/provenance is
+  missing, pending, rejected, expired or contradictory.
+
+This architecture change does not itself activate those new profile names in
+the current `1.2.0` schema. Until a separately verified schema/validator
+migration is merged, current validators remain authoritative and no new
+artifact may become `external_available` under `managed_standard` or
+`managed_restricted`.
+
+G4's purpose allowlist remains `quality_evaluation` and
+`held_out_evaluation`. `model_training`, publication, demonstration,
+calibration, PDF-pipeline evaluation and synthetic derivation remain
+authorized only by separate future decisions in the correct roadmap stage.
 
 Provider-specific production identity, network, secret-management, encrypted
 production storage, production database/queue and deployment controls remain
-Stage 6 work. This status convergence changes no schema, validator, runtime
-behavior, item-level permission or artifact state.
+Stage 6 work. This status convergence changes no restoration runtime behavior
+and does not onboard artifact bytes.
