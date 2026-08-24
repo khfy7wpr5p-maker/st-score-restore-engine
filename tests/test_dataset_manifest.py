@@ -9,6 +9,7 @@ from st_score_restore.dataset_manifest import (
     DatasetManifestError,
     canonical_sha256,
     load_json_object,
+    migrate_dataset_catalog_v1_2_to_v1_3,
     validate_dataset_catalog,
     validate_dataset_snapshot,
 )
@@ -24,6 +25,7 @@ class DatasetManifestTests(unittest.TestCase):
     def test_metadata_only_unassigned_contract_is_valid(self) -> None:
         result = validate_dataset_catalog(catalog([item()]))
         self.assertEqual(result["items"][0]["split"], "unassigned")
+        self.assertEqual(result["items"][0]["eligibilityClass"], "blocked")
 
     def test_entry_decision_is_required(self) -> None:
         value = catalog([item()])
@@ -103,7 +105,7 @@ class DatasetManifestTests(unittest.TestCase):
     def test_json_loader_rejects_duplicate_keys(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "duplicate.json"
-            path.write_text('{"schemaVersion":"1.2.0","schemaVersion":"1.2.0"}', encoding="utf-8")
+            path.write_text('{"schemaVersion":"1.3.0","schemaVersion":"1.3.0"}', encoding="utf-8")
             with self.assertRaisesRegex(DatasetManifestError, "duplicate JSON object key"):
                 load_json_object(path)
 
@@ -169,8 +171,7 @@ class DatasetManifestTests(unittest.TestCase):
             granted_purpose="quality_evaluation",
         )
         value["permissions"]["quality_evaluation"] = permission(
-            "granted",
-            restrictions=[{"type": "environment_allowlist", "values": ["production"]}],
+            "granted", restrictions=[{"type": "environment_allowlist", "values": ["production"]}],
         )
         with self.assertRaisesRegex(DatasetManifestError, "unsupported value"):
             validate_dataset_catalog(catalog([value]))
@@ -236,6 +237,134 @@ class DatasetManifestTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(DatasetManifestError, "source-family split leakage"):
             validate_dataset_catalog(catalog([first, second]))
+
+    def test_all_three_risk_tier_profile_pairs_are_machine_valid(self) -> None:
+        open_item = item(
+            "dataset.item.open.v1",
+            family_id="source.family.open.v1",
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            eligibility_class="open_corpus",
+            storage_class="managed_standard",
+        )
+        restricted_item = item(
+            "dataset.item.restricted.v1",
+            family_id="source.family.restricted.v1",
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            privacy_class="deidentified",
+            artifact_sha="b" * 64,
+            eligibility_class="restricted_corpus",
+            storage_class="managed_restricted",
+        )
+        sensitive_item = item(
+            "dataset.item.sensitive.v1",
+            family_id="source.family.sensitive.v1",
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            privacy_class="personal",
+            artifact_sha="c" * 64,
+            eligibility_class="sensitive_custody",
+            storage_class="high_assurance_vault",
+        )
+        validate_dataset_catalog(catalog([open_item, restricted_item, sensitive_item]))
+
+    def test_blocked_external_artifact_is_rejected(self) -> None:
+        value = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            eligibility_class="blocked",
+            storage_class="managed_standard",
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "eligibility/storage profile mismatch"):
+            validate_dataset_catalog(catalog([value]))
+
+    def test_illegal_eligibility_profile_pair_is_rejected(self) -> None:
+        value = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            eligibility_class="open_corpus",
+            storage_class="managed_restricted",
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "eligibility/storage profile mismatch"):
+            validate_dataset_catalog(catalog([value]))
+
+    def test_open_corpus_cannot_contain_personal_or_student_data(self) -> None:
+        value = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            privacy_class="personal",
+            eligibility_class="open_corpus",
+            storage_class="managed_standard",
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "open_corpus requires privacy"):
+            validate_dataset_catalog(catalog([value]))
+
+    def test_personal_data_requires_sensitive_custody(self) -> None:
+        value = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            privacy_class="student",
+            eligibility_class="restricted_corpus",
+            storage_class="managed_restricted",
+        )
+        with self.assertRaisesRegex(DatasetManifestError, "requires sensitive_custody"):
+            validate_dataset_catalog(catalog([value]))
+
+    def _legacy_catalog(self, source: dict) -> dict:
+        legacy = copy.deepcopy(catalog([source]))
+        legacy["schemaVersion"] = "1.2.0"
+        legacy_item = legacy["items"][0]
+        legacy_item.pop("eligibilityClass")
+        if legacy_item["artifact"]["state"] in {"external_available", "revoked"}:
+            legacy_item["retention"]["storageClass"] = "custody_external"
+        for permission_value in legacy_item["permissions"].values():
+            for restriction in permission_value["restrictions"]:
+                if restriction["type"] == "storage_class_allowlist":
+                    restriction["values"] = ["custody_external"]
+        return legacy
+
+    def test_legacy_external_migration_never_downgrades_custody(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+            eligibility_class="open_corpus",
+            storage_class="managed_standard",
+        )
+        legacy = self._legacy_catalog(source)
+        migrated = migrate_dataset_catalog_v1_2_to_v1_3(legacy)
+        result = migrated["items"][0]
+        self.assertEqual(migrated["schemaVersion"], "1.3.0")
+        self.assertEqual(result["eligibilityClass"], "sensitive_custody")
+        self.assertEqual(result["retention"]["storageClass"], "high_assurance_vault")
+        self.assertNotEqual(result["retention"]["storageClass"], "managed_standard")
+
+    def test_legacy_metadata_only_migration_remains_blocked(self) -> None:
+        migrated = migrate_dataset_catalog_v1_2_to_v1_3(
+            self._legacy_catalog(item())
+        )
+        result = migrated["items"][0]
+        self.assertEqual(result["eligibilityClass"], "blocked")
+        self.assertEqual(result["retention"]["storageClass"], "not_assigned")
+
+    def test_legacy_external_without_custody_external_is_rejected(self) -> None:
+        source = item(
+            artifact_state="external_available",
+            split="development",
+            granted_purpose="quality_evaluation",
+        )
+        legacy = self._legacy_catalog(source)
+        legacy["items"][0]["retention"]["storageClass"] = "managed_standard"
+        with self.assertRaisesRegex(DatasetManifestError, "must use custody_external"):
+            migrate_dataset_catalog_v1_2_to_v1_3(legacy)
 
     def _synthetic_pair(self) -> tuple[dict, dict]:
         parent = item(
