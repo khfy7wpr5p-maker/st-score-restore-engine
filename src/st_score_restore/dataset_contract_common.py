@@ -1,4 +1,4 @@
-"""Shared fail-closed helpers for Stage 1A dataset validation."""
+"""Shared fail-closed helpers for Stage 1A/1C dataset validation."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from .dataset_contract_constants import (
     RESTRICTION_TYPES,
     SHA,
     STAGE1_ENVIRONMENT,
+    STORAGE_CLASSES,
     UTC,
 )
 
@@ -254,7 +255,7 @@ def _restriction(raw: Any, where: str) -> dict[str, Any]:
     elif restriction_type == "storage_class_allowlist":
         _fields(value, {"type", "values"}, where)
         values = [
-            _enum(item, {"custody_external"}, f"{where}.values[]")
+            _enum(item, STORAGE_CLASSES - {"not_assigned"}, f"{where}.values[]")
             for item in _arr(value["values"], f"{where}.values")
         ]
         if len(set(values)) != len(values):
