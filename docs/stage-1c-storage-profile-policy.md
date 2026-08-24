@@ -1,9 +1,9 @@
 # Stage 1C Artifact Custody Profile Policy
 
-**Status:** Accepted architecture policy under ADR 0016; machine-readable implementation pending  
+**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6  
 **Stage:** Stage 1C  
 **Parent:** Issue #47  
-**Accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
+**Architecture accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
 
 ## Purpose
 
@@ -34,7 +34,7 @@ A composer/work being public domain is supporting context only. It does not repl
 | Eligibility class | Typical condition | Allowed profile | Cloud/Drive-style storage | High-assurance C4 vault required? |
 | --- | --- | --- | --- | --- |
 | `open_corpus` | Exact artifact verified public domain or openly licensed; privacy `none`; purpose/review/retention approved | `managed_standard` | Yes, if configured profile controls pass | No |
-| `restricted_corpus` | Lawful intended use but license/donor/access/retention restrictions exist; privacy acceptable | `managed_restricted` | Only if artifact terms and provider configuration permit it | No, unless a restriction requires it |
+| `restricted_corpus` | Lawful intended use but license/donor/access/retention restrictions exist; privacy acceptable | `managed_restricted` | Only if artifact terms and provider configuration permit it | No, unless policy escalates the artifact to `sensitive_custody` |
 | `sensitive_custody` | Private/user-provided, personal/student, consent-restricted, or policy requires strongest custody | `high_assurance_vault` | Not as a substitute for the vault | Yes |
 | `blocked` | Rights/privacy/purpose/review/provenance missing, pending, rejected, expired, or contradictory | none | No | No onboarding at all |
 
@@ -68,14 +68,36 @@ Uses ADR 0014 and the Stage 1C C4 vault-verification evidence contract. This ret
 
 No provider is approved by brand in this policy. Google Drive or another managed service can qualify only for `managed_standard`/`managed_restricted` after its concrete project configuration is checked. A provider's general marketing or encryption statement is not sufficient evidence by itself.
 
-## Migration guard
+The Stage 1 snapshot `environment=stage1_offline` describes the bounded evaluation execution environment. It no longer means that every permitted storage profile must itself be an offline vault.
 
-This policy is accepted at the architecture layer, but the machine-readable dataset contract still uses the legacy storage values. Therefore:
+## C6 machine-readable contract
 
-- no current item is automatically reclassified;
-- existing `custody_external` metadata is not weakened;
-- no new artifact may become `external_available` under the new profile names until the follow-up schema/validator PR is merged and verified;
-- machine-readable migration must reject illegal class/profile combinations and any silent downgrade;
-- Stage 2 remains blocked.
+Catalog schema `1.3.0` adds required `eligibilityClass` and changes external `retention.storageClass` values to the ADR 0016 profiles:
 
-The next implementation slice is the versioned Stage 1C storage-profile schema/validator migration.
+- `blocked` + `not_assigned` for metadata-only/pre-admission state;
+- `open_corpus` + `managed_standard`;
+- `restricted_corpus` + `managed_restricted`;
+- `sensitive_custody` + `high_assurance_vault`.
+
+The Python validator rejects illegal class/profile pairs, `open_corpus` with non-`none` privacy, and personal/student data outside `sensitive_custody`.
+
+## Legacy anti-downgrade guard
+
+Existing catalog `1.2.0` metadata is not silently weakened. The explicit migration maps:
+
+- metadata-only legacy records → `blocked` / `not_assigned`;
+- legacy `custody_external` external/revoked records → `sensitive_custody` / `high_assurance_vault`;
+- legacy storage allowlist `custody_external` → `high_assurance_vault`.
+
+The migration never infers `managed_standard` or `managed_restricted`. Unknown legacy shapes fail closed.
+
+## Remaining operational hold
+
+C6 makes the vocabulary machine-readable; it does not prove a real provider or artifact eligible. Before artifact onboarding:
+
+- C7 must provide deterministic evidence-derived eligibility resolution;
+- C8 must verify a concrete `managed_standard` configuration before open-corpus use;
+- C9 must verify restriction-compatible `managed_restricted` controls before restricted-corpus use;
+- C10 preserves/verifies the existing high-assurance boundary.
+
+No artifact bytes are introduced by C6. Stage 2 remains blocked until the complete Stage 1 exit gate is accepted.
