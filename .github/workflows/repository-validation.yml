@@ -82,6 +82,9 @@ jobs:
       - name: Validate Stage 1A dataset contract
         run: python tools/validate_dataset_manifest.py
 
+      - name: Validate Stage 1C vault verification contract
+        run: python tools/validate_stage1c_vault_verification.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
