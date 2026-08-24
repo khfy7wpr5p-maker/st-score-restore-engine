@@ -1,4 +1,4 @@
-"""Validate Stage 1A dataset governance metadata and repository contracts."""
+"""Validate Stage 1A/1C dataset governance metadata and repository contracts."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from tools.dataset_schema_parity import validate_schema_parity  # noqa: E402
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(
         description=(
-            "Validate purpose-specific dataset governance metadata. "
+            "Validate purpose-specific Stage 1 dataset governance metadata. "
             "This tool never reads document artifacts."
         )
     )
@@ -55,6 +55,7 @@ def validate_repository_contract() -> None:
         ROOT / "docs" / "stage-1a-dataset-governance-contract.md",
         ROOT / "docs" / "adr" / "0012-stage-1a-purpose-bound-dataset-governance.md",
         ROOT / "docs" / "adr" / "0013-stage-1-entry-decision-record.md",
+        ROOT / "docs" / "adr" / "0016-stage-1c-risk-tiered-artifact-custody.md",
         ROOT / "src" / "st_score_restore" / "dataset_contract_constants.py",
         ROOT / "src" / "st_score_restore" / "dataset_contract_common.py",
         ROOT / "src" / "st_score_restore" / "dataset_item_core.py",
@@ -62,6 +63,7 @@ def validate_repository_contract() -> None:
         ROOT / "src" / "st_score_restore" / "dataset_item_final.py",
         ROOT / "src" / "st_score_restore" / "dataset_item_validation.py",
         ROOT / "src" / "st_score_restore" / "dataset_catalog_validation.py",
+        ROOT / "src" / "st_score_restore" / "dataset_catalog_migration.py",
         ROOT / "src" / "st_score_restore" / "dataset_snapshot_validation.py",
         ROOT / "src" / "st_score_restore" / "dataset_manifest.py",
         ROOT / "src" / "st_score_restore" / "dataset_snapshot_policy.py",
@@ -76,7 +78,7 @@ def validate_repository_contract() -> None:
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
         raise DatasetManifestError(
-            "missing Stage 1A contract files: " + ", ".join(missing)
+            "missing Stage 1 contract files: " + ", ".join(missing)
         )
     catalog_schema = _load_object(required[0])
     snapshot_schema = _load_object(required[1])
@@ -125,7 +127,7 @@ def main() -> None:
     suffix = " and authorized snapshot" if args.snapshot is not None else ""
     print(
         "Dataset metadata validation passed: "
-        f"{len(catalog['items'])} catalog item(s){suffix}; Stage 1A contract "
+        f"{len(catalog['items'])} catalog item(s){suffix}; Stage 1 contract "
         f"{CATALOG_SCHEMA_VERSION} bound to {ENTRY_DECISION_ID}."
     )
 
