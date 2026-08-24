@@ -1,8 +1,9 @@
 # Stage 1C Artifact Custody Profile Policy
 
-**Status:** Architecture policy accompanying ADR 0016; no artifact onboarding  
+**Status:** Accepted architecture policy under ADR 0016; machine-readable implementation pending  
 **Stage:** Stage 1C  
-**Parent:** Issue #47
+**Parent:** Issue #47  
+**Accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
 
 ## Purpose
 
@@ -69,9 +70,12 @@ No provider is approved by brand in this policy. Google Drive or another managed
 
 ## Migration guard
 
-This policy is architectural until the machine-readable dataset contract is versioned to represent eligibility class and storage profile. Therefore:
+This policy is accepted at the architecture layer, but the machine-readable dataset contract still uses the legacy storage values. Therefore:
 
 - no current item is automatically reclassified;
 - existing `custody_external` metadata is not weakened;
 - no new artifact may become `external_available` under the new profile names until the follow-up schema/validator PR is merged and verified;
+- machine-readable migration must reject illegal class/profile combinations and any silent downgrade;
 - Stage 2 remains blocked.
+
+The next implementation slice is the versioned Stage 1C storage-profile schema/validator migration.
