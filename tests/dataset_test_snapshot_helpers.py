@@ -6,7 +6,7 @@ except ImportError:
     from dataset_test_item_helpers import opaque
 
 def catalog(items: list[dict]) -> dict:
-    return {'schemaVersion': '1.2.0', 'entryDecisionId': 'adr-0013-stage-1-entry-v1', 'catalogId': 'dataset.catalog.stage1a.v1', 'descriptionCode': 'stage1a-contract-test', 'items': items}
+    return {'schemaVersion': '1.3.0', 'entryDecisionId': 'adr-0013-stage-1-entry-v1', 'catalogId': 'dataset.catalog.stage1a.v1', 'descriptionCode': 'stage1a-contract-test', 'items': items}
 
 def snapshot_for(source_catalog: dict, sources: list[dict], *, created_at: str='2026-08-06T00:00:00Z') -> dict:
     ordered = sorted(sources, key=lambda source: source['datasetItemId'])
