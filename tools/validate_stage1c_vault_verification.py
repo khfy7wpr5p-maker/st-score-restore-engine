@@ -14,6 +14,7 @@ from jsonschema.exceptions import SchemaError
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas" / "stage1c-vault-verification.schema.json"
 DEFAULT_RECORD_PATH = ROOT / "examples" / "stage1c-vault-verification.zero-state.v1.json"
+CONTRACT_PATH = ROOT / "docs" / "stage-1c-vault-verification-evidence-contract.md"
 
 CONTROL_NAMES = (
     "supported_host",
@@ -74,6 +75,52 @@ def load_schema(path: Path = SCHEMA_PATH) -> dict[str, Any]:
     return schema
 
 
+def validate_repository_contract() -> dict[str, Any]:
+    for path in (SCHEMA_PATH, DEFAULT_RECORD_PATH, CONTRACT_PATH):
+        if not path.is_file():
+            raise VaultVerificationError(
+                f"missing Stage 1C vault contract file: {path.relative_to(ROOT)}"
+            )
+
+    schema = load_schema()
+    if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+        raise VaultVerificationError("vault schema must use JSON Schema Draft 2020-12")
+
+    properties = schema.get("properties", {})
+    expected_consts = {
+        "schemaVersion": "stage1c-vault-verification-v1",
+        "contractRef": "adr-0014-stage-1b-custody-operations-v1",
+        "g4BindingRef": "stage1c-g4-2026-08-08",
+        "environment": "stage1_offline",
+        "storageClass": "custody_external",
+    }
+    for name, expected in expected_consts.items():
+        if properties.get(name, {}).get("const") != expected:
+            raise VaultVerificationError(f"unexpected vault schema binding for {name}")
+
+    controls_schema = properties.get("controls", {})
+    if tuple(controls_schema.get("required", ())) != CONTROL_NAMES:
+        raise VaultVerificationError("vault schema required controls drifted")
+    if set(controls_schema.get("properties", {})) != set(CONTROL_NAMES):
+        raise VaultVerificationError("vault schema control properties drifted")
+
+    claims = properties.get("claims", {}).get("properties", {})
+    required_claims = (
+        "artifactOnboardingAuthorized",
+        "artifactPermissionGranted",
+        "artifactBytesIncluded",
+        "realArtifactDigestIncluded",
+        "stage2Authorized",
+    )
+    for name in required_claims:
+        if claims.get(name, {}).get("const") is not False:
+            raise VaultVerificationError(
+                f"vault schema authorization claim must remain false: {name}"
+            )
+
+    return schema
+
+
 def _schema_error_path(error: Any) -> str:
     parts = [str(part) for part in error.absolute_path]
     return ".".join(parts) if parts else "<root>"
@@ -130,17 +177,18 @@ def validate_record(
         )
 
 
-def validate_file(path: Path) -> dict[str, Any]:
-    schema = load_schema()
+def validate_file(path: Path, *, schema: dict[str, Any] | None = None) -> dict[str, Any]:
+    active_schema = schema if schema is not None else load_schema()
     record = load_json_object(path)
-    validate_record(record, schema=schema)
+    validate_record(record, schema=active_schema)
     return record
 
 
 def main() -> None:
     args = parser().parse_args()
     try:
-        record = validate_file(args.record)
+        schema = validate_repository_contract()
+        record = validate_file(args.record, schema=schema)
     except (OSError, VaultVerificationError) as error:
         print(
             f"ERROR: Stage 1C vault verification metadata failed: {error}",
