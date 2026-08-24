@@ -1,4 +1,4 @@
-"""Retention, revocation, permission, and restriction validation."""
+"""Retention, revocation, permission, and storage-profile validation."""
 
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ from .dataset_contract_constants import (
     DELETION_STATES,
     DatasetManifestError,
     EVIDENCE_ID,
+    PROFILE_BY_ELIGIBILITY,
     PURPOSES,
     RECEIPT_ID,
     RETENTION_POLICIES,
@@ -30,6 +31,7 @@ from .dataset_contract_constants import (
 
 def validate_item_policy(value: dict[str, Any], ctx: dict[str, Any]) -> None:
     where, state, split = ctx["where"], ctx["artifact"], ctx["split"]
+    eligibility = ctx["eligibility"]
     retention = _obj(value["retention"], f"{where}.retention")
     _fields(
         retention,
@@ -77,33 +79,57 @@ def validate_item_policy(value: dict[str, Any], ctx: dict[str, Any]) -> None:
     )
     if (policy == "external_until_date") != (expires is not None):
         raise DatasetManifestError(f"{where}.retention expiry does not match policy")
-    if state == "metadata_only" and (
-        policy not in {"metadata_only", "prohibited"}
-        or storage != "not_assigned"
-        or deletion_required
-        or deletion_status != "not_required"
-        or receipt is not None
-        or receipt_sha is not None
-    ):
-        raise DatasetManifestError(
-            f"{where}.retention does not match metadata-only artifact"
-        )
+
+    if state == "metadata_only":
+        if eligibility != "blocked":
+            raise DatasetManifestError(
+                f"{where} metadata_only artifact must remain blocked until admission gates pass"
+            )
+        if (
+            policy not in {"metadata_only", "prohibited"}
+            or storage != "not_assigned"
+            or deletion_required
+            or deletion_status != "not_required"
+            or receipt is not None
+            or receipt_sha is not None
+        ):
+            raise DatasetManifestError(
+                f"{where}.retention does not match metadata-only artifact"
+            )
+    else:
+        expected_profile = PROFILE_BY_ELIGIBILITY.get(eligibility)
+        if expected_profile is None or storage != expected_profile:
+            raise DatasetManifestError(
+                f"{where} eligibility/storage profile mismatch"
+            )
+        if eligibility == "open_corpus" and ctx["privacyClass"] != "none":
+            raise DatasetManifestError(
+                f"{where} open_corpus requires privacy classification none"
+            )
+        if (
+            ctx["privacyClass"] in {"personal", "student"}
+            and eligibility != "sensitive_custody"
+        ):
+            raise DatasetManifestError(
+                f"{where} personal/student data requires sensitive_custody"
+            )
+
     if state == "external_available" and (
         policy in {"metadata_only", "prohibited"}
-        or storage != "custody_external"
+        or storage == "not_assigned"
         or deletion_status not in {"not_required", "pending", "failed"}
         or receipt is not None
         or receipt_sha is not None
     ):
         raise DatasetManifestError(
-            f"{where}.retention external artifact has invalid custody/deletion state"
+            f"{where}.retention external artifact has invalid storage/deletion state"
         )
     if state == "revoked" and (
         not deletion_required
         or deletion_status != "completed"
         or receipt is None
         or receipt_sha is None
-        or storage != "custody_external"
+        or storage == "not_assigned"
     ):
         raise DatasetManifestError(
             f"{where}.retention revoked item requires completed deletion receipt"
