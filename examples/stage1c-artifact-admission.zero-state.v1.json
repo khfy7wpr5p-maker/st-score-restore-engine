@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "stage1c-artifact-admission-request-v1",
+  "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "requestId": "admissionreq:opq_00000000000000000000000000000001",
+  "evaluatedAt": "2026-08-25T00:00:00Z",
+  "datasetItemId": "dataset.item.example-clean-staff.v1",
+  "expectedItemSha256": null,
+  "requestedPurpose": null,
+  "acquisitionEvidenceRef": "evidence:opq_00000000000000000000000000000001",
+  "expectedEligibilityClass": null,
+  "expectedStorageProfile": null,
+  "profileVerificationRef": null,
+  "profileVerificationSha256": null,
+  "storageBindingEvidenceRef": null,
+  "claims": {
+    "artifactBytesIncluded": false,
+    "providerDetailsIncluded": false,
+    "modelTrainingAuthorized": false,
+    "qualityCalibrationAuthorized": false,
+    "safetyCalibrationAuthorized": false,
+    "publicationAuthorized": false,
+    "demonstrationAuthorized": false,
+    "syntheticDerivationAuthorized": false,
+    "stage2Authorized": false
+  }
+}

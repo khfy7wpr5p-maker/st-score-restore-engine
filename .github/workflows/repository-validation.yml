@@ -94,6 +94,9 @@ jobs:
       - name: Validate Stage 1C high-assurance compatibility contract
         run: python tools/validate_stage1c_high_assurance_compatibility.py
 
+      - name: Evaluate Stage 1C artifact admission zero state
+        run: python tools/evaluate_stage1c_artifact_admission.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
