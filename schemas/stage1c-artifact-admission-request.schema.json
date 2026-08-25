@@ -10,11 +10,13 @@
     "requestId",
     "evaluatedAt",
     "datasetItemId",
+    "expectedItemSha256",
     "requestedPurpose",
     "acquisitionEvidenceRef",
     "expectedEligibilityClass",
     "expectedStorageProfile",
     "profileVerificationRef",
+    "profileVerificationSha256",
     "storageBindingEvidenceRef",
     "claims"
   ],
@@ -37,6 +39,12 @@
     "datasetItemId": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$"
+    },
+    "expectedItemSha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
     },
     "requestedPurpose": {
       "oneOf": [
@@ -65,6 +73,12 @@
         {"type": "string", "pattern": "^stdver:opq_[A-Za-z0-9_-]{16,64}$"},
         {"type": "string", "pattern": "^restrictver:opq_[A-Za-z0-9_-]{16,64}$"},
         {"type": "string", "pattern": "^vaultver:opq_[A-Za-z0-9_-]{16,64}$"},
+        {"type": "null"}
+      ]
+    },
+    "profileVerificationSha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         {"type": "null"}
       ]
     },
