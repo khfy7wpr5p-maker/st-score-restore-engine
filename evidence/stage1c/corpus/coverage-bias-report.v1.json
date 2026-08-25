@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0.0",
+  "reportId": "dataset.coverage-bias.stage1c-freeze.v1",
+  "snapshotId": "dataset.snapshot.stage1c-freeze.v1",
+  "snapshotSha256": "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476",
+  "catalogSha256": "059c40b619d3c7815f14377cc8b26fce9a6b0522f2419f481bd93b15ed60e937",
+  "evaluatedOn": "2026-08-25",
+  "measurementBasis": "validated_catalog_snapshot_metadata",
+  "counts": {
+    "itemCount": 2,
+    "realItemCount": 2,
+    "syntheticItemCount": 0,
+    "splitItemCounts": {
+      "development": 1,
+      "held_out": 1
+    },
+    "sourceFamilyCounts": {
+      "development": 1,
+      "held_out": 1,
+      "total": 2
+    },
+    "pageCounts": {
+      "development": 4,
+      "held_out": 8,
+      "total": 12
+    },
+    "notationItemCounts": {
+      "combined_staff_tab": 0,
+      "guitar_tab": 0,
+      "staff": 2
+    },
+    "inputKindItemCounts": {
+      "digital_pdf": 0,
+      "hybrid_pdf": 0,
+      "jpeg": 0,
+      "jpg": 0,
+      "phone_photo": 0,
+      "png": 0,
+      "scanned_pdf": 2
+    },
+    "degradationItemCounts": {
+      "blur": 0,
+      "compression": 0,
+      "glare": 0,
+      "low_resolution": 0,
+      "noise": 0,
+      "none": 2,
+      "page_curl": 0,
+      "perspective": 0,
+      "shadow": 0,
+      "skew": 0,
+      "uneven_lighting": 0
+    },
+    "sourceKindItemCounts": {
+      "licensed": 0,
+      "project_authored": 0,
+      "public_domain": 2,
+      "synthetic": 0,
+      "user_provided": 0
+    }
+  },
+  "coverageTargets": [
+    {
+      "code": "notation.staff",
+      "observedItemCount": 2,
+      "state": "covered"
+    },
+    {
+      "code": "notation.guitar_tab",
+      "observedItemCount": 0,
+      "state": "missing"
+    },
+    {
+      "code": "notation.combined_staff_tab",
+      "observedItemCount": 0,
+      "state": "missing"
+    },
+    {
+      "code": "capture.scanned_pdf",
+      "observedItemCount": 2,
+      "state": "covered"
+    },
+    {
+      "code": "capture.phone_photo",
+      "observedItemCount": 0,
+      "state": "missing"
+    },
+    {
+      "code": "degradation.non_none",
+      "observedItemCount": 0,
+      "state": "missing"
+    }
+  ],
+  "gapCodes": [
+    "coverage.missing-combined-staff-tab",
+    "coverage.missing-degraded-source",
+    "coverage.missing-guitar-tab",
+    "coverage.missing-phone-photo",
+    "coverage.single-item-development",
+    "coverage.single-item-held-out",
+    "coverage.two-item-corpus"
+  ],
+  "biasFindings": [
+    {
+      "code": "capture_condition_concentration",
+      "state": "observed",
+      "evidenceCode": "all-items-scanned-pdf"
+    },
+    {
+      "code": "degradation_coverage_gap",
+      "state": "observed",
+      "evidenceCode": "no-non-none-degradation"
+    },
+    {
+      "code": "held_out_coverage_limit",
+      "state": "observed",
+      "evidenceCode": "one-held-out-source-family"
+    },
+    {
+      "code": "notation_layout_concentration",
+      "state": "observed",
+      "evidenceCode": "all-items-staff-only"
+    },
+    {
+      "code": "source_family_leakage_risk",
+      "state": "controlled",
+      "evidenceCode": "distinct-source-families-and-digests"
+    },
+    {
+      "code": "source_selection_concentration",
+      "state": "observed",
+      "evidenceCode": "all-items-public-domain"
+    }
+  ],
+  "sufficiency": {
+    "state": "insufficient",
+    "reasonCodes": [
+      "coverage.missing-combined-staff-tab",
+      "coverage.missing-degraded-source",
+      "coverage.missing-guitar-tab",
+      "coverage.missing-phone-photo",
+      "coverage.single-item-development",
+      "coverage.single-item-held-out",
+      "coverage.two-item-corpus"
+    ],
+    "requiresCorpusExpansion": true,
+    "stage1ExitSupported": false,
+    "stage2EntrySupported": false
+  },
+  "assertions": {
+    "heldOutFrozen": true,
+    "trainingUseActivated": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "omrImprovementEstablished": false
+  }
+}
