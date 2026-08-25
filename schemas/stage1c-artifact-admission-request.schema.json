@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.invalid/schemas/stage1c-artifact-admission-request.schema.json",
+  "title": "ST Score Restore Stage 1C Artifact Admission Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "architectureRef",
+    "requestId",
+    "evaluatedAt",
+    "datasetItemId",
+    "requestedPurpose",
+    "acquisitionEvidenceRef",
+    "expectedEligibilityClass",
+    "expectedStorageProfile",
+    "profileVerificationRef",
+    "storageBindingEvidenceRef",
+    "claims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "stage1c-artifact-admission-request-v1"
+    },
+    "architectureRef": {
+      "const": "adr-0016-stage-1c-risk-tiered-custody-v1"
+    },
+    "requestId": {
+      "type": "string",
+      "pattern": "^admissionreq:opq_[0-9a-f]{32}$"
+    },
+    "evaluatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z$"
+    },
+    "datasetItemId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$"
+    },
+    "requestedPurpose": {
+      "oneOf": [
+        {"enum": ["quality_evaluation", "held_out_evaluation"]},
+        {"type": "null"}
+      ]
+    },
+    "acquisitionEvidenceRef": {
+      "type": "string",
+      "pattern": "^evidence:opq_[0-9a-f]{32}$"
+    },
+    "expectedEligibilityClass": {
+      "oneOf": [
+        {"enum": ["open_corpus", "restricted_corpus", "sensitive_custody"]},
+        {"type": "null"}
+      ]
+    },
+    "expectedStorageProfile": {
+      "oneOf": [
+        {"enum": ["managed_standard", "managed_restricted", "high_assurance_vault"]},
+        {"type": "null"}
+      ]
+    },
+    "profileVerificationRef": {
+      "oneOf": [
+        {"type": "string", "pattern": "^stdver:opq_[A-Za-z0-9_-]{16,64}$"},
+        {"type": "string", "pattern": "^restrictver:opq_[A-Za-z0-9_-]{16,64}$"},
+        {"type": "string", "pattern": "^vaultver:opq_[A-Za-z0-9_-]{16,64}$"},
+        {"type": "null"}
+      ]
+    },
+    "storageBindingEvidenceRef": {
+      "oneOf": [
+        {"type": "string", "pattern": "^evidence:opq_[0-9a-f]{32}$"},
+        {"type": "null"}
+      ]
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactBytesIncluded",
+        "providerDetailsIncluded",
+        "modelTrainingAuthorized",
+        "qualityCalibrationAuthorized",
+        "safetyCalibrationAuthorized",
+        "publicationAuthorized",
+        "demonstrationAuthorized",
+        "syntheticDerivationAuthorized",
+        "stage2Authorized"
+      ],
+      "properties": {
+        "artifactBytesIncluded": {"const": false},
+        "providerDetailsIncluded": {"const": false},
+        "modelTrainingAuthorized": {"const": false},
+        "qualityCalibrationAuthorized": {"const": false},
+        "safetyCalibrationAuthorized": {"const": false},
+        "publicationAuthorized": {"const": false},
+        "demonstrationAuthorized": {"const": false},
+        "syntheticDerivationAuthorized": {"const": false},
+        "stage2Authorized": {"const": false}
+      }
+    }
+  }
+}
