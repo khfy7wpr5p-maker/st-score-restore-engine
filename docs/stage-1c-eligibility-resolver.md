@@ -22,7 +22,7 @@ The resolver consumes only structured, already validated fields:
 - rights-review status;
 - privacy classification and privacy-review status;
 - dataset-review status;
-- active typed permission restrictions.
+- active storage-class allowlist restrictions.
 
 No composer name, work title, filename, provider brand, local path, free text, URL or human identity participates in the decision.
 
@@ -50,15 +50,12 @@ The baseline evidence-derived floor is:
 - deidentified or licensed → at least `restricted_corpus`;
 - validated public-domain/project-authored/synthetic with privacy `none` → at least `open_corpus`.
 
-Typed restrictions can only raise this floor:
+An active `storage_class_allowlist` can only raise this floor:
 
-- storage allowlist excluding `managed_standard` → at least `restricted_corpus`;
-- storage allowlist permitting only `high_assurance_vault` → `sensitive_custody`;
-- environment restriction → at least `restricted_corpus`;
-- external-export denial → at least `restricted_corpus`;
-- retention-not-after restriction → at least `restricted_corpus`.
+- allowlist excluding `managed_standard` → at least `restricted_corpus`;
+- allowlist permitting only `high_assurance_vault` → `sensitive_custody`.
 
-A split allowlist does not itself change confidentiality/custody risk.
+Other typed restrictions such as split, environment, export and retention remain independent admission gates. They are enforced by the existing permission/snapshot validators but are not reinterpreted as confidentiality evidence unless a storage-class allowlist explicitly raises the storage floor.
 
 ## Escalation and downgrade rule
 
