@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from dataset_test_item_helpers import item, permission  # noqa: E402
+from st_score_restore.dataset_contract_constants import DatasetManifestError  # noqa: E402
 from st_score_restore.dataset_manifest import load_json_object  # noqa: E402
 from tools.evaluate_stage1_corpus_readiness import (  # noqa: E402
     evaluate_corpus_readiness,
@@ -69,30 +70,30 @@ class Stage1CorpusReadinessTests(unittest.TestCase):
         self.assertEqual(result["reasonCodes"], [])
         self.assertEqual(result["sourceFamilyCounts"], {"development": 1, "held_out": 1})
 
-    def test_identical_artifact_digest_across_splits_is_rejected(self) -> None:
-        result = evaluate_corpus_readiness(
-            self.catalog(self.development(digest="c" * 64), self.held_out(digest="c" * 64)),
-            as_of=self.AS_OF,
-        )
-        self.assertEqual(result["state"], "blocked")
-        self.assertIn("artifact_digest_cross_split_leakage", result["reasonCodes"])
+    def test_identical_artifact_digest_across_splits_is_rejected_by_base_contract(self) -> None:
+        with self.assertRaises(DatasetManifestError):
+            evaluate_corpus_readiness(
+                self.catalog(
+                    self.development(digest="c" * 64),
+                    self.held_out(digest="c" * 64),
+                ),
+                as_of=self.AS_OF,
+            )
 
     def test_missing_development_item_blocks(self) -> None:
         result = evaluate_corpus_readiness(self.catalog(self.held_out()), as_of=self.AS_OF)
         self.assertEqual(result["state"], "blocked")
         self.assertIn("missing_development_item", result["reasonCodes"])
 
-    def test_expired_expected_purpose_blocks(self) -> None:
+    def test_expired_held_out_catalog_is_rejected_by_base_contract(self) -> None:
         held = self.held_out()
         held["permissions"]["held_out_evaluation"] = permission(
             "expired", authorized_on="2026-08-01", expires_on="2026-08-20"
         )
-        result = evaluate_corpus_readiness(
-            self.catalog(self.development(), held), as_of=self.AS_OF
-        )
-        self.assertEqual(result["state"], "blocked")
-        self.assertIn("held_out_purpose_not_current", result["reasonCodes"])
-        self.assertIn("active_purpose_set_not_exact", result["reasonCodes"])
+        with self.assertRaises(DatasetManifestError):
+            evaluate_corpus_readiness(
+                self.catalog(self.development(), held), as_of=self.AS_OF
+            )
 
     def test_extra_active_purpose_blocks(self) -> None:
         dev = self.development()
