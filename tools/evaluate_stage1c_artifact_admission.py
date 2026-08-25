@@ -28,6 +28,7 @@ from st_score_restore.dataset_contract_constants import (  # noqa: E402
     STAGE1_ENVIRONMENT,
 )
 from st_score_restore.dataset_manifest import (  # noqa: E402
+    canonical_sha256,
     load_json_object,
     validate_dataset_catalog,
 )
@@ -132,9 +133,7 @@ def validate_repository_contract() -> dict[str, Any]:
     }
     for field, expected in expected_consts.items():
         if properties.get(field, {}).get("const") != expected:
-            raise ArtifactAdmissionError(
-                f"unexpected C11 schema binding for {field}"
-            )
+            raise ArtifactAdmissionError(f"unexpected C11 schema binding for {field}")
 
     claims = properties.get("claims", {}).get("properties", {})
     if not claims or any(value.get("const") is not False for value in claims.values()):
@@ -189,10 +188,7 @@ def _permission_restrictions_allow(
     return True
 
 
-def _validate_profile_record(
-    storage_profile: str,
-    record: dict[str, Any],
-) -> None:
+def _validate_profile_record(storage_profile: str, record: dict[str, Any]) -> None:
     if storage_profile == "managed_standard":
         validate_standard_record(record)
     elif storage_profile == "managed_restricted":
@@ -226,12 +222,21 @@ def evaluate_admission(
     if item is None:
         return {"decision": "blocked", "reasonCodes": ["unknown_dataset_item"]}
 
-    when = _utc_datetime(request["evaluatedAt"], "request.evaluatedAt").date()
+    when_dt = _utc_datetime(request["evaluatedAt"], "request.evaluatedAt")
+    when = when_dt.date()
     artifact = item["artifact"]
     retention = item["retention"]
     eligibility = item["eligibilityClass"]
     storage_profile = retention["storageClass"]
     requested_purpose = request["requestedPurpose"]
+
+    _add(reasons, request["expectedItemSha256"] is None, "missing_expected_item_sha256")
+    if request["expectedItemSha256"] is not None:
+        _add(
+            reasons,
+            request["expectedItemSha256"] != canonical_sha256(item),
+            "item_sha256_mismatch",
+        )
 
     _add(reasons, artifact["state"] != "external_available", "artifact_not_external_available")
     _add(
@@ -269,6 +274,11 @@ def evaluate_admission(
     )
     _add(
         reasons,
+        request["profileVerificationSha256"] is None,
+        "missing_profile_verification_sha256",
+    )
+    _add(
+        reasons,
         request["storageBindingEvidenceRef"] is None,
         "missing_storage_binding_evidence",
     )
@@ -277,11 +287,7 @@ def evaluate_admission(
 
     retention_expiry = retention["expiresOn"]
     if retention_expiry is not None:
-        _add(
-            reasons,
-            when >= date.fromisoformat(retention_expiry),
-            "retention_expired",
-        )
+        _add(reasons, when >= date.fromisoformat(retention_expiry), "retention_expired")
 
     granted_purposes = {
         purpose
@@ -320,6 +326,11 @@ def evaluate_admission(
     if profile_record is None:
         reasons.add("missing_profile_verification_record")
     elif request["expectedStorageProfile"] is not None:
+        _add(
+            reasons,
+            request["profileVerificationSha256"] != canonical_sha256(profile_record),
+            "profile_verification_sha256_mismatch",
+        )
         try:
             _validate_profile_record(request["expectedStorageProfile"], profile_record)
         except (
@@ -341,6 +352,15 @@ def evaluate_admission(
                 reasons,
                 profile_record.get("overallState") != "pass",
                 "profile_verification_not_pass",
+            )
+            assessed_at = _utc_datetime(
+                profile_record["assessedAt"],
+                "profileVerification.assessedAt",
+            )
+            _add(
+                reasons,
+                assessed_at > when_dt,
+                "profile_verification_after_evaluation_time",
             )
             if eligibility_field is not None:
                 _add(
@@ -376,11 +396,7 @@ def main() -> None:
             profile_record=profile_record,
             schema=schema,
         )
-    except (
-        OSError,
-        DatasetManifestError,
-        ArtifactAdmissionError,
-    ) as error:
+    except (OSError, DatasetManifestError, ArtifactAdmissionError) as error:
         print(f"ERROR: Stage 1C artifact admission evaluation failed: {error}", file=sys.stderr)
         raise SystemExit(1) from error
 
