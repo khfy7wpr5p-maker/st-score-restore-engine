@@ -1,0 +1,220 @@
+"""Validate Stage 1C managed-standard verification metadata without artifact bytes."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema.exceptions import SchemaError
+
+ROOT = Path(__file__).resolve().parents[1]
+SCHEMA_PATH = ROOT / "schemas" / "stage1c-managed-standard-verification.schema.json"
+DEFAULT_RECORD_PATH = (
+    ROOT / "examples" / "stage1c-managed-standard-verification.zero-state.v1.json"
+)
+CONTRACT_PATH = ROOT / "docs" / "stage-1c-managed-standard-verification-contract.md"
+
+CONTROL_NAMES = (
+    "git_exclusion",
+    "object_binding_capability",
+    "project_managed_access",
+    "accidental_public_sharing_prevention",
+    "encryption_in_transit",
+    "encryption_at_rest_private_copies",
+    "version_drift_protection",
+    "retention_deletion_behavior",
+    "opaque_repository_boundary",
+)
+
+CLAIM_NAMES = (
+    "artifactOnboardingAuthorized",
+    "artifactPermissionGranted",
+    "providerApprovedByBrand",
+    "artifactBytesIncluded",
+    "realArtifactDigestIncluded",
+    "stage2Authorized",
+)
+
+
+class ManagedStandardVerificationError(ValueError):
+    """Raised when Stage 1C managed-standard verification metadata is invalid."""
+
+
+def parser() -> argparse.ArgumentParser:
+    result = argparse.ArgumentParser(
+        description=(
+            "Validate repository-visible Stage 1C managed-standard verification "
+            "metadata. This tool never reads artifact bytes or external evidence."
+        )
+    )
+    result.add_argument(
+        "record",
+        nargs="?",
+        type=Path,
+        default=DEFAULT_RECORD_PATH,
+    )
+    return result
+
+
+def load_json_object(path: Path) -> dict[str, Any]:
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except json.JSONDecodeError as error:
+        raise ManagedStandardVerificationError(
+            f"invalid JSON at line {error.lineno}, column {error.colno}"
+        ) from error
+    if not isinstance(data, dict):
+        raise ManagedStandardVerificationError("JSON root must be an object")
+    return data
+
+
+def load_schema(path: Path = SCHEMA_PATH) -> dict[str, Any]:
+    schema = load_json_object(path)
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as error:
+        raise ManagedStandardVerificationError(
+            "managed-standard verification schema is invalid"
+        ) from error
+    return schema
+
+
+def validate_repository_contract() -> dict[str, Any]:
+    for path in (SCHEMA_PATH, DEFAULT_RECORD_PATH, CONTRACT_PATH):
+        if not path.is_file():
+            raise ManagedStandardVerificationError(
+                "missing Stage 1C managed-standard contract file: "
+                f"{path.relative_to(ROOT)}"
+            )
+
+    schema = load_schema()
+    if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+        raise ManagedStandardVerificationError(
+            "managed-standard schema must use JSON Schema Draft 2020-12"
+        )
+
+    properties = schema.get("properties", {})
+    expected_consts = {
+        "schemaVersion": "stage1c-managed-standard-verification-v1",
+        "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+        "eligibilityClass": "open_corpus",
+        "storageProfile": "managed_standard",
+    }
+    for name, expected in expected_consts.items():
+        if properties.get(name, {}).get("const") != expected:
+            raise ManagedStandardVerificationError(
+                f"unexpected managed-standard schema binding for {name}"
+            )
+
+    controls_schema = properties.get("controls", {})
+    if tuple(controls_schema.get("required", ())) != CONTROL_NAMES:
+        raise ManagedStandardVerificationError(
+            "managed-standard schema required controls drifted"
+        )
+    if set(controls_schema.get("properties", {})) != set(CONTROL_NAMES):
+        raise ManagedStandardVerificationError(
+            "managed-standard schema control properties drifted"
+        )
+
+    claims = properties.get("claims", {}).get("properties", {})
+    for name in CLAIM_NAMES:
+        if claims.get(name, {}).get("const") is not False:
+            raise ManagedStandardVerificationError(
+                f"managed-standard authorization claim must remain false: {name}"
+            )
+
+    return schema
+
+
+def _schema_error_path(error: Any) -> str:
+    parts = [str(part) for part in error.absolute_path]
+    return ".".join(parts) if parts else "<root>"
+
+
+def validate_record(
+    record: dict[str, Any],
+    *,
+    schema: dict[str, Any] | None = None,
+) -> None:
+    active_schema = schema if schema is not None else load_schema()
+    validator = Draft202012Validator(
+        active_schema,
+        format_checker=FormatChecker(),
+    )
+    errors = sorted(
+        validator.iter_errors(record),
+        key=lambda error: tuple(str(part) for part in error.absolute_path),
+    )
+    if errors:
+        first = errors[0]
+        # Never echo rejected instance values. They could contain paths, URLs,
+        # provider/account identifiers, or other repository-forbidden locators.
+        raise ManagedStandardVerificationError(
+            "schema validation failed at "
+            f"{_schema_error_path(first)} ({first.validator})"
+        )
+
+    controls = record["controls"]
+    results = {name: controls[name]["result"] for name in CONTROL_NAMES}
+    for name in CONTROL_NAMES:
+        result = results[name]
+        evidence_ref = controls[name]["evidenceRef"]
+        if result in {"pass", "fail"} and evidence_ref is None:
+            raise ManagedStandardVerificationError(
+                f"control {name} requires opaque evidence for result {result}"
+            )
+        if result == "not_verified" and evidence_ref is not None:
+            raise ManagedStandardVerificationError(
+                f"control {name} must not carry evidence while not_verified"
+            )
+
+    if any(result == "fail" for result in results.values()):
+        expected_state = "fail"
+    elif any(result == "not_verified" for result in results.values()):
+        expected_state = "incomplete"
+    else:
+        expected_state = "pass"
+
+    if record["overallState"] != expected_state:
+        raise ManagedStandardVerificationError(
+            "overallState contradicts the fail-closed control aggregate"
+        )
+
+
+def validate_file(
+    path: Path,
+    *,
+    schema: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    active_schema = schema if schema is not None else load_schema()
+    record = load_json_object(path)
+    validate_record(record, schema=active_schema)
+    return record
+
+
+def main() -> None:
+    args = parser().parse_args()
+    try:
+        schema = validate_repository_contract()
+        record = validate_file(args.record, schema=schema)
+    except (OSError, ManagedStandardVerificationError) as error:
+        print(
+            f"ERROR: Stage 1C managed-standard verification metadata failed: {error}",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from error
+
+    print(
+        "Stage 1C managed-standard verification metadata passed: "
+        f"overallState={record['overallState']}; "
+        "artifact onboarding authorization remains false."
+    )
+
+
+if __name__ == "__main__":
+    main()
