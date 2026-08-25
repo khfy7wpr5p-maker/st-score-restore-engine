@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -83,6 +84,21 @@ class Stage1CC16CoverageBiasTests(unittest.TestCase):
         mutated["items"].append(extra)
         with self.assertRaises(CoverageBiasError):
             build_coverage_bias_report(mutated, self.snapshot)
+
+    def test_committed_report_duplicate_keys_fail_closed(self) -> None:
+        report = build_coverage_bias_report(self.catalog, self.snapshot)
+        serialized = json.dumps(report, ensure_ascii=False, separators=(",", ":"))
+        duplicate = (
+            '{"sufficiency":{"state":"sufficient","stage1ExitSupported":true},'
+            + serialized[1:]
+        )
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "coverage-report.json"
+            path.write_text(duplicate, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CoverageBiasError, "committed C16 report is not strict JSON"
+            ):
+                verify_committed_report(report, path=path)
 
     def test_safety_assertions_never_claim_downstream_evidence(self) -> None:
         report = build_coverage_bias_report(self.catalog, self.snapshot)
