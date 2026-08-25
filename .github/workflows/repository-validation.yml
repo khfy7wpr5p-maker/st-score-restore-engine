@@ -120,6 +120,9 @@ jobs:
             --as-of 2026-08-25 \
             --require-ready
 
+      - name: Emit Stage 1C C15 snapshot freeze candidate
+        run: python tools/build_stage1_snapshot.py --emit
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
