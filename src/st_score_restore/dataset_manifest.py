@@ -18,6 +18,10 @@ from .dataset_contract_constants import (
     LEGACY_CATALOG_SCHEMA_VERSION,
     SNAPSHOT_SCHEMA_VERSION,
 )
+from .dataset_eligibility import (
+    resolve_required_eligibility_class,
+    validate_declared_eligibility,
+)
 from .dataset_snapshot_validation import validate_dataset_snapshot
 
 
@@ -54,6 +58,8 @@ __all__ = [
     "validate_dataset_catalog",
     "validate_dataset_snapshot",
     "migrate_dataset_catalog_v1_2_to_v1_3",
+    "resolve_required_eligibility_class",
+    "validate_declared_eligibility",
     "load_dataset_catalog",
     "load_dataset_snapshot",
 ]

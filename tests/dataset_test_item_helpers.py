@@ -1,5 +1,6 @@
 from __future__ import annotations
 PURPOSES = ('fixture_validation', 'quality_evaluation', 'quality_calibration', 'pdf_pipeline_evaluation', 'safety_calibration', 'held_out_evaluation', 'synthetic_derivation', 'model_training', 'publication', 'demonstration')
+SOURCE_USAGE_BASIS = {'project_authored': 'project_authored', 'public_domain': 'public_domain', 'licensed': 'license_grant', 'user_provided': 'user_authorization', 'synthetic': 'synthetic_derivation'}
 
 def opaque(number: int) -> str:
     return f'opq_{number:032x}'
@@ -22,9 +23,9 @@ def item(item_id: str='dataset.item.clean-staff.v1', *, family_id: str='source.f
     if eligibility_class is None:
         if not external:
             eligibility_class = 'blocked'
-        elif privacy_class in {'personal', 'student'}:
+        elif privacy_class in {'personal', 'student'} or source_kind == 'user_provided':
             eligibility_class = 'sensitive_custody'
-        elif privacy_class == 'deidentified':
+        elif privacy_class == 'deidentified' or source_kind == 'licensed':
             eligibility_class = 'restricted_corpus'
         else:
             eligibility_class = 'open_corpus'
@@ -43,4 +44,4 @@ def item(item_id: str='dataset.item.clean-staff.v1', *, family_id: str='source.f
     retention = {'policy': 'delete_after_validation' if external else 'metadata_only', 'expiresOn': None, 'storageClass': storage_class, 'deletionRequired': artifact_state == 'revoked', 'deletionStatus': 'completed' if artifact_state == 'revoked' else 'not_required', 'deletionReceiptReference': f'receipt:{opaque(50)}' if artifact_state == 'revoked' else None, 'deletionReceiptSha256': 'd' * 64 if artifact_state == 'revoked' else None}
     review_status = 'revoked' if artifact_state == 'revoked' else 'approved' if external else 'planned'
     completed = review_status in {'approved', 'revoked'}
-    return {'datasetItemId': item_id, 'sourceFamilyId': family_id, 'parentItemId': None, 'eligibilityClass': eligibility_class, 'artifact': artifact, 'provenance': {'sourceKind': source_kind, 'sourceReference': f'evidence:{opaque(60)}', 'rightsHolderId': f'subject:{opaque(61)}', 'licenseId': 'public-domain-1.0', 'usageBasisCode': 'synthetic_derivation' if source_kind == 'synthetic' else 'public_domain', 'rightsReview': rights_review}, 'privacy': privacy, 'input': {'kind': 'digital_pdf', 'mediaType': 'application/pdf', 'notationKinds': ['staff'], 'pageCount': 1, 'degradations': ['none']}, 'permissions': permissions, 'split': split, 'retention': retention, 'revocation': {'status': 'completed' if artifact_state == 'revoked' else 'not_revoked', 'effectiveOn': '2026-08-05' if artifact_state == 'revoked' else None, 'reference': f'evidence:{opaque(70)}' if artifact_state == 'revoked' else None}, 'syntheticGeneration': None, 'review': {'status': review_status, 'reviewedBy': f'actor.dataset:{opaque(80)}' if completed else None, 'reviewedOn': '2026-08-01' if completed else None, 'evidenceReference': f'evidence:{opaque(81)}' if completed else None, 'noteCodes': ['contract-test']}, 'assertions': {'teacherApprovalImpliedDatasetPermission': False, 'teacherApprovalImpliedTrainingPermission': False, 'originalBytesInGit': False, 'stage1TrainingExecutionAuthorized': False}}
+    return {'datasetItemId': item_id, 'sourceFamilyId': family_id, 'parentItemId': None, 'eligibilityClass': eligibility_class, 'artifact': artifact, 'provenance': {'sourceKind': source_kind, 'sourceReference': f'evidence:{opaque(60)}', 'rightsHolderId': f'subject:{opaque(61)}', 'licenseId': 'public-domain-1.0', 'usageBasisCode': SOURCE_USAGE_BASIS[source_kind], 'rightsReview': rights_review}, 'privacy': privacy, 'input': {'kind': 'digital_pdf', 'mediaType': 'application/pdf', 'notationKinds': ['staff'], 'pageCount': 1, 'degradations': ['none']}, 'permissions': permissions, 'split': split, 'retention': retention, 'revocation': {'status': 'completed' if artifact_state == 'revoked' else 'not_revoked', 'effectiveOn': '2026-08-05' if artifact_state == 'revoked' else None, 'reference': f'evidence:{opaque(70)}' if artifact_state == 'revoked' else None}, 'syntheticGeneration': None, 'review': {'status': review_status, 'reviewedBy': f'actor.dataset:{opaque(80)}' if completed else None, 'reviewedOn': '2026-08-01' if completed else None, 'evidenceReference': f'evidence:{opaque(81)}' if completed else None, 'noteCodes': ['contract-test']}, 'assertions': {'teacherApprovalImpliedDatasetPermission': False, 'teacherApprovalImpliedTrainingPermission': False, 'originalBytesInGit': False, 'stage1TrainingExecutionAuthorized': False}}

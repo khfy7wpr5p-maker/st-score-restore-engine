@@ -1,4 +1,4 @@
-"""Synthetic lineage, review, and assertion validation for dataset items."""
+"""Synthetic lineage, review, eligibility, and assertion validation for dataset items."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from .dataset_contract_constants import (
     SEMVER,
     SHA,
 )
+from .dataset_eligibility import validate_declared_eligibility
 
 
 def finalize_item(value: dict[str, Any], ctx: dict[str, Any]) -> dict[str, Any]:
@@ -137,6 +138,18 @@ def finalize_item(value: dict[str, Any], ctx: dict[str, Any]) -> dict[str, Any]:
             f"{where} revoked artifact requires revoked dataset review"
         )
 
+    required_eligibility = validate_declared_eligibility(
+        declared=ctx["eligibility"],
+        artifact_state=ctx["artifact"],
+        source_kind=ctx["source"],
+        usage_basis=ctx["basis"],
+        rights_status=ctx["rights"],
+        privacy_class=ctx["privacyClass"],
+        privacy_status=ctx["privacy"],
+        review_status=status,
+        permissions=ctx["permissions"],
+    )
+
     assertions = _obj(value["assertions"], f"{where}.assertions")
     names = {
         "teacherApprovalImpliedDatasetPermission",
@@ -152,6 +165,7 @@ def finalize_item(value: dict[str, Any], ctx: dict[str, Any]) -> dict[str, Any]:
             "raw": value,
             "review": status,
             "reviewOn": reviewed_on,
+            "requiredEligibility": required_eligibility,
             "generatedOn": generated_on,
             "derivationReference": derivation_reference,
         }
