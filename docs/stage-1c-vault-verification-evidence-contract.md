@@ -1,15 +1,15 @@
 # Stage 1C Vault Verification Evidence Contract
 
-**Status:** C4 implementation contract; metadata-only; no artifact onboarding  
+**Status:** C4 implementation contract; metadata-only; no artifact onboarding; C10 compatibility candidate  
 **Parent:** Issue #47  
 **Roadmap stage:** Stage 1C — authorized artifact onboarding and corpus realization  
-**Depends on:** Stage 1B custody/operations contract and ADR 0016 risk-tiered custody once accepted
+**Depends on:** Stage 1B custody/operations contract and accepted ADR 0016 risk-tiered custody
 
 ## 1. Purpose
 
 This contract defines the repository-visible evidence record used to determine whether a concrete **high-assurance Stage 1 vault** has passed the operational verification required for artifacts classified into the `sensitive_custody` tier.
 
-It is not a universal precondition for every real score/TAB artifact. Under ADR 0016, verified low-risk `open_corpus` artifacts may use the separately defined `managed_standard` profile after the follow-up machine-readable storage-profile implementation is accepted. Restricted artifacts may use `managed_restricted` only when their artifact-specific terms permit it.
+It is not a universal precondition for every real score/TAB artifact. Under ADR 0016 and the merged C6–C9 profile implementation, verified `open_corpus` artifacts use the separately verified `managed_standard` profile when all item-specific gates pass, while `restricted_corpus` artifacts may use `managed_restricted` only when their exact terms and configuration permit it.
 
 The record is deliberately provider-neutral and metadata-only. It must never contain local filesystem paths, provider URLs, bucket/container names, account identifiers, credentials, key material, real-person identifiers, document bytes, or real artifact digests.
 
@@ -43,7 +43,7 @@ Every existing C4 record is bound to:
 - the legacy Stage 1C G4 storage class `custody_external`;
 - the repository-visible opaque locator policy.
 
-ADR 0016 does not reinterpret those records. They remain the evidence format for the `high_assurance_vault` profile. A later schema migration may introduce explicit profile identifiers, but old records must not be silently downgraded or reclassified.
+ADR 0016 does not reinterpret those records. They remain the evidence format used behind the `high_assurance_vault` profile. C10 preserves this by validating a one-way compatibility mapping around the legacy record rather than migrating C4 records in place. Old C4 evidence must not be silently downgraded, rewritten, or reclassified as `managed_standard` or `managed_restricted` proof.
 
 The record uses only opaque references for the assessed vault, assessor, and per-control evidence. Opaque evidence references point to externally retained operational evidence; they do not embed the evidence itself.
 
@@ -132,6 +132,6 @@ The implementation includes at least these negative cases:
 
 C4 remains valid evidence for `high_assurance_vault`. It does **not** make any current vault compliant and it does **not** authorize a storage profile for a particular artifact.
 
-After ADR 0016, an artifact first needs exact-artifact rights/privacy/purpose/retention/dataset classification. A `sensitive_custody` artifact remains blocked until the high-assurance vault actually passes C4 and all item-specific Stage 1A gates pass.
+After ADR 0016, an artifact first needs exact-artifact rights/privacy/purpose/retention/dataset classification. A `sensitive_custody` artifact remains blocked until a concrete high-assurance vault actually passes C4 and all item-specific Stage 1A/1C gates pass.
 
-A verified `open_corpus` artifact does not need C4 solely because it is a real document. However, no artifact may use the new `managed_standard` or `managed_restricted` profile until a follow-up implementation PR adds versioned machine-readable profile fields, validator rules, migration behavior, and negative tests. Until that implementation is merged, current validators remain authoritative and artifact onboarding under the new profile names remains blocked.
+C6 introduced machine-readable risk-tiered profiles, C7 deterministic eligibility, C8 `managed_standard` verification, and C9 `managed_restricted` verification. C10 verifies that C4 remains exclusively compatible with `sensitive_custody/high_assurance_vault` while retaining its historical `custody_external` evidence binding. The repository C4 zero-state remains `incomplete`; structural compatibility is not a real-vault pass and does not begin Stage 2.

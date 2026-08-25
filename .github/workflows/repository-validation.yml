@@ -91,6 +91,9 @@ jobs:
       - name: Validate Stage 1C managed-restricted verification contract
         run: python tools/validate_stage1c_managed_restricted_verification.py
 
+      - name: Validate Stage 1C high-assurance compatibility contract
+        run: python tools/validate_stage1c_high_assurance_compatibility.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
