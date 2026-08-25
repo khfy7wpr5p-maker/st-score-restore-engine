@@ -1,121 +1,119 @@
 # Stage 1 Dataset Card
 
-**Status:** Zero-state planning record; no realized corpus yet  
-**Stage:** Stage 1C / C2 metadata planning  
+**Status:** Realized and frozen; coverage insufficient for Stage 1 exit  
+**Stage:** Stage 1C / C16 coverage-bias reconciliation  
 **Parent issue:** #47  
-**Artifact bytes onboarded:** 0  
-**Realized dataset items:** 0  
-**Frozen splits:** 0  
-**Model training authorized:** No
+**Realized dataset items:** 2  
+**Realized pages:** 12  
+**Frozen splits:** development + held_out  
+**Artifact bytes stored in ordinary Git:** 0  
+**Model training authorized:** No  
+**Stage 2 authorized:** No
 
 ## 1. Purpose
 
-This card records the intended Stage 1 evaluation-corpus boundary before any real or controlled-synthetic artifact is admitted to custody. It is a planning and disclosure document, not evidence that a dataset currently exists.
+This card describes the currently realized Stage 1 evaluation corpus after C12-C15 onboarding and digest-addressed snapshot freeze. It is bound to `dataset.snapshot.stage1c-freeze.v1`, canonical snapshot SHA-256 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`.
 
-The current G4 allowlist permits only:
+The current G4 allowlist remains limited to `quality_evaluation` and `held_out_evaluation` in `stage1_offline`.
 
-- `quality_evaluation`;
-- `held_out_evaluation`.
+## 2. Realized corpus
 
-The current environment is `stage1_offline` and the required storage class is `custody_external`.
+The frozen snapshot contains exactly two independently admitted real items:
 
-## 2. Current zero state
+- development: 1 public-domain scanned PDF, 4 pages;
+- held out: 1 independent public-domain scanned PDF, 8 pages.
 
-No artifact byte has been onboarded for Stage 1C. No item is `external_available`, no item-specific purpose permission is active, and no real dataset split has been frozen.
+Both items are staff-notation only, both use distinct source families and distinct artifact digests, both are classified `open_corpus`, and both are stored under `managed_standard` custody outside ordinary Git.
 
-The external custody environment required by Stage 1B has not yet been verified as compliant. Real or controlled-synthetic onboarding therefore remains blocked.
+No real artifact byte, provider/account identifier, local path, credential, or secret-bearing storage detail is stored in repository metadata.
 
-## 3. Intended content categories
+## 3. Snapshot and split boundary
 
-The Stage 1 roadmap requires the realized corpus, when later authorized and admitted, to seek representative coverage of:
+The frozen snapshot has:
 
-- staff notation;
-- guitar TAB;
-- mixed-layout score/TAB material;
-- clean and degraded scans;
-- phone-captured sheet-music material;
-- relevant degradation classes that can later support quality evaluation.
+- `heldOutFrozen=true`;
+- `trainingUseActivated=false`;
+- zero revoked item IDs;
+- one development source family;
+- one held-out source family;
+- no source-family or artifact-digest leakage across splits.
 
-These are coverage targets only. At zero state, none has an empirical item count.
+The development item grants only `quality_evaluation`; the held-out item grants only `held_out_evaluation`. Held-out data is not authorized for development, tuning, calibration, or training.
 
 ## 4. Source, rights and privacy boundary
 
-Every future included item must independently satisfy the existing Stage 1A governance contract. In particular:
+Both realized items have approved exact-artifact public-domain rights evidence, privacy classification `none`, approved dataset review, immutable artifact digest/size metadata, and opaque custody references.
 
-- provenance must be auditable;
-- rights review must be approved;
-- privacy review must be acceptable;
-- dataset review must be approved;
-- purpose authorization must be item-specific, current and within the G4 allowlist;
-- teacher approval must not be interpreted as dataset or training permission.
+Possession of a file still does not imply rights or purpose authorization. Any future corpus expansion must pass the same item-level admission chain.
 
-No rights, privacy or provenance fact may be inferred from possession of a file or from its appearance.
+## 5. Coverage measurement
 
-## 5. Storage and custody
+C16 derives aggregate coverage only from the validated catalog and frozen snapshot metadata. It does not inspect pixels and does not run restoration or OMR evaluation.
 
-Ordinary Git remains metadata-only. Artifact bytes, credentials, concrete local paths, provider URLs, account identifiers and secret-bearing storage details are prohibited from repository metadata.
+Observed counts:
 
-Before the first item can become `external_available`, the selected offline vault must pass the accepted Stage 1B operational controls, including encryption, private-by-default access, role separation, audit-before-access, revocation/deletion, backup tombstones, anti-rollback restore checks and anti-resurrection behavior.
+| Dimension | Observed |
+|---|---:|
+| Real items | 2 |
+| Development items | 1 |
+| Held-out items | 1 |
+| Total pages | 12 |
+| Staff notation items | 2 |
+| Guitar TAB items | 0 |
+| Combined staff/TAB items | 0 |
+| Scanned-PDF items | 2 |
+| Phone-photo items | 0 |
+| Items with non-`none` degradation metadata | 0 |
 
-Current custody readiness: **BLOCKED / not yet verified**.
+## 6. Coverage decision
 
-## 6. Splits
+Current coverage sufficiency is **INSUFFICIENT**.
 
-Current split state: **no realized split**.
+Confirmed gap codes:
 
-The repository contract supports source-family isolation and later digest-bound snapshots, but a real split must not be frozen before eligible `external_available` items and their required approvals exist.
+- `coverage.missing-combined-staff-tab`;
+- `coverage.missing-degraded-source`;
+- `coverage.missing-guitar-tab`;
+- `coverage.missing-phone-photo`;
+- `coverage.single-item-development`;
+- `coverage.single-item-held-out`;
+- `coverage.two-item-corpus`.
 
-Held-out data, once realized, must remain isolated from tuning and development use.
+The corpus therefore does not establish representativeness and does not support Stage 1 final exit or Stage 2 entry.
 
-## 7. Authorized and prohibited uses
+## 7. Bias and limitation findings
 
-### Currently permitted by G4
+The current metadata demonstrates concentration in several dimensions:
 
-- quality evaluation;
-- held-out evaluation.
+- all realized items are staff-only;
+- all realized items are scanned PDFs;
+- all realized items declare only `none` degradation;
+- all realized items use a public-domain source basis;
+- the held-out split contains only one source family.
 
-### Not currently authorized
+Source-family leakage risk is controlled by the frozen split bindings, but absence of bias is **not** established. Balanced counts are not inferred, and no fairness, restoration-effectiveness, OMR-improvement, or musical-correctness claim is made.
+
+## 8. Authorized and prohibited uses
+
+Authorized for the realized items only as item-specific permissions allow:
+
+- development item: quality evaluation;
+- held-out item: held-out evaluation.
+
+Not authorized by this card:
 
 - model training;
 - quality calibration;
 - safety calibration;
-- PDF-pipeline evaluation;
 - publication;
 - demonstration;
-- synthetic derivation.
+- synthetic derivation;
+- Stage 2 OpenCV quality-analysis execution.
 
-A future governance decision is required before any prohibited purpose can be activated.
+## 9. Required next step
 
-## 8. Coverage and quality state
+The current frozen snapshot must not be mutated to hide the observed gaps. Stage 1 requires additional independently authorized corpus items covering missing notation/layout, capture-condition, and degradation dimensions. Any expanded corpus requires a new versioned snapshot after item-level governance and split-isolation checks.
 
-All empirical coverage, balance and bias measurements are currently `not_yet_measured` because the realized corpus contains zero items.
+## 10. Safety statement
 
-This card must not claim representativeness, fairness, OMR improvement, restoration effectiveness or musical correctness before evidence exists.
-
-The companion `stage-1-coverage-and-bias-register.md` records the zero-state gaps and the dimensions that must later be measured.
-
-## 9. Known limitations at zero state
-
-- no compliant vault has been accepted;
-- no artifact is available for evaluation;
-- no item-level authorization set has been realized;
-- no split is frozen;
-- no empirical category coverage is known;
-- no empirical degradation distribution is known;
-- no empirical bias analysis is possible yet.
-
-These are explicit blockers, not missing values to be guessed.
-
-## 10. Update conditions
-
-This card may move beyond zero state only when direct evidence exists for the claimed state. In particular:
-
-1. the external custody gate passes;
-2. each admitted item passes rights, privacy, dataset-review and purpose checks;
-3. artifact digest/size and opaque custody references exist;
-4. the repository metadata validates under the accepted contracts;
-5. split and snapshot claims are supported by actual eligible items.
-
-## 11. Safety statement
-
-This document onboards no artifact bytes, grants no permission, creates no storage resource, freezes no split, activates no model training and does not start Stage 2.
+This card documents observed metadata only. It grants no new permission, stores no artifact bytes in Git, activates no training, performs no restoration, and does not authorize Stage 2.
