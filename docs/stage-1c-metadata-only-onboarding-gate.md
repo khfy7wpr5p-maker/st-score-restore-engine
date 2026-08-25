@@ -1,245 +1,187 @@
 # Stage 1C Metadata-Only Onboarding Gate
 
-**Status:** C1 pre-byte governance gate, amended by accepted ADR 0016  
+**Status:** C1 pre-byte governance gate, amended by ADR 0016 and C6 catalog `1.3.0`  
 **Stage:** Stage 1C only  
 **Parent issue:** #47  
-**Artifact policy:** Metadata only in ordinary Git  
-**Real-artifact onboarding status:** BLOCKED until the versioned storage-profile schema/validator migration is accepted and the exact artifact passes all applicable item/profile controls
+**Artifact policy:** real corpus bytes remain outside ordinary Git  
+**Real-artifact onboarding status:** BLOCKED pending evidence-derived eligibility and applicable operational profile verification
 
 ## 1. Purpose
 
-This document defines the fail-closed checklist that must be satisfied before any Stage 1C item may move from repository-safe metadata planning toward real or controlled-synthetic artifact onboarding.
+This document defines the fail-closed boundary between repository-safe metadata planning and real artifact onboarding.
 
-Passing this checklist does **not** make an artifact `external_available`, does not authorize bytes to be stored, does not create a storage resource, does not activate an item-level purpose grant, and does not complete Stage 1.
+C6 makes ADR 0016 eligibility classes and storage profiles machine-readable. That change is necessary but not sufficient to make an artifact `external_available`. No schema value can create rights, privacy approval, purpose permission or operational storage evidence.
 
-The checklist separates three boundaries:
+The gate separates:
 
-1. **repository metadata preparation**, which may occur with no artifact bytes;
-2. **artifact eligibility and storage-profile selection**, which is defined by ADR 0016; and
-3. **external operational readiness**, whose required controls depend on the selected profile.
+1. repository metadata preparation;
+2. evidence-derived artifact eligibility;
+3. storage-profile selection;
+4. operational profile verification; and
+5. the controlled transition to `external_available`.
 
-Any unknown, missing, contradictory or stale condition is a gate failure.
+Unknown, missing, contradictory or stale evidence fails closed.
 
 ## 2. Binding authority
 
-This gate is subordinate to and must not weaken:
+This gate is subordinate to:
 
 - `docs/roadmap.md`;
 - `docs/stage-1a-dataset-governance-contract.md`;
-- `docs/adr/0013-stage-1-entry-decision-record.md`;
-- `docs/adr/0014-stage-1b-custody-operations-boundary.md` for high-assurance custody;
-- `docs/adr/0016-stage-1c-risk-tiered-artifact-custody.md`;
+- ADR 0013;
+- ADR 0014 for high-assurance custody;
+- accepted ADR 0016;
 - `docs/stage-1c-storage-profile-policy.md`;
 - Issue #47 and the amended G4 binding.
 
-The current G4 purpose allowlist remains:
+Stage 1C's purpose allowlist remains only:
 
 - `quality_evaluation`;
 - `held_out_evaluation`.
 
-The universal storage rule is superseded by ADR 0016. The accepted architecture is:
+Model training, publication, demonstration, calibration, PDF-pipeline evaluation and synthetic derivation remain unauthorized by the current Stage 1C decision.
+
+## 3. Repository-safe metadata state
+
+A planned item may remain in ordinary Git when:
+
+- `artifact.state = metadata_only`;
+- `eligibilityClass = blocked`;
+- `split = unassigned`;
+- `retention.storageClass = not_assigned`;
+- digest, byte size, storage locator, custody/encryption policies and custodian are null;
+- no purpose is granted merely because planning metadata exists;
+- no provider URL, account ID, credential, secret, local path or personal identity is exposed.
+
+For metadata-only items, retention remains `metadata_only` or `prohibited`, deletion is not required and no deletion receipt is present.
+
+C6 deliberately keeps pre-admission metadata `blocked`. A later resolver may compute a candidate eligibility result from approved evidence, but the catalog must not persist a lower-risk external class in anticipation of successful onboarding.
+
+## 4. Machine-readable eligibility/profile contract
+
+Catalog `1.3.0` represents:
 
 - `open_corpus` → `managed_standard`;
-- `restricted_corpus` → `managed_restricted` when restrictions permit;
+- `restricted_corpus` → `managed_restricted`;
 - `sensitive_custody` → `high_assurance_vault`;
-- unresolved, rejected, contradictory or expired governance → `blocked`.
+- `blocked` → no external profile.
 
-`model_training`, `publication`, `demonstration`, `quality_calibration`, `safety_calibration`, `pdf_pipeline_evaluation` and `synthetic_derivation` remain unauthorized by the current Stage 1C decision.
+The validator additionally requires:
 
-## 3. C1 repository-safe metadata gate
+- `open_corpus` privacy classification is `none`;
+- personal/student data uses `sensitive_custody`;
+- external/revoked artifacts cannot use `not_assigned`;
+- metadata-only artifacts cannot claim an external profile;
+- permission storage restrictions match the selected profile.
 
-A planned item may exist in ordinary Git only when all of the following are true.
+Public-domain status of the composition alone is never sufficient. Rights evidence must cover the exact edition, engraving, scan, photograph or acquired file.
 
-### 3.1 Artifact state
+## 5. Legacy migration boundary
 
-The repository record remains `artifact.state = metadata_only`.
+Catalog `1.2.0` records are migrated only through the explicit migration function.
 
-While that state is active, byte/custody evidence remains absent under the currently merged schema:
+The safe mapping is:
 
-- `artifact.sha256`;
-- `artifact.byteSize`;
-- `artifact.storageLocator`;
-- `artifact.custodyProfileId`;
-- `artifact.encryptionProfileId`;
-- `artifact.custodianId`.
+```text
+metadata_only + not_assigned
+        ↓
+blocked + not_assigned
 
-A local path, provider URL, bucket/container name, account identifier, credential, secret, person name, email address, student identifier or teacher identifier must never be substituted for an opaque repository field.
+external/revoked + custody_external
+        ↓
+sensitive_custody + high_assurance_vault
+```
 
-### 3.2 Retention and storage state
+Legacy records are never automatically reclassified as `open_corpus` or `restricted_corpus`. Any unexpected legacy storage state is rejected.
 
-For a metadata-only item under the current machine-readable schema:
+## 6. Operational profile gates
 
-- `retention.policy` is `metadata_only` or `prohibited`;
-- `retention.storageClass = not_assigned`;
-- `retention.deletionRequired = false`;
-- `retention.deletionStatus = not_required`;
-- deletion receipt reference and digest remain `null`.
-
-Repository metadata must not claim a new ADR 0016 storage profile before the versioned schema/validator migration exists and validates that profile.
-
-### 3.3 Split and permissions
-
-Before artifact availability:
-
-- `split = unassigned`;
-- no purpose permission may have `status = granted` merely because metadata planning exists;
-- teacher approval must not imply dataset or training permission;
-- Stage 1 training execution remains unauthorized.
-
-Pending, denied, expired, withdrawn, not-requested or not-applicable permission states remain subject to the existing Stage 1A schema and validator rules. C1 creates no new permission state.
-
-### 3.4 Rights, privacy, provenance and review planning
-
-Metadata planning must use only the existing structured fields and opaque evidence/actor identifiers.
-
-C1 does not waive the later requirement for:
-
-- approved exact-artifact rights evidence;
-- acceptable privacy review;
-- approved dataset review;
-- item-specific purpose authorization;
-- compatible retention policy;
-- immutable artifact SHA-256 and exact byte size once bytes actually exist.
-
-Public-domain status of the underlying composition alone is not sufficient. The exact edition, engraving, scan, photograph or acquired file must have evidence compatible with the intended purpose.
-
-If any rights, privacy, provenance or review fact is unknown, it remains explicitly unresolved and the artifact is `blocked` at the ADR 0016 eligibility layer.
-
-### 3.5 Synthetic boundary
-
-Because the current Stage 1C purpose decision does not authorize `synthetic_derivation`, C1 must not create or activate a controlled-synthetic derivation path. Any future synthetic derivation requires a separate explicit governance decision before use.
-
-## 4. Artifact eligibility and storage-profile gate
-
-ADR 0016 requires deterministic classification before an artifact can be admitted:
-
-### `open_corpus`
-
-Requires exact-artifact rights compatible with the intended Stage 1 purpose, privacy `none`, approved dataset review, current purpose authorization, compatible retention, and no source/license restriction requiring stronger custody.
-
-Only `managed_standard` is the normal profile for this class.
-
-### `restricted_corpus`
-
-Requires lawful use for the intended purpose but has license, donor, access, redistribution, retention or similar restrictions. The selected environment/provider must satisfy those restrictions.
-
-Only `managed_restricted` is the normal profile unless an artifact-specific policy requires escalation to high assurance.
-
-### `sensitive_custody`
-
-Required for private/user-provided, personal/student, consent-restricted or policy-designated sensitive material.
-
-This class requires `high_assurance_vault` and the accepted Stage 1B/C4 high-assurance controls.
-
-### `blocked`
-
-Missing, pending, rejected, expired or contradictory rights/privacy/review/purpose/provenance/retention state produces `blocked`. A blocked artifact has no eligible storage profile and cannot become `external_available`.
-
-## 5. Current machine-readable migration hold
-
-ADR 0016 is accepted on `main`, but the current Stage 1A/1C machine-readable contract still represents legacy storage values.
-
-Therefore the current real-artifact decision remains:
-
-> **BLOCKED — no artifact may become `external_available` under an ADR 0016 storage profile until the versioned storage-profile schema/validator migration is merged and verified.**
-
-The migration must be additive and fail closed. It must not silently reinterpret an existing `custody_external` record as `managed_standard` or otherwise lower a previously recorded security state.
-
-## 6. External operational gate after the migration
-
-Once the machine-readable profile migration exists, the selected profile determines the required operational evidence.
+Machine-readable profile selection does not prove the physical/provider controls.
 
 ### `managed_standard`
 
-At minimum:
+Before use, C8 must establish at least:
 
-- artifact bytes outside ordinary Git;
+- bytes outside ordinary Git;
 - exact SHA-256 and byte-size binding;
 - exact-artifact rights evidence;
 - privacy `none`;
-- approved dataset review and allowed purpose;
+- approved dataset review and allowed Stage 1C purpose;
 - documented retention/deletion behavior;
-- protection against accidental public sharing for project-managed private copies;
+- protection against accidental public sharing for private project copies;
 - encryption in transit and at rest for non-public managed copies;
-- known backup/version behavior sufficient to prevent silent corpus drift;
-- no provider/account/path/credential leakage into ordinary Git.
+- understood backup/version behavior preventing silent corpus drift;
+- no provider/account/path/credential leakage into Git.
 
-A managed cloud/file service or local managed store may qualify if its actual configuration satisfies these controls. No provider is approved merely by brand.
+Managed cloud/file storage may qualify. No provider is approved merely by brand.
 
 ### `managed_restricted`
 
-Requires all applicable `managed_standard` controls plus:
-
-- provider/environment compatibility with binding artifact restrictions;
-- deny-by-default project membership;
-- no public-link sharing;
-- access/change history where available;
-- restriction-compatible retention, deletion and backup behavior;
-- matching environment/storage allowlists when present.
+C9 requires the applicable `managed_standard` controls plus restriction-compatible provider/environment, deny-by-default membership, no public links, appropriate access/change history and restriction-compatible retention/deletion/backup behavior.
 
 ### `high_assurance_vault`
 
-Requires the accepted Stage 1B/C4 controls, including supported host, encryption, least privilege, role separation, quarantine isolation, audit integrity/anti-rollback, retention enforcement, immediate revocation, deletion evidence, backup anti-resurrection and Git/sync separation.
+C10 retains the accepted Stage 1B/C4 controls: supported host, encryption, least privilege, role separation, quarantine, audit integrity/anti-rollback, retention, immediate revocation, deletion evidence, backup anti-resurrection and Git/sync separation.
 
-The prior Windows 7 assessment remains relevant only to a proposed `high_assurance_vault` on that host. It does not block a verified `open_corpus` artifact from later using a valid `managed_standard` profile.
+The previous Windows 7 failure applies to the inspected high-assurance-vault candidate. It is not a universal blocker for future `open_corpus` managed storage.
 
 ## 7. Item-specific pre-admission conditions
 
-Even after the schema migration and a compatible storage environment exist, every item remains independently deny-by-default.
+Before a specific artifact becomes `external_available`, evidence must establish:
 
-Before admission of a specific item, evidence must show at least:
+- exact-artifact rights review approved;
+- privacy review acceptable;
+- dataset review approved;
+- provenance sufficient;
+- purpose exactly within the current Stage 1C allowlist;
+- item-specific purpose authorization current and not revoked;
+- retention/restrictions compatible with selected profile;
+- deterministic eligibility result compatible with the stored class/profile;
+- selected operational profile verification passed;
+- held-out isolation preserved;
+- no prohibited Stage 1 purpose activated.
 
-- exact-artifact rights review is approved;
-- privacy review is acceptable under the Stage 1A contract;
-- dataset review is approved;
-- requested purpose is exactly within the Stage 1C allowlist;
-- purpose authorization is item-specific, current and not revoked;
-- retention and restrictions are compatible with the selected storage profile;
-- the selected eligibility class/profile pairing is legal;
-- held-out items are isolated from tuning and development use;
-- no prohibited Stage 1 purpose is activated.
-
-A failure in any one condition blocks admission.
+Failure of any one gate blocks admission.
 
 ## 8. Transition discipline
 
-C1 does not define a new artifact-state transition. The existing Stage 1A states remain authoritative until a separately versioned migration changes them:
+The artifact-state sequence remains:
 
 ```text
 metadata_only -> external_available -> revoked
 ```
 
-The transition to `external_available` may be recorded only after actual bytes, digest, size, approved opaque storage/custody references, applicable operational evidence and all item-level authorizations exist, and the then-current validators accept the resulting record.
+C6 does not perform this transition. Repository metadata must never be marked `external_available` in anticipation of a future upload or provider check.
 
-Repository metadata must never be changed to `external_available` in anticipation of a future upload.
+The transition may be recorded only after the actual artifact digest/size, opaque storage references, item authorizations and applicable operational evidence exist and the then-current validators accept the record.
 
-## 9. Decision table
+## 9. Current decision table
 
 | Condition | Result |
 |---|---|
-| Repository metadata is valid but ADR 0016 machine-readable profile migration is not merged | Metadata planning allowed; artifact onboarding BLOCKED |
-| Exact-artifact rights/privacy/review/purpose/provenance is unresolved | `blocked`; artifact onboarding BLOCKED |
-| `open_corpus` + verified compatible `managed_standard` controls after migration | Eligible for a separately controlled onboarding operation |
-| `restricted_corpus` + incompatible provider/restriction | BLOCKED |
-| `sensitive_custody` without passing high-assurance Stage 1B/C4 evidence | BLOCKED |
-| Purpose outside the current Stage 1C allowlist | BLOCKED |
-| Synthetic derivation requested under the current decision | BLOCKED |
-| All repository, profile, operational and item-specific gates pass | Eligible for controlled onboarding; never automatic approval |
+| Valid metadata-only record | planning allowed; onboarding blocked |
+| C6 class/profile schema is valid but C7 evidence-derived resolver is not established | onboarding blocked |
+| Exact rights/privacy/review/purpose/provenance unresolved | `blocked`; onboarding blocked |
+| `open_corpus` without C8 `managed_standard` verification | onboarding blocked |
+| `restricted_corpus` without C9 restriction-compatible verification | onboarding blocked |
+| `sensitive_custody` without Stage 1B/C4/C10 high-assurance verification | onboarding blocked |
+| Purpose outside current Stage 1C allowlist | onboarding blocked |
+| All item, resolver and operational gates pass | eligible for separately controlled onboarding; never automatic approval |
 
-## 10. Zero-state assertion
+## 10. C6 zero-state assertion
 
-This amended C1 document itself:
+C6:
 
 - onboards **0** artifact bytes;
 - creates **0** storage resources;
 - creates **0** credentials or keys;
-- activates **0** artifact-specific permissions;
+- grants **0** artifact-specific permissions;
 - freezes **0** real dataset splits;
-- authorizes **0** model-training, publication, demonstration, calibration, PDF-pipeline or synthetic-derivation uses;
+- authorizes **0** model training, publication, demonstration, calibration, PDF-pipeline evaluation or synthetic derivation;
 - does not start Stage 2.
 
 ## 11. Verification boundary
 
-This C5 status-convergence revision is documentation/governance only. It changes no schema, validator, runtime, test fixture, workflow or dependency.
+C6 changes the dataset catalog schema, Python validators, schema-parity checks, test helpers, metadata example and a conservative legacy migration function. It does not modify restoration runtime, job API, model behavior, provider infrastructure or artifact bytes.
 
-Repository CI must pass on the exact pull-request head before the revision can be treated as ready. The separate Ready-for-review and merge gates remain binding.
+The C6 PR must pass exact-head repository validation, catalog validation, schema parity, full unit tests and compile checks on Python 3.11 and 3.12 before Ready-for-review. Ready and merge remain separate approval gates.

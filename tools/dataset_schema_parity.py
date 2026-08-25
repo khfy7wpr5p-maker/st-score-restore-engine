@@ -1,4 +1,4 @@
-"""Fail-closed JSON Schema/Python parity checks for Stage 1A."""
+"""Fail-closed JSON Schema/Python parity checks for Stage 1A/1C."""
 from __future__ import annotations
 
 from typing import Any, Iterable
@@ -7,8 +7,8 @@ from st_score_restore.dataset_contract_constants import (
     ARTIFACT_STATES, ASSIGNED_SPLITS, CATALOG_FIELDS, CATALOG_SCHEMA_VERSION,
     CODE, CUSTODIAN_ACTOR_ID, CUSTODY_ID, DATASET_ACTOR_ID,
     DATASET_REVIEW_STATES, DATE, DEGRADATIONS, DEIDENTIFICATION_METHODS,
-    DELETION_STATES, ENTRY_DECISION_ID, EVIDENCE_ID, ID, INPUT_MEDIA,
-    ITEM_FIELDS, NOTATION_KINDS, PERMISSION_STATES, POLICY_ID,
+    DELETION_STATES, ELIGIBILITY_CLASSES, ENTRY_DECISION_ID, EVIDENCE_ID, ID,
+    INPUT_MEDIA, ITEM_FIELDS, NOTATION_KINDS, PERMISSION_STATES, POLICY_ID,
     PRIVACY_ACTOR_ID, PRIVACY_CLASSES, PRIVACY_REVIEW_STATES, PURPOSES,
     PURPOSE_ACTOR_ID, RECEIPT_ID, RESTRICTION_TYPES, RETENTION_POLICIES,
     REVOCATION_STATES, RIGHTS_ACTOR_ID, RIGHTS_REVIEW_STATES, SEMVER, SHA,
@@ -192,6 +192,7 @@ def validate_schema_parity(catalog: dict[str, Any], snapshot: dict[str, Any]) ->
         _field(schema, path, "pattern", expected, label)
 
     enum_checks = [
+        (catalog, ci+("eligibilityClass",), ELIGIBILITY_CLASSES, "eligibility classes"),
         (catalog, ci+("artifact","properties","state"), ARTIFACT_STATES, "artifact states"),
         (catalog, ci+("provenance","properties","sourceKind"), SOURCE_KINDS, "source kinds"),
         (catalog, ci+("provenance","properties","usageBasisCode"), USAGE_BASIS_CODES, "usage basis"),
@@ -221,7 +222,7 @@ def validate_schema_parity(catalog: dict[str, Any], snapshot: dict[str, Any]) ->
     if set(restrictions) != RESTRICTION_TYPES:
         raise DatasetManifestError("restriction type drift")
     _set_field(restrictions["split_allowlist"], ("properties","values","items"), "enum", ASSIGNED_SPLITS, "split restriction values")
-    _field(restrictions["storage_class_allowlist"], ("properties","values","items"), "const", "custody_external", "storage restriction")
+    _set_field(restrictions["storage_class_allowlist"], ("properties","values","items"), "enum", STORAGE_CLASSES - {"not_assigned"}, "storage restriction values")
     _field(restrictions["environment_allowlist"], ("properties","values","items"), "const", STAGE1_ENVIRONMENT, "environment restriction")
     _field(restrictions["external_export"], ("properties","allowed"), "type", "boolean", "external export restriction")
     _field(restrictions["retention_not_after"], ("properties","date"), "pattern", DATE.pattern, "retention restriction")

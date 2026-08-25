@@ -1,10 +1,11 @@
-"""Public Stage 1A dataset governance API."""
+"""Public Stage 1A/1C dataset governance API."""
 
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
+from .dataset_catalog_migration import migrate_dataset_catalog_v1_2_to_v1_3
 from .dataset_catalog_validation import validate_dataset_catalog
 from .dataset_contract_common import (
     _strict_json_load,
@@ -14,6 +15,7 @@ from .dataset_contract_constants import (
     CATALOG_SCHEMA_VERSION,
     DatasetManifestError,
     ENTRY_DECISION_ID,
+    LEGACY_CATALOG_SCHEMA_VERSION,
     SNAPSHOT_SCHEMA_VERSION,
 )
 from .dataset_snapshot_validation import validate_dataset_snapshot
@@ -43,6 +45,7 @@ def load_dataset_snapshot(
 
 __all__ = [
     "CATALOG_SCHEMA_VERSION",
+    "LEGACY_CATALOG_SCHEMA_VERSION",
     "SNAPSHOT_SCHEMA_VERSION",
     "ENTRY_DECISION_ID",
     "DatasetManifestError",
@@ -50,6 +53,7 @@ __all__ = [
     "load_json_object",
     "validate_dataset_catalog",
     "validate_dataset_snapshot",
+    "migrate_dataset_catalog_v1_2_to_v1_3",
     "load_dataset_catalog",
     "load_dataset_snapshot",
 ]

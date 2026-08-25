@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.2.0",
+  "schemaVersion": "1.3.0",
   "entryDecisionId": "adr-0013-stage-1-entry-v1",
   "catalogId": "dataset.catalog.metadata-contract-example.v1",
   "descriptionCode": "metadata-contract-only",
@@ -8,6 +8,7 @@
       "datasetItemId": "dataset.item.example-clean-staff.v1",
       "sourceFamilyId": "source.family.example-clean-staff.v1",
       "parentItemId": null,
+      "eligibilityClass": "blocked",
       "artifact": {
         "state": "metadata_only",
         "sha256": null,

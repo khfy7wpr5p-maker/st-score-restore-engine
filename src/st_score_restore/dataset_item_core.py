@@ -22,6 +22,7 @@ from .dataset_contract_constants import (
     DEGRADATIONS,
     DEIDENTIFICATION_METHODS,
     DatasetManifestError,
+    ELIGIBILITY_CLASSES,
     EVIDENCE_ID,
     ID,
     INPUT_MEDIA,
@@ -48,6 +49,11 @@ def validate_item_core(raw: Any, index: int) -> tuple[dict[str, Any], dict[str, 
     item_id = _match(value["datasetItemId"], ID, f"{where}.datasetItemId")
     family_id = _match(value["sourceFamilyId"], ID, f"{where}.sourceFamilyId")
     parent_id = _match(value["parentItemId"], ID, f"{where}.parentItemId", null=True)
+    eligibility = _enum(
+        value["eligibilityClass"],
+        ELIGIBILITY_CLASSES,
+        f"{where}.eligibilityClass",
+    )
     assert item_id and family_id
     if parent_id == item_id:
         raise DatasetManifestError(f"{where}.parentItemId cannot reference itself")
@@ -283,6 +289,7 @@ def validate_item_core(raw: Any, index: int) -> tuple[dict[str, Any], dict[str, 
         "id": item_id,
         "family": family_id,
         "parent": parent_id,
+        "eligibility": eligibility,
         "source": source,
         "artifact": state,
         "digest": digest,

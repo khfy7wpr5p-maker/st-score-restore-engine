@@ -14,11 +14,23 @@ def permission(status: str='not_requested', *, authorized_on: str='2026-08-01', 
         value.update({'revokedOn': '2026-08-05', 'revocationReference': f'evidence:{opaque(12)}'})
     return value
 
-def item(item_id: str='dataset.item.clean-staff.v1', *, family_id: str='source.family.clean-staff.v1', split: str='unassigned', source_kind: str='public_domain', artifact_state: str='metadata_only', granted_purpose: str | None=None, privacy_class: str='none', artifact_sha: str='a' * 64) -> dict:
+def item(item_id: str='dataset.item.clean-staff.v1', *, family_id: str='source.family.clean-staff.v1', split: str='unassigned', source_kind: str='public_domain', artifact_state: str='metadata_only', granted_purpose: str | None=None, privacy_class: str='none', artifact_sha: str='a' * 64, eligibility_class: str | None=None, storage_class: str | None=None) -> dict:
     permissions = {name: permission() for name in PURPOSES}
     if granted_purpose:
         permissions[granted_purpose] = permission('granted')
     external = artifact_state in {'external_available', 'revoked'}
+    if eligibility_class is None:
+        if not external:
+            eligibility_class = 'blocked'
+        elif privacy_class in {'personal', 'student'}:
+            eligibility_class = 'sensitive_custody'
+        elif privacy_class == 'deidentified':
+            eligibility_class = 'restricted_corpus'
+        else:
+            eligibility_class = 'open_corpus'
+    expected_profiles = {'open_corpus': 'managed_standard', 'restricted_corpus': 'managed_restricted', 'sensitive_custody': 'high_assurance_vault'}
+    if storage_class is None:
+        storage_class = 'not_assigned' if not external else expected_profiles.get(eligibility_class, 'not_assigned')
     artifact = {'state': artifact_state, 'sha256': artifact_sha if external else None, 'byteSize': 1234 if external else None, 'storageLocator': f'custody:{opaque(20)}' if artifact_state == 'external_available' else None, 'custodyProfileId': f'policy:{opaque(21)}' if external else None, 'encryptionProfileId': f'policy:{opaque(22)}' if external else None, 'custodianId': f'actor.custodian:{opaque(23)}' if external else None}
     rights_approved = external
     rights_review = {'status': 'approved' if rights_approved else 'pending', 'verifiedBy': f'actor.rights:{opaque(30)}' if rights_approved else None, 'verifiedOn': '2026-08-01' if rights_approved else None, 'evidenceReference': f'evidence:{opaque(31)}' if rights_approved else None}
@@ -28,7 +40,7 @@ def item(item_id: str='dataset.item.clean-staff.v1', *, family_id: str='source.f
         privacy = {'classification': 'deidentified', 'reviewStatus': 'approved', 'reviewedBy': f'actor.privacy:{opaque(40)}', 'reviewedOn': '2026-08-01', 'evidenceReference': f'evidence:{opaque(41)}', 'deidentificationMethodCode': 'metadata_scrub', 'deidentifiedArtifactSha256': artifact_sha}
     else:
         privacy = {'classification': privacy_class, 'reviewStatus': 'approved', 'reviewedBy': f'actor.privacy:{opaque(40)}', 'reviewedOn': '2026-08-01', 'evidenceReference': f'evidence:{opaque(41)}', 'deidentificationMethodCode': None, 'deidentifiedArtifactSha256': None}
-    retention = {'policy': 'delete_after_validation' if external else 'metadata_only', 'expiresOn': None, 'storageClass': 'custody_external' if external else 'not_assigned', 'deletionRequired': artifact_state == 'revoked', 'deletionStatus': 'completed' if artifact_state == 'revoked' else 'not_required', 'deletionReceiptReference': f'receipt:{opaque(50)}' if artifact_state == 'revoked' else None, 'deletionReceiptSha256': 'd' * 64 if artifact_state == 'revoked' else None}
+    retention = {'policy': 'delete_after_validation' if external else 'metadata_only', 'expiresOn': None, 'storageClass': storage_class, 'deletionRequired': artifact_state == 'revoked', 'deletionStatus': 'completed' if artifact_state == 'revoked' else 'not_required', 'deletionReceiptReference': f'receipt:{opaque(50)}' if artifact_state == 'revoked' else None, 'deletionReceiptSha256': 'd' * 64 if artifact_state == 'revoked' else None}
     review_status = 'revoked' if artifact_state == 'revoked' else 'approved' if external else 'planned'
     completed = review_status in {'approved', 'revoked'}
-    return {'datasetItemId': item_id, 'sourceFamilyId': family_id, 'parentItemId': None, 'artifact': artifact, 'provenance': {'sourceKind': source_kind, 'sourceReference': f'evidence:{opaque(60)}', 'rightsHolderId': f'subject:{opaque(61)}', 'licenseId': 'public-domain-1.0', 'usageBasisCode': 'synthetic_derivation' if source_kind == 'synthetic' else 'public_domain', 'rightsReview': rights_review}, 'privacy': privacy, 'input': {'kind': 'digital_pdf', 'mediaType': 'application/pdf', 'notationKinds': ['staff'], 'pageCount': 1, 'degradations': ['none']}, 'permissions': permissions, 'split': split, 'retention': retention, 'revocation': {'status': 'completed' if artifact_state == 'revoked' else 'not_revoked', 'effectiveOn': '2026-08-05' if artifact_state == 'revoked' else None, 'reference': f'evidence:{opaque(70)}' if artifact_state == 'revoked' else None}, 'syntheticGeneration': None, 'review': {'status': review_status, 'reviewedBy': f'actor.dataset:{opaque(80)}' if completed else None, 'reviewedOn': '2026-08-01' if completed else None, 'evidenceReference': f'evidence:{opaque(81)}' if completed else None, 'noteCodes': ['contract-test']}, 'assertions': {'teacherApprovalImpliedDatasetPermission': False, 'teacherApprovalImpliedTrainingPermission': False, 'originalBytesInGit': False, 'stage1TrainingExecutionAuthorized': False}}
+    return {'datasetItemId': item_id, 'sourceFamilyId': family_id, 'parentItemId': None, 'eligibilityClass': eligibility_class, 'artifact': artifact, 'provenance': {'sourceKind': source_kind, 'sourceReference': f'evidence:{opaque(60)}', 'rightsHolderId': f'subject:{opaque(61)}', 'licenseId': 'public-domain-1.0', 'usageBasisCode': 'synthetic_derivation' if source_kind == 'synthetic' else 'public_domain', 'rightsReview': rights_review}, 'privacy': privacy, 'input': {'kind': 'digital_pdf', 'mediaType': 'application/pdf', 'notationKinds': ['staff'], 'pageCount': 1, 'degradations': ['none']}, 'permissions': permissions, 'split': split, 'retention': retention, 'revocation': {'status': 'completed' if artifact_state == 'revoked' else 'not_revoked', 'effectiveOn': '2026-08-05' if artifact_state == 'revoked' else None, 'reference': f'evidence:{opaque(70)}' if artifact_state == 'revoked' else None}, 'syntheticGeneration': None, 'review': {'status': review_status, 'reviewedBy': f'actor.dataset:{opaque(80)}' if completed else None, 'reviewedOn': '2026-08-01' if completed else None, 'evidenceReference': f'evidence:{opaque(81)}' if completed else None, 'noteCodes': ['contract-test']}, 'assertions': {'teacherApprovalImpliedDatasetPermission': False, 'teacherApprovalImpliedTrainingPermission': False, 'originalBytesInGit': False, 'stage1TrainingExecutionAuthorized': False}}

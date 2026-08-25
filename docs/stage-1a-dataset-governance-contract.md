@@ -1,28 +1,27 @@
 # Stage 1A Dataset Governance and Metadata Contract
 
-**Status:** Accepted and merged Stage 1A governance baseline  
-**Issue:** #32  
-**Schema version:** `1.2.0`  
+**Status:** Accepted Stage 1A baseline extended by Stage 1C C6 profile contract  
+**Issue:** #32 / Stage 1C #47  
+**Catalog schema version:** `1.3.0`  
+**Snapshot schema version:** `1.2.0`  
 **Entry decision:** `adr-0013-stage-1-entry-v1`  
-**Artifact policy:** Metadata only  
-**Runtime restoration impact:** None  
-**Current substage state:** Stage 1A complete; Stage 1B formally closed; Stage 1C active under Issue #47; ADR 0016 introduces risk-tiered custody architecture, with machine-readable profile implementation still pending
+**Custody decision:** `adr-0016-stage-1c-risk-tiered-custody-v1`  
+**Artifact policy:** real corpus bytes remain outside ordinary Git  
+**Runtime restoration impact:** None
 
 ## 1. Scope
 
-Stage 1A defines the fail-closed metadata and validation boundary required
-before any real-data onboarding. It did not collect document bytes, select a
-storage provider, freeze a real split, run training, tune thresholds, start
-Stage 1B/1C/2 or add restoration engines.
+Stage 1A established the fail-closed dataset metadata boundary. Stage 1C C6
+extends that machine-readable catalog contract so ADR 0016 eligibility classes
+and storage profiles can be represented and validated without weakening rights,
+privacy, purpose, retention, split-isolation or revocation controls.
 
-The existing fixture catalog remains the regression-fixture planning contract.
-The Stage 1A dataset contract separately models custody references, purpose
-authorization, source-family isolation, frozen snapshots, privacy and
-revocation.
+C6 does not collect document bytes, approve a provider, authorize an artifact,
+freeze a real split, run training, tune thresholds, or start Stage 2.
 
 ## 2. Bound purposes
 
-All purposes are independent and deny-by-default:
+All purposes remain independent and deny-by-default:
 
 - `fixture_validation`
 - `quality_evaluation`
@@ -35,18 +34,15 @@ All purposes are independent and deny-by-default:
 - `publication`
 - `demonstration`
 
-A granted permission carries an opaque authorization reference, a
-purpose-authorizer ID, authorization date, optional expiry and typed
-restrictions. Snapshot inclusion requires a split-relevant permission that is
-valid on the snapshot date. Expiry is fail-closed.
-
-Teacher approval creates none of these permissions. Stage 1 records future
-training eligibility but cannot authorize training execution.
+Stage 1C's currently approved purpose allowlist remains only
+`quality_evaluation` and `held_out_evaluation`. The existence of other schema
+fields records future governance possibilities; it does not activate them.
+Teacher approval creates no dataset or training permission.
 
 ## 3. Opaque identity and evidence
 
-Git metadata accepts role-scoped opaque identifiers with the exact suffix
-`opq_<32 lowercase hex>`:
+Repository metadata accepts role-scoped opaque identifiers with the exact
+suffix `opq_<32 lowercase hex>`:
 
 - rights verifier: `actor.rights:opq_...`
 - privacy reviewer: `actor.privacy:opq_...`
@@ -56,114 +52,160 @@ Git metadata accepts role-scoped opaque identifiers with the exact suffix
 - rights subject: `subject:opq_...`
 - evidence: `evidence:opq_...`
 - policy: `policy:opq_...`
-- custody locator: `custody:opq_...`
+- custody/storage locator: `custody:opq_...`
 - deletion receipt: `receipt:opq_...`
 
-Semantic aliases such as person names, email addresses, student identifiers or
-personal paths are invalid. Catalog description and license fields are
-restricted code values. Synthetic parameter objects cannot contain strings.
-Stage 1B subsequently defined and tested the provider-neutral external-identity
-and real-person role-conflict boundary. Production identity implementation
-remains deferred to Stage 6.
+Person names, email addresses, student identifiers, provider URLs, account IDs,
+credentials, secrets and local filesystem paths are not valid substitutes.
 
-## 4. Artifact and custody states
+## 4. Artifact state and eligibility
 
-- `metadata_only`: no digest, bytes or custody reference
-- `external_available`: digest, byte size, opaque locator, custody policy,
-  encryption policy and custodian required
-- `revoked`: historical digest/policies remain; active locator is absent and a
-  completed deletion receipt is required
+Artifact states remain:
 
-Ordinary Git remains metadata-only. No credentials, personal names or personal
-paths are valid custody or identity fields.
+- `metadata_only`: no digest, byte-size or active storage/custody reference;
+- `external_available`: immutable digest/size plus opaque storage-policy evidence;
+- `revoked`: historical digest/policy evidence remains, active locator is absent,
+  and completed deletion evidence is required.
 
-The schema version described by this document still exposes the original
-Stage 1A storage vocabulary. ADR 0016 changes the architecture before the
-machine-readable contract: no item may use a new custody-profile name until a
-follow-up versioned schema/validator change is merged and verified.
+Catalog `1.3.0` adds exactly one `eligibilityClass` per item:
 
-## 5. Rights, privacy and review
+- `blocked`
+- `open_corpus`
+- `restricted_corpus`
+- `sensitive_custody`
 
-An external or actively authorized item requires approved rights review,
-acceptable privacy review, approved dataset review, immutable artifact SHA-256
-and external custody metadata.
+`metadata_only` items remain `blocked`. C6 does not infer a lower-risk class from
+composer age, source label, possession of a file or an old custody record.
 
-Rights review applies to the exact artifact used by the project. The fact that
-a musical composition is public domain does not by itself establish that a
-particular modern edition, engraving, editorial layer, scan, photograph or
-acquired file is public domain or freely reusable.
+## 5. Storage profiles
 
-For `deidentified` data, the privacy-reviewed derivative SHA-256 must equal the
-artifact SHA-256 used in the dataset. Identifiable personal/student data cannot
-be trained, published, demonstrated or used for synthetic derivation.
+`retention.storageClass` remains the machine field name for compatibility, but
+in catalog `1.3.0` its external values are ADR 0016 storage profiles:
 
-## 6. Source families and synthetic lineage
+- `managed_standard`
+- `managed_restricted`
+- `high_assurance_vault`
+
+`not_assigned` remains valid only where no external profile is active.
+
+The validator enforces:
+
+- `open_corpus` → `managed_standard`;
+- `restricted_corpus` → `managed_restricted`;
+- `sensitive_custody` → `high_assurance_vault`;
+- `blocked` → no external storage profile / no external availability.
+
+`open_corpus` requires privacy classification `none`. Personal or student data
+requires `sensitive_custody`. Unknown or contradictory governance never falls
+back to a weaker profile.
+
+The existing opaque `artifact.storageLocator` field is provider-neutral. It does
+not expose a Google Drive URL, local path, bucket name, account ID or credential.
+
+## 6. Legacy migration rule
+
+Catalog `1.2.0` used the universal `custody_external` storage value. C6 provides
+a deterministic migration boundary from `1.2.0` to `1.3.0` with one critical
+anti-downgrade invariant:
+
+- legacy `metadata_only` / `not_assigned` → `blocked` / `not_assigned`;
+- legacy external or revoked `custody_external` → `sensitive_custody` /
+  `high_assurance_vault`;
+- legacy `storage_class_allowlist=[custody_external]` →
+  `storage_class_allowlist=[high_assurance_vault]`.
+
+The migration never infers `open_corpus`, `restricted_corpus`,
+`managed_standard` or `managed_restricted`. Reclassification to those lower
+profiles requires current evidence and the later eligibility/operational gates.
+Malformed or unexpected legacy storage state is rejected rather than guessed.
+
+## 7. Rights, privacy and review
+
+An external or actively authorized item requires approved exact-artifact rights
+review, acceptable privacy review, approved dataset review, immutable artifact
+SHA-256 and external storage metadata.
+
+Public-domain status of the underlying composition does not itself establish
+rights for a modern edition, engraving, editorial layer, scan, photograph or
+acquired file.
+
+For `deidentified` data, the reviewed derivative SHA-256 must equal the artifact
+SHA-256 used in the dataset. Identifiable personal/student data cannot be
+trained, published, demonstrated or used for synthetic derivation.
+
+## 8. Source families and synthetic lineage
 
 Every source and derivative shares one `sourceFamilyId` and one assigned split.
-A synthetic child must exactly equal its parent's non-`unassigned` split.
+A synthetic child must share its parent's non-`unassigned` split.
 
-A synthetic item requires an approved, available, non-synthetic parent; a
-synthetic-derivation authorization valid on `generatedOn`; matching
-authorization reference; generator name, semantic version, commit SHA-256,
-seed and non-text parameter values. Synthetic-on-synthetic derivation is
-rejected. Child retention cannot exceed parent retention.
+Synthetic derivation requires a valid purpose grant, approved available parent,
+authorization reference, generator/version/commit, generation date, seed and
+non-text parameters. Synthetic-on-synthetic derivation is rejected and child
+retention cannot exceed parent retention.
 
-## 7. Split policy
+Current Stage 1C governance still does not authorize synthetic derivation.
+
+## 9. Split policy
 
 - `unassigned`: no active purpose
-- `development`: fixture, quality-evaluation and PDF-pipeline evaluation
-- `calibration`: quality and safety calibration
+- `development`: fixture, quality-evaluation and PDF-pipeline evaluation schema capability
+- `calibration`: quality and safety calibration schema capability
 - `held_out`: held-out evaluation only
 - `training_reserved`: future model-training eligibility only
 
 Held-out and training-reserved items cannot enable active synthetic derivation.
-Stage 1A snapshots keep `trainingUseActivated=false`.
+Stage 1 snapshots keep `trainingUseActivated=false`.
 
-## 8. Typed restrictions
+## 10. Typed restrictions
 
-Supported restrictions are `split_allowlist`, `storage_class_allowlist`,
+Supported restrictions remain `split_allowlist`, `storage_class_allowlist`,
 `environment_allowlist`, `external_export` and `retention_not_after`.
-Unknown or contradictory restrictions fail closed. The current schema version
-still uses the legacy Stage 1 snapshot environment `stage1_offline`; ADR 0016
-requires a versioned follow-up before additional managed-storage environments
-can be represented.
 
-## 9. Revocation and deletion evidence
+For catalog `1.3.0`, `storage_class_allowlist` values are restricted to
+`managed_standard`, `managed_restricted` and `high_assurance_vault`.
+
+The snapshot `environment=stage1_offline` remains the bounded Stage 1 evaluation
+execution environment. It no longer acts as a universal storage-location rule:
+a `managed_standard` or `managed_restricted` artifact may reside in an approved
+managed store while evaluation remains inside the bounded Stage 1 environment.
+Unknown or contradictory restrictions fail closed.
+
+## 11. Revocation and deletion evidence
 
 Revoked items cannot appear in snapshots. Their active locator is removed.
 Completed revocation requires a revocation date and opaque evidence reference,
 `deletionStatus=completed`, an opaque deletion receipt reference and deletion
-receipt SHA-256. The provider-neutral operational deletion/revocation drill was
-completed under Stage 1B and remains binding evidence for high-assurance
-onboarding and for any lower-tier profile that explicitly adopts those controls.
+receipt SHA-256.
 
-## 10. Snapshot integrity and authorization
+Stage 1B/C4 operational evidence remains mandatory for
+`high_assurance_vault`. Lower profiles must satisfy their own operational
+verification contracts; C6 does not claim those checks have passed.
+
+## 12. Snapshot integrity and authorization
 
 A snapshot binds ADR 0013, catalog and item canonical SHA-256 values, source
-family and split, a valid UTC creation timestamp, held-out freeze state,
-revoked-item tombstones, separate real/synthetic counts and approved opaque
-review evidence.
+family and split, UTC creation time, held-out freeze state, revoked-item set,
+coverage counts and approved opaque review evidence.
 
-`validate_dataset_snapshot` is the only public safe boundary. It includes
-integrity, split-purpose, temporal and restriction checks. The compatibility
-wrapper delegates to it.
+`validate_dataset_snapshot` remains the public safe boundary. Catalog version
+`1.3.0` changes item metadata and therefore changes the canonical catalog/item
+digests naturally; snapshot schema shape remains `1.2.0`.
 
-## 11. Schema parity
+## 13. Schema parity
 
-CI uses the exact offline Draft 2020-12 validation stack in
-`requirements.validation.lock`. It validates the schemas themselves, executes
-shared instances through JSON Schema and Python, and compares all versions,
-required fields, enums, constants and patterns. Structural invalid data must be
-rejected by both engines; semantic invalid data may pass JSON Schema but must be
-rejected by Python.
+CI validates the Draft 2020-12 schemas and Python contract together. Parity now
+covers the `eligibilityClass` enum, profile-valued `storageClass`, storage
+restriction values, all prior required fields/enums/constants/patterns and the
+closed-object invariant. Structural invalid data must fail JSON Schema and
+Python; semantic illegal class/profile combinations fail Python.
 
-## 12. Repository example
+## 14. Repository example and validation
 
-`examples/dataset-catalog.metadata-only.v1.json` contains no artifact bytes,
-digest, locator, active permission, assigned split or completed review. It is
-not a dataset and cannot satisfy the Stage 1 exit gate.
+`examples/dataset-catalog.metadata-only.v1.json` is catalog `1.3.0`, contains
+`eligibilityClass=blocked`, and contains no artifact bytes, digest, locator,
+active permission, assigned split or completed review.
 
-## 13. Validation
+Validate with:
 
 ```bash
 python tools/validate_dependency_lock.py
@@ -174,41 +216,19 @@ python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-## 14. Current Stage 1C boundary
+## 15. Current Stage 1C boundary after C6
 
-Stage 1B's provider-neutral high-assurance custody, encryption, identity, audit,
-revocation, deletion and restore contract is complete and formally closed.
-Stage 1C received separate start authorization under Issue #47.
+C6 makes the ADR 0016 classes/profiles machine-readable and adds conservative
+legacy migration. It does **not** make any real artifact automatically eligible
+or available.
 
-The earlier G4 pre-byte decision bound all real/controlled-synthetic artifacts
-to one `stage1_offline` / `custody_external` encrypted offline vault. ADR 0016
-supersedes **that universal storage-location rule** with artifact-specific risk
-tiers while retaining G4's purpose allowlist and all independent Stage 1A
-governance gates.
+The next planned slices remain:
 
-The approved architecture now distinguishes:
+1. C7 deterministic evidence-derived eligibility resolver;
+2. C8 `managed_standard` operational verification;
+3. C9 `managed_restricted` operational verification;
+4. C10 high-assurance compatibility verification.
 
-- `open_corpus` → `managed_standard` after exact-artifact rights, privacy,
-  purpose, retention and dataset-review approval;
-- `restricted_corpus` → `managed_restricted` only when artifact-specific terms
-  allow the selected provider/environment;
-- `sensitive_custody` → `high_assurance_vault`, using the accepted Stage 1B
-  boundary and C4 vault-verification evidence;
-- `blocked` → no onboarding when rights/privacy/purpose/review/provenance is
-  missing, pending, rejected, expired or contradictory.
-
-This architecture change does not itself activate those new profile names in
-the current `1.2.0` schema. Until a separately verified schema/validator
-migration is merged, current validators remain authoritative and no new
-artifact may become `external_available` under `managed_standard` or
-`managed_restricted`.
-
-G4's purpose allowlist remains `quality_evaluation` and
-`held_out_evaluation`. `model_training`, publication, demonstration,
-calibration, PDF-pipeline evaluation and synthetic derivation remain
-authorized only by separate future decisions in the correct roadmap stage.
-
-Provider-specific production identity, network, secret-management, encrypted
-production storage, production database/queue and deployment controls remain
-Stage 6 work. This status convergence changes no restoration runtime behavior
-and does not onboard artifact bytes.
+Until the relevant item evidence and profile verification pass, artifact
+onboarding remains fail-closed. Stage 2 remains blocked until the complete
+Stage 1 corpus exit gate is accepted.
