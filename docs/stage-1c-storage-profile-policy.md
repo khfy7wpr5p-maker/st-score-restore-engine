@@ -1,6 +1,6 @@
 # Stage 1C Artifact Custody Profile Policy
 
-**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6; C7 deterministic eligibility merged; C8 managed-standard verification merged  
+**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6; C7 deterministic eligibility merged; C8 managed-standard and C9 managed-restricted verification merged; C10 high-assurance compatibility candidate  
 **Stage:** Stage 1C  
 **Parent:** Issue #47  
 **Architecture accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
@@ -68,6 +68,8 @@ C9 verifies these restricted-profile controls while inheriting the nine C8 basel
 
 Uses ADR 0014 and the Stage 1C C4 vault-verification evidence contract. This retains the stronger requirements for supported host, encryption, offline separation, least privilege, role separation, quarantine, audit anti-rollback, retention, immediate revocation, deletion evidence, backup anti-resurrection, and Git/sync separation.
 
+C10 verifies structural compatibility without rewriting historical C4 evidence. The one-way compatibility is `sensitive_custody` → `high_assurance_vault` → legacy C4 evidence with `storageClass=custody_external`. C4 evidence cannot be reinterpreted as proof for `managed_standard` or `managed_restricted`, and a structural C10 pass does not verify a real vault.
+
 ## Provider neutrality
 
 No provider is approved by brand in this policy. Google Drive or another managed service can qualify only for `managed_standard`/`managed_restricted` after its concrete project configuration is checked. A provider's general marketing or encryption statement is not sufficient evidence by itself.
@@ -105,6 +107,6 @@ C6 and C7 make profile vocabulary and eligibility deterministic; neither proves 
 
 - C8 defines fail-closed operational verification for a concrete `managed_standard` configuration. The repository zero state remains `incomplete`; an actual pass requires external evidence.
 - C9 defines fail-closed operational verification for `managed_restricted`, including the C8 baseline plus the six accepted restricted-profile controls. Its repository zero state also remains `incomplete`; an actual pass requires external evidence bound to a concrete restriction set.
-- C10 preserves/verifies the existing high-assurance boundary.
+- C10 verifies that the existing C4 high-assurance contract remains compatible with `sensitive_custody/high_assurance_vault` while preserving the legacy `custody_external` evidence binding. The repository C4 zero state remains `incomplete`; C10 itself does not verify a real vault.
 
 No governance/profile implementation by itself introduces artifact bytes or grants artifact-specific permission. Stage 2 remains blocked until the complete Stage 1 exit gate is accepted.
