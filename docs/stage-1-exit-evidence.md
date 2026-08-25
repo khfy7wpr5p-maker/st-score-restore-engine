@@ -1,15 +1,16 @@
 # Stage 1 Exit Evidence
 
 **Status:** Incomplete / Stage 1 remains open  
-**Stage:** Stage 1C / C2 metadata planning  
+**Stage:** Stage 1C / post-C12 corpus realization  
 **Parent issue:** #32  
 **Active substage:** #47  
-**Artifact bytes onboarded:** 0  
+**Real external artifacts admitted:** 1  
+**Artifact bytes stored in ordinary Git:** 0  
 **Stage 2 entry:** BLOCKED
 
 ## 1. Purpose
 
-This record assembles the current Stage 1 exit evidence without treating planning, governance or reference drills as proof that the real evaluation corpus already exists.
+This record assembles the current Stage 1 exit evidence without treating governance mechanisms or a single admitted item as proof that a complete evaluation corpus already exists.
 
 A gate may be marked `PASS` only when direct evidence exists. Unknown, future, blocked or not-yet-executed conditions remain non-passing.
 
@@ -18,77 +19,63 @@ A gate may be marked `PASS` only when direct evidence exists. Unknown, future, b
 | Gate | Current result | Evidence boundary |
 |---|---|---|
 | Stage 1A metadata governance accepted | PASS | Accepted Stage 1A contract and validators on `main` |
-| Stage 1B custody/operations contract accepted | PASS | Issue #36 closed as completed with accepted reference-drill/security evidence |
+| Stage 1B custody/operations contract accepted | PASS | Issue #36 closed with accepted reference-drill/security evidence |
 | Stage 1C start authorization | PASS | Issue #47 records explicit Stage 1C start approval |
-| G4 purpose/storage policy binding | PASS | `quality_evaluation` + `held_out_evaluation`; `stage1_offline`; `custody_external` |
-| C1 metadata-only onboarding gate | PASS as planning boundary | C1 document exists; it onboards zero bytes and preserves fail-closed state |
-| C2 zero-state dataset card | PRESENT IN C2 PACKAGE | Planning document only; not corpus evidence |
-| C2 zero-state coverage/bias register | PRESENT IN C2 PACKAGE | Planning document only; empirical measurements remain unavailable |
-| Compliant concrete offline custody vault | BLOCKED | No accepted operational verification of a supported encrypted vault |
-| Authorized real/controlled artifact onboarding | BLOCKED | 0 artifact bytes; no item is admitted through Stage 1C |
-| Per-item auditable rights and provenance | NOT REALIZED | Requires actual candidate items and item-specific evidence |
-| Per-item acceptable privacy review | NOT REALIZED | Requires actual candidate items and review evidence |
-| Per-item approved dataset review | NOT REALIZED | Requires actual candidate items and review evidence |
-| Per-item current allowed-purpose authorization | NOT REALIZED | G4 creates no item-level grant |
-| Immutable artifact digest/size and opaque custody binding | NOT REALIZED | Requires admitted bytes in a compliant vault |
-| Source-family split realization without leakage | BLOCKED | No eligible external items exist |
-| Held-out split freeze and digest-bound snapshot | BLOCKED | Snapshot requires approved `external_available` items |
-| Realized coverage measurement | NOT MEASURED | Corpus size is zero |
-| Empirical known-bias assessment | NOT MEASURED | Corpus size is zero |
-| Revocation/deletion demonstrated for realized corpus items | NOT REALIZED | Stage 1B reference behavior is accepted, but no Stage 1C item exists |
-| Repository remains metadata-only for dataset artifacts | PASS at current state | No Stage 1C artifact byte is recorded in ordinary Git |
-| Training permission inferred from teacher approval | PASS / prohibited invariant preserved | Governance contract explicitly rejects this inference |
-| Stage 1 final exit | FAIL / INCOMPLETE | Required corpus evidence is not yet realized |
+| G4 purpose/storage policy binding | PASS | `quality_evaluation` + `held_out_evaluation`; `stage1_offline`; ADR 0016 risk-tiered storage |
+| C5-C11 governance/storage/admission mechanisms | PASS | Accepted merged contracts and CI evidence |
+| First authorized real artifact onboarding | PASS | C12 / PR #63 admitted one public-domain scanned PDF outside ordinary Git |
+| Per-item auditable rights and provenance | PASS FOR 1 ITEM | C12 exact-artifact public-domain evidence |
+| Per-item acceptable privacy review | PASS FOR 1 ITEM | C12 item classification `none` / review not required |
+| Per-item approved dataset review | PASS FOR 1 ITEM | C12 item review approved |
+| Per-item current allowed-purpose authorization | PASS FOR 1 ITEM | C12 item grants only `quality_evaluation` |
+| Immutable artifact digest/size and opaque custody binding | PASS FOR 1 ITEM | C12 exact digest/size plus opaque managed-standard binding |
+| Development split realization | PARTIAL PASS | One authorized development item exists |
+| Held-out split realization | BLOCKED | No independently authorized held-out item exists |
+| Source-family split realization without leakage | INCOMPLETE | Cannot complete cross-split proof until held-out exists |
+| Held-out split freeze and digest-bound snapshot | BLOCKED | Minimum development + held-out structure is not yet present |
+| Realized coverage measurement | PARTIAL / INSUFFICIENT | One real item exists; coverage is not sufficient for Stage 1 exit |
+| Empirical known-bias assessment | INCOMPLETE | Requires realized multi-item corpus and coverage/gap review |
+| Revocation/deletion behavior applicable to realized items | MECHANISM PASS / ITEM EXERCISE PENDING | Stage 1B mechanism accepted; C12 item has not required revocation |
+| Repository remains metadata-only for dataset artifacts | PASS | No real document artifact byte is stored in ordinary Git |
+| Training permission inferred from teacher approval | PASS / PROHIBITED INVARIANT | Governance contract rejects this inference |
+| Stage 1 final exit | FAIL / INCOMPLETE | Held-out realization, snapshot freeze and coverage evidence remain incomplete |
 | Stage 2 entry | BLOCKED | Stage 1 final exit has not passed |
 
 ## 3. Evidence already accepted
 
-The following foundations do not need to be redefined merely because artifact onboarding is blocked:
+The following foundations are accepted and do not need to be redefined:
 
-- Stage 1A purpose-bound metadata governance;
+- Stage 1A purpose-bound dataset governance;
 - Stage 1B provider-neutral custody/operations contract and security reference evidence;
-- Stage 1C start authorization;
-- G4 allowlist/environment/storage-class/location-policy binding;
-- C1 metadata-only pre-byte discipline.
+- Stage 1C authorization and ADR 0016 risk-tiered storage architecture;
+- C5-C10 storage/eligibility/profile verification chain;
+- C11 deterministic artifact admission gate;
+- C12 first real authorized development artifact with exact rights, digest, storage and purpose evidence.
 
-These foundations enable later onboarding; they do not substitute for the missing corpus itself.
+## 4. C13 structural readiness boundary
 
-## 4. Evidence still required for Stage 1 completion
+C13 introduces a deterministic pre-snapshot readiness gate. It requires at least one authorized development item and one independently authorized held-out item, with exact current purposes and no cross-split source-family or artifact-digest leakage.
+
+The current C12 corpus must remain `blocked` at this gate because it contains one development item and zero held-out items. C13 readiness is a structural prerequisite only; a future `ready` result will still not by itself prove coverage sufficiency or complete Stage 1 exit.
+
+## 5. Evidence still required for Stage 1 completion
 
 Stage 1 cannot close until direct evidence supports at least:
 
-1. a compliant concrete custody environment;
-2. actual authorized items with auditable provenance and rights;
-3. acceptable privacy and dataset review per included item;
-4. item-specific purpose grants restricted to the authorized Stage 1 purposes;
-5. immutable digests, sizes and opaque custody references for admitted bytes;
-6. source-family-isolated split realization;
-7. a digest-bound held-out freeze/snapshot where required;
-8. demonstrated revocation/deletion behavior applicable to realized items;
-9. empirical coverage gaps and bias limitations;
-10. repository validation showing ordinary Git remains metadata-only.
+1. one or more independently authorized held-out artifacts under the same rights/storage/admission discipline;
+2. source-family-isolated development/held-out corpus realization;
+3. C13 structural readiness `ready` on an explicit evaluation date;
+4. a digest-bound approved development/held-out snapshot with held-out freeze;
+5. empirical coverage/gap/bias documentation and dataset card for the realized corpus;
+6. repository validation showing ordinary Git remains free of real dataset artifact bytes;
+7. final Stage 1 exit evidence acceptance.
 
-## 5. Current blocker
+## 6. Current blocker
 
-The first blocking dependency is the concrete external pre-byte vault gate. The selected environment must satisfy the accepted Stage 1B controls before any artifact may move from `metadata_only` to `external_available`.
+The first blocking dependency is now **independently authorized held-out corpus evidence**. The existing development artifact cannot be reused as held-out evidence, and its source family or identical digest must not cross the split boundary.
 
-Without that evidence, the project must not fabricate SHA-256 values, custody locators, item-level permission grants, split assignments or snapshot approval merely to make the exit matrix appear complete.
+No held-out item, snapshot approval, coverage claim or Stage 1 exit PASS may be fabricated merely to advance the roadmap.
 
-## 6. Stage 2 prohibition
+## 7. Stage 2 prohibition
 
-Stage 2 quality-analysis expansion remains blocked while this matrix is incomplete. This record does not authorize quality calibration, safety calibration, DocRes, comparator, selector, ST Image AI, training or downstream application integration.
-
-## 7. C2 package boundary
-
-The C2 package is limited to zero-state planning documentation. It:
-
-- onboards 0 artifact bytes;
-- creates 0 storage resources;
-- creates 0 credentials or keys;
-- grants 0 item-level permissions;
-- freezes 0 real splits;
-- performs 0 empirical coverage measurements;
-- activates 0 training/calibration/publication/demonstration/synthetic uses;
-- changes no schema, validator, runtime, dependency or workflow.
-
-Merging C2 improves Stage 1 evidence organization but does **not** make Stage 1 complete.
+Stage 2 Complete Quality Analysis and OpenCV setup/run/completion remain blocked while this matrix is incomplete. This record does not authorize quality calibration, safety calibration, DocRes, comparator, selector, ST Image AI, model training or downstream integration.

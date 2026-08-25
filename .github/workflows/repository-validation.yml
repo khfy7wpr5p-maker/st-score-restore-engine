@@ -105,6 +105,13 @@ jobs:
             --profile-verification evidence/stage1c/imslp799143/managed-standard-verification.v1.json \
             --require-eligible
 
+      - name: Evaluate Stage 1C corpus readiness (expected blocked pending held-out)
+        run: |
+          python tools/evaluate_stage1_corpus_readiness.py \
+            evidence/stage1c/imslp799143/catalog.v1.json \
+            --as-of 2026-08-25 \
+            --require-blocked
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
