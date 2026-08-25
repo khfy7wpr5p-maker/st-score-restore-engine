@@ -44,7 +44,6 @@
         "kind": "png",
         "mediaType": "image/png",
         "notationKinds": [
-          "guitar_tab",
           "combined_staff_tab"
         ],
         "pageCount": 1,
@@ -177,7 +176,7 @@
         "evidenceReference": "evidence:opq_a255b0ac13e69ca188dd94b0bb52eab2",
         "noteCodes": [
           "wikimedia-public-domain",
-          "c17-guitar-tab-combined-staff-tab",
+          "c17-combined-staff-tab",
           "exact-byte-drive-roundtrip-pass"
         ]
       },
