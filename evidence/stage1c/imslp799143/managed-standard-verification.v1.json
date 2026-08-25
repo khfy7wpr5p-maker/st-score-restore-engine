@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "stage1c-managed-standard-verification-v1",
+  "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "verificationId": "stdver:opq_wMqR5woy5Ii32IbRABugcA",
+  "configurationRef": "storagecfg:opq_f8a7d2a8ae778acdbb90626047769bd0",
+  "assessorRef": "actor:opq_2s1oIZK6yJhwHT6lZZpneg",
+  "assessedAt": "2026-08-25T14:21:00Z",
+  "eligibilityClass": "open_corpus",
+  "storageProfile": "managed_standard",
+  "overallState": "pass",
+  "controls": {
+    "git_exclusion": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_5650c091ddcad3e5375114e2745d012f"
+    },
+    "object_binding_capability": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_aa920829b32d8b96653a6b037d6addc7"
+    },
+    "project_managed_access": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_ec705fa742b54cf46039eae4172f3fe0"
+    },
+    "accidental_public_sharing_prevention": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_fc4ce3094a07965f5540fb7842d277d8"
+    },
+    "encryption_in_transit": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_2f1e7b5e926ded6cd120f816f525313f"
+    },
+    "encryption_at_rest_private_copies": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_40a4de902c94fbdf67f8a76a1c2def6a"
+    },
+    "version_drift_protection": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_a27610d4a7de3205f66079b471c90263"
+    },
+    "retention_deletion_behavior": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_76e723ccd9e312b892c346c657051a1d"
+    },
+    "opaque_repository_boundary": {
+      "result": "pass",
+      "evidenceRef": "evidence:opq_eb09c22fa64c09aa8c6964ca7d44928a"
+    }
+  },
+  "claims": {
+    "artifactOnboardingAuthorized": false,
+    "artifactPermissionGranted": false,
+    "providerApprovedByBrand": false,
+    "artifactBytesIncluded": false,
+    "realArtifactDigestIncluded": false,
+    "stage2Authorized": false
+  }
+}
