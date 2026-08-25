@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://st-score-restore.invalid/schemas/stage1c-managed-restricted-verification.schema.json",
+  "title": "ST Score Restore Stage 1C Managed Restricted Verification Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contractRef",
+    "verificationId",
+    "configurationRef",
+    "restrictionSetRef",
+    "assessorRef",
+    "assessedAt",
+    "profile",
+    "eligibilityClass",
+    "overallState",
+    "controls",
+    "claims"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "stage1c-managed-restricted-verification-v1"},
+    "contractRef": {"const": "adr-0016-stage-1c-risk-tiered-custody-v1"},
+    "verificationId": {"type": "string", "pattern": "^restrictver:opq_[A-Za-z0-9_-]{16,64}$"},
+    "configurationRef": {"type": "string", "pattern": "^storagecfg:opq_[A-Za-z0-9_-]{16,64}$"},
+    "restrictionSetRef": {"type": "string", "pattern": "^restrictset:opq_[A-Za-z0-9_-]{16,64}$"},
+    "assessorRef": {"type": "string", "pattern": "^actor:opq_[A-Za-z0-9_-]{16,64}$"},
+    "assessedAt": {"type": "string", "format": "date-time"},
+    "profile": {"const": "managed_restricted"},
+    "eligibilityClass": {"const": "restricted_corpus"},
+    "overallState": {"enum": ["pass", "fail", "incomplete"]},
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "git_exclusion",
+        "object_binding_capability",
+        "project_managed_access",
+        "accidental_public_sharing_prevention",
+        "encryption_in_transit",
+        "encryption_at_rest_private_copies",
+        "version_drift_protection",
+        "retention_deletion_behavior",
+        "opaque_repository_boundary",
+        "artifact_terms_compatibility",
+        "deny_by_default_membership",
+        "public_links_disabled",
+        "access_change_history",
+        "restriction_compatible_deletion_backup",
+        "storage_environment_allowlist_match"
+      ],
+      "properties": {
+        "git_exclusion": {"$ref": "#/$defs/controlEvidence"},
+        "object_binding_capability": {"$ref": "#/$defs/controlEvidence"},
+        "project_managed_access": {"$ref": "#/$defs/controlEvidence"},
+        "accidental_public_sharing_prevention": {"$ref": "#/$defs/controlEvidence"},
+        "encryption_in_transit": {"$ref": "#/$defs/controlEvidence"},
+        "encryption_at_rest_private_copies": {"$ref": "#/$defs/controlEvidence"},
+        "version_drift_protection": {"$ref": "#/$defs/controlEvidence"},
+        "retention_deletion_behavior": {"$ref": "#/$defs/controlEvidence"},
+        "opaque_repository_boundary": {"$ref": "#/$defs/controlEvidence"},
+        "artifact_terms_compatibility": {"$ref": "#/$defs/controlEvidence"},
+        "deny_by_default_membership": {"$ref": "#/$defs/controlEvidence"},
+        "public_links_disabled": {"$ref": "#/$defs/controlEvidence"},
+        "access_change_history": {"$ref": "#/$defs/controlEvidence"},
+        "restriction_compatible_deletion_backup": {"$ref": "#/$defs/controlEvidence"},
+        "storage_environment_allowlist_match": {"$ref": "#/$defs/controlEvidence"}
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactOnboardingAuthorized",
+        "artifactPermissionGranted",
+        "providerApprovedByBrand",
+        "artifactBytesIncluded",
+        "realArtifactDigestIncluded",
+        "modelTrainingAuthorized",
+        "publicationAuthorized",
+        "stage2Authorized"
+      ],
+      "properties": {
+        "artifactOnboardingAuthorized": {"const": false},
+        "artifactPermissionGranted": {"const": false},
+        "providerApprovedByBrand": {"const": false},
+        "artifactBytesIncluded": {"const": false},
+        "realArtifactDigestIncluded": {"const": false},
+        "modelTrainingAuthorized": {"const": false},
+        "publicationAuthorized": {"const": false},
+        "stage2Authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "controlEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result", "evidenceRef"],
+      "properties": {
+        "result": {"enum": ["pass", "fail", "not_verified"]},
+        "evidenceRef": {
+          "oneOf": [
+            {"type": "string", "pattern": "^evidence:opq_[A-Za-z0-9_-]{16,64}$"},
+            {"type": "null"}
+          ]
+        }
+      }
+    }
+  }
+}

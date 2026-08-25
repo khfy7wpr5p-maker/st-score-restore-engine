@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "stage1c-managed-restricted-verification-v1",
+  "contractRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "verificationId": "restrictver:opq_0000000000000001",
+  "configurationRef": "storagecfg:opq_0000000000000001",
+  "restrictionSetRef": "restrictset:opq_0000000000000001",
+  "assessorRef": "actor:opq_0000000000000001",
+  "assessedAt": "2026-08-25T00:00:00Z",
+  "profile": "managed_restricted",
+  "eligibilityClass": "restricted_corpus",
+  "overallState": "incomplete",
+  "controls": {
+    "git_exclusion": {"result": "not_verified", "evidenceRef": null},
+    "object_binding_capability": {"result": "not_verified", "evidenceRef": null},
+    "project_managed_access": {"result": "not_verified", "evidenceRef": null},
+    "accidental_public_sharing_prevention": {"result": "not_verified", "evidenceRef": null},
+    "encryption_in_transit": {"result": "not_verified", "evidenceRef": null},
+    "encryption_at_rest_private_copies": {"result": "not_verified", "evidenceRef": null},
+    "version_drift_protection": {"result": "not_verified", "evidenceRef": null},
+    "retention_deletion_behavior": {"result": "not_verified", "evidenceRef": null},
+    "opaque_repository_boundary": {"result": "not_verified", "evidenceRef": null},
+    "artifact_terms_compatibility": {"result": "not_verified", "evidenceRef": null},
+    "deny_by_default_membership": {"result": "not_verified", "evidenceRef": null},
+    "public_links_disabled": {"result": "not_verified", "evidenceRef": null},
+    "access_change_history": {"result": "not_verified", "evidenceRef": null},
+    "restriction_compatible_deletion_backup": {"result": "not_verified", "evidenceRef": null},
+    "storage_environment_allowlist_match": {"result": "not_verified", "evidenceRef": null}
+  },
+  "claims": {
+    "artifactOnboardingAuthorized": false,
+    "artifactPermissionGranted": false,
+    "providerApprovedByBrand": false,
+    "artifactBytesIncluded": false,
+    "realArtifactDigestIncluded": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage2Authorized": false
+  }
+}
