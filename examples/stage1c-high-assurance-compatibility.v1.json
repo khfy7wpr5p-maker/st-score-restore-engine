@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "stage1c-high-assurance-compatibility-v1",
+  "contractRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "eligibilityClass": "sensitive_custody",
+  "storageProfile": "high_assurance_vault",
+  "legacyC4SchemaVersion": "stage1c-vault-verification-v1",
+  "legacyC4ContractRef": "adr-0014-stage-1b-custody-operations-v1",
+  "legacyC4Environment": "stage1_offline",
+  "legacyC4StorageClass": "custody_external",
+  "requiredC4Controls": [
+    "supported_host",
+    "encryption_at_rest",
+    "offline_boundary",
+    "private_by_default",
+    "least_privilege_access",
+    "separation_of_duties",
+    "quarantine_isolation",
+    "audit_integrity_and_anti_rollback",
+    "retention_enforcement",
+    "immediate_revocation",
+    "deletion_receipts",
+    "backup_anti_resurrection",
+    "git_and_sync_separation"
+  ],
+  "compatibilityState": "pass",
+  "claims": {
+    "legacyRecordDowngraded": false,
+    "legacyEvidenceReusedForManagedStandard": false,
+    "legacyEvidenceReusedForManagedRestricted": false,
+    "realVaultVerified": false,
+    "providerApprovedByBrand": false,
+    "artifactOnboardingAuthorized": false,
+    "artifactPermissionGranted": false,
+    "stage2Authorized": false
+  }
+}
