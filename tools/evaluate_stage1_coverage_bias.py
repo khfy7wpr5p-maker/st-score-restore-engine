@@ -23,6 +23,7 @@ from st_score_restore.dataset_manifest import (  # noqa: E402
     canonical_sha256,
     load_dataset_catalog,
     load_dataset_snapshot,
+    load_json_object,
 )
 
 CATALOG_PATH = ROOT / "evidence" / "stage1c" / "corpus" / "catalog.v1.json"
@@ -253,8 +254,10 @@ def verify_committed_report(
 ) -> dict[str, Any]:
     if not path.is_file():
         raise CoverageBiasError(f"missing committed report: {path.relative_to(ROOT)}")
-    with path.open("r", encoding="utf-8") as handle:
-        committed = json.load(handle)
+    try:
+        committed = load_json_object(path)
+    except ValueError as error:
+        raise CoverageBiasError("committed C16 report is not strict JSON") from error
     if canonical_json(committed) != canonical_json(expected):
         raise CoverageBiasError("committed C16 report differs from deterministic evaluation")
     return committed
