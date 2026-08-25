@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "stage1c-artifact-admission-request-v1",
+  "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "requestId": "admissionreq:opq_27ac7feeadffd94f1c439bdf63e0461f",
+  "evaluatedAt": "2026-08-25T15:13:00Z",
+  "datasetItemId": "dataset.item.imslp82860-chopin-op69.v1",
+  "expectedItemSha256": "b8aab0a86924043c038c44f3f7346199628ae101e520c7f023d934485db3e58b",
+  "requestedPurpose": "held_out_evaluation",
+  "acquisitionEvidenceRef": "evidence:opq_8fabd00cc3dd6699931b9f3e6b73f799",
+  "expectedEligibilityClass": "open_corpus",
+  "expectedStorageProfile": "managed_standard",
+  "profileVerificationRef": "stdver:opq_AUqIC7ZnOmoYgQVzEaQWTA",
+  "profileVerificationSha256": "37be7b7c24d6d7419af5d668c46faa2a37f876550eaa933e7a15b16adac418bf",
+  "storageBindingEvidenceRef": "evidence:opq_91d6de8376d86e2d092dc112662790b9",
+  "claims": {
+    "artifactBytesIncluded": false,
+    "providerDetailsIncluded": false,
+    "modelTrainingAuthorized": false,
+    "qualityCalibrationAuthorized": false,
+    "safetyCalibrationAuthorized": false,
+    "publicationAuthorized": false,
+    "demonstrationAuthorized": false,
+    "syntheticDerivationAuthorized": false,
+    "stage2Authorized": false
+  }
+}
