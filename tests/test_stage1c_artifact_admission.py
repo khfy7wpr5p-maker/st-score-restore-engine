@@ -10,7 +10,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from dataset_test_item_helpers import item, opaque, permission  # noqa: E402
-from st_score_restore.dataset_manifest import load_json_object  # noqa: E402
+from st_score_restore.dataset_manifest import canonical_sha256, load_json_object  # noqa: E402
 from tools.evaluate_stage1c_artifact_admission import (  # noqa: E402
     ArtifactAdmissionError,
     evaluate_admission,
@@ -44,7 +44,7 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
         profile: dict,
         *,
         purpose: str = "quality_evaluation",
-        evaluated_at: str = "2026-08-02T00:00:00Z",
+        evaluated_at: str = "2026-08-25T12:00:00Z",
     ) -> dict:
         profile_name = candidate["retention"]["storageClass"]
         return {
@@ -53,11 +53,13 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
             "requestId": f"admissionreq:{opaque(90)}",
             "evaluatedAt": evaluated_at,
             "datasetItemId": candidate["datasetItemId"],
+            "expectedItemSha256": canonical_sha256(candidate),
             "requestedPurpose": purpose,
             "acquisitionEvidenceRef": candidate["provenance"]["sourceReference"],
             "expectedEligibilityClass": candidate["eligibilityClass"],
             "expectedStorageProfile": profile_name,
             "profileVerificationRef": profile["verificationId"],
+            "profileVerificationSha256": canonical_sha256(profile),
             "storageBindingEvidenceRef": f"evidence:{opaque(91)}",
             "claims": {
                 "artifactBytesIncluded": False,
@@ -103,7 +105,9 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
         result = evaluate_admission(request, catalog=catalog, schema=schema)
         self.assertEqual(result["decision"], "blocked")
         self.assertIn("artifact_not_external_available", result["reasonCodes"])
+        self.assertIn("missing_expected_item_sha256", result["reasonCodes"])
         self.assertIn("missing_requested_purpose", result["reasonCodes"])
+        self.assertIn("missing_profile_verification_sha256", result["reasonCodes"])
         self.assertIn("missing_profile_verification_record", result["reasonCodes"])
 
     def test_all_three_storage_profiles_can_be_eligible(self) -> None:
@@ -172,6 +176,48 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
         )
         self.assert_blocked(result, "profile_verification_ref_mismatch")
 
+    def test_item_digest_mismatch_blocks_admission(self) -> None:
+        candidate = self.candidate()
+        profile = self.pass_profile(
+            "stage1c-managed-standard-verification.zero-state.v1.json"
+        )
+        request = self.request(candidate, profile)
+        request["expectedItemSha256"] = "f" * 64
+        result = evaluate_admission(
+            request,
+            catalog=self.catalog(candidate),
+            profile_record=profile,
+        )
+        self.assert_blocked(result, "item_sha256_mismatch")
+
+    def test_profile_digest_mismatch_blocks_admission(self) -> None:
+        candidate = self.candidate()
+        profile = self.pass_profile(
+            "stage1c-managed-standard-verification.zero-state.v1.json"
+        )
+        request = self.request(candidate, profile)
+        request["profileVerificationSha256"] = "f" * 64
+        result = evaluate_admission(
+            request,
+            catalog=self.catalog(candidate),
+            profile_record=profile,
+        )
+        self.assert_blocked(result, "profile_verification_sha256_mismatch")
+
+    def test_future_profile_verification_cannot_authorize_past_admission(self) -> None:
+        candidate = self.candidate()
+        profile = self.pass_profile(
+            "stage1c-managed-standard-verification.zero-state.v1.json"
+        )
+        profile["assessedAt"] = "2026-08-26T00:00:00Z"
+        request = self.request(candidate, profile, evaluated_at="2026-08-25T12:00:00Z")
+        result = evaluate_admission(
+            request,
+            catalog=self.catalog(candidate),
+            profile_record=profile,
+        )
+        self.assert_blocked(result, "profile_verification_after_evaluation_time")
+
     def test_acquisition_evidence_must_bind_catalog_source_reference(self) -> None:
         candidate = self.candidate()
         profile = self.pass_profile(
@@ -218,12 +264,12 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
         candidate = self.candidate()
         candidate["permissions"]["quality_evaluation"] = permission(
             "granted",
-            authorized_on="2026-08-03",
+            authorized_on="2026-08-26",
         )
         profile = self.pass_profile(
             "stage1c-managed-standard-verification.zero-state.v1.json"
         )
-        request = self.request(candidate, profile, evaluated_at="2026-08-02T00:00:00Z")
+        request = self.request(candidate, profile)
         result = evaluate_admission(
             request,
             catalog=self.catalog(candidate),
@@ -233,11 +279,11 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
 
     def test_reviews_cannot_postdate_admission_evaluation(self) -> None:
         candidate = self.candidate()
-        candidate["provenance"]["rightsReview"]["verifiedOn"] = "2026-08-03"
+        candidate["provenance"]["rightsReview"]["verifiedOn"] = "2026-08-26"
         profile = self.pass_profile(
             "stage1c-managed-standard-verification.zero-state.v1.json"
         )
-        request = self.request(candidate, profile, evaluated_at="2026-08-02T00:00:00Z")
+        request = self.request(candidate, profile)
         result = evaluate_admission(
             request,
             catalog=self.catalog(candidate),
@@ -248,11 +294,11 @@ class Stage1CArtifactAdmissionTests(unittest.TestCase):
     def test_retention_cannot_be_expired_at_admission(self) -> None:
         candidate = self.candidate()
         candidate["retention"]["policy"] = "external_until_date"
-        candidate["retention"]["expiresOn"] = "2026-08-02"
+        candidate["retention"]["expiresOn"] = "2026-08-25"
         profile = self.pass_profile(
             "stage1c-managed-standard-verification.zero-state.v1.json"
         )
-        request = self.request(candidate, profile, evaluated_at="2026-08-02T00:00:00Z")
+        request = self.request(candidate, profile)
         result = evaluate_admission(
             request,
             catalog=self.catalog(candidate),
