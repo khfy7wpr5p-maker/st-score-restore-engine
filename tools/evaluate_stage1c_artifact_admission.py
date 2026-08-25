@@ -40,7 +40,7 @@ from tools.validate_stage1c_managed_standard_verification import (  # noqa: E402
     validate_record as validate_standard_record,
 )
 from tools.validate_stage1c_vault_verification import (  # noqa: E402
-    Stage1CVaultVerificationError,
+    VaultVerificationError,
     validate_record as validate_vault_record,
 )
 
@@ -325,7 +325,7 @@ def evaluate_admission(
         except (
             ManagedStandardVerificationError,
             ManagedRestrictedVerificationError,
-            Stage1CVaultVerificationError,
+            VaultVerificationError,
         ):
             reasons.add("profile_verification_record_invalid")
         else:
