@@ -1,6 +1,6 @@
 # Stage 1C Artifact Custody Profile Policy
 
-**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6  
+**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6; C7 deterministic eligibility merged  
 **Stage:** Stage 1C  
 **Parent:** Issue #47  
 **Architecture accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
@@ -51,6 +51,8 @@ A composer/work being public domain is supporting context only. It does not repl
 - corpus manifest cannot silently drift when a provider version changes;
 - provider/account/path details remain outside ordinary Git except for approved opaque evidence references.
 
+C8 operational verification covers only the storage-configuration subset of these requirements. Exact-artifact rights, privacy, dataset review, purpose, retention assignment and final digest/byte-size values remain item-specific Stage 1A/1C admission gates and are not replaced by a profile-level pass.
+
 ## `managed_restricted` additional controls
 
 - provider/environment explicitly compatible with artifact terms;
@@ -81,6 +83,10 @@ Catalog schema `1.3.0` adds required `eligibilityClass` and changes external `re
 
 The Python validator rejects illegal class/profile pairs, `open_corpus` with non-`none` privacy, and personal/student data outside `sensitive_custody`.
 
+## C7 deterministic eligibility
+
+C7 derives the minimum required eligibility class from validated structured evidence and rejects declarations weaker than that floor. Explicit security escalation remains permitted, so legacy high-assurance records are never silently downgraded.
+
 ## Legacy anti-downgrade guard
 
 Existing catalog `1.2.0` metadata is not silently weakened. The explicit migration maps:
@@ -91,13 +97,12 @@ Existing catalog `1.2.0` metadata is not silently weakened. The explicit migrati
 
 The migration never infers `managed_standard` or `managed_restricted`. Unknown legacy shapes fail closed.
 
-## Remaining operational hold
+## Operational hold
 
-C6 makes the vocabulary machine-readable; it does not prove a real provider or artifact eligible. Before artifact onboarding:
+C6 and C7 make profile vocabulary and eligibility deterministic; neither proves a real storage configuration or artifact eligible.
 
-- C7 must provide deterministic evidence-derived eligibility resolution;
-- C8 must verify a concrete `managed_standard` configuration before open-corpus use;
-- C9 must verify restriction-compatible `managed_restricted` controls before restricted-corpus use;
+- C8 defines fail-closed operational verification for a concrete `managed_standard` configuration. The repository zero state remains `incomplete`; an actual pass requires external evidence.
+- C9 must verify restriction-compatible `managed_restricted` controls before restricted-corpus use.
 - C10 preserves/verifies the existing high-assurance boundary.
 
-No artifact bytes are introduced by C6. Stage 2 remains blocked until the complete Stage 1 exit gate is accepted.
+No governance/profile implementation by itself introduces artifact bytes or grants artifact-specific permission. Stage 2 remains blocked until the complete Stage 1 exit gate is accepted.

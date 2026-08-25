@@ -85,6 +85,9 @@ jobs:
       - name: Validate Stage 1C vault verification contract
         run: python tools/validate_stage1c_vault_verification.py
 
+      - name: Validate Stage 1C managed-standard verification contract
+        run: python tools/validate_stage1c_managed_standard_verification.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
