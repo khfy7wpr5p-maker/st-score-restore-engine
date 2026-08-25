@@ -4,11 +4,13 @@
   "requestId": "admissionreq:opq_00000000000000000000000000000001",
   "evaluatedAt": "2026-08-25T00:00:00Z",
   "datasetItemId": "dataset.item.example-clean-staff.v1",
+  "expectedItemSha256": null,
   "requestedPurpose": null,
   "acquisitionEvidenceRef": "evidence:opq_00000000000000000000000000000001",
   "expectedEligibilityClass": null,
   "expectedStorageProfile": null,
   "profileVerificationRef": null,
+  "profileVerificationSha256": null,
   "storageBindingEvidenceRef": null,
   "claims": {
     "artifactBytesIncluded": false,
