@@ -1,6 +1,6 @@
 # Stage 1C Artifact Custody Profile Policy
 
-**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6; C7 deterministic eligibility merged  
+**Status:** Accepted architecture; catalog `1.3.0` machine-readable implementation introduced by C6; C7 deterministic eligibility merged; C8 managed-standard verification merged  
 **Stage:** Stage 1C  
 **Parent:** Issue #47  
 **Architecture accepted through:** PR #55 / `c6e6b592c2cef63a15c13fb8b0f72019c7864a84`
@@ -62,6 +62,8 @@ C8 operational verification covers only the storage-configuration subset of thes
 - restriction-compatible deletion and backup behavior;
 - any storage/environment allowlist in the artifact permission must match.
 
+C9 verifies these restricted-profile controls while inheriting the nine C8 baseline operational controls. It uses an opaque `restrictionSetRef`; the repository does not embed license text, provider details, or artifact-specific restriction content.
+
 ## `high_assurance_vault`
 
 Uses ADR 0014 and the Stage 1C C4 vault-verification evidence contract. This retains the stronger requirements for supported host, encryption, offline separation, least privilege, role separation, quarantine, audit anti-rollback, retention, immediate revocation, deletion evidence, backup anti-resurrection, and Git/sync separation.
@@ -102,7 +104,7 @@ The migration never infers `managed_standard` or `managed_restricted`. Unknown l
 C6 and C7 make profile vocabulary and eligibility deterministic; neither proves a real storage configuration or artifact eligible.
 
 - C8 defines fail-closed operational verification for a concrete `managed_standard` configuration. The repository zero state remains `incomplete`; an actual pass requires external evidence.
-- C9 must verify restriction-compatible `managed_restricted` controls before restricted-corpus use.
+- C9 defines fail-closed operational verification for `managed_restricted`, including the C8 baseline plus the six accepted restricted-profile controls. Its repository zero state also remains `incomplete`; an actual pass requires external evidence bound to a concrete restriction set.
 - C10 preserves/verifies the existing high-assurance boundary.
 
 No governance/profile implementation by itself introduces artifact bytes or grants artifact-specific permission. Stage 2 remains blocked until the complete Stage 1 exit gate is accepted.
