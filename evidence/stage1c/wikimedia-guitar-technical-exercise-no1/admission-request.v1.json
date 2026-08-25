@@ -4,7 +4,7 @@
   "requestId": "admissionreq:opq_bdb9fc01b72598c73e31bb00154cbcf2",
   "evaluatedAt": "2026-08-25T19:30:00Z",
   "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
-  "expectedItemSha256": "bc6aa0c75adb8021ee7f4f18c76bd8b916e707ef610d0a25c6f6c2a673ec1ec8",
+  "expectedItemSha256": "5deed5fac92ff98e10177eb1ff45d742e15863d58235a18af2dedcb4b1880449",
   "requestedPurpose": "quality_evaluation",
   "acquisitionEvidenceRef": "evidence:opq_0de27324e60c71ed3e03c30a9f05226e",
   "expectedEligibilityClass": "open_corpus",
