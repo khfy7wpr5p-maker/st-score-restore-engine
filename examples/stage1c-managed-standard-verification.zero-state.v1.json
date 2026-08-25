@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "stage1c-managed-standard-verification-v1",
+  "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "verificationId": "stdver:opq_0000000000000001",
+  "configurationRef": "storagecfg:opq_0000000000000001",
+  "assessorRef": "actor:opq_0000000000000001",
+  "assessedAt": "2026-08-25T00:00:00Z",
+  "eligibilityClass": "open_corpus",
+  "storageProfile": "managed_standard",
+  "overallState": "incomplete",
+  "controls": {
+    "git_exclusion": {"result": "not_verified", "evidenceRef": null},
+    "object_binding_capability": {"result": "not_verified", "evidenceRef": null},
+    "project_managed_access": {"result": "not_verified", "evidenceRef": null},
+    "accidental_public_sharing_prevention": {"result": "not_verified", "evidenceRef": null},
+    "encryption_in_transit": {"result": "not_verified", "evidenceRef": null},
+    "encryption_at_rest_private_copies": {"result": "not_verified", "evidenceRef": null},
+    "version_drift_protection": {"result": "not_verified", "evidenceRef": null},
+    "retention_deletion_behavior": {"result": "not_verified", "evidenceRef": null},
+    "opaque_repository_boundary": {"result": "not_verified", "evidenceRef": null}
+  },
+  "claims": {
+    "artifactOnboardingAuthorized": false,
+    "artifactPermissionGranted": false,
+    "providerApprovedByBrand": false,
+    "artifactBytesIncluded": false,
+    "realArtifactDigestIncluded": false,
+    "stage2Authorized": false
+  }
+}
