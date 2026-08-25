@@ -15,7 +15,10 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from st_score_restore.dataset_contract_common import _permission, _permission_valid_on  # noqa: E402
 from st_score_restore.dataset_contract_constants import PURPOSES, DatasetManifestError  # noqa: E402
-from st_score_restore.dataset_manifest import load_dataset_catalog  # noqa: E402
+from st_score_restore.dataset_manifest import (  # noqa: E402
+    load_dataset_catalog,
+    validate_dataset_catalog,
+)
 
 DEFAULT_CATALOG = ROOT / "evidence" / "stage1c" / "imslp799143" / "catalog.v1.json"
 CONTRACT_PATH = ROOT / "docs" / "stage-1c-corpus-readiness.md"
@@ -78,12 +81,13 @@ def evaluate_corpus_readiness(
     catalog: dict[str, Any], *, as_of: date
 ) -> dict[str, Any]:
     """Return deterministic structural readiness without creating a snapshot."""
+    validated = validate_dataset_catalog(catalog)
     reasons: set[str] = set()
     counts = {"development": 0, "held_out": 0}
     families = {"development": set(), "held_out": set()}
     digests: dict[str, set[str]] = {}
 
-    for item in catalog["items"]:
+    for item in validated["items"]:
         artifact = item["artifact"]
         if artifact["state"] != "external_available":
             continue
