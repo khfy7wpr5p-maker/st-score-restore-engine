@@ -45,9 +45,10 @@ class Stage1CC17GuitarTabAdmissionTests(unittest.TestCase):
         self.assertEqual(self.item["input"]["kind"], "png")
         self.assertEqual(self.item["input"]["mediaType"], "image/png")
         self.assertEqual(
-            set(self.item["input"]["notationKinds"]),
-            {"guitar_tab", "combined_staff_tab"},
+            self.item["input"]["notationKinds"],
+            ["combined_staff_tab"],
         )
+        self.assertNotIn("guitar_tab", self.item["input"]["notationKinds"])
         self.assertEqual(self.item["split"], "development")
         granted = sorted(
             purpose
