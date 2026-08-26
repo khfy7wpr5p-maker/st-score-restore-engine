@@ -4,13 +4,14 @@
 **As of:** 2026-08-26  
 **Parent issue:** #47  
 **Historical frozen baseline:** C15/C16  
-**Active implementation slice:** C17A / PR #68 (Draft)  
+**Latest merged slice:** C17A / PR #68  
+**Current continuation:** C17B/C17C/C17D source qualification; exact-byte ingestion pending  
 **Stage 1 exit:** BLOCKED  
 **Stage 2 entry:** BLOCKED
 
 ## 1. Purpose
 
-This document is the repository-visible current-status reconciliation for Stage 1C. It does not replace the historical C12-C16 evidence records or mutate the C15 frozen snapshot. When an older status paragraph conflicts with this document, the current repository state, accepted ADRs, merged implementation evidence, and the exact open-PR state remain authoritative.
+This document is the repository-visible current-state reconciliation for Stage 1C. It does not replace the historical C12-C16 evidence records or mutate the C15 frozen snapshot. When an older status paragraph conflicts with this document, the fresh repository state, accepted ADRs, merged implementation evidence, Issue #47, and exact open-PR state remain authoritative.
 
 ## 2. Merged Stage 1C baseline
 
@@ -29,9 +30,10 @@ The following Stage 1C slices are merged on `main`:
 - C13 — structural corpus readiness gate;
 - C14 — independent held-out artifact and two-item realized corpus;
 - C15 — digest-addressed immutable snapshot freeze;
-- C16 — deterministic frozen-snapshot coverage/gap/bias evaluation.
+- C16 — deterministic frozen-snapshot coverage/gap/bias evaluation;
+- C17A — rights-clean Public Domain combined staff+TAB artifact admission.
 
-The earlier statement that the machine-readable ADR 0016 migration is still pending is obsolete. Catalog `1.3.0`, eligibility/profile validation, and the C8-C11 operational/admission mechanisms are already implemented and merged.
+The earlier statement that the machine-readable ADR 0016 migration is still pending is obsolete. Catalog `1.3.0`, eligibility/profile validation, and the C8-C11 operational/admission mechanisms are implemented and merged.
 
 ## 3. Binding custody model
 
@@ -60,7 +62,7 @@ Historical C16 corpus:
 - development: 1 item / 4 pages;
 - held out: 1 item / 8 pages;
 - staff notation: 2 items;
-- guitar TAB: 0 items;
+- standalone guitar TAB: 0 items;
 - combined staff/TAB: 0 items;
 - scanned PDF: 2 items;
 - phone photo: 0 items;
@@ -78,13 +80,15 @@ Historical C16 gap codes remain:
 
 C17 work must not rewrite these historical counts. Any expanded corpus requires a new versioned snapshot and a new deterministic coverage evaluation.
 
-## 5. C17A / PR #68
+## 5. C17A / PR #68 — MERGED
 
-PR #68 is the current C17A implementation slice and remains Draft.
-
-The corrected exact C17A head before this documentation reconciliation is:
+PR #68 is merged. The exact reviewed head was:
 
 `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`
+
+The merge commit on `main` is:
+
+`010db20a4feb71dd36c9c5378d4d486836c5abc0`
 
 The C17A artifact is a rights-clean Public Domain PNG admitted only for `quality_evaluation` under `open_corpus` / `managed_standard`. Its notation taxonomy is intentionally:
 
@@ -94,7 +98,7 @@ combined_staff_tab
 
 It is **not** also classified as standalone `guitar_tab`. The Codex P2 review finding that the original metadata would overstate future coverage was accepted and corrected. Standalone guitar TAB therefore remains a separate missing target.
 
-The exact artifact metadata is:
+Exact C17A artifact metadata:
 
 - SHA-256: `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
 - byte size: `34636`;
@@ -111,25 +115,53 @@ The corrected canonical dataset-item digest bound by the admission request is:
 
 `5deed5fac92ff98e10177eb1ff45d742e15863d58235a18af2dedcb4b1880449`
 
-Repository validation Run #147 (`32895593925`) succeeded for the corrected C17A head on Python 3.11 and 3.12. The review thread is resolved. Because the head changed after the earlier review cycle, repository governance still requires a fresh Ready-for-review gate and a later exact-head merge gate.
+Repository validation Run #147 (`32895593925`) succeeded for the corrected exact head on Python 3.11 and 3.12. The review thread was resolved before merge.
 
-## 6. Phone-photo boundary
+C17A does not mutate the historical C15 snapshot and does not retroactively alter the historical C16 result.
 
-A user-provided real phone photograph remains fail-closed because it maps to `sensitive_custody` and therefore requires a real `high_assurance_vault` verification. The current C10 compatibility evidence proves structural compatibility only; it explicitly does not prove a real vault and does not authorize sensitive artifact onboarding.
+## 6. Current C17 continuation
+
+The next independently qualified targets are:
+
+1. **C17B — standalone guitar TAB:** IMSLP #911664, `Complete Tablature (Guitar TAB)`, qualified as a rights-clean candidate. Exact original PDF bytes are not yet present in the authorized Stage 1 custody workspace, so no SHA-256, C11 admission, or coverage closure is claimed.
+2. **C17C — naturally degraded/non-clean score:** Wikimedia Commons `File:Notenblatt-music-vintage-alt.jpg`, qualified as a candidate subject to exact-byte verification and exact degradation encoding.
+3. **C17D — genuine rights-clean phone-photo path:** independently sourced public-domain phone-captured sheet music is preferred over the user-provided sensitive artifact when exact rights, privacy, and exact-byte evidence permit `open_corpus -> managed_standard`.
+
+The fresh authorized-custody inventory contains the merged C17A PNG, the existing development/held-out baseline artifacts, and the separate user-provided phone photo. The preferred C17B/C17C/C17D public-source bytes are not yet present. Therefore exact digests, admission records, new snapshot membership, and coverage closure must not be fabricated.
+
+## 7. Phone-photo boundary
+
+A user-provided real phone photograph remains fail-closed because it maps to `sensitive_custody` and therefore requires real `high_assurance_vault` verification. The current C10 compatibility evidence proves structural compatibility only; it explicitly does not prove a real vault and does not authorize sensitive artifact onboarding.
 
 A phone-photo gap must not be fabricated by synthetically converting an existing score or by relabeling a non-phone source. It remains missing until independently authorized real evidence exists.
 
-## 7. Current next work
+## 8. PR transition governance
 
-C17 must continue corpus expansion without mutating the C15 historical freeze. The remaining priority dimensions are:
+Ready-for-review and merge remain separate objective technical gates. Under the current autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force.
 
-1. standalone rights-clean guitar TAB;
-2. real non-clean/degraded source material;
-3. real phone-captured sheet music with an admissible custody path;
-4. additional independent development and held-out source families.
+The safety requirements are unchanged:
 
-After enough independently admitted material exists, create a **new versioned snapshot**, re-run deterministic coverage/bias evaluation, reconcile the Stage 1 dataset card and exit evidence, and only then decide whether Stage 1 exit is supportable.
+- fresh-read base and head before each transition;
+- focused Draft-first PR;
+- exact-head CI and review reconciliation;
+- no unresolved blocking review findings;
+- merge only from the exact verified head;
+- any head movement invalidates earlier head-specific evidence;
+- later roadmap stages remain blocked by their own entry gates.
 
-## 8. Safety statement
+This changes approval cadence only; it does not waive safety, rights, privacy, custody, dataset, or roadmap gates.
+
+## 9. Current next work
+
+C17 must continue corpus expansion without mutating the C15 historical freeze. After enough independently admitted material exists:
+
+1. validate all new item-level governance/admission evidence;
+2. verify split/source-family/digest isolation;
+3. create a **new versioned snapshot** rather than changing C15;
+4. run a fresh deterministic coverage/bias evaluation;
+5. reconcile the dataset card and Stage 1 exit evidence;
+6. decide Stage 1 exit only from that new evidence.
+
+## 10. Safety statement
 
 This status reconciliation grants no new artifact permission, changes no historical snapshot, stores no score/image/PDF bytes in Git, starts no model training or calibration, and does not authorize Stage 2, DocRes, the multi-engine comparator, the selector, the ST Restore image model, production deployment, or downstream music-application integration.
