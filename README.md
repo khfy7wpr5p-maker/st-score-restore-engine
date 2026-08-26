@@ -28,13 +28,13 @@ ScoreMosaic OMR
 MusicXML
 ```
 
-The target path above is architecture-locked by [ADR 0015](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md). A restoration derivative must be safety-validated before comparator eligibility; a rejected derivative cannot win; and the immutable original always remains selectable. The future ST Restore Selector may decide which optional engines or profiles to invoke, but it may not bypass or reorder the mandatory validation → comparator → original-aware selection sequence.
+The target path is architecture-locked by [ADR 0015](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md). A restoration derivative must be safety-validated before comparator eligibility; a rejected derivative cannot win; and the immutable original always remains selectable. The future ST Restore Selector may choose optional engines or profiles, but it may not bypass or reorder the mandatory validation → comparator → original-aware selection sequence.
 
-This diagram records the target architecture. The current OpenCV-only runtime now implements the validator-before-comparator ordering and records the immutable original as a selectable comparator baseline. It does not activate DocRes, ST Image AI, the Roadmap Stage 9 multi-engine comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
+The current runtime remains OpenCV-only. It implements validator-before-comparator ordering for its bounded current workflow and records the immutable original as a selectable baseline. It does **not** activate DocRes, ST Image AI, the Roadmap Stage 9 multi-engine comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
 
 ## Repository boundary
 
-This repository remains an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik will integrate through a versioned API; their repositories are not merged into this engine.
+This repository remains an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik integrate only through versioned contracts; their repositories are not merged into this engine.
 
 ST Score Restore produces visual `restoration_variant` artifacts. It is not an OMR engine and its variants must not be confused with ScoreMosaic OMR candidates. A selected visual source variant must cross ScoreMosaic's own Safe Intake boundary before OMR processing.
 
@@ -42,13 +42,31 @@ ST Score Restore produces visual `restoration_variant` artifacts. It is not an O
 
 Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
 
-The target multi-engine architecture is explicitly locked as: restoration engines → per-variant safety validation → original-aware comparator → selected source variant → downstream ScoreMosaic Safe Intake/OMR. The current runtime remains OpenCV-only, but its processing order is aligned with ADR 0015: the OpenCV restoration variant is safety-validated before comparator evidence is emitted, rejected variants are excluded from comparator eligibility, and the immutable original remains selectable. This bounded current behavior is not the Roadmap Stage 9 multi-engine comparator.
+The current Stage 1 state is:
 
-Stage 1 dataset governance is being delivered through explicit gated substages. Stage 1A metadata governance is complete. Stage 1B provider-neutral high-assurance custody/operations implementation and hardening are complete: Issue #36 closed as `completed` after the final PR #44 exact-head audit evidence, merge, and successful post-merge `main` CI. Stage 1C is active under Issue #47.
+- **Stage 1A — metadata governance:** complete;
+- **Stage 1B — high-assurance custody/operations boundary:** complete and formally closed;
+- **Stage 1C — authorized artifact onboarding and corpus realization:** active under Issue #47;
+- **Stage 2 — complete quality analysis:** blocked until the complete Stage 1 exit gate passes.
 
-The Stage 1C storage architecture is now risk-tiered by [ADR 0016](docs/adr/0016-stage-1c-risk-tiered-artifact-custody.md). The previous G4 rule that forced every real artifact into one encrypted offline vault is superseded once ADR 0016 is accepted. Exact-artifact rights, privacy, purpose, retention and dataset-review evidence are evaluated first. Verified low-risk `open_corpus` artifacts may use a `managed_standard` profile; lawfully usable but restricted artifacts may use `managed_restricted` when their terms permit it; private/personal/student/consent-restricted artifacts remain in `high_assurance_vault`; unresolved or rejected governance is `blocked` and cannot be onboarded. The public-domain status of a musical composition alone is not sufficient: the exact edition/engraving/scan/file must have suitable rights evidence.
+ADR 0016 risk-tiered custody is implemented, not merely proposed. Catalog schema `1.3.0` and the deterministic profile/eligibility machinery are merged. The binding custody mapping is:
 
-The merged C4 vault-verification schema remains the high-assurance evidence mechanism. It is no longer intended as a universal gate for every real document. However, ADR 0016 changes architecture before implementation: the current Stage 1A/1C machine-readable schemas still represent the legacy storage values. Therefore no artifact may yet become `external_available` under the new storage-profile names until a follow-up versioned schema/validator PR is merged and verified. No artifact bytes are added by the architecture change.
+- `open_corpus` → `managed_standard`;
+- `restricted_corpus` → `managed_restricted` when exact artifact terms permit it;
+- `sensitive_custody` → `high_assurance_vault`;
+- unresolved/rejected governance → `blocked`.
+
+The G4 Stage 1 purpose allowlist remains limited to `quality_evaluation` and `held_out_evaluation`. Exact-artifact rights, privacy, purpose, retention, dataset review, provenance, digest/size binding, custody verification, and admission remain independent fail-closed gates.
+
+C5-C16 are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
+
+C17 corpus expansion is active. The current C17A implementation is Draft PR #68. Its corrected metadata admits one rights-clean Public Domain PNG as **`combined_staff_tab` only** for `quality_evaluation` under `open_corpus` / `managed_standard`. It is deliberately **not** also counted as standalone `guitar_tab`, so historical and future coverage is not artificially inflated. The corrected pre-documentation head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146` passed Repository validation Run #147 on Python 3.11 and 3.12.
+
+The historical C15/C16 snapshot remains immutable and unchanged by C17A. C17 additions require a new versioned snapshot before they can alter the deterministic coverage decision.
+
+A real user-provided phone photo remains blocked unless its `sensitive_custody` path has a genuinely verified `high_assurance_vault`. C10 proves structural compatibility only; it does not prove a real vault or authorize sensitive artifact onboarding.
+
+See [Stage 1C current status](docs/stage-1c-current-status.md) for the canonical current-state reconciliation and [Stage 1 exit evidence](docs/stage-1-exit-evidence.md) for the gate evidence.
 
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Image AI, OMR, and MusicXML integration remain disabled or deferred.
 
@@ -57,36 +75,34 @@ Production deployment, encrypted cloud object storage, an external queue, produc
 The project uses a data-first, measurement-first sequence. Later stages may not be pulled forward merely because implementation appears possible.
 
 ```text
-Roadmap update
+Stage 0  Roadmap update
       ↓
-Real and explicitly authorized test dataset
+Stage 1  Real and explicitly authorized test dataset
       ↓
-Complete quality-analysis system
+Stage 2  Complete quality-analysis system
       ↓
-Multi-page PDF pipeline
+Stage 3  Multi-page PDF pipeline
       ↓
-Safety calibration with real data
+Stage 4  Safety calibration with real data
       ↓
-Accessible teacher review interface
+Stage 5  Accessible teacher review interface
       ↓
-Identity, network and production infrastructure
+Stage 6  Identity, network and production infrastructure
       ↓
-Preview release
+Stage 7  Preview release
       ↓
-DocRes optional candidate
+Stage 8  DocRes optional candidate
       ↓
-Multi-engine comparator
+Stage 9  Multi-engine comparator
       ↓
-ST Restore Selector
+Stage 10 ST Restore Selector
       ↓
-ST Restore image model
+Stage 11 ST Restore image model
       ↓
-Music-application integrations
+Stage 12 Music-application integrations
 ```
 
-Each stage requires explicit approval before work begins and separate approval before merge. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
-
-**Current Stage 1 gate:** Stage 1A is complete, Stage 1B is formally closed, and Stage 1C is active under Issue #47. ADR 0016 replaces the universal offline-vault storage rule with artifact-specific custody tiers, but the machine-readable profile implementation is not yet merged. Metadata-only Stage 1C architecture/contract work may proceed; artifact onboarding remains fail-closed until the relevant storage-profile schema and validator update is accepted and each item independently satisfies rights, privacy, dataset-review, retention and purpose authorization. Stage 2 remains blocked until the complete Stage 1 corpus exit gate is accepted.
+Every implementation slice must publish objective evidence before transition. The repository governance requires Draft-first PR handling, exact-head verification, a separate Ready-for-review gate, and a later exact-head merge gate. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
 
 ## Development baseline
 
@@ -97,18 +113,18 @@ Each stage requires explicit approval before work begins and separate approval b
 - NumPy runtime: `numpy==2.3.5`
 - Job API: `/api/v1`, version `0.5.0`
 - Review contract: reviewer-only immutable evidence bundles and stale-screen binding
-- HTTP baseline: strict standard-library server with bounded headers/body/timeouts; still not approved for untrusted networks
+- HTTP baseline: strict standard-library server with bounded headers/body/timeouts; not approved for untrusted networks
 - HTTP connection model: one request per connection; pipelining, chunked requests, upgrades, and `Expect` are rejected
 - Storage baseline: in-memory by default; opt-in local SQLite metadata and content-addressed blobs
 - Local worker safety: attempt-bound lease tokens, transaction fencing, and expired in-flight recovery
-- Fixture artifact bytes: not included; current catalog is metadata-only
+- Real Stage 1 artifact bytes: stored outside ordinary Git; repository metadata uses exact digests plus opaque evidence/custody references
 - Source identity: deterministic SHA-256 artifact manifest
 - Candidate identity: separate SHA-256 digest and audit manifest
 - Safety report: staff and TAB geometry, line continuity, local symbol and component risk
 - Review evidence: source-space overlays, deterministic grayscale before/after crops, transform provenance
 - Audit: append-only hash-linked events, verified when durable state is loaded
 - Digital PDFs: preserved as vector; never implicitly rasterized
-- Teacher approval: separate from candidate generation and training consent
+- Teacher approval: separate from candidate generation, dataset inclusion, and training consent
 
 Validate the repository contracts with:
 
@@ -150,17 +166,21 @@ python tools/run_api.py \
 
 The selected data directory contains source and derived document bytes and is not encrypted by the application. Use a dedicated private directory. Do not commit it and do not expose the built-in API adapter to an untrusted network.
 
-See:
+## Repository references
 
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
+- [Stage 1C current status](docs/stage-1c-current-status.md)
+- [Stage 1 dataset card](docs/stage-1-dataset-card.md)
+- [Stage 1 coverage and bias register](docs/stage-1-coverage-and-bias-register.md)
+- [Stage 1 exit evidence](docs/stage-1-exit-evidence.md)
 - [ADR 0015 — Restoration pipeline validation, comparator, and OMR handoff](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md)
 - [ADR 0016 — Stage 1C risk-tiered artifact custody](docs/adr/0016-stage-1c-risk-tiered-artifact-custody.md)
 - [Stage 1C artifact custody profile policy](docs/stage-1c-storage-profile-policy.md)
-- [Stage 1C high-assurance vault verification evidence](docs/stage-1c-vault-verification-evidence-contract.md)
+- [Stage 1C artifact admission contract](docs/stage-1c-artifact-admission-contract.md)
+- [Stage 1C high-assurance compatibility contract](docs/stage-1c-high-assurance-compatibility-contract.md)
 - [Stage 1B closure evidence](docs/stage-1b-closure-evidence.md)
 - [Stage 1B custody and operations contract](docs/stage-1b-custody-operations-contract.md)
-- [Stage 1B decision hardening record](docs/stage-1b-decision-hardening-record.md)
 - [Job API and teacher-review baseline](docs/job-api-and-teacher-review.md)
 - [Immutable review evidence contract](docs/review-evidence-contract.md)
 - [Durable local persistence baseline](docs/durable-local-persistence.md)
@@ -172,9 +192,3 @@ See:
 - [Immutable input inspection contract](docs/input-inspection-contract.md)
 - [OpenCV safe-restoration baseline](docs/safe-restoration-baseline.md)
 - [Music-score and guitar-TAB safety validator](docs/music-safety-validator.md)
-- [ADR 0007](docs/adr/0007-in-process-job-api-and-review-workflow.md)
-- [ADR 0008](docs/adr/0008-durable-local-persistence.md)
-- [ADR 0009](docs/adr/0009-attempt-bound-worker-fencing-and-recovery.md)
-- [ADR 0010](docs/adr/0010-strict-local-http-and-multipart-boundary.md)
-- [ADR 0011](docs/adr/0011-immutable-review-evidence-and-stale-screen-binding.md)
-- [ADR 0014](docs/adr/0014-stage-1b-custody-operations-boundary.md)
