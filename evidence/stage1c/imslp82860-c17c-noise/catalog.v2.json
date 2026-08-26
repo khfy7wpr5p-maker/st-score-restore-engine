@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.3.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.stage1c-c17c-imslp82860-noise.v2",
+  "descriptionCode": "stage1c-c17c-imslp82860-noise",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+        "byteSize": 1114479,
+        "storageLocator": "custody:opq_70ff4da03e17e5cc62e1bcd06ce5ef9a",
+        "custodyProfileId": "policy:opq_bf8b8be7d0934740022bc90f9db7cdce",
+        "encryptionProfileId": "policy:opq_c33c9fb68b531dfa9f72c3f44703b747",
+        "custodianId": "actor.custodian:opq_54b947e184a7d6539c8876b29178ebaf"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_8fabd00cc3dd6699931b9f3e6b73f799",
+        "rightsHolderId": "subject:opq_7fe01fa6e13f435dd8be3622f775fbe4",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_914e636eb94d697ff31fb91ea26302fd",
+          "verifiedOn": "2026-08-25",
+          "evidenceReference": "evidence:opq_52cbe6bbdc0a3c8434e94990c86ed34e"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "scanned_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": ["staff"],
+        "pageCount": 8,
+        "degradations": ["noise"]
+      },
+      "permissions": {
+        "fixture_validation": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "quality_evaluation": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "quality_calibration": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "pdf_pipeline_evaluation": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "safety_calibration": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "held_out_evaluation": {
+          "status":"granted",
+          "authorizationReference":"evidence:opq_c2bb8aac4b0381fc44e96ffb3729eabc",
+          "authorizedBy":"actor.purpose:opq_43e98cb13090b661ce214e622d913fb7",
+          "authorizedOn":"2026-08-25",
+          "expiresOn":null,
+          "restrictions":[],
+          "revokedOn":null,
+          "revocationReference":null
+        },
+        "synthetic_derivation": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "model_training": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "publication": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null},
+        "demonstration": {"status":"not_requested","authorizationReference":null,"authorizedBy":null,"authorizedOn":null,"expiresOn":null,"restrictions":[],"revokedOn":null,"revocationReference":null}
+      },
+      "split": "held_out",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {"status":"not_revoked","effectiveOn":null,"reference":null},
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_23fb71d429a5735bef6bd500e573d41a",
+        "reviewedOn": "2026-08-26",
+        "evidenceReference": "evidence:opq_3a902965b5bd4020ef7e4f3e4a02dcbe",
+        "noteCodes": ["imslp82860-public-domain","stage1c-first-held-out-item","c17c-exact-byte-noise-review","metadata-v2"]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}
