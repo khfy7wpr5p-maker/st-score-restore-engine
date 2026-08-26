@@ -58,11 +58,13 @@ ADR 0016 risk-tiered custody is implemented, not merely proposed. Catalog schema
 
 The G4 Stage 1 purpose allowlist remains limited to `quality_evaluation` and `held_out_evaluation`. Exact-artifact rights, privacy, purpose, retention, dataset review, provenance, digest/size binding, custody verification, and admission remain independent fail-closed gates.
 
-C5-C16 are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
+C5-C17A are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
 
-C17 corpus expansion is active. The current C17A implementation is Draft PR #68. Its corrected metadata admits one rights-clean Public Domain PNG as **`combined_staff_tab` only** for `quality_evaluation` under `open_corpus` / `managed_standard`. It is deliberately **not** also counted as standalone `guitar_tab`, so historical and future coverage is not artificially inflated. The corrected pre-documentation head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146` passed Repository validation Run #147 on Python 3.11 and 3.12.
+C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`; merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. It admits one rights-clean Public Domain PNG as **`combined_staff_tab` only** for `quality_evaluation` under `open_corpus` / `managed_standard`. It is deliberately **not** also counted as standalone `guitar_tab`, so historical and future coverage is not artificially inflated. Repository validation Run #147 passed on Python 3.11 and 3.12.
 
 The historical C15/C16 snapshot remains immutable and unchanged by C17A. C17 additions require a new versioned snapshot before they can alter the deterministic coverage decision.
+
+C17B/C17C/C17D source qualification is the current continuation: standalone guitar TAB, naturally degraded material, and an independently rights-clean genuine phone-photo path have qualified candidates, but their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace. No digest, admission, snapshot membership, or coverage closure is claimed until exact-byte evidence exists.
 
 A real user-provided phone photo remains blocked unless its `sensitive_custody` path has a genuinely verified `high_assurance_vault`. C10 proves structural compatibility only; it does not prove a real vault or authorize sensitive artifact onboarding.
 
@@ -102,7 +104,7 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-Every implementation slice must publish objective evidence before transition. The repository governance requires Draft-first PR handling, exact-head verification, a separate Ready-for-review gate, and a later exact-head merge gate. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
+Every implementation slice must publish objective evidence before transition. Draft, Ready-for-review, and merge remain separate objective technical gates with fresh exact-head verification. Under the autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
 
 ## Development baseline
 
