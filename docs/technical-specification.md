@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline; maintenance-aligned with Roadmap v0.2.4 and Stage 1C/C17  
-**Version:** 0.2.4-aligned  
+**Document status:** Approved architecture baseline; maintenance-aligned with Roadmap v0.2.5 and Stage 1C/C17  
+**Version:** 0.2.5-aligned  
 **Date:** 2026-08-26  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Roadmap authority:** `docs/roadmap.md` v0.2.4  
+**Roadmap authority:** `docs/roadmap.md` v0.2.5  
 **Current Stage 1 authority:** Issue #47 and `docs/stage-1c-current-status.md`  
 **Primary language:** English identifiers and API contracts; Turkish-first teacher-facing messages may be added by clients.
 
@@ -69,7 +69,7 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-Every implementation slice follows fresh-read → focused branch/PR → Draft → exact-head evidence → separate Ready-for-review gate → later exact-head merge gate. A later stage may not begin until the preceding stage's exit evidence is published and accepted.
+Every implementation slice follows fresh-read → focused branch/PR → Draft → exact-head evidence → separate Ready-for-review technical gate → later exact-head merge technical gate. While the autonomous authorization recorded in Issue #47 remains active, separate per-transition user confirmation is not required. A later stage may not begin until the preceding stage's exit evidence is published and accepted.
 
 ### 2.2 Current Stage 1 state
 
@@ -90,7 +90,9 @@ Current custody mapping:
 
 C12 and C14 realized two independently authorized real `open_corpus` items outside ordinary Git. C15 froze the resulting two-item corpus as a digest-addressed historical snapshot. C16 deterministically measured that exact snapshot and concluded `insufficient` for Stage 1 exit.
 
-C17 corpus expansion is active. C17A / PR #68 is currently Draft. Its accepted taxonomy correction classifies the new Public Domain PNG only as `combined_staff_tab`; standalone `guitar_tab` remains a separate missing category. C17A does not mutate the historical C15/C16 snapshot. A future expanded corpus must use a new versioned snapshot and a fresh deterministic coverage evaluation.
+C17 corpus expansion is active. C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`, merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. Its accepted taxonomy classifies the admitted Public Domain PNG only as `combined_staff_tab`; standalone `guitar_tab` remains a separate missing category. C17A does not mutate the historical C15/C16 snapshot.
+
+C17B/C17C/C17D are qualified continuation targets for standalone guitar TAB, naturally degraded/non-clean material, and an independently rights-clean genuine phone-photo path. Their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace, so no exact digest, C11 admission, snapshot membership, or coverage closure is claimed for those candidates.
 
 A real user-provided phone photo remains blocked unless a real operational `high_assurance_vault` passes the accepted high-assurance evidence boundary. C10 structural compatibility is not operational vault verification.
 
@@ -391,7 +393,9 @@ C16 conclusion: **`insufficient`**.
 
 ### 8.4 C17 expansion — CURRENT ACTIVE WORK
 
-C17 must address missing categories using independently authorized artifacts without mutating C15. C17A / PR #68 is Draft and currently covers only `combined_staff_tab` after the accepted review correction. Its artifact is not standalone `guitar_tab` and must not satisfy that gap.
+C17 must address missing categories using independently authorized artifacts without mutating C15. C17A / PR #68 is merged and covers only `combined_staff_tab` after the accepted review correction. Its artifact is not standalone `guitar_tab` and must not satisfy that gap.
+
+C17B/C17C/C17D have qualified preferred candidates, but their public-source exact bytes are not currently in the authorized Stage 1 custody workspace. Qualification alone does not authorize admission, and source-page SHA-1 or descriptive metadata must not substitute for SHA-256 of exact admitted bytes.
 
 A future expanded corpus requires:
 
@@ -611,7 +615,7 @@ Teacher approval of a restoration does not imply dataset inclusion, calibration 
 
 The historical C15 Stage 1 snapshot contains two real, externally retained Public Domain scanned-PDF items / 12 pages with source-family-isolated development and held-out assignments. Real artifact bytes are not stored in ordinary Git.
 
-C16 measured that frozen snapshot and concluded `insufficient`. C17 is expanding the corpus under the same fail-closed admission rules. No current Stage 1 evidence authorizes model training or safety/quality calibration.
+C16 measured that frozen snapshot and concluded `insufficient`. C17A is now merged as an independently admitted `combined_staff_tab` expansion item, but the historical snapshot remains unchanged. C17B/C17C/C17D remain qualified and unadmitted pending exact-byte custody. No current Stage 1 evidence authorizes model training or safety/quality calibration.
 
 ### 12.2 Local drill boundary
 
