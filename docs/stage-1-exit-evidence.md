@@ -8,8 +8,8 @@
 **Historical realized artifacts:** 2  
 **Historical realized pages:** 12  
 **Artifact bytes stored in ordinary Git:** 0  
-**Latest merged expansion slice:** C17A / PR #68  
-**Current continuation:** C17B/C17C/C17D exact-byte ingestion pending  
+**Latest merged expansion slice:** C17C / PR #72  
+**Current continuation:** C17B standalone guitar TAB and C17D admissible phone-photo path; new aggregate snapshot not yet created  
 **Stage 1 final exit:** BLOCKED  
 **Stage 2 entry:** BLOCKED
 
@@ -49,7 +49,10 @@ A gate is marked `PASS` only when direct evidence exists. A measured insufficien
 | Repository remains metadata-only for real dataset bytes | PASS | 0 real score/TAB/PDF/image corpus bytes in ordinary Git |
 | Revocation/deletion mechanism | PASS | Stage 1B mechanism accepted; item-specific rules remain binding |
 | C17A combined staff+TAB admission | PASS / MERGED | PR #68 exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146` |
-| C17B/C17C/C17D source qualification | QUALIFIED / NOT ADMITTED | Exact preferred public-source bytes not yet in authorized custody |
+| C17C exact-byte non-`none` degradation admission | PASS / MERGED | PR #72 exact reviewed head `fe5a280f3574a8a24a477fd10185f4fe6cab6063`; `noise` only |
+| C17B standalone guitar TAB | QUALIFIED / NOT ADMITTED | Exact preferred source bytes absent from authorized custody |
+| C17D admissible phone-photo path | QUALIFIED / NOT ADMITTED | Exact preferred source bytes absent; privacy review mandatory |
+| New aggregate snapshot including C17 expansions | NOT CREATED | Historical C15 remains immutable |
 | Stage 1 final exit | FAIL / INCOMPLETE | Expanded corpus + new snapshot + new coverage decision required |
 | Stage 2 entry | BLOCKED | Stage 1 final exit has not passed |
 
@@ -125,29 +128,59 @@ Codex review correctly identified that the original metadata would have counted 
 
 C17A does **not** modify the C15 snapshot and therefore does not modify the historical C16 counts or gap list. Its contribution to coverage can only be measured after inclusion in a new versioned expanded snapshot.
 
-## 6. Current C17 continuation
+## 6. C17C merged evidence boundary
 
-The next independently qualified targets are:
+C17C / PR #72 is merged. Its exact reviewed head was:
+
+`fe5a280f3574a8a24a477fd10185f4fe6cab6063`
+
+The merge commit on `main` is:
+
+`e211893324d47e2084f873c14f5737968cb55cc2`
+
+C17C re-used the already-authorized held-out IMSLP82860 artifact rather than ingesting a new public-source file. The exact custody PDF was re-fetched and all eight pages were re-inspected. The exact artifact identity remained:
+
+- artifact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
+- byte size `1114479`;
+- page count 8.
+
+Direct exact-byte visual evidence supports the conservative degradation label `noise` only. The new metadata representation is:
+
+- dataset item `dataset.item.imslp82860-chopin-op69.v2`;
+- same source family as v1;
+- same held-out split;
+- same rights basis and managed-standard custody binding;
+- only `held_out_evaluation` permission granted;
+- canonical metadata-v2 item SHA-256 `6a75bd7d8348c6ba6e47a4bdbc16a1fc9a3f3ec23fb79a36ad7c123608d3ff36`.
+
+Independent C11 admission for v2 is required by CI and passed in Repository validation Run #155 (`32983542768`) on Python 3.11 and 3.12 for the exact PR head.
+
+Historical v1 metadata, historical corpus catalog v1, C15 and C16 remain immutable. A later aggregate snapshot must choose v2 instead of v1 and must not count the two metadata versions as separate artifacts. C17C can satisfy a future non-`none` degradation dimension only when that v2 representation is included in a new versioned snapshot and re-evaluated; it does not retroactively alter the historical C16 report.
+
+## 7. Current C17 continuation
+
+The remaining independently qualified targets are:
 
 - **C17B:** standalone rights-clean guitar TAB, preferred candidate IMSLP #911664;
-- **C17C:** naturally degraded/non-clean real score, preferred candidate Wikimedia `File:Notenblatt-music-vintage-alt.jpg`;
 - **C17D:** independently rights-clean genuine phone-photo source with an admissible open-corpus path where exact rights/privacy evidence permits it.
 
-The fresh authorized-custody inventory does not contain the preferred C17B/C17C/C17D public-source exact bytes. Therefore no SHA-256, C11 admission, new snapshot membership, or coverage closure is claimed for those candidates yet.
+The fresh authorized-custody inbox does not contain the preferred C17B or C17D public-source exact bytes. Therefore no SHA-256, C11 admission, new snapshot membership, or coverage closure is claimed for those candidates yet.
 
-## 7. Phone-photo and high-assurance boundary
+## 8. Phone-photo and high-assurance boundary
 
 A real user-provided phone photograph remains outside the realized corpus. The current mapping is `sensitive_custody` → `high_assurance_vault`. C10 demonstrates structural compatibility with the legacy C4 high-assurance evidence format, but the current compatibility record explicitly does not prove a real vault or authorize sensitive artifact onboarding.
 
+The preferred public C17D candidate also requires deliberate privacy review because its source metadata exposes device/GPS EXIF. Public availability alone does not imply `privacy:none`.
+
 Therefore a phone-photo gap must remain visible until a genuine independently authorized artifact has a compliant custody path. A synthetic transformation or relabeling cannot satisfy this real-data coverage category.
 
-## 8. PR transition governance
+## 9. PR transition governance
 
 Ready-for-review and merge remain separate objective technical gates. Under the current autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force.
 
 Fresh base/head verification, exact-head CI, review reconciliation, blocking-thread resolution, and exact-head merge requirements remain mandatory. Head movement invalidates earlier head-specific evidence.
 
-## 9. Bias and limitation interpretation
+## 10. Bias and limitation interpretation
 
 Historical C16 concentration remains visible until a new snapshot is evaluated:
 
@@ -157,27 +190,29 @@ Historical C16 concentration remains visible until a new snapshot is evaluated:
 - 2/2 use Public Domain source basis;
 - held-out contains one source family.
 
-Source-family leakage is controlled by distinct frozen source-family and digest bindings. Absence of bias, representativeness, restoration effectiveness, OMR improvement, and musical correctness are not established.
+C17A and C17C provide new evidence outside that historical snapshot, but no updated concentration or sufficiency claim is valid until a new aggregate snapshot is frozen and evaluated. Source-family leakage remains controlled by distinct source-family and digest bindings, and v1/v2 metadata versions of the same exact artifact must never be treated as independent source diversity.
 
-## 10. Required next work
+Absence of bias, representativeness, restoration effectiveness, OMR improvement, and musical correctness are not established.
 
-Stage 1 cannot close on the current historical frozen corpus. C17 must continue independently authorized expansion covering remaining dimensions, especially:
+## 11. Required next work
+
+Stage 1 cannot close on the historical frozen corpus. C17 must continue independently authorized expansion covering remaining dimensions, especially:
 
 1. standalone guitar TAB;
-2. real non-clean/degraded material;
-3. genuine phone-captured sheet music with an admissible custody path;
-4. broader development source-family diversity;
-5. broader held-out source-family diversity.
+2. genuine phone-captured sheet music with an admissible custody path;
+3. broader development source-family diversity;
+4. broader held-out source-family diversity;
+5. additional capture/degradation diversity beyond the single exact held-out scan now classified as `noise`.
 
 After sufficient additions:
 
 1. validate all new item-level governance/admission evidence;
-2. verify split/source-family/digest isolation;
+2. verify split/source-family/digest isolation and de-duplicate metadata versions of the same artifact;
 3. create a **new versioned snapshot** rather than changing C15;
 4. run a fresh deterministic coverage/bias evaluation;
 5. reconcile the dataset card and this exit record;
 6. decide Stage 1 exit only from that new evidence.
 
-## 11. Stage 2 prohibition
+## 12. Stage 2 prohibition
 
-Stage 2 Complete Quality Analysis / OpenCV quality-analysis execution remains blocked until expanded-corpus evidence satisfies Stage 1 exit and that exit is accepted. Neither C16 nor C17A authorizes model training, calibration, publication, demonstration, synthetic derivation, Stage 3 PDF work, OMR evaluation, or downstream integrations.
+Stage 2 Complete Quality Analysis / OpenCV quality-analysis execution remains blocked until expanded-corpus evidence satisfies Stage 1 exit and that exit is accepted. Neither C16, C17A nor C17C authorizes model training, calibration, publication, demonstration, synthetic derivation, Stage 3 PDF work, OMR evaluation, or downstream integrations.
