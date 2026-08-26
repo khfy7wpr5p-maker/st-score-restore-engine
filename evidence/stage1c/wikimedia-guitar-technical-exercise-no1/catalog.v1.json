@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "1.3.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.stage1c-c17-guitar-technical-exercise.v1",
+  "descriptionCode": "stage1c-c17-guitar-technical-exercise",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+        "byteSize": 34636,
+        "storageLocator": "custody:opq_f9207164ab40766defac9730dccb86cd",
+        "custodyProfileId": "policy:opq_203e9ac081d9f52e60b5d6ca8be7e1a1",
+        "encryptionProfileId": "policy:opq_a7c238f4ee7743971be01ed8dd90be0d",
+        "custodianId": "actor.custodian:opq_0492d480355e1efba01b59ec9133e333"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_0de27324e60c71ed3e03c30a9f05226e",
+        "rightsHolderId": "subject:opq_6ed9a532e8a68307cfcec7c7353fee46",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_8d3d2eb23f70fa3b6e58d2c9e0279cb3",
+          "verifiedOn": "2026-08-25",
+          "evidenceReference": "evidence:opq_526558a7d194f447926ad498e0b63e84"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "png",
+        "mediaType": "image/png",
+        "notationKinds": [
+          "combined_staff_tab"
+        ],
+        "pageCount": 1,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_bef731e91bc070587922e2f88d9cb399",
+          "authorizedBy": "actor.purpose:opq_68874591ab435cc4b18f2d5b5aa6e435",
+          "authorizedOn": "2026-08-25",
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "development",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_49a49a3515e284441d5530550f822268",
+        "reviewedOn": "2026-08-25",
+        "evidenceReference": "evidence:opq_a255b0ac13e69ca188dd94b0bb52eab2",
+        "noteCodes": [
+          "wikimedia-public-domain",
+          "c17-combined-staff-tab",
+          "exact-byte-drive-roundtrip-pass"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}

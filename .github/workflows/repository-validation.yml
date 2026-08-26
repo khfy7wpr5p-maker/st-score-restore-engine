@@ -113,6 +113,14 @@ jobs:
             --profile-verification evidence/stage1c/imslp82860/managed-standard-verification.v1.json \
             --require-eligible
 
+      - name: Require Stage 1C C17 guitar TAB combined admission
+        run: |
+          python tools/evaluate_stage1c_artifact_admission.py \
+            evidence/stage1c/wikimedia-guitar-technical-exercise-no1/admission-request.v1.json \
+            --catalog evidence/stage1c/wikimedia-guitar-technical-exercise-no1/catalog.v1.json \
+            --profile-verification evidence/stage1c/imslp799143/managed-standard-verification.v1.json \
+            --require-eligible
+
       - name: Require Stage 1C corpus structural readiness
         run: |
           python tools/evaluate_stage1_corpus_readiness.py \
