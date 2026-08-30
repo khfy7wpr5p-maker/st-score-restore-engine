@@ -1,6 +1,7 @@
 # Stage 1 Exit Evidence
 
 **Status:** Incomplete — C17 corpus expansion required  
+**As of:** 2026-08-30  
 **Stage:** Stage 1C / C17 active  
 **Parent issue:** #32  
 **Active substage:** #47  
@@ -17,7 +18,7 @@
 
 This record assembles the current Stage 1 exit evidence without rewriting historical C15/C16 results. Governance, storage-profile machinery, artifact admission, structural readiness, and the C15 digest-addressed snapshot freeze are complete on `main`. C16 deterministically measured the exact frozen snapshot and concluded that the corpus is insufficient for Stage 1 exit. C17 is the active corpus-expansion phase.
 
-A gate is marked `PASS` only when direct evidence exists. A measured insufficiency is never converted into a pass merely to advance the roadmap.
+A gate is marked `PASS` only when direct evidence exists. A measured insufficiency is never converted into a pass merely to advance the roadmap. A queued, cancelled, or zero-job workflow run is not executable verification evidence.
 
 ## 2. Current exit matrix
 
@@ -45,7 +46,7 @@ A gate is marked `PASS` only when direct evidence exists. A measured insufficien
 | Metadata-derived C16 coverage measurement | PASS | C16 / PR #67 merged |
 | Historical C16 coverage sufficiency | FAIL / `insufficient` | Seven confirmed gap codes |
 | Known concentration/limitation register | PASS | C16 merged evidence |
-| Stage 1 dataset card reconciliation to C16 | PASS | Current frozen-baseline dataset card |
+| Stage 1 dataset card reconciliation to C16 | PASS | Historical frozen-baseline dataset card |
 | Repository remains metadata-only for real dataset bytes | PASS | 0 real score/TAB/PDF/image corpus bytes in ordinary Git |
 | Revocation/deletion mechanism | PASS | Stage 1B mechanism accepted; item-specific rules remain binding |
 | C17A combined staff+TAB admission | PASS / MERGED | PR #68 exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146` |
@@ -53,6 +54,9 @@ A gate is marked `PASS` only when direct evidence exists. A measured insufficien
 | C17B standalone guitar TAB | QUALIFIED / NOT ADMITTED | Exact preferred source bytes absent from authorized custody |
 | C17D admissible phone-photo path | QUALIFIED / NOT ADMITTED | Exact preferred source bytes absent; privacy review mandatory |
 | New aggregate snapshot including C17 expansions | NOT CREATED | Historical C15 remains immutable |
+| Architecture consistency guard | ADDED IN PR #73 / CI PENDING | Repository-local deterministic cross-document/evidence checker |
+| PR #72 post-merge Run #156 | NO EXECUTABLE EVIDENCE | Completed `cancelled`; zero jobs allocated |
+| PR #73 prior Run #157 | NO EXECUTABLE EVIDENCE | Completed `cancelled`; zero jobs allocated |
 | Stage 1 final exit | FAIL / INCOMPLETE | Expanded corpus + new snapshot + new coverage decision required |
 | Stage 2 entry | BLOCKED | Stage 1 final exit has not passed |
 
@@ -124,7 +128,7 @@ C17A admits one exact Public Domain PNG for `quality_evaluation` under `open_cor
 - no model training, calibration, publication, demonstration, synthetic derivation, or Stage 2 authorization;
 - no artifact bytes in ordinary Git.
 
-Codex review correctly identified that the original metadata would have counted a combined staff/TAB layout as standalone guitar TAB. The metadata and regression test were corrected. The review thread was resolved, and Repository validation Run #147 (`32895593925`) succeeded on Python 3.11 and 3.12 for the exact merged head.
+The accepted review correction prevented a combined staff/TAB layout from being counted as standalone guitar TAB. The metadata and regression test were corrected and Repository validation Run #147 (`32895593925`) succeeded on Python 3.11 and 3.12 for the exact reviewed head.
 
 C17A does **not** modify the C15 snapshot and therefore does not modify the historical C16 counts or gap list. Its contribution to coverage can only be measured after inclusion in a new versioned expanded snapshot.
 
@@ -153,7 +157,7 @@ Direct exact-byte visual evidence supports the conservative degradation label `n
 - only `held_out_evaluation` permission granted;
 - canonical metadata-v2 item SHA-256 `6a75bd7d8348c6ba6e47a4bdbc16a1fc9a3f3ec23fb79a36ad7c123608d3ff36`.
 
-Independent C11 admission for v2 is required by CI and passed in Repository validation Run #155 (`32983542768`) on Python 3.11 and 3.12 for the exact PR head.
+Independent C11 admission for v2 passed in Repository validation Run #155 (`32983542768`) on Python 3.11 and 3.12 for the exact PR head.
 
 Historical v1 metadata, historical corpus catalog v1, C15 and C16 remain immutable. A later aggregate snapshot must choose v2 instead of v1 and must not count the two metadata versions as separate artifacts. C17C can satisfy a future non-`none` degradation dimension only when that v2 representation is included in a new versioned snapshot and re-evaluated; it does not retroactively alter the historical C16 report.
 
@@ -164,7 +168,7 @@ The remaining independently qualified targets are:
 - **C17B:** standalone rights-clean guitar TAB, preferred candidate IMSLP #911664;
 - **C17D:** independently rights-clean genuine phone-photo source with an admissible open-corpus path where exact rights/privacy evidence permits it.
 
-The fresh authorized-custody inbox does not contain the preferred C17B or C17D public-source exact bytes. Therefore no SHA-256, C11 admission, new snapshot membership, or coverage closure is claimed for those candidates yet.
+The authorized Stage 1 workspace does not contain the preferred C17B or C17D public-source exact bytes. Therefore no SHA-256, C11 admission, new snapshot membership, or coverage closure is claimed for those candidates yet. This remains an exact-byte acquisition/transfer workflow blocker rather than a user-upload requirement.
 
 ## 8. Phone-photo and high-assurance boundary
 
@@ -174,13 +178,31 @@ The preferred public C17D candidate also requires deliberate privacy review beca
 
 Therefore a phone-photo gap must remain visible until a genuine independently authorized artifact has a compliant custody path. A synthetic transformation or relabeling cannot satisfy this real-data coverage category.
 
-## 9. PR transition governance
+## 9. Architecture / governance consistency findings
 
-Ready-for-review and merge remain separate objective technical gates. Under the current autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force.
+The 2026-08-30 compatibility audit identified two repository-governance drifts in addition to the stale C17C status text corrected by PR #73:
+
+- parent Issue #32 still contained obsolete pre-entry wording and must be reconciled to Stage 1C active status;
+- active server-side ruleset `main-safety-gate` enforces PR + Python 3.11/3.12 checks but does not enforce approving-review count or review-thread resolution, so manual governance remains the stronger merge contract.
+
+`tools/validate_architecture_consistency.py` is added to prevent the repository-internal portions of this drift from recurring.
+
+## 10. Exact-head CI boundary
+
+PR #72 pre-merge Run #155 remains valid evidence for the exact reviewed PR head. By contrast:
+
+- post-merge Run #156 for `e211893324d47e2084f873c14f5737968cb55cc2` completed `cancelled` without allocating jobs;
+- earlier PR #73 Run #157 for `b03c6eb9a6484501a9a26cf9ce31f9a16806acb6` completed `cancelled` without allocating jobs.
+
+These cancellations do not prove a code/test regression, because no test jobs ran. They also cannot satisfy the fresh exact-head gate. PR #73 must remain Draft until a new head triggers both required jobs and both complete successfully, followed by review/thread reconciliation.
+
+## 11. PR transition governance
+
+Ready-for-review and merge remain separate objective technical gates. Under the active authorization recorded in Issue #47, separate per-transition user confirmation is not required.
 
 Fresh base/head verification, exact-head CI, review reconciliation, blocking-thread resolution, and exact-head merge requirements remain mandatory. Head movement invalidates earlier head-specific evidence.
 
-## 10. Bias and limitation interpretation
+## 12. Bias and limitation interpretation
 
 Historical C16 concentration remains visible until a new snapshot is evaluated:
 
@@ -194,7 +216,7 @@ C17A and C17C provide new evidence outside that historical snapshot, but no upda
 
 Absence of bias, representativeness, restoration effectiveness, OMR improvement, and musical correctness are not established.
 
-## 11. Required next work
+## 13. Required next work
 
 Stage 1 cannot close on the historical frozen corpus. C17 must continue independently authorized expansion covering remaining dimensions, especially:
 
@@ -213,6 +235,6 @@ After sufficient additions:
 5. reconcile the dataset card and this exit record;
 6. decide Stage 1 exit only from that new evidence.
 
-## 12. Stage 2 prohibition
+## 14. Stage 2 prohibition
 
 Stage 2 Complete Quality Analysis / OpenCV quality-analysis execution remains blocked until expanded-corpus evidence satisfies Stage 1 exit and that exit is accepted. Neither C16, C17A nor C17C authorizes model training, calibration, publication, demonstration, synthetic derivation, Stage 3 PDF work, OMR evaluation, or downstream integrations.

@@ -58,17 +58,21 @@ ADR 0016 risk-tiered custody is implemented, not merely proposed. Catalog schema
 
 The G4 Stage 1 purpose allowlist remains limited to `quality_evaluation` and `held_out_evaluation`. Exact-artifact rights, privacy, purpose, retention, dataset review, provenance, digest/size binding, custody verification, and admission remain independent fail-closed gates.
 
-C5-C17A are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
+C5-C17A plus C17C are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
 
 C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`; merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. It admits one rights-clean Public Domain PNG as **`combined_staff_tab` only** for `quality_evaluation` under `open_corpus` / `managed_standard`. It is deliberately **not** also counted as standalone `guitar_tab`, so historical and future coverage is not artificially inflated. Repository validation Run #147 passed on Python 3.11 and 3.12.
 
-The historical C15/C16 snapshot remains immutable and unchanged by C17A. C17 additions require a new versioned snapshot before they can alter the deterministic coverage decision.
+C17C / PR #72 is merged at exact reviewed head `fe5a280f3574a8a24a477fd10185f4fe6cab6063`; merge commit `e211893324d47e2084f873c14f5737968cb55cc2`. It re-uses the already-authorized held-out IMSLP82860 artifact and records a metadata-v2 representation with exact-byte degradation classification **`noise` only**. The exact artifact SHA-256 remains `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`. Historical v1 metadata, C15 and C16 remain immutable; a future aggregate snapshot must select v2 instead of v1 and must not double-count both metadata versions.
 
-C17B/C17C/C17D source qualification is the current continuation: standalone guitar TAB, naturally degraded material, and an independently rights-clean genuine phone-photo path have qualified candidates, but their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace. No digest, admission, snapshot membership, or coverage closure is claimed until exact-byte evidence exists.
+The historical C15/C16 snapshot remains immutable and unchanged by C17A or C17C. C17 additions require a new versioned snapshot before they can alter the deterministic coverage decision.
+
+The remaining C17 continuation targets are C17B standalone guitar TAB and C17D an independently admissible genuine phone-photo path. Their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace. No digest, admission, snapshot membership, or coverage closure is claimed until exact-byte evidence exists. This exact-byte acquisition/transfer limitation is a workflow blocker, not a user-upload obligation.
 
 A real user-provided phone photo remains blocked unless its `sensitive_custody` path has a genuinely verified `high_assurance_vault`. C10 proves structural compatibility only; it does not prove a real vault or authorize sensitive artifact onboarding.
 
-See [Stage 1C current status](docs/stage-1c-current-status.md) for the canonical current-state reconciliation and [Stage 1 exit evidence](docs/stage-1-exit-evidence.md) for the gate evidence.
+The 2026-08-30 architecture consistency audit also identified two operational/governance constraints: the active GitHub ruleset enforces PR plus Python 3.11/3.12 status checks but not approving-review count or review-thread resolution, so manual governance remains stronger; and recent Runs #156/#157 were cancelled before any jobs executed, so they are neither test failures nor valid fresh CI evidence.
+
+See [Stage 1C current status](docs/stage-1c-current-status.md), [Stage 1 exit evidence](docs/stage-1-exit-evidence.md), and [Architecture consistency audit](docs/architecture-consistency-audit.md) for the current gate evidence.
 
 Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Image AI, OMR, and MusicXML integration remain disabled or deferred.
 
@@ -133,6 +137,7 @@ Validate the repository contracts with:
 ```bash
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
+python tools/validate_architecture_consistency.py
 python tools/validate_fixture_catalog.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
@@ -172,6 +177,7 @@ The selected data directory contains source and derived document bytes and is no
 
 - [Technical Specification](docs/technical-specification.md)
 - [Roadmap](docs/roadmap.md)
+- [Architecture consistency audit](docs/architecture-consistency-audit.md)
 - [Stage 1C current status](docs/stage-1c-current-status.md)
 - [Stage 1 dataset card](docs/stage-1-dataset-card.md)
 - [Stage 1 coverage and bias register](docs/stage-1-coverage-and-bias-register.md)

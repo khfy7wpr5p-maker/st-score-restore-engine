@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Document status:** Approved architecture baseline; maintenance-aligned with Roadmap v0.2.5 and Stage 1C/C17  
-**Version:** 0.2.5-aligned  
-**Date:** 2026-08-26  
+**Document status:** Approved architecture baseline; maintenance-aligned with Roadmap v0.2.6 and Stage 1C/C17  
+**Version:** 0.2.6-aligned  
+**Date:** 2026-08-30  
 **Target repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Roadmap authority:** `docs/roadmap.md` v0.2.5  
+**Roadmap authority:** `docs/roadmap.md` v0.2.6  
 **Current Stage 1 authority:** Issue #47 and `docs/stage-1c-current-status.md`  
 **Primary language:** English identifiers and API contracts; Turkish-first teacher-facing messages may be added by clients.
 
@@ -69,7 +69,7 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-Every implementation slice follows fresh-read → focused branch/PR → Draft → exact-head evidence → separate Ready-for-review technical gate → later exact-head merge technical gate. While the autonomous authorization recorded in Issue #47 remains active, separate per-transition user confirmation is not required. A later stage may not begin until the preceding stage's exit evidence is published and accepted.
+Every implementation slice follows fresh-read → focused branch/PR → Draft → exact-head evidence → separate Ready-for-review technical gate → later exact-head merge technical gate. While the autonomous authorization recorded in Issue #47 remains active, separate per-transition user confirmation is not required. A later stage may not begin until the preceding stage's exit evidence is published and accepted. A queued, cancelled, skipped, or zero-job CI run is not exact-head evidence; required jobs must actually execute and succeed.
 
 ### 2.2 Current Stage 1 state
 
@@ -92,9 +92,13 @@ C12 and C14 realized two independently authorized real `open_corpus` items outsi
 
 C17 corpus expansion is active. C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`, merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. Its accepted taxonomy classifies the admitted Public Domain PNG only as `combined_staff_tab`; standalone `guitar_tab` remains a separate missing category. C17A does not mutate the historical C15/C16 snapshot.
 
-C17B/C17C/C17D are qualified continuation targets for standalone guitar TAB, naturally degraded/non-clean material, and an independently rights-clean genuine phone-photo path. Their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace, so no exact digest, C11 admission, snapshot membership, or coverage closure is claimed for those candidates.
+C17C / PR #72 is merged at exact reviewed head `fe5a280f3574a8a24a477fd10185f4fe6cab6063`, merge commit `e211893324d47e2084f873c14f5737968cb55cc2`. It re-uses the already-authorized held-out IMSLP82860 artifact with exact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3` and admits metadata-v2 `dataset.item.imslp82860-chopin-op69.v2` with degradation classification `noise` only. Historical v1 metadata, C15 and C16 remain immutable; a future aggregate snapshot must select v2 instead of v1 and must not count both metadata versions as independent artifacts.
+
+The remaining qualified continuation targets are C17B standalone guitar TAB and C17D an independently admissible genuine phone-photo path. Their preferred public-source exact bytes are not yet present in authorized Stage 1 custody, so no exact digest, C11 admission, snapshot membership, or coverage closure is claimed. This is an exact-byte acquisition/transfer workflow blocker rather than a user-upload obligation.
 
 A real user-provided phone photo remains blocked unless a real operational `high_assurance_vault` passes the accepted high-assurance evidence boundary. C10 structural compatibility is not operational vault verification.
+
+The 2026-08-30 architecture consistency audit records that active server-side rules require PR plus Python 3.11/3.12 checks but do not enforce approving-review count or review-thread resolution. Manual governance therefore remains stronger. It also records that Runs #156 and #157 completed `cancelled` without job allocation; those runs are neither product-test failures nor usable fresh CI evidence.
 
 Stage 2 remains blocked until Stage 1 exit passes.
 
@@ -118,6 +122,8 @@ The following invariants apply to every current and future stage:
 10. DocRes and ST Restore models may only become optional candidates in their approved future stages.
 11. A combined notation layout must not be counted as a separate standalone notation category unless the artifact independently contains that category.
 12. Historical frozen dataset evidence must not be rewritten to hide later coverage gaps or later corpus expansion.
+13. Multiple metadata versions of one exact artifact must not be counted as independent real artifacts or source-family diversity.
+14. Repository-visible architecture/status claims must remain compatible with machine-readable evidence and public API/package versions.
 
 A restoration is acceptable only when it improves readability or downstream recognition while preserving, within documented tolerances:
 
@@ -393,17 +399,22 @@ C16 conclusion: **`insufficient`**.
 
 ### 8.4 C17 expansion — CURRENT ACTIVE WORK
 
-C17 must address missing categories using independently authorized artifacts without mutating C15. C17A / PR #68 is merged and covers only `combined_staff_tab` after the accepted review correction. Its artifact is not standalone `guitar_tab` and must not satisfy that gap.
+C17 must address missing categories using independently authorized artifacts without mutating C15.
 
-C17B/C17C/C17D have qualified preferred candidates, but their public-source exact bytes are not currently in the authorized Stage 1 custody workspace. Qualification alone does not authorize admission, and source-page SHA-1 or descriptive metadata must not substitute for SHA-256 of exact admitted bytes.
+C17A / PR #68 is merged and covers only `combined_staff_tab` after the accepted review correction. Its artifact is not standalone `guitar_tab` and must not satisfy that gap.
+
+C17C / PR #72 is merged using the already-authorized held-out IMSLP82860 exact artifact. Metadata-v2 `dataset.item.imslp82860-chopin-op69.v2` preserves the exact artifact digest and all held-out/source-family/custody/purpose boundaries while recording exact-byte degradation `noise` only. The historical v1 representation remains immutable. Any future expanded snapshot must select v2 instead of v1 and must not count both as separate real artifacts or source families.
+
+C17B standalone guitar TAB and C17D an admissible genuine phone-photo path remain qualified but unadmitted because preferred public-source exact bytes are not currently in authorized Stage 1 custody. Qualification alone does not authorize admission, and source-page SHA-1 or descriptive metadata must not substitute for SHA-256 of exact admitted bytes.
 
 A future expanded corpus requires:
 
 1. item-level admission under existing gates;
 2. source-family-safe split assignment;
-3. a new versioned snapshot;
-4. a new deterministic coverage/bias evaluation;
-5. dataset-card/exit-evidence reconciliation.
+3. de-duplication of multiple metadata versions for the same exact artifact;
+4. a new versioned snapshot;
+5. a new deterministic coverage/bias evaluation;
+6. dataset-card/exit-evidence reconciliation.
 
 ### 8.5 Sensitive/phone-photo boundary
 
@@ -615,7 +626,7 @@ Teacher approval of a restoration does not imply dataset inclusion, calibration 
 
 The historical C15 Stage 1 snapshot contains two real, externally retained Public Domain scanned-PDF items / 12 pages with source-family-isolated development and held-out assignments. Real artifact bytes are not stored in ordinary Git.
 
-C16 measured that frozen snapshot and concluded `insufficient`. C17A is now merged as an independently admitted `combined_staff_tab` expansion item, but the historical snapshot remains unchanged. C17B/C17C/C17D remain qualified and unadmitted pending exact-byte custody. No current Stage 1 evidence authorizes model training or safety/quality calibration.
+C16 measured that frozen snapshot and concluded `insufficient`. C17A is merged as an independently admitted `combined_staff_tab` expansion item. C17C is merged as metadata-v2 for the existing held-out IMSLP82860 exact artifact with degradation `noise` only. Neither expansion mutates the historical snapshot. C17B standalone guitar TAB and C17D an admissible genuine phone-photo path remain qualified/unadmitted pending exact-byte custody and all required evidence. No current Stage 1 evidence authorizes model training or safety/quality calibration.
 
 ### 12.2 Local drill boundary
 
@@ -690,12 +701,13 @@ Document contents must not appear in ordinary application logs.
 ```bash
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
+python tools/validate_architecture_consistency.py
 python tools/validate_fixture_catalog.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-CI validates Python 3.11 and 3.12.
+CI is defined for Python 3.11 and 3.12. A CI run counts as fresh evidence only when it targets the exact reviewed head and both required matrix jobs actually execute and succeed. Queueing or cancellation before job allocation is not a test failure, but it is also not verification evidence.
 
 ### 14.2 Current test-data boundary
 
@@ -707,9 +719,25 @@ CI validates Python 3.11 and 3.12.
 
 ### 14.3 Frozen and expanding corpus evidence
 
-C15/C16 is the immutable historical baseline. C17 additions are not retroactively added to it. Once C17 has enough independently admitted material, a new snapshot version must be created and checked deterministically before new coverage claims are made.
+C15/C16 is the immutable historical baseline. C17 additions are not retroactively added to it. C17C v2 is another metadata representation of the same exact held-out artifact and must replace v1 rather than be double-counted in any future aggregate snapshot. Once C17 has enough independently admitted material, a new snapshot version must be created and checked deterministically before new coverage claims are made.
 
 Golden-image, restoration-effectiveness, OMR-improvement, or musical-correctness claims require separately authorized evidence and cannot be inferred from metadata coverage alone.
+
+### 14.4 Architecture consistency guard
+
+`tools/validate_architecture_consistency.py` is a repository-local deterministic guard against architecture/status drift. It validates:
+
+- package/OpenAPI version equality;
+- roadmap/technical-spec stage-sequence parity;
+- merged C17C status across canonical current-state documents;
+- C17A `combined_staff_tab`-only taxonomy;
+- C17C exact artifact digest, `noise`-only degradation, held-out purpose, and no training grant;
+- historical C15/C16 snapshot identity and `insufficient` decision;
+- Stage 2 blocked boundary;
+- metadata-only Stage 1 evidence path;
+- CI wiring for architecture consistency and C17 admission checks.
+
+The guard intentionally uses repository files only; it does not replace fresh GitHub ruleset, review-thread, or workflow-execution checks.
 
 ---
 
@@ -784,6 +812,7 @@ The trusted path shall not:
 - expose the built-in HTTP adapter publicly;
 - treat combined staff/TAB as standalone TAB without evidence;
 - rewrite frozen historical corpus evidence to claim later coverage;
+- double-count metadata versions of the same exact artifact;
 - fabricate phone-photo/degraded-source coverage using synthetic relabeling;
 - activate DocRes, Stage 9 comparator, Selector, or ST Restore image model before their roadmap gates.
 
@@ -797,6 +826,7 @@ Repository-authoritative references:
 
 - `README.md`
 - `docs/roadmap.md`
+- `docs/architecture-consistency-audit.md`
 - `docs/stage-1c-current-status.md`
 - `docs/stage-1-dataset-card.md`
 - `docs/stage-1-coverage-and-bias-register.md`

@@ -76,6 +76,9 @@ jobs:
       - name: Validate repository contract
         run: python tools/validate_repository.py
 
+      - name: Validate architecture consistency
+        run: python tools/validate_architecture_consistency.py
+
       - name: Validate fixture catalog
         run: python tools/validate_fixture_catalog.py
 
