@@ -1,11 +1,11 @@
 # Stage 1C Current Status
 
 **Status:** ACTIVE — C17 corpus expansion  
-**As of:** 2026-08-26  
+**As of:** 2026-08-30  
 **Parent issue:** #47  
 **Historical frozen baseline:** C15/C16  
-**Latest merged slice:** C17A / PR #68  
-**Current continuation:** C17B/C17C/C17D source qualification; exact-byte ingestion pending  
+**Latest merged slice:** C17C / PR #72  
+**Current continuation:** C17B standalone guitar TAB and C17D admissible phone-photo path; new aggregate snapshot not yet created  
 **Stage 1 exit:** BLOCKED  
 **Stage 2 entry:** BLOCKED
 
@@ -31,7 +31,8 @@ The following Stage 1C slices are merged on `main`:
 - C14 — independent held-out artifact and two-item realized corpus;
 - C15 — digest-addressed immutable snapshot freeze;
 - C16 — deterministic frozen-snapshot coverage/gap/bias evaluation;
-- C17A — rights-clean Public Domain combined staff+TAB artifact admission.
+- C17A — rights-clean Public Domain combined staff+TAB artifact admission;
+- C17C — exact-byte degradation reclassification and independent C11 admission for the already-authorized held-out scan.
 
 The earlier statement that the machine-readable ADR 0016 migration is still pending is obsolete. Catalog `1.3.0`, eligibility/profile validation, and the C8-C11 operational/admission mechanisms are implemented and merged.
 
@@ -96,7 +97,7 @@ The C17A artifact is a rights-clean Public Domain PNG admitted only for `quality
 combined_staff_tab
 ```
 
-It is **not** also classified as standalone `guitar_tab`. The Codex P2 review finding that the original metadata would overstate future coverage was accepted and corrected. Standalone guitar TAB therefore remains a separate missing target.
+It is **not** also classified as standalone `guitar_tab`. The accepted review correction prevents future coverage from being overstated. Standalone guitar TAB therefore remains a separate missing target.
 
 Exact C17A artifact metadata:
 
@@ -115,29 +116,66 @@ The corrected canonical dataset-item digest bound by the admission request is:
 
 `5deed5fac92ff98e10177eb1ff45d742e15863d58235a18af2dedcb4b1880449`
 
-Repository validation Run #147 (`32895593925`) succeeded for the corrected exact head on Python 3.11 and 3.12. The review thread was resolved before merge.
+Repository validation Run #147 (`32895593925`) succeeded for the corrected exact head on Python 3.11 and 3.12. The blocking review finding was reconciled before merge.
 
 C17A does not mutate the historical C15 snapshot and does not retroactively alter the historical C16 result.
 
-## 6. Current C17 continuation
+## 6. C17C / PR #72 — MERGED
 
-The next independently qualified targets are:
+PR #72 is merged. The exact reviewed head was:
 
-1. **C17B — standalone guitar TAB:** IMSLP #911664, `Complete Tablature (Guitar TAB)`, qualified as a rights-clean candidate. Exact original PDF bytes are not yet present in the authorized Stage 1 custody workspace, so no SHA-256, C11 admission, or coverage closure is claimed.
-2. **C17C — naturally degraded/non-clean score:** Wikimedia Commons `File:Notenblatt-music-vintage-alt.jpg`, qualified as a candidate subject to exact-byte verification and exact degradation encoding.
-3. **C17D — genuine rights-clean phone-photo path:** independently sourced public-domain phone-captured sheet music is preferred over the user-provided sensitive artifact when exact rights, privacy, and exact-byte evidence permit `open_corpus -> managed_standard`.
+`fe5a280f3574a8a24a477fd10185f4fe6cab6063`
 
-The fresh authorized-custody inventory contains the merged C17A PNG, the existing development/held-out baseline artifacts, and the separate user-provided phone photo. The preferred C17B/C17C/C17D public-source bytes are not yet present. Therefore exact digests, admission records, new snapshot membership, and coverage closure must not be fabricated.
+The merge commit on `main` is:
 
-## 7. Phone-photo boundary
+`e211893324d47e2084f873c14f5737968cb55cc2`
+
+C17C did not ingest a new public-source artifact. Instead, the already-authorized held-out IMSLP82860 PDF was re-fetched from Stage 1 custody and its exact artifact bytes were re-inspected page by page. The exact artifact remained unchanged:
+
+- artifact SHA-256: `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
+- byte size: `1114479`;
+- page count: 8;
+- exact-byte degradation classification: `noise` only;
+- metadata-v2 dataset item: `dataset.item.imslp82860-chopin-op69.v2`;
+- canonical metadata-v2 item SHA-256: `6a75bd7d8348c6ba6e47a4bdbc16a1fc9a3f3ec23fb79a36ad7c123608d3ff36`;
+- source family: unchanged from v1;
+- split: `held_out`;
+- purpose: `held_out_evaluation` only;
+- storage profile: `managed_standard`;
+- ordinary Git artifact bytes: 0.
+
+Repository validation Run #155 (`32983542768`) succeeded on Python 3.11 and 3.12 for the exact PR head, including the new C17C C11 admission check and regression tests.
+
+Historical `dataset.item.imslp82860-chopin-op69.v1`, the historical corpus catalog v1, C15 snapshot and C16 report remain untouched. A future aggregate snapshot must select the v2 metadata representation instead of v1; the two metadata versions must never be double-counted as independent real artifacts.
+
+C17C therefore establishes direct exact-byte evidence for a non-`none` degradation classification in future expanded-corpus evaluation, but it does not retroactively close the historical C16 gap and does not itself authorize Stage 1 exit.
+
+## 7. Current C17 continuation
+
+The remaining independently qualified targets are:
+
+1. **C17B — standalone guitar TAB:** IMSLP #911664, `Complete Tablature (Guitar TAB)`, remains source-qualified. Exact original PDF bytes are still absent from the authorized Stage 1 custody workspace, so no SHA-256, C11 admission, or standalone-TAB coverage closure is claimed.
+2. **C17D — genuine rights-clean phone-photo path:** independently sourced public-domain phone-captured sheet music remains preferred when exact rights, privacy, exact-byte evidence and an admissible `open_corpus -> managed_standard` path all pass.
+
+The authorized Stage 1 workspace does not currently contain the preferred C17B or C17D public-source exact bytes. Therefore their exact digests, admission records, new snapshot membership, and coverage closure must not be fabricated. This is an exact-byte acquisition/transfer workflow blocker, not a user-upload obligation.
+
+## 8. Phone-photo boundary
 
 A user-provided real phone photograph remains fail-closed because it maps to `sensitive_custody` and therefore requires real `high_assurance_vault` verification. The current C10 compatibility evidence proves structural compatibility only; it explicitly does not prove a real vault and does not authorize sensitive artifact onboarding.
 
 A phone-photo gap must not be fabricated by synthetically converting an existing score or by relabeling a non-phone source. It remains missing until independently authorized real evidence exists.
 
-## 8. PR transition governance
+## 9. Architecture consistency and CI execution
 
-Ready-for-review and merge remain separate objective technical gates. Under the current autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force.
+The repository now treats cross-document drift as a validation target. `tools/validate_architecture_consistency.py` checks package/API version parity, roadmap/spec stage-sequence parity, C17A taxonomy, C17C exact-byte metadata-v2, historical C15/C16 immutability, Stage 2 blocking, and metadata-only Stage 1 evidence.
+
+GitHub Actions Run #156 on the PR #72 merge commit and the earlier PR #73 Run #157 both completed as `cancelled` after extended queueing and allocated zero jobs. These runs are **not test failures**, but they are also **not successful verification evidence**. A fresh exact-head run must actually execute and pass both Python 3.11 and 3.12 jobs before PR #73 can advance.
+
+The active server-side ruleset requires a pull request plus `validate (3.11)` and `validate (3.12)`, but it does not currently enforce an approving-review count or review-thread resolution. Manual project governance therefore remains stronger than server-side enforcement and remains authoritative until the ruleset is hardened.
+
+## 10. PR transition governance
+
+Ready-for-review and merge remain separate objective technical gates. Under the active authorization recorded in Issue #47, separate per-transition user confirmation is not required.
 
 The safety requirements are unchanged:
 
@@ -149,19 +187,21 @@ The safety requirements are unchanged:
 - any head movement invalidates earlier head-specific evidence;
 - later roadmap stages remain blocked by their own entry gates.
 
-This changes approval cadence only; it does not waive safety, rights, privacy, custody, dataset, or roadmap gates.
+A queued, cancelled, or zero-job workflow run does not satisfy exact-head verification.
 
-## 9. Current next work
+## 11. Current next work
 
 C17 must continue corpus expansion without mutating the C15 historical freeze. After enough independently admitted material exists:
 
 1. validate all new item-level governance/admission evidence;
-2. verify split/source-family/digest isolation;
+2. verify split/source-family/digest isolation and ensure v1/v2 metadata versions of the same artifact are not double-counted;
 3. create a **new versioned snapshot** rather than changing C15;
 4. run a fresh deterministic coverage/bias evaluation;
 5. reconcile the dataset card and Stage 1 exit evidence;
 6. decide Stage 1 exit only from that new evidence.
 
-## 10. Safety statement
+Before corpus expansion continues through a merge boundary, PR #73 must obtain fresh executable exact-head CI evidence.
+
+## 12. Safety statement
 
 This status reconciliation grants no new artifact permission, changes no historical snapshot, stores no score/image/PDF bytes in Git, starts no model training or calibration, and does not authorize Stage 2, DocRes, the multi-engine comparator, the selector, the ST Restore image model, production deployment, or downstream music-application integration.

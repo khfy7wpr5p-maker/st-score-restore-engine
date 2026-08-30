@@ -1,8 +1,8 @@
 # ST Score Restore Engine — Development Roadmap
 
 **Document status:** Approved binding sequence; Stage 1C active in C17 corpus expansion  
-**Version:** 0.2.5  
-**Date:** 2026-08-26  
+**Version:** 0.2.6  
+**Date:** 2026-08-30  
 **Decision record:** Issue #31  
 **Current Stage 1 tracking:** Issue #47  
 **Dependency:** `docs/technical-specification.md`
@@ -13,7 +13,7 @@
 
 This document defines the binding development order for ST Score Restore Engine. The project follows a **data-first, measurement-first, gate-controlled** sequence. A later stage may not begin merely because its code appears technically possible.
 
-Current-state details that change more frequently than this roadmap are reconciled in `docs/stage-1c-current-status.md`. Historical C12-C16 evidence remains authoritative for the exact slice it records and must not be rewritten to make later corpus expansion appear retroactive.
+Current-state details that change more frequently than this roadmap are reconciled in `docs/stage-1c-current-status.md`. Historical C12-C16 evidence remains authoritative for the exact slice it records and must not be rewritten to make later corpus expansion appear retroactive. Cross-document status and evidence invariants are checked by `tools/validate_architecture_consistency.py` and summarized in `docs/architecture-consistency-audit.md`.
 
 ## 2. Non-negotiable roadmap rules
 
@@ -31,6 +31,8 @@ Current-state details that change more frequently than this roadmap are reconcil
 12. Music applications integrate only through versioned contracts and only at the final integration stage.
 13. No stage authorizes autonomous online learning, automatic teacher approval, or generative reconstruction of unreadable musical symbols.
 14. Open issues describe deferred work; their existence is not permission to start them out of order.
+15. A queued, cancelled, skipped, or zero-job CI run is not stage-transition evidence; required jobs must actually execute and succeed on the exact reviewed head.
+16. Repository-visible current-state documents, package/API versions, Stage 1 evidence, and roadmap/spec stage sequences must remain compatible under the deterministic architecture-consistency check.
 
 ## 3. Completed foundation
 
@@ -70,9 +72,13 @@ C12 admitted the first real development artifact and C14 admitted an independent
 
 C17 corpus expansion is the active Stage 1C work. C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`, with merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. It admits one rights-clean Public Domain PNG classified **only** as `combined_staff_tab`, not as standalone `guitar_tab`. C17A does not mutate C15 and does not retroactively change historical C16 counts.
 
-C17B/C17C/C17D are the current continuation targets: standalone rights-clean guitar TAB, naturally degraded/non-clean material, and an independently rights-clean genuine phone-photo path. Their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace, so no SHA-256, C11 admission, snapshot membership, or coverage closure is claimed for those candidates yet.
+C17C / PR #72 is also merged. It re-uses the exact already-authorized held-out IMSLP82860 artifact and admits metadata-v2 `dataset.item.imslp82860-chopin-op69.v2` with exact artifact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3` and conservative degradation classification `noise` only. The v1 metadata, C15 and C16 remain immutable. A future aggregate snapshot must select v2 instead of v1 and must not double-count the two metadata versions as independent artifacts.
+
+The remaining continuation targets are C17B standalone rights-clean guitar TAB and C17D an independently admissible genuine phone-photo path. Their preferred public-source exact bytes are not yet present in authorized Stage 1 custody, so no SHA-256, C11 admission, snapshot membership, or coverage closure is claimed. This remains an exact-byte acquisition/transfer workflow blocker rather than a user-upload obligation.
 
 A user-provided phone photo remains fail-closed because `sensitive_custody` requires a genuinely verified `high_assurance_vault`; C10 structural compatibility alone is not operational vault verification.
+
+The 2026-08-30 consistency audit also records two governance/CI constraints: the active GitHub ruleset is weaker than manual review/thread governance, and Runs #156/#157 were cancelled without job allocation. Those cancelled runs are not test failures, but they are not valid fresh CI evidence either.
 
 Stage 2 remains blocked until Stage 1 final exit is objectively supported and accepted.
 
@@ -171,7 +177,7 @@ Create a trustworthy evaluation corpus before expanding quality analysis, PDF pr
 
 ### Current gate
 
-C15/C16 establish a valid but insufficient historical baseline. C17A is merged but does not by itself satisfy Stage 1 exit. C17B/C17C/C17D remain qualified but unadmitted until exact preferred source bytes enter authorized custody. After sufficient independently admitted C17 material exists, the project must produce a new versioned snapshot and re-evaluate coverage. Stage 1 remains **ACTIVE / NOT EXITED**.
+C15/C16 establish a valid but insufficient historical baseline. C17A and C17C are merged but do not by themselves satisfy Stage 1 exit. C17B standalone guitar TAB and C17D admissible genuine phone-photo evidence remain qualified but unadmitted until exact preferred source bytes and all required evidence enter authorized custody. After sufficient independently admitted C17 material exists, the project must produce a new versioned snapshot and re-evaluate coverage. C17C v2 must replace v1 in that new snapshot rather than being counted as a second artifact. Stage 1 remains **ACTIVE / NOT EXITED**.
 
 ## 8. Stage 2 — Complete quality-analysis system
 
@@ -570,8 +576,9 @@ Every stage-completion report must include:
 6. known limitations and unsupported cases;
 7. rollback/original-fallback evidence;
 8. explicit statement that later stages were not started;
-9. exact PR head and required CI status;
-10. separate Ready-for-review and merge technical gates according to repository governance; per-transition user confirmation follows the active authorization record.
+9. exact PR head and required CI status, where CI status counts only if the required jobs actually executed and succeeded;
+10. separate Ready-for-review and merge technical gates according to repository governance; per-transition user confirmation follows the active authorization record;
+11. architecture-consistency validation for repository-visible current-state and immutable-evidence invariants.
 
 ## 20. Work that must not be pulled forward
 
@@ -594,6 +601,8 @@ Every stage-completion report must include:
 
 The active roadmap stage remains **Stage 1**, with **Stage 1C / C17 corpus expansion** active under Issue #47.
 
-C17A / PR #68 is merged and covers `combined_staff_tab` only; standalone `guitar_tab` remains missing after the accepted taxonomy correction. The historical C15/C16 snapshot remains immutable and `insufficient`.
+C17A / PR #68 is merged and covers `combined_staff_tab` only; standalone `guitar_tab` remains missing after the accepted taxonomy correction. C17C / PR #72 is merged and provides exact-byte `noise` evidence on the existing held-out artifact through metadata-v2. The historical C15/C16 snapshot remains immutable and `insufficient`.
 
-The next corpus work is C17B/C17C/C17D: standalone guitar TAB, genuine degraded material, and a genuine phone-photo artifact with an admissible custody path. Their preferred public-source exact bytes are not currently present in the authorized custody workspace, so admission remains fail-closed. Once exact bytes are available, the project may autonomously continue through digest/size verification, rights/privacy/provenance binding, storage-profile verification, negative tests, C11 admission, focused Draft PR, exact-head CI/review reconciliation, Ready-for-review, and merge. After enough C17 items are admitted, the project must create a **new versioned snapshot** and run a fresh deterministic coverage/bias decision. Only a passing Stage 1 exit decision can unlock Stage 2.
+The remaining corpus work is C17B standalone guitar TAB and C17D a genuine phone-photo artifact with an admissible custody path. Their preferred public-source exact bytes are not currently present in authorized custody, so admission remains fail-closed. Once exact bytes are available, the project may continue through digest/size verification, rights/privacy/provenance binding, storage-profile verification, negative tests, C11 admission, focused Draft PR, exact-head CI/review reconciliation, Ready-for-review, and merge. C17C v2 must replace rather than duplicate v1 in any future aggregate snapshot. After enough C17 items are admitted, the project must create a **new versioned snapshot** and run a fresh deterministic coverage/bias decision. Only a passing Stage 1 exit decision can unlock Stage 2.
+
+Before PR #73 or any later Stage 1 slice crosses a merge boundary, required Python 3.11 and 3.12 jobs must actually execute and succeed on the exact head; the cancelled zero-job Runs #156/#157 do not satisfy that requirement.
