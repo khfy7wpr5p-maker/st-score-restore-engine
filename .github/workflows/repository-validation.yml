@@ -153,6 +153,19 @@ jobs:
       - name: Require Stage 1C C16 frozen coverage decision
         run: python tools/evaluate_stage1_coverage_bias.py --check --require-insufficient
 
+      - name: Generate Stage 1C expanded-v2 evidence candidate
+        run: python tools/build_stage1_expanded_snapshot.py --write
+
+      - name: Upload Stage 1C expanded-v2 evidence candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage1c-expanded-v2-${{ matrix.python-version }}
+          path: |
+            evidence/stage1c/corpus/catalog.v2.json
+            evidence/stage1c/corpus/snapshot.expanded.v2.json
+            evidence/stage1c/corpus/coverage-bias-report.v2.json
+          if-no-files-found: error
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
