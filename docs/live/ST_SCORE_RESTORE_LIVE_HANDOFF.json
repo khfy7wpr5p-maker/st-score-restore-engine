@@ -2,17 +2,17 @@
   "schema_version": "1.1.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T02:51:00+03:00",
+  "last_updated_at": "2026-09-02T02:53:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "53ae13d3a1b9bda08c79125674e1b7fca78ee8af",
   "active_branch": "stage1c-expanded-snapshot-v2",
   "active_pr": 81,
   "active_pr_state": "open_draft",
-  "active_pr_head_sha_at_last_fresh_read": "c58cf3a376c0263a92d220e4e4842277a9236b89",
-  "head_scope_note": "This field records the branch head immediately before this handoff update. The handoff commit itself moves the branch head; final transition decisions must bind a fresh exact-head CI run.",
-  "latest_ci_run_id": 33572689805,
-  "latest_ci_run_number": 194,
-  "latest_ci_status": "failed_on_d9d9178d942a9718f37ca922a6cbceed2e866318_root_cause_fixed_head_moved",
+  "active_pr_head_sha_at_last_fresh_read": "d9377de8e88b48d4ab55a86351faa4dd360f2402",
+  "head_scope_note": "Run 197 is successful on the immediately preceding exact head. This handoff-record commit moves the branch head once more, so one final exact-head CI run is required before Ready/merge. After that final CI, no further branch write may occur before merge.",
+  "latest_ci_run_id": 33572819472,
+  "latest_ci_run_number": 197,
+  "latest_ci_status": "success_on_exact_pre_handoff_head_d9377de8e88b48d4ab55a86351faa4dd360f2402_python_3_11_and_3_12",
   "completed": [
     "fresh repository read of main, PR 81, reviews, review threads, Issue 47 and historical Run 177",
     "verified C17B and C17D are admitted on current main",
@@ -29,22 +29,22 @@
     "committed expanded-v2 catalog, snapshot and coverage report evidence",
     "changed repository validation from candidate --write/upload to committed-evidence --check",
     "added expanded-v2 regression tests for membership, split/source-family isolation, digest uniqueness, C17C v1/v2 dedup, historical immutability and zero corpus artifact bytes under evidence/stage1c",
-    "expanded architecture-consistency validator to enforce C17B/C17D admission truth, expanded-v2 invariants, historical immutability, fail-closed Stage 1/Stage 2 state and committed-evidence CI wiring",
-    "Run 194 root cause identified from both Python jobs: dataset card expressed the same Stage 2 denial as 'Stage 2 authorized: No' while the consistency validator required canonical explicit BLOCKED wording",
-    "Run 194 root cause fixed by making Stage 2 BLOCKED explicit in the dataset card; validator rule was not weakened"
+    "expanded architecture-consistency validator to enforce current C17 and expanded-v2 architecture truth",
+    "Run 194 root cause identified as a documentation wording mismatch and fixed without relaxing any gate",
+    "Run 197 succeeded on head d9377de8e88b48d4ab55a86351faa4dd360f2402 for Python 3.11 and 3.12 including architecture consistency, all C17 admission gates, historical C15/C16 checks, committed expanded-v2 --check, full unit tests and compile"
   ],
   "in_progress": [
-    "fresh exact-head Python 3.11/3.12 CI after Run 194 root-cause fix",
-    "PR 81 final review/thread/head reconciliation",
+    "one final exact-head Python 3.11/3.12 CI for this handoff-record commit",
+    "PR 81 final review/thread/base/head reconciliation",
     "PR 81 Ready and merge objective gates"
   ],
   "blocked": [
-    "PR 81 cannot become Ready or merge until fresh exact-head CI is green after the Run 194 fix",
+    "PR 81 cannot become Ready or merge until the final handoff-record head has green exact-head CI",
     "Stage 1 final exit cannot be evaluated until PR 81 merge and successful post-merge main CI",
     "Stage 2 remains blocked until explicit Stage 1 final exit PASS"
   ],
   "open_gates": [
-    "new exact-head CI must pass on Python 3.11 and 3.12",
+    "final handoff-record exact-head CI must pass on Python 3.11 and 3.12",
     "reviews and review threads must be re-read at final head",
     "base and head must be fresh-read before Ready and merge",
     "PR 81 must be Ready before merge",
@@ -112,7 +112,17 @@
       "resolution": "standardized dataset card to explicit Stage 2 entry: BLOCKED; no safety or validator gate relaxed"
     }
   ],
-  "next_safe_action": "fresh-read the new branch head and require new exact-head repository validation on Python 3.11 and 3.12; fix any further real failure before Ready",
+  "verification_history": [
+    {
+      "run_number": 197,
+      "run_id": 33572819472,
+      "head_sha": "d9377de8e88b48d4ab55a86351faa4dd360f2402",
+      "python_3_11": "success",
+      "python_3_12": "success",
+      "scope": "full repository validation including committed expanded-v2 evidence"
+    }
+  ],
+  "next_safe_action": "require final exact-head repository validation for the handoff-record commit; if both Python jobs are green and review/base/head gates remain clean, transition PR 81 to Ready and merge without further branch writes",
   "stage1_exit_state": "blocked_pending_pr81_merge_post_merge_ci_and_separate_acceptance",
   "stage2_entry_state": "blocked",
   "hard_rules": [
@@ -139,6 +149,10 @@
     {
       "at": "2026-09-02T02:51:00+03:00",
       "event": "Run 194 architecture-consistency failure root cause identified and fixed without weakening fail-closed Stage 2 rule"
+    },
+    {
+      "at": "2026-09-02T02:53:00+03:00",
+      "event": "Run 197 fully green on both Python versions; canonical handoff updated once before final no-write exact-head verification"
     }
   ]
 }
