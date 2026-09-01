@@ -69,10 +69,17 @@ def main() -> int:
         road_without_stage0 = [line for line in road_stages if not line.startswith("Stage 0 ")]
         require(road_without_stage0 == technical_stages, "roadmap and technical-spec stage sequences diverge")
 
+    taxonomy = _read("docs/stage-1-notation-taxonomy.md")
+    taxonomy_lower = taxonomy.lower()
+    require("standalone" in taxonomy_lower and "artifact role" in taxonomy_lower, "Stage 1 notation taxonomy does not define standalone as an artifact role")
+    require("pure tab-only layout is **not required**" in taxonomy_lower, "Stage 1 notation taxonomy does not explicitly allow staff-above/TAB-below guitar scores")
+    require("may legitimately carry both `guitar_tab` and `combined_staff_tab`" in taxonomy, "Stage 1 notation taxonomy does not allow independently supported overlapping TAB/layout labels")
+    require("do not define `guitar_tab` as \"tab-only\"" in taxonomy_lower, "Stage 1 notation taxonomy permits the obsolete TAB-only interpretation")
+
     c17a = _json("evidence/stage1c/wikimedia-guitar-technical-exercise-no1/catalog.v1.json")["items"][0]
     notation_kinds = c17a["input"]["notationKinds"]
     require(notation_kinds == ["combined_staff_tab"], f"C17A notation taxonomy drifted: {notation_kinds}")
-    require("guitar_tab" not in notation_kinds, "C17A incorrectly claims standalone guitar_tab")
+    require("guitar_tab" not in notation_kinds, "C17A accepted admission scope was retroactively widened")
     require(c17a["assertions"]["originalBytesInGit"] is False, "C17A claims real artifact bytes are in Git")
 
     c17c = _json("evidence/stage1c/imslp82860-c17c-noise/catalog.v2.json")["items"][0]
@@ -113,7 +120,8 @@ def main() -> int:
     print("Architecture consistency validation: PASS")
     print(f"- package/OpenAPI version: {package_version}")
     print("- roadmap/technical stage sequence: aligned")
-    print("- C17A taxonomy: combined_staff_tab only")
+    print("- Stage 1 TAB taxonomy: standalone is an artifact role; TAB-only layout is not required")
+    print("- C17A accepted scope: combined_staff_tab only, unchanged")
     print("- C17C exact-byte metadata-v2: noise / held_out / no training")
     print("- historical C15/C16 freeze: unchanged and insufficient")
     print("- Stage 2 boundary: blocked")
