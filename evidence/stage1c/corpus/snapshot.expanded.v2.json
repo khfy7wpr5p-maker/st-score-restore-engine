@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.2.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "snapshotId": "dataset.snapshot.stage1c-expanded.v2",
+  "datasetId": "dataset.catalog.stage1c-expanded-corpus.v2",
+  "version": "2.0.0",
+  "createdAt": "2026-09-01T23:10:00Z",
+  "environment": "stage1_offline",
+  "catalogSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+  "assignments": [
+    {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "split": "development",
+      "itemSha256": "226e65e50cbf8905510160fb45de8ef966bdc684cedc5766a37d5e454962462b"
+    },
+    {
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+      "split": "development",
+      "itemSha256": "c1f06342ba4932e2a087e76d424fbb253d63fa19bf7dc7f07196fbe99026b23f"
+    },
+    {
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+      "split": "held_out",
+      "itemSha256": "6a75bd7d8348c6ba6e47a4bdbc16a1fc9a3f3ec23fb79a36ad7c123608d3ff36"
+    },
+    {
+      "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "split": "development",
+      "itemSha256": "5deed5fac92ff98e10177eb1ff45d742e15863d58235a18af2dedcb4b1880449"
+    },
+    {
+      "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+      "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+      "split": "held_out",
+      "itemSha256": "6df8229e1a23160a21845c73ea195943287b03af77245132dfe2b53078d952bf"
+    }
+  ],
+  "heldOutFrozen": true,
+  "trainingUseActivated": false,
+  "revokedItemIds": [],
+  "coverage": {
+    "realItemCount": 5,
+    "syntheticItemCount": 0,
+    "gapCodes": []
+  },
+  "review": {
+    "status": "approved",
+    "reviewedBy": "actor.dataset:opq_543323ff2e140749c8f6ee4f839e1bd6",
+    "reviewedOn": "2026-09-01",
+    "evidenceReference": "evidence:opq_07f1e704e60b0fdf88670d5115b32360",
+    "noteCodes": [
+      "c17-expanded-snapshot",
+      "c17c-v2-replaces-v1",
+      "coverage-review-required"
+    ]
+  }
+}
