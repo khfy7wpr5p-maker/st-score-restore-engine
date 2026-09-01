@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "stage1c-artifact-admission-request-v1",
+  "architectureRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "requestId": "admissionreq:opq_2ed34da70f55f7c73a95af617b580b73",
+  "evaluatedAt": "2026-09-01T20:40:00Z",
+  "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+  "expectedItemSha256": "6df8229e1a23160a21845c73ea195943287b03af77245132dfe2b53078d952bf",
+  "requestedPurpose": "held_out_evaluation",
+  "acquisitionEvidenceRef": "evidence:opq_51a632554e61194e19aa68a86b884924",
+  "expectedEligibilityClass": "restricted_corpus",
+  "expectedStorageProfile": "managed_restricted",
+  "profileVerificationRef": "restrictver:opq_644a9b8e39e7662f0a4c16aec44a175b",
+  "profileVerificationSha256": "24003f0776816f8282bb6967fc1946fba5f15bb86cca6000f96819d22eb32f4a",
+  "storageBindingEvidenceRef": "evidence:opq_ad5dd6108fb10e2d96f81d23e8336a10",
+  "claims": {
+    "artifactBytesIncluded": false,
+    "providerDetailsIncluded": false,
+    "modelTrainingAuthorized": false,
+    "qualityCalibrationAuthorized": false,
+    "safetyCalibrationAuthorized": false,
+    "publicationAuthorized": false,
+    "demonstrationAuthorized": false,
+    "syntheticDerivationAuthorized": false,
+    "stage2Authorized": false
+  }
+}
