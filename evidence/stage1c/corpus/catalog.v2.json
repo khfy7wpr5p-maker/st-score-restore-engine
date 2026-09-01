@@ -1,0 +1,942 @@
+{
+  "schemaVersion": "1.3.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.stage1c-expanded-corpus.v2",
+  "descriptionCode": "stage1c-expanded-corpus-v2",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+        "byteSize": 1182561,
+        "storageLocator": "custody:opq_f7edd748c4f5dd38cc60530053184785",
+        "custodyProfileId": "policy:opq_1336dac4f8e3c11ea111c6de04452ff8",
+        "encryptionProfileId": "policy:opq_d1ccbd26faa925d1fcfb65d0130b6b2c",
+        "custodianId": "actor.custodian:opq_d1d26013622f21594aff20a7fc59f726"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_14e6e82acb5ac9a5d67702769081240d",
+        "rightsHolderId": "subject:opq_0adcc0e8a74904617d9088ccb45b0787",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_850cb59bbda9fdcb664602e68d438168",
+          "verifiedOn": "2026-08-25",
+          "evidenceReference": "evidence:opq_d2a5fa88899ead51bb5a94d0c33af489"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "scanned_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": [
+          "staff"
+        ],
+        "pageCount": 4,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_2d855d09b2aabd0c1385aa74d90c92f2",
+          "authorizedBy": "actor.purpose:opq_17ae0eb0b64f056de2b6f8b1824f7d5c",
+          "authorizedOn": "2026-08-25",
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "development",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_8c472d44d13702aa89251bb5d7a2f7c9",
+        "reviewedOn": "2026-08-25",
+        "evidenceReference": "evidence:opq_b654c3598d793eaffd4ba4d46cd70d42",
+        "noteCodes": [
+          "imslp799143-public-domain",
+          "stage1c-first-real-item"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    },
+    {
+      "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+        "byteSize": 34636,
+        "storageLocator": "custody:opq_f9207164ab40766defac9730dccb86cd",
+        "custodyProfileId": "policy:opq_203e9ac081d9f52e60b5d6ca8be7e1a1",
+        "encryptionProfileId": "policy:opq_a7c238f4ee7743971be01ed8dd90be0d",
+        "custodianId": "actor.custodian:opq_0492d480355e1efba01b59ec9133e333"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_0de27324e60c71ed3e03c30a9f05226e",
+        "rightsHolderId": "subject:opq_6ed9a532e8a68307cfcec7c7353fee46",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_8d3d2eb23f70fa3b6e58d2c9e0279cb3",
+          "verifiedOn": "2026-08-25",
+          "evidenceReference": "evidence:opq_526558a7d194f447926ad498e0b63e84"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "png",
+        "mediaType": "image/png",
+        "notationKinds": [
+          "combined_staff_tab"
+        ],
+        "pageCount": 1,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_bef731e91bc070587922e2f88d9cb399",
+          "authorizedBy": "actor.purpose:opq_68874591ab435cc4b18f2d5b5aa6e435",
+          "authorizedOn": "2026-08-25",
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "development",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_49a49a3515e284441d5530550f822268",
+        "reviewedOn": "2026-08-25",
+        "evidenceReference": "evidence:opq_a255b0ac13e69ca188dd94b0bb52eab2",
+        "noteCodes": [
+          "wikimedia-public-domain",
+          "c17-combined-staff-tab",
+          "exact-byte-drive-roundtrip-pass"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    },
+    {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+        "byteSize": 84689,
+        "storageLocator": "custody:opq_b11c4cdb35b439567cdfcde4263e2d81",
+        "custodyProfileId": "policy:opq_9d79a3b0669bafcd0609ce6507692671",
+        "encryptionProfileId": "policy:opq_460997774f6cf242be276a6d1e3e21b2",
+        "custodianId": "actor.custodian:opq_eec71ddae9caa725f4bb93a846db6d71"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_6ac377302081879bffc3ce4df1a9849b",
+        "rightsHolderId": "subject:opq_a7b7acaaa6f121057e547f39ef01a2fc",
+        "licenseId": "cc0-1.0-universal",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_7e1b286f8832dcd698faa5e6346643d6",
+          "verifiedOn": "2026-09-01",
+          "evidenceReference": "evidence:opq_2d1f665ebbd83d7cc766d85743d4612e"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "digital_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": [
+          "guitar_tab"
+        ],
+        "pageCount": 2,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_5f49064b63f644d3efec24ea1e665398",
+          "authorizedBy": "actor.purpose:opq_6a66667bbc9a7d6c10fb538968a3cb75",
+          "authorizedOn": "2026-09-01",
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "development",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_9887726577b343669dcc9ad629a371fe",
+        "reviewedOn": "2026-09-01",
+        "evidenceReference": "evidence:opq_192479397cc4f1b69ff0eff74e1edbf8",
+        "noteCodes": [
+          "cc0-public-domain-dedication",
+          "c17b-guitar-tab",
+          "standard-notation-over-six-line-tab",
+          "exact-byte-drive-roundtrip-pass"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    },
+    {
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+        "byteSize": 1114479,
+        "storageLocator": "custody:opq_70ff4da03e17e5cc62e1bcd06ce5ef9a",
+        "custodyProfileId": "policy:opq_bf8b8be7d0934740022bc90f9db7cdce",
+        "encryptionProfileId": "policy:opq_c33c9fb68b531dfa9f72c3f44703b747",
+        "custodianId": "actor.custodian:opq_54b947e184a7d6539c8876b29178ebaf"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_8fabd00cc3dd6699931b9f3e6b73f799",
+        "rightsHolderId": "subject:opq_7fe01fa6e13f435dd8be3622f775fbe4",
+        "licenseId": "public-domain-1.0",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_914e636eb94d697ff31fb91ea26302fd",
+          "verifiedOn": "2026-08-25",
+          "evidenceReference": "evidence:opq_52cbe6bbdc0a3c8434e94990c86ed34e"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "scanned_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": [
+          "staff"
+        ],
+        "pageCount": 8,
+        "degradations": [
+          "noise"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_c2bb8aac4b0381fc44e96ffb3729eabc",
+          "authorizedBy": "actor.purpose:opq_43e98cb13090b661ce214e622d913fb7",
+          "authorizedOn": "2026-08-25",
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "held_out",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_23fb71d429a5735bef6bd500e573d41a",
+        "reviewedOn": "2026-08-26",
+        "evidenceReference": "evidence:opq_3a902965b5bd4020ef7e4f3e4a02dcbe",
+        "noteCodes": [
+          "imslp82860-public-domain",
+          "stage1c-first-held-out-item",
+          "c17c-exact-byte-noise-review",
+          "metadata-v2"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    },
+    {
+      "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+      "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+      "parentItemId": null,
+      "eligibilityClass": "restricted_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+        "byteSize": 647003,
+        "storageLocator": "custody:opq_3e7648c5174fa78a05fe16534e3a8d7b",
+        "custodyProfileId": "policy:opq_c9d357070f3e300dabf45b21a9a04555",
+        "encryptionProfileId": "policy:opq_2826f7cff2dc52b51e856c4336ada1f1",
+        "custodianId": "actor.custodian:opq_5eb83bb7143456c4a6b707286d793caa"
+      },
+      "provenance": {
+        "sourceKind": "licensed",
+        "sourceReference": "evidence:opq_51a632554e61194e19aa68a86b884924",
+        "rightsHolderId": "subject:opq_b93fd07d9258292ef5e4758a7904fa52",
+        "licenseId": "cc-by-sa-3.0",
+        "usageBasisCode": "license_grant",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_ff8f30c8d992ada7df644d228341433e",
+          "verifiedOn": "2026-09-01",
+          "evidenceReference": "evidence:opq_7d6dd3f0dec4ed34b04bf43ec4970b14"
+        }
+      },
+      "privacy": {
+        "classification": "deidentified",
+        "reviewStatus": "approved",
+        "reviewedBy": "actor.privacy:opq_2167ecd9d9f8a0832912983227e5083e",
+        "reviewedOn": "2026-09-01",
+        "evidenceReference": "evidence:opq_b42be3db783416357e2b147f3e7bc58c",
+        "deidentificationMethodCode": "metadata_scrub",
+        "deidentifiedArtifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
+      },
+      "input": {
+        "kind": "phone_photo",
+        "mediaType": "image/jpeg",
+        "notationKinds": [
+          "staff"
+        ],
+        "pageCount": 1,
+        "degradations": [
+          "none"
+        ]
+      },
+      "permissions": {
+        "fixture_validation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "quality_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "pdf_pipeline_evaluation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "safety_calibration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "held_out_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_8e7d5057834397782af8003ca18969e7",
+          "authorizedBy": "actor.purpose:opq_7580d0bcd314ab60c98ec0841496ad11",
+          "authorizedOn": "2026-09-01",
+          "expiresOn": null,
+          "restrictions": [
+            {
+              "type": "split_allowlist",
+              "values": [
+                "held_out"
+              ]
+            },
+            {
+              "type": "storage_class_allowlist",
+              "values": [
+                "managed_restricted"
+              ]
+            },
+            {
+              "type": "external_export",
+              "allowed": false
+            }
+          ],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "model_training": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "publication": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "demonstration": {
+          "status": "not_requested",
+          "authorizationReference": null,
+          "authorizedBy": null,
+          "authorizedOn": null,
+          "expiresOn": null,
+          "restrictions": [],
+          "revokedOn": null,
+          "revocationReference": null
+        }
+      },
+      "split": "held_out",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_restricted",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {
+        "status": "not_revoked",
+        "effectiveOn": null,
+        "reference": null
+      },
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_533cff5faa39b10621c2276c6ef9b0f4",
+        "reviewedOn": "2026-09-01",
+        "evidenceReference": "evidence:opq_ee4ce0c95836537984ce93be7b977afc",
+        "noteCodes": [
+          "c17d-phone-photo",
+          "licensed-cc-by-sa-3.0",
+          "metadata-scrub",
+          "drive-roundtrip-pass"
+        ]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}
