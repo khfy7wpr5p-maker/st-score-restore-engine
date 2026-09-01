@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.3.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.stage1c-c17b-barley-guitar-tab.v1",
+  "descriptionCode": "stage1c-c17b-barley-guitar-tab",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "parentItemId": null,
+      "eligibilityClass": "open_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+        "byteSize": 84689,
+        "storageLocator": "custody:opq_b11c4cdb35b439567cdfcde4263e2d81",
+        "custodyProfileId": "policy:opq_9d79a3b0669bafcd0609ce6507692671",
+        "encryptionProfileId": "policy:opq_460997774f6cf242be276a6d1e3e21b2",
+        "custodianId": "actor.custodian:opq_eec71ddae9caa725f4bb93a846db6d71"
+      },
+      "provenance": {
+        "sourceKind": "public_domain",
+        "sourceReference": "evidence:opq_6ac377302081879bffc3ce4df1a9849b",
+        "rightsHolderId": "subject:opq_a7b7acaaa6f121057e547f39ef01a2fc",
+        "licenseId": "cc0-1.0-universal",
+        "usageBasisCode": "public_domain",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_7e1b286f8832dcd698faa5e6346643d6",
+          "verifiedOn": "2026-09-02",
+          "evidenceReference": "evidence:opq_2d1f665ebbd83d7cc766d85743d4612e"
+        }
+      },
+      "privacy": {
+        "classification": "none",
+        "reviewStatus": "not_required",
+        "reviewedBy": null,
+        "reviewedOn": null,
+        "evidenceReference": null,
+        "deidentificationMethodCode": null,
+        "deidentifiedArtifactSha256": null
+      },
+      "input": {
+        "kind": "digital_pdf",
+        "mediaType": "application/pdf",
+        "notationKinds": ["guitar_tab"],
+        "pageCount": 2,
+        "degradations": ["none"]
+      },
+      "permissions": {
+        "fixture_validation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "quality_evaluation": {"status": "granted", "authorizationReference": "evidence:opq_5f49064b63f644d3efec24ea1e665398", "authorizedBy": "actor.purpose:opq_6a66667bbc9a7d6c10fb538968a3cb75", "authorizedOn": "2026-09-02", "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "quality_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "pdf_pipeline_evaluation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "safety_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "held_out_evaluation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "synthetic_derivation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "model_training": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "publication": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "demonstration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null}
+      },
+      "split": "development",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_standard",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {"status": "not_revoked", "effectiveOn": null, "reference": null},
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_9887726577b343669dcc9ad629a371fe",
+        "reviewedOn": "2026-09-02",
+        "evidenceReference": "evidence:opq_192479397cc4f1b69ff0eff74e1edbf8",
+        "noteCodes": ["cc0-public-domain-dedication", "c17b-guitar-tab", "standard-notation-over-six-line-tab", "exact-byte-drive-roundtrip-pass"]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}
