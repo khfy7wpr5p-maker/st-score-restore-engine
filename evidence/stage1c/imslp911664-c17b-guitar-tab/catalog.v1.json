@@ -27,7 +27,7 @@
         "rightsReview": {
           "status": "approved",
           "verifiedBy": "actor.rights:opq_7e1b286f8832dcd698faa5e6346643d6",
-          "verifiedOn": "2026-09-02",
+          "verifiedOn": "2026-09-01",
           "evidenceReference": "evidence:opq_2d1f665ebbd83d7cc766d85743d4612e"
         }
       },
@@ -49,7 +49,7 @@
       },
       "permissions": {
         "fixture_validation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
-        "quality_evaluation": {"status": "granted", "authorizationReference": "evidence:opq_5f49064b63f644d3efec24ea1e665398", "authorizedBy": "actor.purpose:opq_6a66667bbc9a7d6c10fb538968a3cb75", "authorizedOn": "2026-09-02", "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "quality_evaluation": {"status": "granted", "authorizationReference": "evidence:opq_5f49064b63f644d3efec24ea1e665398", "authorizedBy": "actor.purpose:opq_6a66667bbc9a7d6c10fb538968a3cb75", "authorizedOn": "2026-09-01", "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
         "quality_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
         "pdf_pipeline_evaluation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
         "safety_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
@@ -74,7 +74,7 @@
       "review": {
         "status": "approved",
         "reviewedBy": "actor.dataset:opq_9887726577b343669dcc9ad629a371fe",
-        "reviewedOn": "2026-09-02",
+        "reviewedOn": "2026-09-01",
         "evidenceReference": "evidence:opq_192479397cc4f1b69ff0eff74e1edbf8",
         "noteCodes": ["cc0-public-domain-dedication", "c17b-guitar-tab", "standard-notation-over-six-line-tab", "exact-byte-drive-roundtrip-pass"]
       },
