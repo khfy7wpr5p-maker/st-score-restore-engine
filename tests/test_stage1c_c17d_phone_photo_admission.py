@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
+from st_score_restore.dataset_contract_constants import DatasetManifestError  # noqa: E402
 from st_score_restore.dataset_manifest import canonical_sha256, load_json_object  # noqa: E402
 from tools.evaluate_stage1c_artifact_admission import evaluate_admission  # noqa: E402
 
@@ -80,12 +81,12 @@ class Stage1CC17DPhonePhotoAdmissionTests(unittest.TestCase):
     def test_restricted_profile_or_privacy_tampering_fails_closed(self) -> None:
         catalog = copy.deepcopy(self.catalog)
         catalog["items"][0]["eligibilityClass"] = "open_corpus"
-        result = evaluate_admission(
-            self.request,
-            catalog=catalog,
-            profile_record=self.profile,
-        )
-        self.assertEqual(result["decision"], "blocked")
+        with self.assertRaises(DatasetManifestError):
+            evaluate_admission(
+                self.request,
+                catalog=catalog,
+                profile_record=self.profile,
+            )
 
         catalog = copy.deepcopy(self.catalog)
         catalog["items"][0]["privacy"]["classification"] = "none"
