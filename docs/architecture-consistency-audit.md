@@ -1,65 +1,97 @@
-# Architecture Consistency Audit — 2026-08-30
+# Architecture Consistency Audit — 2026-09-02
 
-**Audit scope:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Fresh-read main:** `e211893324d47e2084f873c14f5737968cb55cc2`  
-**Active Stage:** Stage 1C / C17 corpus expansion  
+**Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
+**Fresh-read production main:** `53ae13d3a1b9bda08c79125674e1b7fca78ee8af`  
+**Active PR:** #81 / `stage1c-expanded-snapshot-v2`  
 **Stage 1 exit:** BLOCKED  
 **Stage 2 entry:** BLOCKED
 
 ## 1. Purpose
 
-This record reconciles architecture, implementation contracts, Stage 1 evidence, repository governance, and CI enforcement after C17C / PR #72. It is a maintenance audit, not a new roadmap authorization. Accepted ADR decisions remain unchanged.
+This audit separates current production truth, immutable historical evidence and in-progress PR state. It changes no accepted ADR and creates no roadmap authorization.
 
-## 2. Compatibility / inconsistency matrix
+Authority order is: merged `main` + accepted deterministic evidence > stale status prose. An open PR is not production truth. Exact-head CI evidence becomes stale after head movement.
 
-| Area | Result | Evidence / interpretation |
+## 2. Fresh-read findings
+
+| Area | Result | Current interpretation |
 |---|---|---|
-| Package vs OpenAPI version | PASS | `pyproject.toml` and `api/openapi.v1.json` are both `0.5.0`. |
-| Python compatibility | PASS BY CONTRACT | Runtime is `>=3.11,<3.13`; CI matrix is 3.11 and 3.12. Fresh CI execution is separately blocked below. |
-| ADR 0015 processing order | PASS BY IMPLEMENTATION REGRESSION | `tests/test_restoration_pipeline_architecture.py` requires safety validation before comparator use, excludes rejected variants, and keeps the immutable original selectable. |
-| C17A notation taxonomy | PASS | Exact catalog classifies the artifact only as `combined_staff_tab`; standalone `guitar_tab` remains open. |
-| C17C exact-byte evidence | PASS | PR #72 merged metadata-v2 for the existing held-out artifact, exact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`, degradation `noise` only. |
-| C15/C16 historical immutability | PASS | Historical snapshot remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; C16 remains `insufficient`, 2 real items / 12 pages. |
-| Stage boundary | PASS | Stage 1 remains active/not exited; Stage 2 remains blocked. |
-| Ordinary Git artifact custody | PASS | Stage 1 evidence remains metadata-only; no PDF/JPG/JPEG/PNG/TIFF corpus bytes are permitted under `evidence/stage1c`. |
-| Architecture/status documentation | FAIL ON CURRENT MAIN → REMEDIATED IN PR #73 | README, roadmap, technical specification, Stage 1C status and exit evidence contained stale C17C-pending wording after PR #72. This PR reconciles them. |
-| Parent Stage 1 issue state | FAIL → GOVERNANCE CORRECTION REQUIRED | Issue #32 still describes Stage 1 as planned/blocked even though Stage 1A/B are complete and Stage 1C is active. Its body must be reconciled without changing the Stage 1 exit gate. |
-| Server-side review enforcement | WARNING | Active ruleset requires PR plus `validate (3.11)` / `validate (3.12)`, but requires zero approving reviews and does not require review-thread resolution. Manual repository governance is therefore stronger than server-side enforcement. |
-| Fresh exact-head CI | BLOCKED | Post-merge Run #156 and PR #73 Run #157 completed as `cancelled` after extended queueing and allocated zero jobs. They are not test failures, but they provide no executable CI evidence. |
+| Production main | PASS | main is `53ae13d3a1b9bda08c79125674e1b7fca78ee8af` |
+| C17B standalone guitar TAB | PASS / MERGED | exact Barley artifact admitted; older docs/Issue #47 wording that says pending is stale |
+| C17D phone photo | PASS / MERGED | exact deidentified restricted derivative admitted; older pending wording is stale |
+| C17C v1/v2 dedup rule | PASS | aggregate must select Chopin v2 and exclude v1; never double-count exact artifact |
+| Historical C15/C16 immutability | PASS | v1 catalog, frozen snapshot and C16 report remain historical and unchanged |
+| Ordinary Git artifact custody | PASS BY CONTRACT | corpus artifacts remain outside ordinary Git; repository stores metadata/evidence only |
+| Active PR #81 | OPEN / DRAFT | in-progress, mergeable; not production truth |
+| PR #81 reviews | NONE | no submitted reviews at fresh-read |
+| PR #81 review threads | NONE | no unresolved threads at fresh-read |
+| Candidate exact-head CI | PASS FOR OLD HEAD | Run #177 passed Python 3.11/3.12 on `e733d19cf5cb64d86f70017118d8d06c6863c304`; any later head invalidates it as merge evidence |
+| Expanded-v2 candidate determinism | PASS | Python 3.11/3.12 workflow artifacts were byte-identical for all three generated evidence files |
+| Expanded-v2 committed evidence | PENDING | must be added to PR #81 and checked from Git |
+| Stage 1 exit | BLOCKED | separate post-merge acceptance still required |
+| Stage 2 entry | BLOCKED | no Stage 2 work before final Stage 1 PASS |
 
-## 3. Ordered remediation plan
+## 3. Documentation drift found
 
-1. **Reconcile repository-visible current state.** Update README, Stage 1C current status, Stage 1 exit evidence, roadmap and technical specification so C17C is consistently recorded as merged and only C17B/C17D remain exact-byte admission targets.
-2. **Add deterministic drift detection.** `tools/validate_architecture_consistency.py` must verify package/API version parity, roadmap/spec stage-sequence parity, C17A taxonomy, C17C exact-byte metadata-v2, immutable historical C15/C16 evidence, Stage 2 blocking, metadata-only corpus evidence, and CI wiring.
-3. **Wire the consistency test into CI.** Repository validation must execute the new checker on Python 3.11 and 3.12 before Stage 1 admission checks.
-4. **Correct parent Issue #32.** Replace obsolete pre-entry wording with the current Stage 1A/B/C state while preserving its parent-scope and exit requirements.
-5. **Preserve exact-head merge discipline.** A `queued`, `cancelled`, or zero-job workflow run is not verification evidence. PR #73 remains Draft until a new exact-head run actually executes both required matrix jobs successfully and review/thread reconciliation is complete.
-6. **Harden GitHub ruleset when capability is available.** Raise server-side enforcement toward documented governance: approving review requirement and review-thread resolution. Until then, manual gates remain authoritative.
-7. **Continue Stage 1 corpus expansion only after governance consistency is restored.** C17B standalone guitar TAB and C17D admissible real phone-photo path remain fail-closed until exact bytes and all rights/privacy/custody/admission evidence pass.
-8. **Create a new aggregate snapshot only after sufficient C17 admission.** Never mutate C15/C16 and never double-count C17C v1/v2 metadata for the same exact artifact.
+Fresh-read identified stale current-state wording in:
 
-## 4. CI interpretation rule
+- `README.md`;
+- `docs/roadmap.md`;
+- `docs/technical-specification.md`;
+- `docs/stage-1c-current-status.md`;
+- `docs/stage-1-exit-evidence.md`;
+- `docs/stage-1-dataset-card.md`;
+- `docs/stage-1-coverage-and-bias-register.md`;
+- this audit;
+- Issue #47.
 
-A GitHub Actions run counts as fresh evidence only when the exact PR/main head is unchanged and the required `validate (3.11)` and `validate (3.12)` jobs actually execute and succeed. Cancellation before job allocation is an infrastructure/execution-state blocker, not a product-test failure and not a success.
+The primary drift was the claim that C17B/C17D were still unadmitted and that only C17A/C17C were merged. Current main disproves that claim.
 
-## 5. Ruleset enforcement gap
+Historical C15/C16 evidence documents are deliberately not rewritten to make current coverage retroactive.
 
-The active `main-safety-gate` ruleset is a minimum server-side gate, not the complete project governance contract. Until the ruleset is hardened, merge decisions must additionally enforce:
+## 4. Expanded-v2 candidate truth
 
-- Draft → Ready as a separate transition;
-- fresh base/head verification;
-- exact-head CI success;
-- review reconciliation;
-- no unresolved blocking review threads/findings;
-- exact verified head at merge time;
-- Stage/custody/rights/privacy boundaries.
+PR #81's deterministic builder selects exactly five real items and zero synthetic items:
 
-## 6. Stage 1 evidence interpretation
+1. Beethoven baseline v1;
+2. combined staff+TAB technical exercise v1;
+3. Barley standalone guitar TAB v1;
+4. Chopin metadata v2;
+5. Nearer My God to Thee deidentified phone-photo v1.
 
-C17C improves future degradation coverage evidence but does not retroactively change C16. A future expanded snapshot must select the C17C v2 representation of IMSLP82860 instead of v1 and must not count both metadata versions as separate artifacts or source families.
+Candidate structure:
 
-C17B remains the standalone Guitar TAB gap. C17D remains the genuine phone-photo gap. The user-provided phone photo remains a separate `sensitive_custody -> high_assurance_vault` path and is not an open-corpus substitute while real vault verification is absent.
+- development: 3 items / 3 source families;
+- held out: 2 items / 2 source families;
+- distinct source families across splits;
+- distinct exact artifact SHA-256 values;
+- Chopin v1 excluded;
+- six explicit coverage targets all `covered`;
+- historical seven C16 gap codes absent.
 
-## 7. Safety statement
+The candidate report nevertheless remains `review_required`, with `stage1ExitSupported=false` and `stage2EntrySupported=false`. This is the intended fail-closed boundary.
 
-This audit changes no accepted ADR, does not add real document bytes to Git, does not grant training/calibration/publication permission, does not authorize Stage 2, and does not activate DocRes, the future multi-engine comparator, Selector, ST Restore image model, production deployment, OMR, or MusicXML integration.
+## 5. Required PR #81 finalization sequence
+
+1. commit canonical v2 catalog/snapshot/report without changing historical v1 evidence;
+2. replace candidate-only workflow generation with committed-evidence `--check`;
+3. add focused regression tests for exact membership, split/source-family isolation, digest uniqueness, C17C dedup, historical immutability and zero artifact bytes in ordinary Git;
+4. update repository-visible current-state documentation and the canonical live handoff;
+5. fresh-read base/head;
+6. obtain successful exact-head `validate (3.11)` and `validate (3.12)`;
+7. reconcile reviews and review threads;
+8. Draft -> Ready only if gates are clean;
+9. merge exact verified head only if gates remain clean;
+10. verify post-merge main CI.
+
+A queued, cancelled, zero-job or old-head workflow run is not valid final evidence.
+
+## 6. Stage 1 exit boundary
+
+Only after PR #81 merge and successful post-merge CI may Stage 1 final exit be evaluated. A PASS must bind the exact main SHA and accepted v2 catalog/snapshot/report digests plus the successful CI run.
+
+Coverage closure alone does not establish representativeness, absence of bias, restoration effectiveness, OMR improvement or musical correctness.
+
+## 7. Stage 2 prohibition
+
+Stage 2 / OpenCV Complete Quality Analysis remains blocked until the explicit Stage 1 final exit decision is PASS. Stage 1 evidence must not be retroactively rewritten based on later Stage 2 results.
