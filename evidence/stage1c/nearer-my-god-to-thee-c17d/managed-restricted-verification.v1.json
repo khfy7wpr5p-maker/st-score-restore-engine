@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "stage1c-managed-restricted-verification-v1",
+  "contractRef": "adr-0016-stage-1c-risk-tiered-custody-v1",
+  "verificationId": "restrictver:opq_644a9b8e39e7662f0a4c16aec44a175b",
+  "configurationRef": "storagecfg:opq_f1b2a88cb8c63585586e6eaf206ac099",
+  "restrictionSetRef": "restrictset:opq_900125bbb3642f89594923c79e95eb09",
+  "assessorRef": "actor:opq_250d92e1f50b75a857d0e89d9c494641",
+  "assessedAt": "2026-09-01T20:35:00Z",
+  "profile": "managed_restricted",
+  "eligibilityClass": "restricted_corpus",
+  "overallState": "pass",
+  "controls": {
+    "git_exclusion": {"result": "pass", "evidenceRef": "evidence:opq_93db28bb5b68d20b8679ec5d7c448845"},
+    "object_binding_capability": {"result": "pass", "evidenceRef": "evidence:opq_68fa1a874eafb0da66088ac2e387f10f"},
+    "project_managed_access": {"result": "pass", "evidenceRef": "evidence:opq_3c58dab80dee76b3598ccabb03d25367"},
+    "accidental_public_sharing_prevention": {"result": "pass", "evidenceRef": "evidence:opq_d500fc5d1107c56a8b422f362af0f8ae"},
+    "encryption_in_transit": {"result": "pass", "evidenceRef": "evidence:opq_404e2977f5e2b0cdbde2a97958d26353"},
+    "encryption_at_rest_private_copies": {"result": "pass", "evidenceRef": "evidence:opq_533277aa5dc05e95dd5700ffc2141cf9"},
+    "version_drift_protection": {"result": "pass", "evidenceRef": "evidence:opq_27aae0520112b78dcf3cb4eac5cf02ea"},
+    "retention_deletion_behavior": {"result": "pass", "evidenceRef": "evidence:opq_e1e4efdb04c601779f18b4c45be49207"},
+    "opaque_repository_boundary": {"result": "pass", "evidenceRef": "evidence:opq_e7f1de7e3db82f990dbcb64d86aee876"},
+    "artifact_terms_compatibility": {"result": "pass", "evidenceRef": "evidence:opq_491355fd180075c3deb4e019b1889a3f"},
+    "deny_by_default_membership": {"result": "pass", "evidenceRef": "evidence:opq_91788ebb3074e4e7b9c4dd5062bef31c"},
+    "public_links_disabled": {"result": "pass", "evidenceRef": "evidence:opq_890c8ac20ac7b20cc4d27be1d0d8fcff"},
+    "access_change_history": {"result": "pass", "evidenceRef": "evidence:opq_c697596f2058cdd3572899be7dd958f4"},
+    "restriction_compatible_deletion_backup": {"result": "pass", "evidenceRef": "evidence:opq_ceb14fdc116e0544f482486db140fcf8"},
+    "storage_environment_allowlist_match": {"result": "pass", "evidenceRef": "evidence:opq_14a64d759da89e6209d3318c0afb1edb"}
+  },
+  "claims": {
+    "artifactOnboardingAuthorized": false,
+    "artifactPermissionGranted": false,
+    "providerApprovedByBrand": false,
+    "artifactBytesIncluded": false,
+    "realArtifactDigestIncluded": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage2Authorized": false
+  }
+}
