@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.3.0",
+  "entryDecisionId": "adr-0013-stage-1-entry-v1",
+  "catalogId": "dataset.catalog.stage1c-c17d-nearer-phone-photo.v1",
+  "descriptionCode": "stage1c-c17d-nearer-phone-photo",
+  "items": [
+    {
+      "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+      "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+      "parentItemId": null,
+      "eligibilityClass": "restricted_corpus",
+      "artifact": {
+        "state": "external_available",
+        "sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+        "byteSize": 647003,
+        "storageLocator": "custody:opq_3e7648c5174fa78a05fe16534e3a8d7b",
+        "custodyProfileId": "policy:opq_c9d357070f3e300dabf45b21a9a04555",
+        "encryptionProfileId": "policy:opq_2826f7cff2dc52b51e856c4336ada1f1",
+        "custodianId": "actor.custodian:opq_5eb83bb7143456c4a6b707286d793caa"
+      },
+      "provenance": {
+        "sourceKind": "licensed",
+        "sourceReference": "evidence:opq_51a632554e61194e19aa68a86b884924",
+        "rightsHolderId": "subject:opq_b93fd07d9258292ef5e4758a7904fa52",
+        "licenseId": "cc-by-sa-3.0",
+        "usageBasisCode": "license_grant",
+        "rightsReview": {
+          "status": "approved",
+          "verifiedBy": "actor.rights:opq_ff8f30c8d992ada7df644d228341433e",
+          "verifiedOn": "2026-09-01",
+          "evidenceReference": "evidence:opq_7d6dd3f0dec4ed34b04bf43ec4970b14"
+        }
+      },
+      "privacy": {
+        "classification": "deidentified",
+        "reviewStatus": "approved",
+        "reviewedBy": "actor.privacy:opq_2167ecd9d9f8a0832912983227e5083e",
+        "reviewedOn": "2026-09-01",
+        "evidenceReference": "evidence:opq_b42be3db783416357e2b147f3e7bc58c",
+        "deidentificationMethodCode": "metadata_scrub",
+        "deidentifiedArtifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
+      },
+      "input": {
+        "kind": "phone_photo",
+        "mediaType": "image/jpeg",
+        "notationKinds": ["staff"],
+        "pageCount": 1,
+        "degradations": ["none"]
+      },
+      "permissions": {
+        "fixture_validation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "quality_evaluation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "quality_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "pdf_pipeline_evaluation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "safety_calibration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "held_out_evaluation": {
+          "status": "granted",
+          "authorizationReference": "evidence:opq_8e7d5057834397782af8003ca18969e7",
+          "authorizedBy": "actor.purpose:opq_7580d0bcd314ab60c98ec0841496ad11",
+          "authorizedOn": "2026-09-01",
+          "expiresOn": null,
+          "restrictions": [
+            {"type": "split_allowlist", "values": ["held_out"]},
+            {"type": "storage_class_allowlist", "values": ["managed_restricted"]},
+            {"type": "external_export", "allowed": false}
+          ],
+          "revokedOn": null,
+          "revocationReference": null
+        },
+        "synthetic_derivation": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "model_training": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "publication": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null},
+        "demonstration": {"status": "not_requested", "authorizationReference": null, "authorizedBy": null, "authorizedOn": null, "expiresOn": null, "restrictions": [], "revokedOn": null, "revocationReference": null}
+      },
+      "split": "held_out",
+      "retention": {
+        "policy": "delete_after_validation",
+        "expiresOn": null,
+        "storageClass": "managed_restricted",
+        "deletionRequired": false,
+        "deletionStatus": "not_required",
+        "deletionReceiptReference": null,
+        "deletionReceiptSha256": null
+      },
+      "revocation": {"status": "not_revoked", "effectiveOn": null, "reference": null},
+      "syntheticGeneration": null,
+      "review": {
+        "status": "approved",
+        "reviewedBy": "actor.dataset:opq_533cff5faa39b10621c2276c6ef9b0f4",
+        "reviewedOn": "2026-09-01",
+        "evidenceReference": "evidence:opq_ee4ce0c95836537984ce93be7b977afc",
+        "noteCodes": ["c17d-phone-photo", "licensed-cc-by-sa-3.0", "metadata-scrub", "drive-roundtrip-pass"]
+      },
+      "assertions": {
+        "teacherApprovalImpliedDatasetPermission": false,
+        "teacherApprovalImpliedTrainingPermission": false,
+        "originalBytesInGit": false,
+        "stage1TrainingExecutionAuthorized": false
+      }
+    }
+  ]
+}
