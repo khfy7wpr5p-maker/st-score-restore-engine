@@ -1,12 +1,12 @@
 # Stage 1 Dataset Card
 
-**Status:** Historical C15/C16 baseline preserved; expanded-v2 candidate under PR #81 acceptance  
+**Status:** Historical C15/C16 baseline preserved; expanded-v2 evidence under PR #81 acceptance  
 **As of:** 2026-09-02  
 **Stage:** Stage 1C  
 **Parent issue:** #47  
 **Artifact bytes stored in ordinary Git:** 0  
 **Model training authorized:** No  
-**Stage 2 authorized:** No
+**Stage 2 entry:** BLOCKED
 
 ## 1. Scope and evidence versions
 
@@ -16,13 +16,13 @@ This card distinguishes two evidence generations that must not be conflated.
 
 `dataset.snapshot.stage1c-freeze.v1` remains the historical frozen snapshot, with canonical snapshot SHA-256 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`. It contains 2 real items / 12 pages and C16 concluded `insufficient`. Neither the historical catalog, frozen snapshot nor C16 report is rewritten by C17.
 
-### Expanded-v2 candidate — PR #81, not yet production evidence
+### Expanded-v2 evidence — PR #81, not yet production evidence
 
-PR #81 deterministically builds a new five-item aggregate candidate from already admitted item-level evidence. Until the v2 files are committed, exact-head checked, merged and post-merge validated, this candidate is in-progress rather than `main` production truth.
+PR #81 deterministically builds and now commits a new five-item aggregate from already admitted item-level evidence. Until the committed v2 files pass fresh exact-head CI, review/thread/head gates, merge and post-merge validation, this evidence remains in-progress rather than `main` production truth.
 
 ## 2. Expanded-v2 membership
 
-The required candidate membership is exactly:
+The required membership is exactly:
 
 - `dataset.item.imslp799143-beethoven-op48-no3.v1` — development;
 - `dataset.item.wikimedia-guitar-technical-exercise-no1.v1` — development;
@@ -32,11 +32,11 @@ The required candidate membership is exactly:
 
 `dataset.item.imslp82860-chopin-op69.v1` is excluded. Metadata v2 represents the same exact Chopin artifact and replaces v1 for this aggregate; both versions must never be counted as independent real items.
 
-## 3. Candidate corpus structure
+## 3. Corpus structure
 
-The deterministic candidate reports:
+The deterministic expanded-v2 evidence reports:
 
-| Dimension | Candidate observation |
+| Dimension | Observation |
 |---|---:|
 | Real items | 5 |
 | Synthetic items | 0 |
@@ -69,7 +69,7 @@ Public availability, possession of bytes, provider identity or teacher approval 
 
 ## 5. Coverage interpretation
 
-The expanded-v2 candidate closes the explicit historical target gaps for:
+The expanded-v2 evidence closes the explicit historical target gaps for:
 
 - staff notation;
 - standalone guitar TAB;
@@ -82,7 +82,7 @@ The expanded-v2 candidate closes the explicit historical target gaps for:
 
 That result is a metadata coverage observation only. It does not establish that the corpus is representative, unbiased, musically correct, restoration-effective, or OMR-improving.
 
-The candidate coverage report remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`.
+The coverage report remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`. Therefore Stage 2 entry remains **BLOCKED**.
 
 ## 6. Authorized and prohibited uses
 
@@ -96,6 +96,6 @@ Authorized use remains item-specific and purpose-bound. This card does not autho
 
 ## 7. Acceptance boundary
 
-Before the expanded-v2 dataset can become current production evidence, PR #81 must commit the deterministic v2 catalog/snapshot/report, run committed-evidence `--check`, pass focused regression tests and fresh exact-head Python 3.11/3.12 CI, clear review/thread/head gates, merge, and pass post-merge `main` CI.
+The deterministic v2 catalog/snapshot/report are committed and CI is wired to committed-evidence `--check`. PR #81 must still pass fresh exact-head Python 3.11/3.12 CI, focused regressions, review/thread/head gates, merge, and post-merge `main` CI.
 
-Only after those steps may Stage 1 final exit be evaluated separately.
+Only after those steps may Stage 1 final exit be evaluated separately. Stage 2 remains BLOCKED until explicit Stage 1 final PASS.
