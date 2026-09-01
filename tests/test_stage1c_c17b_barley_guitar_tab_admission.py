@@ -34,7 +34,7 @@ class Stage1CC17BBarleyGuitarTabAdmissionTests(unittest.TestCase):
         self.assertEqual(self.item["input"]["pageCount"], 2)
         self.assertEqual(self.item["split"], "development")
         self.assertEqual(self.request["expectedItemSha256"], canonical_sha256(self.item))
-        self.assertEqual(canonical_sha256(self.item), "6fc7fec810847acb06c54b8a036557e9f3fd402b673a57a0b1ce8b729a5b6310")
+        self.assertEqual(canonical_sha256(self.item), "226e65e50cbf8905510160fb45de8ef966bdc684cedc5766a37d5e454962462b")
 
     def test_committed_admission_is_eligible(self) -> None:
         result = evaluate_admission(self.request, catalog=self.catalog, profile_record=self.profile)
