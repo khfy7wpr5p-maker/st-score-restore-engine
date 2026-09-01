@@ -4,7 +4,7 @@
   "requestId": "admissionreq:opq_21bef5696069c0ec5c57ca33a046b8af",
   "evaluatedAt": "2026-09-01T22:40:00Z",
   "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
-  "expectedItemSha256": "6fc7fec810847acb06c54b8a036557e9f3fd402b673a57a0b1ce8b729a5b6310",
+  "expectedItemSha256": "226e65e50cbf8905510160fb45de8ef966bdc684cedc5766a37d5e454962462b",
   "requestedPurpose": "quality_evaluation",
   "acquisitionEvidenceRef": "evidence:opq_6ac377302081879bffc3ce4df1a9849b",
   "expectedEligibilityClass": "open_corpus",
