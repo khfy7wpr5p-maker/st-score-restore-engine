@@ -30,7 +30,8 @@ Authority order is: merged `main` + accepted deterministic evidence > stale stat
 | Expanded-v2 committed evidence | PASS IN PR | canonical v2 catalog, snapshot and coverage report are committed and CI now checks them with `--check` |
 | Focused expanded-v2 regressions | ADDED IN PR | exact membership, split/source-family isolation, digest uniqueness, C17C dedup, historical immutability and zero artifact bytes are covered |
 | Repository documentation drift | REMEDIATED IN PR | README, roadmap, technical spec, Stage 1 status/card/register/exit and this audit are reconciled to current main + PR #81 reality |
-| Issue #47 body | STALE / GOVERNANCE RECONCILIATION REQUIRED | issue text still predates merged C17B/C17D and PR #81 acceptance work |
+| Issue #47 body | RECONCILED | issue body now records merged C17B/C17D, PR #81 expanded-v2 acceptance work and the separate sensitive-vault path |
+| Run #194 | FAILED / ROOT CAUSE FIXED | both Python jobs stopped at architecture consistency because the dataset card said `Stage 2 authorized: No` rather than the validator's explicit `Stage 2 ... BLOCKED` wording; the card now uses the canonical fail-closed wording without relaxing the rule |
 | Stage 1 exit | BLOCKED | separate post-merge acceptance still required |
 | Stage 2 entry | BLOCKED | no Stage 2 work before final Stage 1 PASS |
 
@@ -76,17 +77,18 @@ Completed inside the PR:
 2. candidate-only workflow generation replaced by committed-evidence `--check`;
 3. focused regression tests added;
 4. repository-visible architecture/status documents reconciled;
-5. canonical live handoff added at `docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json`.
+5. Issue #47 current-state wording reconciled;
+6. canonical live handoff added at `docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json`;
+7. Run #194 wording-only architecture-validator mismatch root cause identified and corrected without weakening any gate.
 
 Still required before merge:
 
-1. reconcile stale Issue #47 current-state wording;
-2. fresh-read final base/head;
-3. obtain successful exact-head `validate (3.11)` and `validate (3.12)`;
-4. reconcile reviews and review threads at that exact head;
-5. Draft -> Ready only if all gates are clean;
-6. merge exact verified head only if gates remain clean;
-7. verify post-merge main CI.
+1. fresh-read final base/head;
+2. obtain successful exact-head `validate (3.11)` and `validate (3.12)` after the Run #194 root-cause fix;
+3. reconcile reviews and review threads at that exact head;
+4. Draft -> Ready only if all gates are clean;
+5. merge exact verified head only if gates remain clean;
+6. verify post-merge main CI.
 
 A queued, cancelled, zero-job or old-head workflow run is not valid final evidence.
 
