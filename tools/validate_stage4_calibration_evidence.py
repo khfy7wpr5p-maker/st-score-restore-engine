@@ -109,10 +109,28 @@ def main() -> int:
     module = MODULE.read_text(encoding="utf-8")
 
     require(EVIDENCE_CONTRACT_VERSION == "0.1.0", "calibration evidence contract version drifted", failures)
-    require("BLOCKED / NOT AUTHORIZED" in status, "Stage 4 real calibration block disappeared", failures)
+    # This validator owns the historical synthetic/public-evidence contract. A
+    # later, separate exact-scope real-development execution authorization must
+    # not rewrite this synthetic contract or imply that real execution occurred.
     require(
-        "no_real_calibration_reference_label_bundle_is_accepted" in status,
-        "Stage 4 reference-label blocker disappeared",
+        "realDataCalibrationExecutionAuthorized=true" in status,
+        "Stage 4 status lost the later separate development execution authorization",
+        failures,
+    )
+    require(
+        "realDataCalibrationExecuted=false" in status,
+        "Stage 4 status falsely claims real calibration execution",
+        failures,
+    )
+    require(
+        "no_real_calibration_reference_label_bundle_is_accepted" in status
+        and "Resolved" in status,
+        "Stage 4 status lost the historical reference-bundle blocker/resolution record",
+        failures,
+    )
+    require(
+        "private observation metrics" in status.lower(),
+        "Stage 4 status lost the private observation-metric execution dependency",
         failures,
     )
     granted = [
@@ -120,7 +138,7 @@ def main() -> int:
         for item in catalog.get("items", [])
         if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
     ]
-    require(not granted, f"real safety_calibration permission unexpectedly exists: {granted}", failures)
+    require(not granted, f"historical Stage 1 catalog was rewritten with later safety_calibration grants: {granted}", failures)
 
     dev = [
         obs("dev-a", "dev-item-a", "dev-family-a", 0.2, "clear", "development"),
@@ -238,10 +256,10 @@ def main() -> int:
 
     print("Stage 4 calibration evidence validation: PASS")
     print("- public evidence contract version: 0.1.0")
-    print("- candidate + held-out evaluation evidence are synthetic-only")
+    print("- candidate + held-out evaluation evidence in this contract remain synthetic-only")
     print("- public receipts expose digests and aggregates, not row/private identity data")
-    print("- real calibration and production changes remain unauthorized")
-    print("- Stage 4 exit / Stage 5 entry remain false")
+    print("- later real development execution authorization is separate; actual execution remains false")
+    print("- production changes / Stage 4 exit / Stage 5 entry remain false")
     return 0
 
 
