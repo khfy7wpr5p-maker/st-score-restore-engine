@@ -1,11 +1,11 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Binding sequence; Stage 4 ACTIVE — framework/governance only  
-**Version:** 0.7.0  
+**Document status:** Binding sequence; Stage 4 ACTIVE — framework/governance only / readiness NOT_READY  
+**Version:** 0.8.0  
 **Date:** 2026-09-02  
 **Stage 4 tracking:** Issue #104  
-**Stage 4 framework main:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`  
-**Stage 4 framework post-merge CI:** Run #259 (`33659753403`) — Python 3.11 / 3.12 SUCCESS
+**Latest Stage 4 production main:** `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75`  
+**Latest Stage 4 post-merge CI:** Run #267 (`33670331093`) — Python 3.11 / 3.12 SUCCESS
 
 ## Authority and invariant rules
 
@@ -51,28 +51,41 @@ Purpose-grant digest `3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db
 ## Stage 4 — Safety calibration with real data
 
 **State:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY.  
+**Readiness:** NOT_READY.  
 **Tracking:** Issue #104.  
 **Entry/start decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`.  
-**Decision digest:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.  
-**Framework production main / CI:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259 (`33659753403`).
+**Decision digest:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.
 
-Implemented framework scope:
+Production chain:
 
-- deterministic calibration observation/candidate contracts;
-- development-only candidate derivation;
-- held-out evaluation without feedback into candidate selection;
-- false-negative, false-positive, exact-match, coverage/not-assessed metrics;
-- deterministic digests and source-family anti-leakage;
-- synthetic contract tests and CI validation.
+- framework start: PR #105 / main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259;
+- reference-label contract v0.1.0: PR #107 / main `b184f5e5b780213671597ffa9f4380aa4a1adb47` / Run #263;
+- public calibration-evidence contract v0.1.0: PR #108 / main `4c936353ede322f41d009d503bcb4ca7fa64b2b9` / Run #265;
+- exit-readiness contract v0.1.0: PR #109 / main `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75` / Run #267.
 
-Real calibration remains blocked because no accepted artifact has a granted `safety_calibration` purpose and no accepted real calibration reference-label bundle exists. Production thresholds/resource limits remain `uncalibrated_engineering_defaults`; model training and publication remain unauthorized.
+Implemented framework/governance scope:
 
-Stage 4 exit requires separate purpose-bound real calibration evidence, accepted limitations, exact-head/post-merge CI and a separate final acceptance. Numerical targets must be evidence-derived rather than invented.
+- deterministic observation/candidate contracts and held-out anti-leakage evaluation;
+- reference-label provenance/purpose contract with human-review requirement for real labels;
+- synthetic-only public-safe candidate/evaluation evidence receipts;
+- deterministic exit-readiness evaluator that cannot self-authorize PASS.
+
+Current readiness blockers:
+
+1. `no_real_artifact_has_granted_safety_calibration_permission`
+2. `no_real_calibration_reference_label_bundle_is_accepted`
+3. `no_real_development_calibration_evidence_is_accepted`
+4. `no_real_held_out_evaluation_evidence_is_accepted`
+5. `no_stage4_metric_acceptance_target_policy_is_accepted`
+
+Stage 4 readiness may advance only to `READY_FOR_FINAL_ACCEPTANCE_REVIEW` after those prerequisites and all safety invariants are satisfied. A separate final governance acceptance remains mandatory; readiness never sets `stage4ExitPass=true` or authorizes Stage 5.
+
+Production thresholds/resource limits remain `uncalibrated_engineering_defaults`; model training and publication remain unauthorized. Numerical metric targets must be separately accepted from evidence and must not be invented.
 
 ## Stages 5–12
 
-**State:** NOT STARTED. Stage 5 remains blocked until Stage 4 exit PASS.
+**State:** NOT STARTED. Stage 5 remains blocked until Stage 4 final exit PASS.
 
 ## Current next safe action
 
-Continue Stage 4 framework/governance and reference-label contract hardening without touching real corpus bytes or production thresholds. Real-data calibration must fail closed until explicit `safety_calibration` grants become production-effective.
+Autonomous framework/governance work has reached the real-evidence boundary. The next substantive Stage 4 work requires externally supplied, evidence-bound decisions: exact real-artifact `safety_calibration` permission, accepted real reference-label provenance, real development/held-out calibration evidence, and a separately accepted metric-target policy. Do not fabricate or infer these prerequisites.

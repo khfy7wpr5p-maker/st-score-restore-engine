@@ -1,16 +1,16 @@
 # ST Score Restore Engine — Technical Specification
 
-**Status:** Current architecture; Stage 4 ACTIVE — framework/governance only  
-**Version:** 1.0.0-doc  
+**Status:** Current architecture; Stage 4 ACTIVE — framework/governance only / readiness NOT_READY  
+**Version:** 1.1.0-doc  
 **Date:** 2026-09-02  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Stage 4 framework main:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259 (`33659753403`) SUCCESS
+**Latest Stage 4 production main:** `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75` / Run #267 (`33670331093`) SUCCESS
 
 ## 1. Scope and invariants
 
 ST Score Restore Engine is a safety-first visual restoration and validation service for music-score and guitar-TAB documents. It is not an OMR engine.
 
-Source bytes are immutable; exact SHA-256 defines artifact identity; historical evidence is immutable; real corpus/derivative bytes remain outside ordinary Git; held-out evidence never tunes thresholds or resource limits; vector/hybrid content is never silently rasterized; purpose, custody and split rules fail closed.
+Source bytes are immutable; exact SHA-256 defines artifact identity; historical evidence is immutable; real corpus/derivative bytes remain outside ordinary Git; held-out evidence never tunes thresholds or resource limits; vector/hybrid content is never silently rasterized; purpose, custody, split, reference-label provenance and final acceptance rules fail closed.
 
 ## 2. Processing architecture
 
@@ -58,29 +58,51 @@ Stage 3 digests: purpose grants `3350b85407b783fff451238932982fdc94618fad404e2f4
 
 Stage 3 resource values remain uncalibrated engineering defaults: 200 DPI; 64 pages; 40,000,000 pixels/page; 160,000,000 aggregate pixels; 8,000-pixel dimension; page-object depth 15.
 
-## 5. Stage 4 safety-calibration framework
+## 5. Stage 4 production framework/governance chain
 
 **State:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY.  
+**Readiness:** NOT_READY.  
 **Tracking:** Issue #104.  
-**Decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`; canonical SHA-256 `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.  
-**Production framework:** PR #105 → main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` → Run #259 (`33659753403`) Python 3.11/3.12 SUCCESS.
+**Entry/start decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`; canonical SHA-256 `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.
 
-`src/st_score_restore/stage4_calibration.py` provides deterministic contracts for calibration observations and threshold candidates. Candidate derivation is development-only. Held-out observations can evaluate a frozen candidate but cannot enter derivation or feed results back into candidate selection. Cross-split source-family overlap is rejected.
+Production checkpoints:
 
-The framework reports exact-match, false-negative, false-positive, coverage/not-assessed and source-family leakage metrics where reference labels exist. Candidate/evaluation manifests are digest-bound and deterministic.
+- framework start PR #105 → main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` → Run #259;
+- reference-label contract v0.1.0 PR #107 → main `b184f5e5b780213671597ffa9f4380aa4a1adb47` → Run #263;
+- public calibration-evidence contract v0.1.0 PR #108 → main `4c936353ede322f41d009d503bcb4ca7fa64b2b9` → Run #265;
+- exit-readiness contract v0.1.0 PR #109 → main `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75` → Run #267.
 
-## 6. Stage 4 permission boundary
+### 5.1 Calibration observations/candidates
 
-Real-data execution is **not authorized** by framework start. Real development observations require an already validated exact-artifact `safety_calibration` purpose. Real held-out observations require `held_out_evaluation` and remain evaluation-only.
+`src/st_score_restore/stage4_calibration.py` defines deterministic calibration observations and threshold candidates. Candidate derivation is development-only. Held-out observations can evaluate a frozen candidate but cannot enter derivation or feed results back into candidate selection. Cross-split source-family overlap is rejected.
 
-Current blockers:
+### 5.2 Reference-label contract
 
-- `no_real_artifact_has_granted_safety_calibration_permission`;
-- `no_real_calibration_reference_label_bundle_is_accepted`.
+`src/st_score_restore/stage4_reference_labels.py` defines immutable reference-label records/bundles. Real development labels require exact `safety_calibration` purpose permission and human expert-review provenance. Real held-out labels require `held_out_evaluation`. A purpose grant does not itself accept a real reference bundle. Prediction/model output cannot be used as reference evidence.
 
-Therefore `calibrationAuthorized=false`, `realDataCalibrationExecuted=false`, `thresholdsCalibrated=false`, `resourceLimitsCalibrated=false`, `modelTrainingAuthorized=false`, and `publicationAuthorized=false`.
+### 5.3 Public-safe calibration evidence
 
-No production Stage 2 quality threshold or Stage 3 page/resource limit changes in this framework-only state.
+`src/st_score_restore/stage4_calibration_evidence.py` accepts synthetic contract evidence only in the current slice. Candidate/evaluation public receipts bind deterministic digests and aggregate metrics while keeping row-level observations/results, reviewer/provenance refs, dataset/source-family identities and artifact/derivative bytes non-public. Real calibration evidence is rejected by this public contract slice.
+
+### 5.4 Exit readiness
+
+`src/st_score_restore/stage4_exit_readiness.py` returns `NOT_READY` or `READY_FOR_FINAL_ACCEPTANCE_REVIEW`. It always keeps `stage4ExitPass=false` and `stage5EntryAuthorized=false`. Readiness can never substitute for final governance acceptance.
+
+Current blocker set:
+
+1. `no_real_artifact_has_granted_safety_calibration_permission`
+2. `no_real_calibration_reference_label_bundle_is_accepted`
+3. `no_real_development_calibration_evidence_is_accepted`
+4. `no_real_held_out_evaluation_evidence_is_accepted`
+5. `no_stage4_metric_acceptance_target_policy_is_accepted`
+
+## 6. Stage 4 permission and safety boundary
+
+Real-data execution is **BLOCKED / NOT AUTHORIZED**. Real development observations require an already validated exact-artifact `safety_calibration` purpose. Real held-out observations require `held_out_evaluation` and remain evaluation-only.
+
+Therefore `calibrationAuthorized=false`, `realDataCalibrationExecuted=false`, `thresholdsCalibrated=false`, `resourceLimitsCalibrated=false`, `heldOutTuningUsed=false`, `modelTrainingAuthorized=false`, `publicationAuthorized=false`, `stage4ExitPass=false`, and `stage5EntryEligible=false`.
+
+No production Stage 2 quality threshold or Stage 3 page/resource limit changes in this framework-only state. Numerical metric acceptance targets have not been accepted and are not invented by the framework.
 
 ## 7. Binding development sequence
 
@@ -101,6 +123,6 @@ Stage 12 Music-application integrations
 
 ## 8. Validation and transition
 
-CI validates dependency/repository/architecture contracts, all accepted Stage 1–3 evidence, Stage 4 entry/start governance, Stage 4 anti-leakage behavior, full unit tests and Python compile on 3.11 and 3.12.
+CI validates dependency/repository/architecture contracts, all accepted Stage 1–3 evidence, Stage 4 entry/start governance, reference-label contract, public calibration-evidence contract, exit-readiness contract, full unit tests and Python compile on 3.11 and 3.12.
 
-Stage 4 exit cannot be inferred from framework start. Exit requires purpose-authorized real calibration evidence, accepted reference-label provenance, development-only candidate derivation, held-out non-tuning evaluation, limitations review, public-safe evidence freeze, separate final acceptance and exact-head/post-merge CI. Stage 5 remains blocked until then.
+Stage 4 exit requires production-effective real calibration purpose grants/evidence, accepted real reference-label provenance, development-only candidate derivation, held-out non-tuning evaluation, accepted metric-target policy, limitations review, public-safe evidence freeze, separate final acceptance and exact-head/post-merge CI. Stage 5 remains blocked until final Stage 4 PASS.

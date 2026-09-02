@@ -5,13 +5,14 @@
 **Stage 2:** COMPLETE / PASS / production-effective  
 **Stage 3:** COMPLETE / PASS / production-effective  
 **Stage 4:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY  
-**Stage 4 framework main:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`  
-**Stage 4 framework post-merge CI:** Run #259 (`33659753403`) — Python 3.11 / 3.12 SUCCESS  
+**Stage 4 readiness:** NOT_READY  
+**Latest Stage 4 main:** `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75`  
+**Latest post-merge CI:** Run #267 (`33670331093`) — Python 3.11 / 3.12 SUCCESS  
 **Real-data calibration:** BLOCKED / NOT AUTHORIZED
 
 ## Authority
 
-Merged `main` plus accepted deterministic evidence is production truth. Historical evidence remains immutable. Open PR state is not production-effective. CI is exact-head scoped. Stage 4 framework start is distinct from real-data calibration authorization.
+Merged `main` plus accepted deterministic evidence is production truth. Historical evidence remains immutable. Open PR state is not production-effective. CI is exact-head scoped. Stage 4 framework/readiness contracts are distinct from real-data calibration authorization and final Stage 4 acceptance.
 
 ## Current findings
 
@@ -27,12 +28,18 @@ Merged `main` plus accepted deterministic evidence is production truth. Historic
 | Stage 3 real execution | 3 items / 14 pages / 12 raster rendered / 2 vector preserved / 0 review-required |
 | Stage 3 held-out tuning | FALSE |
 | Stage 4 framework start | EFFECTIVE / PR #105 / main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259 |
-| Stage 4 decision digest | `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8` |
-| Stage 4 current mode | ACTIVE — framework/governance only |
+| Stage 4 entry/start digest | `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8` |
+| Reference-label contract | EFFECTIVE / v0.1.0 / PR #107 / main `b184f5e5b780213671597ffa9f4380aa4a1adb47` / Run #263 |
+| Public calibration-evidence contract | EFFECTIVE / v0.1.0 / PR #108 / main `4c936353ede322f41d009d503bcb4ca7fa64b2b9` / Run #265 |
+| Exit-readiness contract | EFFECTIVE / v0.1.0 / PR #109 / main `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75` / Run #267 |
+| Stage 4 readiness | NOT_READY / 5 prerequisite blockers |
 | Real `safety_calibration` grant | NONE |
 | Accepted real reference-label bundle | NONE |
+| Accepted real development calibration evidence | NONE |
+| Accepted real held-out evaluation evidence | NONE |
+| Accepted Stage 4 metric-target policy | NONE |
 | Production thresholds/resource limits | UNCALIBRATED ENGINEERING DEFAULTS / UNCHANGED |
-| Stage 5 | BLOCKED pending Stage 4 exit PASS |
+| Stage 5 | BLOCKED pending Stage 4 final exit PASS |
 
 ## Immutable evidence retained
 
@@ -40,25 +47,30 @@ Stage 1 canonical digests: catalog `4dd989a16c466027a952c6d8ea7c325e27681b959955
 
 Stage 3 immutable production evidence: purpose grants `3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8`; execution evidence `a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6`; limitations `5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d`; acceptance `e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90`.
 
-## Stage 4 production framework
+Historical Stage 4 entry/start evidence remains immutable. Its pre-start claims retain `stage4Started=false`; later production-effectiveness of PR #105/Run #259 established current framework-active state without rewriting history.
 
-`src/st_score_restore/stage4_calibration.py` defines deterministic observation/candidate contracts and evaluation. Candidate derivation is development-only. Held-out evidence cannot derive or tune a candidate; evaluation is not fed back into candidate selection; cross-split source-family overlap is rejected.
+## Stage 4 production contracts
 
-`evidence/stage4/governance/stage4-entry-start.v1.json` authorizes framework implementation and synthetic contract testing only. The historical decision itself retains `stage4Started=false` because it was the pre-start authorization; production-effectiveness of PR #105 plus Run #259 is what permits current repository state to become framework-active.
+`src/st_score_restore/stage4_calibration.py` provides deterministic observation/candidate/evaluation and anti-leakage behavior.
 
-## Real-data boundary
+`src/st_score_restore/stage4_reference_labels.py` binds reference labels to split, purpose, provenance and reviewer method. Real labels require human expert review; held-out labels cannot derive candidates; model predictions cannot become reference evidence.
 
-The accepted Stage 1 catalog currently contains no granted `safety_calibration` purpose. Existing Stage 3 purpose grants remain `pdf_pipeline_evaluation` and explicitly retain `calibrationAuthorized=false`.
+`src/st_score_restore/stage4_calibration_evidence.py` provides synthetic-only public-safe receipts with digest/aggregate disclosure and private row/identity redaction.
 
-Consequently real-data threshold/resource calibration is fail-closed. General project approval cannot substitute for an artifact-specific purpose grant. Held-out observations remain `held_out_evaluation` only.
+`src/st_score_restore/stage4_exit_readiness.py` provides deterministic readiness assessment without authority to PASS Stage 4 or enter Stage 5.
 
-Current real-calibration blockers:
+## Current readiness blockers
 
-- `no_real_artifact_has_granted_safety_calibration_permission`;
-- `no_real_calibration_reference_label_bundle_is_accepted`.
+1. `no_real_artifact_has_granted_safety_calibration_permission`
+2. `no_real_calibration_reference_label_bundle_is_accepted`
+3. `no_real_development_calibration_evidence_is_accepted`
+4. `no_real_held_out_evaluation_evidence_is_accepted`
+5. `no_stage4_metric_acceptance_target_policy_is_accepted`
+
+A future state with these prerequisites resolved and all safety invariants satisfied can only become `READY_FOR_FINAL_ACCEPTANCE_REVIEW`. Separate final governance acceptance remains mandatory.
 
 ## Non-claims
 
-Stage 4 ACTIVE does not mean calibration has run. No production quality threshold, PDF page policy, renderer bound or resource limit is changed by the framework start. Training, publication, representativeness, absence of bias, restoration effectiveness, OMR improvement and musical correctness are not established.
+Stage 4 ACTIVE does not mean real calibration has run. No production quality threshold, PDF page policy, renderer bound or resource limit is changed. Numerical acceptance targets are not invented. Training, publication, representativeness, absence of bias, restoration effectiveness, OMR improvement and musical correctness are not established. `stage4ExitPass=false` and Stage 5 remains blocked.
 
 The separate `Fly Me to the Moon` phone-photo path remains independently blocked pending real high-assurance-vault verification.
