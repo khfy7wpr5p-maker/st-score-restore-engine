@@ -208,6 +208,9 @@ jobs:
       - name: Validate Stage 4 real development calibration execution authorization
         run: python tools/validate_stage4_execution_authorization.py
 
+      - name: Validate Stage 4 private metric development runner contract
+        run: python tools/validate_stage4_development_calibration_runner.py
+
       - name: Validate Stage 4 public calibration evidence contract
         run: python tools/validate_stage4_calibration_evidence.py
 
