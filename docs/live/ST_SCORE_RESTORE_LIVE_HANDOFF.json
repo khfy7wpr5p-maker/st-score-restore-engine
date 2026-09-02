@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.5.0",
+  "schema_version": "1.5.1",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "last_updated_at": "2026-09-02T09:24:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
   "active_branch": "stage2-dev-corpus-hardening",
-  "active_pr": null,
-  "active_pr_state": "pending_creation",
-  "latest_ci_run_id": 33599776059,
-  "latest_ci_run_number": 207,
-  "latest_ci_status": "success_on_post_merge_main_28aa17c28eb826b4fd860917f5f7b2f72a01bdad_python_3_11_and_3_12",
+  "active_pr": 85,
+  "active_pr_state": "open_draft",
+  "latest_ci_run_id": 33600977793,
+  "latest_ci_run_number": 208,
+  "latest_ci_status": "failed_at_architecture_consistency_on_head_527bd3705d88484ac23cbb1f0cd0e45fc2712c76_root_cause_fixed",
   "completed": [
     "Stage 1 final decision PASS remains effective",
     "PR 84 merged deterministic Stage 2 OpenCV quality-analysis core into main 28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
@@ -19,12 +19,15 @@
     "all five transiently re-materialized custody objects matched accepted exact byte size and SHA-256 before Stage 2 evaluation",
     "no real corpus artifact bytes were added to ordinary Git",
     "development C17A exercise identified two Stage 2 measurement-semantics defects without using held-out thresholds",
-    "focused development-corpus hardening branch created"
+    "analyzer 0.1.1 hardening and focused synthetic regressions implemented",
+    "Draft PR 85 opened",
+    "Run 208 root cause identified: Stage 2 current-status refresh replaced the historical Stage 1 accepted entry-main binding with only the newer production main",
+    "Run 208 root cause fixed by restoring accepted Stage 1 entry main 936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6 while retaining current production main 28aa17c28eb826b4fd860917f5f7b2f72a01bdad; no validator was weakened"
   ],
   "in_progress": [
-    "analyzer 0.1.1 development-corpus hardening for localized glare semantics and minimum page-area geometry eligibility",
-    "synthetic regressions for white score background and small inner quadrilateral",
-    "exact-head CI and review gates for focused hardening PR",
+    "fresh exact-head Python 3.11/3.12 CI after Run 208 documentation-binding fix",
+    "PR 85 review/thread/base/head reconciliation",
+    "PR 85 Draft -> Ready -> merge objective gates",
     "approved-custody corpus execution contract design after hardening merge"
   ],
   "blocked": [
@@ -35,9 +38,10 @@
     "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "focused hardening PR must pass exact-head Python 3.11 and 3.12 repository validation",
-    "existing Stage 2 validator and all regressions must remain green",
+    "PR 85 final head must pass exact-head Python 3.11 and 3.12 repository validation",
+    "Stage 2 validator and all regressions must remain green",
     "reviews and review threads must be clean before Ready/merge",
+    "base and head must be fresh-read before merge",
     "post-merge main CI must pass",
     "approved-custody runner must verify exact digest, byte size and purpose authorization before execution",
     "development and held-out output policies must remain separated",
@@ -59,7 +63,10 @@
   "stage1_exit_state": "pass_effective",
   "stage2": {
     "tracking_issue": 83,
+    "active_pr": 85,
     "entry_state": "satisfied",
+    "accepted_entry_main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
+    "current_production_main_sha": "28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
     "implementation_state": "active_development_corpus_hardening",
     "production_analyzer_version": "0.1.0",
     "candidate_analyzer_version": "0.1.1",
@@ -91,7 +98,17 @@
   "stage2_started": true,
   "stage2_exit_state": "not_yet_evaluated",
   "stage3_entry_state": "blocked_pending_stage2_exit",
-  "next_safe_action": "create a Draft PR for stage2-dev-corpus-hardening, require exact-head Python 3.11/3.12 CI, fix only demonstrated root causes without held-out tuning, merge after clean objective gates, then implement the approved-custody execution contract",
+  "ci_failure_history": [
+    {
+      "run_number": 208,
+      "run_id": 33600977793,
+      "head_sha": "527bd3705d88484ac23cbb1f0cd0e45fc2712c76",
+      "failure_step": "Validate architecture consistency",
+      "root_cause": "docs/stage-2-current-status.md no longer contained the accepted Stage 1 entry main SHA required to distinguish Stage 2 authorization evidence from the later production main",
+      "resolution": "restore accepted entry main SHA alongside current production main; validator unchanged"
+    }
+  ],
+  "next_safe_action": "require fresh exact-head Python 3.11/3.12 CI after the Run 208 binding fix; if clean, reconcile reviews/threads/base/head, transition Ready and merge exact verified head, then verify post-merge main before implementing the approved-custody execution contract",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "Real corpus artifact bytes remain outside ordinary Git.",
@@ -115,7 +132,15 @@
     {
       "at": "2026-09-02T09:24:00+03:00",
       "event": "accepted five-item corpus exact-byte custody identity rechecked; development C17A exposed glare and page-boundary semantics defects; hardening started without held-out tuning"
+    },
+    {
+      "at": "2026-09-02T06:54:17Z",
+      "event": "Draft PR 85 opened for development-corpus hardening"
+    },
+    {
+      "at": "2026-09-02T06:54:38Z",
+      "event": "Run 208 failed architecture consistency because Stage 2 status omitted accepted entry-main binding; documentation-only root cause fixed without weakening validation"
     }
   ],
-  "head_scope_note": "The active hardening branch has not yet been accepted. Only its final exact head CI may authorize Ready/merge."
+  "head_scope_note": "This handoff update moves PR 85 head one final time. Only the resulting exact-head CI may authorize Ready/merge; make no further branch writes after that run is green."
 }
