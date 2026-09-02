@@ -132,7 +132,9 @@
     "barley_exact_bytes_verified": true,
     "chopin_exact_bytes_verified": true,
     "source_bytes_in_ordinary_git": false,
-    "real_corpus_execution_complete": true,
+    "real_corpus_batch_executed": true,
+    "real_corpus_execution_complete": false,
+    "real_corpus_execution_complete_scope": "production_effective_evidence_freeze",
     "real_corpus_execution_status": "executed_public_evidence_freeze_candidate",
     "real_corpus_execution_date": "2026-09-02",
     "real_corpus_execution_evidence_canonical_sha256": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
@@ -170,5 +172,5 @@
     "Stage 4 must not start until explicit Stage 3 final exit PASS."
   ],
   "next_safe_action": "Validate and merge the public-safe Stage 3 execution-evidence plus limitations-review slice with exact-head and post-merge Python 3.11/3.12 CI, then create a separate machine-readable Stage 3 final-exit acceptance bound to the production-effective evidence digests.",
-  "head_scope_note": "The real Stage 3 batch is complete. This evidence-freeze candidate intentionally preserves stage3ExitPass=false and stage4EntryAuthorized=false; final exit is a separate decision."
+  "head_scope_note": "The real Stage 3 batch is complete. real_corpus_execution_complete remains false until the public-safe evidence freeze is production-effective. This evidence-freeze candidate intentionally preserves stage3ExitPass=false and stage4EntryAuthorized=false."
 }
