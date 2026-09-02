@@ -2,12 +2,13 @@
   "schema_version": "1.8.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T11:15:00+03:00",
+  "last_updated_at": "2026-09-02T11:22:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
   "active_branch": "stage2-exit-acceptance",
-  "active_pr": null,
-  "active_pr_state": "acceptance_branch_pre_pr",
+  "active_pr": 88,
+  "active_pr_state": "open_draft",
+  "active_pr_parent_head_before_handoff": "4120ba643de21a63ef79ac175151766a3e054426",
   "latest_main_ci_run_id": 33607016064,
   "latest_main_ci_run_number": 221,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
@@ -25,29 +26,29 @@
     "C17D detailed evidence remained managed_restricted with external_export=false",
     "public execution evidence contains no detailed metrics/findings or provider/local custody locators",
     "Stage 2 limitations review completed with no fail-closed blocker",
-    "separate machine-readable Stage 2 exit decision prepared as PASS"
+    "separate machine-readable Stage 2 exit decision prepared as PASS",
+    "Draft PR 88 opened for final Stage 2 exit acceptance"
   ],
   "in_progress": [
-    "focused Stage 2 exit acceptance PR creation",
-    "fresh exact-head Python 3.11/3.12 validation for the acceptance slice",
-    "acceptance PR review/thread/base/head reconciliation",
-    "acceptance PR Ready and merge objective gates",
+    "fresh exact-head Python 3.11/3.12 validation for PR 88 after this final handoff write",
+    "PR 88 review/thread/base/head reconciliation",
+    "PR 88 Draft to Ready to merge objective gates",
     "post-merge main CI for the Stage 2 acceptance commit"
   ],
   "blocked": [
-    "Stage 3 implementation must not start before the Stage 2 acceptance PR is merged and post-merge main CI is green",
+    "Stage 3 implementation must not start before PR 88 is merged and post-merge main CI is green",
     "Stage 4 real-data threshold calibration remains not started",
     "held-out data must not tune Stage 2 thresholds or hardening constants",
     "C17D detailed held-out metrics cannot be exported because external_export=false",
     "separate user-provided sensitive Fly Me to the Moon phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "Stage 2 final exit acceptance validator must pass on the resulting exact PR head",
+    "Stage 2 final exit acceptance validator must pass on the resulting exact PR 88 head",
     "architecture/status consistency must remain green",
     "Python 3.11 and 3.12 exact-head CI must pass",
     "reviews and unresolved review threads must be clean",
     "base and head must be fresh-read before merge",
-    "acceptance PR post-merge main CI must pass before Stage 3 work starts"
+    "PR 88 post-merge main CI must pass before Stage 3 work starts"
   ],
   "latest_evidence_digests": {
     "catalog_v2_canonical_sha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
@@ -62,6 +63,7 @@
   "stage1_exit_state": "pass_effective",
   "stage2": {
     "tracking_issue": 83,
+    "active_pr": 88,
     "entry_state": "satisfied",
     "accepted_entry_main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
     "evidence_main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
@@ -100,8 +102,8 @@
     "C17D external_export=false prohibits public export of detailed held-out metrics or reports.",
     "The frozen Stage 2 execution evidence remains historical and must not be rewritten to retroactively claim Stage 2 exit PASS.",
     "The final Stage 2 PASS is a separate acceptance layer.",
-    "Stage 3 implementation begins only after the acceptance PR is merged and its post-merge main CI succeeds."
+    "Stage 3 implementation begins only after PR 88 is merged and its post-merge main CI succeeds."
   ],
-  "next_safe_action": "Open the Stage 2 exit acceptance PR, record its number in this handoff as the final intended branch write, require fresh exact-head Python 3.11/3.12 CI, then reconcile review/thread/base/head state and merge only if objective gates remain clean. After post-merge main CI succeeds, Stage 3 may begin in a new focused branch.",
-  "head_scope_note": "This handoff is branch-scoped before PR creation. The PR number will be added in one final handoff-only branch write; only CI on the resulting exact head may authorize Ready/merge."
+  "next_safe_action": "Treat this handoff update as the final intended PR 88 branch write. Require fresh exact-head Python 3.11/3.12 CI. If green, reconcile reviews/threads/base/head, transition Ready, merge the exact verified head and require post-merge main CI. Only after that success may Stage 3 begin in a new focused branch.",
+  "head_scope_note": "The handoff records parent head 4120ba643de21a63ef79ac175151766a3e054426 because a JSON file cannot contain the SHA of the commit that contains itself without moving the branch again. This is the final intended PR 88 branch write; only CI on the resulting exact head may authorize Ready/merge."
 }
