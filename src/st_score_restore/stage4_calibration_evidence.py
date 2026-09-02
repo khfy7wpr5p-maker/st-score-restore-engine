@@ -119,7 +119,9 @@ def _require_synthetic_candidate_manifest(candidate_manifest: Mapping[str, Any])
     return candidate_digest, manifest_digest, observation_count, source_family_count
 
 
-def _require_reference_receipt(reference_receipt: Mapping[str, Any]) -> tuple[str, str, int]:
+def _require_reference_receipt(
+    reference_receipt: Mapping[str, Any], *, required_split: str
+) -> tuple[str, str, int]:
     receipt = _require_mapping("reference_receipt", reference_receipt)
     if receipt.get("status") != "reference_bundle_frozen":
         raise Stage4CalibrationEvidenceError("invalid_reference_receipt", "Reference-label receipt is not frozen.")
@@ -129,10 +131,10 @@ def _require_reference_receipt(reference_receipt: Mapping[str, Any]) -> tuple[st
             "real_reference_evidence_forbidden",
             "This public-evidence slice accepts only synthetic reference-label receipts.",
         )
-    if scope.get("split") != "development" or scope.get("purpose") != "synthetic_contract_test":
+    if scope.get("split") != required_split or scope.get("purpose") != "synthetic_contract_test":
         raise Stage4CalibrationEvidenceError(
             "reference_scope_mismatch",
-            "Candidate evidence requires a synthetic development reference-label bundle.",
+            "Reference-label receipt does not match the required synthetic split/purpose.",
         )
     bundle_digest = _digest_value("bundleDigest", receipt.get("bundleDigest"))
     receipt_digest = _digest_value("receiptDigest", receipt.get("receiptDigest"))
@@ -189,7 +191,9 @@ def build_public_candidate_evidence(
     """Build a redacted synthetic-only candidate evidence receipt."""
 
     candidate_digest, manifest_digest, observation_count, source_family_count = _require_synthetic_candidate_manifest(candidate_manifest)
-    reference_bundle_digest, reference_receipt_digest, label_count = _require_reference_receipt(reference_receipt)
+    reference_bundle_digest, reference_receipt_digest, label_count = _require_reference_receipt(
+        reference_receipt, required_split="development"
+    )
     binding_digest, binding_count = _require_binding_receipt(binding_receipt, reference_bundle_digest)
     if observation_count != label_count or observation_count != binding_count:
         raise Stage4CalibrationEvidenceError(
@@ -281,8 +285,10 @@ def _require_synthetic_evaluation_report(
 def build_public_evaluation_evidence(
     candidate_public_evidence: Mapping[str, Any],
     evaluation_report: Mapping[str, Any],
+    evaluation_reference_receipt: Mapping[str, Any],
+    evaluation_binding_receipt: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Build a redacted aggregate evaluation receipt without row-level results."""
+    """Build redacted aggregate evaluation evidence without row-level results."""
 
     candidate_evidence = _require_mapping("candidate_public_evidence", candidate_public_evidence)
     if candidate_evidence.get("status") != "synthetic_candidate_evidence_frozen":
@@ -295,6 +301,18 @@ def build_public_evaluation_evidence(
     candidate_digest = _digest_value("candidate.candidateDigest", candidate_evidence.get("candidateDigest"))
     split, report_digest, metrics = _require_synthetic_evaluation_report(evaluation_report, candidate_digest)
 
+    reference_bundle_digest, reference_receipt_digest, label_count = _require_reference_receipt(
+        evaluation_reference_receipt, required_split=split
+    )
+    binding_digest, binding_count = _require_binding_receipt(
+        evaluation_binding_receipt, reference_bundle_digest
+    )
+    if metrics["observationCount"] != label_count or label_count != binding_count:
+        raise Stage4CalibrationEvidenceError(
+            "evidence_count_mismatch",
+            "Evaluation report, reference-label and observation-binding counts must match exactly.",
+        )
+
     evidence = {
         "schemaVersion": SCHEMA_VERSION,
         "evidenceContractVersion": EVIDENCE_CONTRACT_VERSION,
@@ -303,6 +321,9 @@ def build_public_evaluation_evidence(
         "candidateDigest": {"algorithm": "sha256", "value": candidate_digest},
         "candidatePublicEvidenceDigest": {"algorithm": "sha256", "value": candidate_public_digest},
         "evaluationReportDigest": {"algorithm": "sha256", "value": report_digest},
+        "referenceLabelBundleDigest": {"algorithm": "sha256", "value": reference_bundle_digest},
+        "referenceReceiptDigest": {"algorithm": "sha256", "value": reference_receipt_digest},
+        "observationBindingDigest": {"algorithm": "sha256", "value": binding_digest},
         "evaluationSummary": {"split": split, "dataClass": "synthetic_test", "metrics": metrics},
         "assertions": _public_assertions(),
         "limitations": [
