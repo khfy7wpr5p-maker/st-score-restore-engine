@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "decisionId": "stage1.exit.acceptance.v1",
+  "decision": "PASS",
+  "decidedOn": "2026-09-02",
+  "acceptanceAuthority": "issue-47-autonomous-objective-gates",
+  "evidenceMainSha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
+  "postMergeCi": {
+    "runId": 33573656067,
+    "runNumber": 199,
+    "event": "push",
+    "python311": "success",
+    "python312": "success"
+  },
+  "evidenceDigests": {
+    "catalogV2CanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+    "snapshotV2CanonicalSha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
+    "coverageReportV2CanonicalSha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834"
+  },
+  "historicalEvidence": {
+    "c15SnapshotCanonicalSha256": "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476",
+    "c16CoverageReportCanonicalSha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e",
+    "immutable": true
+  },
+  "sourceReportReview": {
+    "sufficiencyState": "review_required",
+    "requiresCorpusExpansion": false,
+    "stage1ExitSupportedByAutomaticReport": false,
+    "stage2EntrySupportedByAutomaticReport": false,
+    "gapCodes": []
+  },
+  "gates": {
+    "governance": "pass",
+    "custody": "pass",
+    "rights": "pass",
+    "privacy": "pass",
+    "purposeAuthorization": "pass",
+    "sourceFamilyIsolation": "pass",
+    "artifactDigestUniqueness": "pass",
+    "historicalImmutability": "pass",
+    "ordinaryGitArtifactBytes": "pass_zero_real_artifact_bytes",
+    "exactHeadPrVerification": "pass_run_198",
+    "postMergeMainVerification": "pass_run_199",
+    "reviewAndThreadReconciliation": "pass"
+  },
+  "acceptedPurpose": "stage2-complete-quality-analysis-evaluation",
+  "stage2EntryEligible": true,
+  "stage2Started": false,
+  "blockerCodes": [],
+  "acceptedLimitations": [
+    "source_selection_concentration: public-domain majority with one licensed item",
+    "corpus representativeness is not established",
+    "absence of bias is not established",
+    "restoration effectiveness is not established",
+    "OMR improvement is not established",
+    "musical correctness is not established",
+    "training and calibration permission are not inferred"
+  ],
+  "claims": {
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "omrImprovementEstablished": false,
+    "musicalCorrectnessEstablished": false,
+    "trainingAuthorized": false,
+    "calibrationAuthorized": false
+  },
+  "separateSensitivePhonePhotoPath": {
+    "requiredForAcceptedCorpus": false,
+    "state": "blocked_pending_real_high_assurance_vault_verification"
+  }
+}
