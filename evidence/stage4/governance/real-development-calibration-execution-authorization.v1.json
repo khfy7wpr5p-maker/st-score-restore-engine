@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage4.real-development-calibration-execution-authorization.beethoven-barley.v1",
+  "decision": "AUTHORIZE_REAL_DEVELOPMENT_CALIBRATION_EXECUTION",
+  "authorizedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-01",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "purposeGrantDigest": {
+    "algorithm": "sha256",
+    "value": "4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc"
+  },
+  "referenceBundleAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c"
+  },
+  "acceptedReferenceReceiptDigest": {
+    "algorithm": "sha256",
+    "value": "f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33"
+  },
+  "referenceBundleDigest": {
+    "algorithm": "sha256",
+    "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"
+  },
+  "scope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "environment": "stage1_offline",
+    "storageClass": "managed_standard",
+    "datasetItemCount": 2,
+    "sourceFamilyCount": 2,
+    "referenceRecordCount": 42,
+    "datasetItems": [
+      {
+        "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+        "artifactSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+        "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1"
+      },
+      {
+        "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+        "artifactSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+        "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1"
+      }
+    ],
+    "candidateDerivationAuthorized": true,
+    "developmentEvaluationAuthorized": true,
+    "heldOutIncluded": false,
+    "heldOutEvaluationAuthorized": false,
+    "heldOutTuningAuthorized": false,
+    "privateObservationMetricsRequired": true,
+    "rawObservationMetricsAllowedInOrdinaryGit": false
+  },
+  "assertions": {
+    "safetyCalibrationPurposeGranted": true,
+    "referenceBundleAccepted": true,
+    "realDataCalibrationExecutionAuthorized": true,
+    "realDataCalibrationExecuted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "heldOutThresholdTuningUsed": false,
+    "externalExportAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
