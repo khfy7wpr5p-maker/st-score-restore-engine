@@ -16,9 +16,16 @@ from st_score_restore.stage3_custody_execution import (
     Stage3CustodyExecutionError,
     run_authorized_pdf_pipeline_execution,
 )
+from st_score_restore.stage3_purpose_grants import (
+    APPROVED_GRANT_CANONICAL_SHA256,
+    Stage3PurposeGrantError,
+    run_purpose_granted_pdf_pipeline_execution,
+    validate_stage3_purpose_grants,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "evidence" / "stage1c" / "corpus" / "catalog.v2.json"
+GRANT_PATH = ROOT / "evidence" / "stage3" / "governance" / "purpose-grants.v1.json"
 BEETHOVEN = "dataset.item.imslp799143-beethoven-op48-no3.v1"
 BARLEY = "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1"
 CHOPIN = "dataset.item.imslp82860-chopin-op69.v2"
@@ -27,6 +34,10 @@ REAL_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
 def _load_catalog() -> dict:
     return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+
+
+def _load_grants() -> dict:
+    return json.loads(GRANT_PATH.read_text(encoding="utf-8"))
 
 
 def _jpeg_bytes() -> bytes:
@@ -119,13 +130,13 @@ def main() -> int:
         require(items[BEETHOVEN]["split"] == "development", "Beethoven split drifted")
         require(
             items[BEETHOVEN]["permissions"]["pdf_pipeline_evaluation"]["status"] == "not_requested",
-            "Beethoven real Stage 3 purpose permission changed without a dedicated authorization slice",
+            "Historical Beethoven catalog permission was rewritten; Stage 3 grants must be overlays.",
         )
     if BARLEY in items:
         require(items[BARLEY]["split"] == "development", "Barley split drifted")
         require(
             items[BARLEY]["permissions"]["pdf_pipeline_evaluation"]["status"] == "not_requested",
-            "Barley real Stage 3 purpose permission changed without a dedicated authorization slice",
+            "Historical Barley catalog permission was rewritten; Stage 3 grants must be overlays.",
         )
     if CHOPIN in items:
         require(items[CHOPIN]["split"] == "held_out", "Chopin split drifted")
@@ -142,6 +153,41 @@ def main() -> int:
         SPLIT_PURPOSES["held_out"] == frozenset({"held_out_evaluation"}),
         "held-out split purpose boundary drifted",
     )
+
+    try:
+        grants = validate_stage3_purpose_grants(_load_grants())
+    except Stage3PurposeGrantError as exc:
+        failures.append(f"committed Stage 3 purpose-grant overlay is invalid: {exc}")
+        grants = None
+    if grants is not None:
+        require(
+            APPROVED_GRANT_CANONICAL_SHA256 == "3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8",
+            "approved Stage 3 purpose-grant digest drifted",
+        )
+        require(len(grants["grants"]) == 2, "Stage 3 purpose-grant overlay must contain exactly two grants")
+        require(grants["assertions"]["historicalCatalogModified"] is False, "purpose-grant overlay claims historical catalog mutation")
+        require(grants["assertions"]["trainingAuthorized"] is False, "purpose-grant overlay authorizes training")
+        require(grants["assertions"]["calibrationAuthorized"] is False, "purpose-grant overlay authorizes calibration")
+        require(grants["assertions"]["publicationAuthorized"] is False, "purpose-grant overlay authorizes publication")
+        require(grants["assertions"]["externalExportAuthorized"] is False, "purpose-grant overlay authorizes external export")
+
+        for item_id in (BEETHOVEN, BARLEY):
+            try:
+                run_purpose_granted_pdf_pipeline_execution(
+                    catalog,
+                    grants,
+                    dataset_item_id=item_id,
+                    data=b"validator-does-not-have-real-corpus-bytes",
+                    purpose="pdf_pipeline_evaluation",
+                    execution_date="2026-09-02",
+                )
+            except Stage3CustodyExecutionError as exc:
+                require(
+                    exc.code == "exact_sha256_mismatch",
+                    f"{item_id} purpose grant did not advance cleanly to exact-byte gate: {exc.code}",
+                )
+            else:
+                failures.append(f"{item_id} unexpectedly executed without exact admitted bytes")
 
     raw = _raster_pdf()
     dev_catalog = _catalog_for(BEETHOVEN, raw, grant_dev=True)
@@ -179,9 +225,9 @@ def main() -> int:
             execution_date="2026-09-02",
         )
     except Stage3CustodyExecutionError as exc:
-        require(exc.code == "purpose_permission_not_valid", f"development permission blocker changed: {exc.code}")
+        require(exc.code == "purpose_permission_not_valid", f"historical catalog permission blocker changed: {exc.code}")
     else:
-        failures.append("real development permission state did not fail closed")
+        failures.append("historical development catalog permission no longer fails closed without overlay")
 
     binary_paths = [
         str(path.relative_to(ROOT))
@@ -197,13 +243,16 @@ def main() -> int:
         return 1
 
     print("Stage 3 authorized PDF execution validation: PASS")
-    print("- development purpose: pdf_pipeline_evaluation / explicit permission required")
-    print("- current accepted development PDF permissions: not_requested / fail closed")
-    print("- held-out purpose: held_out_evaluation / Chopin permission granted")
+    print("- historical Stage 1 catalog permissions: unchanged / not_requested")
+    print("- Beethoven + Barley Stage 3 purpose grants: approved immutable overlay")
+    print(f"- purpose-grant canonical SHA-256: {APPROVED_GRANT_CANONICAL_SHA256}")
+    print("- development purpose: pdf_pipeline_evaluation only")
+    print("- overlay external export/training/calibration/publication: false")
+    print("- held-out purpose: held_out_evaluation / Chopin permission unchanged")
     print("- synthetic purpose/custody/exact-byte execution: PASS")
     print("- held-out threshold tuning: false")
     print("- real artifact bytes in ordinary Git: 0")
-    print("- real Stage 3 corpus execution: not complete")
+    print("- real Stage 3 corpus execution: still requires exact custody bytes")
     print("- Stage 4: blocked pending Stage 3 exit PASS")
     return 0
 
