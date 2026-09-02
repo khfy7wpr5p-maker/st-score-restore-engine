@@ -133,13 +133,14 @@ def main() -> int:
     )
 
     stage4 = handoff.get("stage4", {})
-    require(stage4.get("stage4_state") == "active_framework_governance_only", "Stage 4 current state drifted", failures)
-    # Transitional invariant for this authorization PR: production current truth
-    # remains the last post-merge checkpoint until this authorization itself merges
-    # and receives green post-merge CI. A follow-up current-truth checkpoint must
-    # then flip these fields without rewriting historical evidence.
-    require(stage4.get("real_data_calibration_execution_authorized") is False, "pre-authorization production handoff changed too early", failures)
-    require(stage4.get("calibration_authorized") is False, "pre-authorization calibration flag changed too early", failures)
+    require(stage4.get("stage4_state") == "active_framework_governance_only", "Stage 4 historical framework state anchor drifted", failures)
+    require(
+        stage4.get("execution_phase") == "real_development_calibration_authorized_not_executed",
+        "Stage 4 current execution phase drifted",
+        failures,
+    )
+    require(stage4.get("real_data_calibration_execution_authorized") is True, "production-effective execution authorization missing", failures)
+    require(stage4.get("calibration_authorized") is True, "exact-scope development calibration authorization missing", failures)
     require(stage4.get("real_data_calibration_executed") is False, "real calibration unexpectedly executed", failures)
     require(stage4.get("held_out_tuning_used") is False, "held-out tuning unexpectedly used", failures)
     require(stage4.get("production_threshold_changes_authorized") is False, "production threshold changes unexpectedly authorized", failures)
@@ -157,11 +158,15 @@ def main() -> int:
     require(BLOCK_NO_REFERENCE_BUNDLE not in current_existing_blockers, "accepted reference bundle regressed into blockers", failures)
     require(stage4.get("reference_label_bundle_accepted") is True, "live handoff lost production-effective reference acceptance", failures)
     require(
-        stage4.get("current_execution_blocker_codes") == ["real_data_calibration_execution_not_authorized"],
-        "pre-authorization production handoff execution blocker drifted",
+        stage4.get("current_execution_blocker_codes") == ["private_observation_metrics_not_available"],
+        "post-authorization execution dependency drifted",
         failures,
     )
-    require("BLOCKED / NOT AUTHORIZED" in status, "pre-authorization Stage 4 status changed before production effectiveness", failures)
+    require(stage4.get("private_observation_metrics_required") is True, "private metric requirement missing", failures)
+    require(stage4.get("private_observation_metrics_available") is False, "live handoff falsely claims private metrics are available", failures)
+    require(stage4.get("raw_observation_metrics_allowed_in_ordinary_git") is False, "raw metrics were allowed in ordinary Git", failures)
+    require("AUTHORIZED" in status and "NOT YET EXECUTED" in status, "Stage 4 status lost post-authorization execution state", failures)
+    require("private observation metrics" in status.lower(), "Stage 4 status lost private metric dependency", failures)
     require("uncalibrated_engineering_defaults" in status, "Stage 4 status lost uncalibrated-defaults state", failures)
 
     governance_files = sorted(path.name for path in STAGE4_GOVERNANCE.iterdir() if path.is_file())
@@ -253,11 +258,11 @@ def main() -> int:
     print("Stage 4 exit-readiness validation: PASS")
     print("- safety_calibration artifacts: 2 exact development items")
     print("- accepted real development reference bundles: 1")
-    print("- execution authorization candidate: exact Beethoven + Barley development scope")
+    print("- real development calibration execution: AUTHORIZED / NOT YET EXECUTED")
+    print("- immediate execution dependency: private observation metrics not available")
     print("- readiness decision: NOT_READY / 3 remaining blockers")
     for blocker in sorted(EXPECTED_CANDIDATE_BLOCKERS):
         print(f"  - {blocker}")
-    print("- production current truth remains pre-authorization until merge + post-merge CI")
     print("- held-out tuning: false / Stage 4 PASS: false / Stage 5 entry: false")
     return 0
 
