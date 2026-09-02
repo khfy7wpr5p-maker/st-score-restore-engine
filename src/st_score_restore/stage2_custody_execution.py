@@ -1,0 +1,418 @@
+"""Fail-closed Stage 2 execution boundary for approved-custody corpus bytes."""
+
+from __future__ import annotations
+
+from copy import deepcopy
+from dataclasses import dataclass, field
+from datetime import date
+import hashlib
+import json
+import re
+from typing import Any, Mapping
+
+from .dataset_catalog_validation import validate_dataset_catalog
+from .dataset_contract_common import (
+    _permission,
+    _permission_valid_on,
+    _restriction_by_type,
+)
+from .dataset_contract_constants import DatasetManifestError, STAGE1_ENVIRONMENT
+from .quality_analysis import (
+    ANALYZER_VERSION,
+    QualityAnalysisConfig,
+    QualityAnalysisError,
+    analyze_quality_bytes,
+)
+
+SCHEMA_VERSION = "1.0.0"
+CONTRACT_VERSION = "0.1.0"
+APPROVED_CUSTODY_ENVIRONMENT = STAGE1_ENVIRONMENT
+_STAGE2_PURPOSE_BY_SPLIT = {
+    "development": "quality_evaluation",
+    "held_out": "held_out_evaluation",
+}
+_ENVIRONMENT = re.compile(r"^[a-z0-9][a-z0-9._-]{2,79}$")
+
+
+class CustodyExecutionError(ValueError):
+    """Stable fail-closed rejection before or during Stage 2 corpus execution."""
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        details: Mapping[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.message = message
+        self.details = dict(details or {})
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schemaVersion": SCHEMA_VERSION,
+            "status": "rejected",
+            "error": {
+                "code": self.code,
+                "message": self.message,
+                "details": deepcopy(self.details),
+            },
+        }
+
+
+@dataclass(frozen=True)
+class CustodyExecutionResult:
+    """Public-safe receipt plus an explicitly custody-only detailed report."""
+
+    public_receipt: Mapping[str, Any]
+    _custody_report: Mapping[str, Any] | None = field(default=None, repr=False)
+
+    def to_public_dict(self) -> dict[str, Any]:
+        """Return only the redacted receipt suitable for repository evidence."""
+        return deepcopy(dict(self.public_receipt))
+
+    def restricted_report_for_custody(self) -> dict[str, Any] | None:
+        """Return detailed metrics only to an approved custody caller."""
+        if self._custody_report is None:
+            return None
+        return deepcopy(dict(self._custody_report))
+
+
+def _as_date(value: date | str) -> date:
+    if isinstance(value, date):
+        return value
+    if not isinstance(value, str):
+        raise CustodyExecutionError(
+            "invalid_execution_date",
+            "Execution date must be an ISO date string or datetime.date.",
+        )
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:
+        raise CustodyExecutionError(
+            "invalid_execution_date",
+            "Execution date must use YYYY-MM-DD.",
+        ) from exc
+
+
+def _receipt_digest(receipt: Mapping[str, Any]) -> str:
+    payload = dict(receipt)
+    payload.pop("receiptDigest", None)
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _find_item(catalog: Mapping[str, Any], dataset_item_id: str) -> dict[str, Any]:
+    for item in catalog["items"]:
+        if item["datasetItemId"] == dataset_item_id:
+            return item
+    raise CustodyExecutionError(
+        "dataset_item_not_found",
+        "Dataset item is not present in the validated catalog.",
+        details={"datasetItemId": dataset_item_id},
+    )
+
+
+def _require_restrictions(
+    permission: Mapping[str, Any],
+    *,
+    split: str,
+    storage_class: str,
+    environment: str,
+    execution_date: date,
+) -> dict[str, Any]:
+    split_rule = _restriction_by_type(dict(permission), "split_allowlist")
+    if split_rule is not None and split not in split_rule["values"]:
+        raise CustodyExecutionError(
+            "split_restriction_violation",
+            "Purpose permission does not allow the assigned split.",
+            details={"split": split},
+        )
+
+    storage_rule = _restriction_by_type(dict(permission), "storage_class_allowlist")
+    if storage_rule is not None and storage_class not in storage_rule["values"]:
+        raise CustodyExecutionError(
+            "storage_restriction_violation",
+            "Purpose permission does not allow the active storage class.",
+            details={"storageClass": storage_class},
+        )
+
+    environment_rule = _restriction_by_type(dict(permission), "environment_allowlist")
+    if environment_rule is not None and environment not in environment_rule["values"]:
+        raise CustodyExecutionError(
+            "environment_restriction_violation",
+            "Purpose permission does not allow the requested execution environment.",
+            details={"environment": environment},
+        )
+
+    retention_rule = _restriction_by_type(dict(permission), "retention_not_after")
+    if retention_rule is not None:
+        maximum = date.fromisoformat(retention_rule["date"])
+        if execution_date > maximum:
+            raise CustodyExecutionError(
+                "permission_retention_restriction_expired",
+                "Execution date exceeds the permission retention boundary.",
+                details={"retentionNotAfter": retention_rule["date"]},
+            )
+
+    export_rule = _restriction_by_type(dict(permission), "external_export")
+    export_state = (
+        "explicitly_blocked"
+        if export_rule is not None and export_rule["allowed"] is False
+        else "not_authorized_by_stage2_execution"
+    )
+    return {
+        "splitRestrictionSatisfied": True,
+        "storageRestrictionSatisfied": True,
+        "environmentRestrictionSatisfied": True,
+        "retentionRestrictionSatisfied": True,
+        "externalExportState": export_state,
+    }
+
+
+def _validate_exact_bytes(item: Mapping[str, Any], data: bytes) -> tuple[str, int]:
+    if not isinstance(data, bytes) or not data:
+        raise CustodyExecutionError(
+            "invalid_source_bytes",
+            "A non-empty immutable byte sequence is required.",
+        )
+    digest = hashlib.sha256(data).hexdigest()
+    size = len(data)
+    artifact = item["artifact"]
+    if digest != artifact["sha256"]:
+        raise CustodyExecutionError(
+            "exact_sha256_mismatch",
+            "Custody bytes do not match the admitted artifact SHA-256.",
+            details={"expected": artifact["sha256"], "actual": digest},
+        )
+    if size != artifact["byteSize"]:
+        raise CustodyExecutionError(
+            "exact_byte_size_mismatch",
+            "Custody bytes do not match the admitted artifact byte size.",
+            details={"expected": artifact["byteSize"], "actual": size},
+        )
+    return digest, size
+
+
+def _validate_catalog_input_kind(
+    item: Mapping[str, Any],
+    report: Mapping[str, Any],
+) -> None:
+    catalog_kind = item["input"]["kind"]
+    report_kind = report.get("input", {}).get("kind")
+    if catalog_kind == "png":
+        expected = "png"
+    elif catalog_kind in {"jpg", "jpeg", "phone_photo"}:
+        expected = "jpeg"
+    elif catalog_kind == "digital_pdf":
+        expected = "pdf"
+    else:
+        return
+    if report_kind != expected:
+        raise CustodyExecutionError(
+            "catalog_input_kind_mismatch",
+            "Analyzed media kind does not match the admitted catalog input kind.",
+            details={"catalogInputKind": catalog_kind, "analyzedInputKind": report_kind},
+        )
+
+
+def run_authorized_quality_execution(
+    catalog: Mapping[str, Any],
+    *,
+    dataset_item_id: str,
+    data: bytes,
+    purpose: str,
+    execution_date: date | str,
+    environment: str = APPROVED_CUSTODY_ENVIRONMENT,
+    config: QualityAnalysisConfig | Mapping[str, Any] | None = None,
+) -> CustodyExecutionResult:
+    """Run Stage 2 analysis only after exact-byte and purpose/custody gates pass.
+
+    The returned public receipt never contains quality metrics or findings. Detailed
+    analyzer output is available only through ``restricted_report_for_custody()``.
+    """
+
+    if not isinstance(dataset_item_id, str) or not dataset_item_id:
+        raise CustodyExecutionError(
+            "invalid_dataset_item_id",
+            "dataset_item_id must be a non-empty string.",
+        )
+    if not isinstance(environment, str) or _ENVIRONMENT.fullmatch(environment) is None:
+        raise CustodyExecutionError(
+            "invalid_execution_environment",
+            "Execution environment must be a stable lowercase code.",
+        )
+
+    try:
+        validated = validate_dataset_catalog(deepcopy(dict(catalog)))
+    except (DatasetManifestError, TypeError, KeyError) as exc:
+        raise CustodyExecutionError(
+            "catalog_invalid",
+            "Dataset catalog failed the canonical governance validator.",
+        ) from exc
+
+    item = _find_item(validated, dataset_item_id)
+    artifact = item["artifact"]
+    split = item["split"]
+    storage_class = item["retention"]["storageClass"]
+    when = _as_date(execution_date)
+
+    if artifact["state"] != "external_available":
+        raise CustodyExecutionError(
+            "artifact_not_available",
+            "Stage 2 execution requires an admitted external_available artifact.",
+        )
+    if item["review"]["status"] != "approved":
+        raise CustodyExecutionError(
+            "dataset_review_not_approved",
+            "Stage 2 execution requires approved dataset review.",
+        )
+    if item["revocation"]["status"] != "not_revoked":
+        raise CustodyExecutionError(
+            "artifact_revoked_or_pending",
+            "Revoked or pending-deletion artifacts cannot be executed.",
+        )
+    if item["retention"]["deletionRequired"] is not False:
+        raise CustodyExecutionError(
+            "artifact_pending_deletion",
+            "Artifacts marked for deletion cannot be executed.",
+        )
+
+    retention_expiry = item["retention"]["expiresOn"]
+    if retention_expiry is not None and when >= date.fromisoformat(retention_expiry):
+        raise CustodyExecutionError(
+            "artifact_retention_expired",
+            "Execution date is outside the artifact retention window.",
+            details={"expiresOn": retention_expiry},
+        )
+
+    expected_purpose = _STAGE2_PURPOSE_BY_SPLIT.get(split)
+    if expected_purpose is None:
+        raise CustodyExecutionError(
+            "split_not_authorized_for_stage2_execution",
+            "Stage 2 corpus execution is limited to development and held-out splits.",
+            details={"split": split},
+        )
+    if purpose != expected_purpose:
+        raise CustodyExecutionError(
+            "purpose_not_authorized_for_split",
+            "Requested purpose does not match the Stage 2 split boundary.",
+            details={"split": split, "requiredPurpose": expected_purpose, "requestedPurpose": purpose},
+        )
+
+    permission = _permission(
+        item["permissions"][purpose],
+        f"item.permissions.{purpose}",
+    )
+    if not _permission_valid_on(permission, when):
+        raise CustodyExecutionError(
+            "purpose_permission_not_valid",
+            "Purpose permission is not granted and valid on the execution date.",
+            details={"purpose": purpose, "executionDate": when.isoformat()},
+        )
+
+    restriction_state = _require_restrictions(
+        permission,
+        split=split,
+        storage_class=storage_class,
+        environment=environment,
+        execution_date=when,
+    )
+    digest, size = _validate_exact_bytes(item, data)
+
+    custody_report: dict[str, Any] | None = None
+    analysis_status: str
+    analysis_error_code: str | None = None
+    report_digest: str | None = None
+    try:
+        report = analyze_quality_bytes(data, config=config)
+        _validate_catalog_input_kind(item, report)
+        if item["input"]["kind"] in {"scanned_pdf", "hybrid_pdf"}:
+            raise CustodyExecutionError(
+                "catalog_input_kind_mismatch",
+                "Scanned/hybrid catalog input unexpectedly crossed the Stage 3 renderer boundary.",
+            )
+        analysis_status = str(report["status"])
+        custody_report = report
+        report_digest = report.get("reportDigest", {}).get("value")
+    except QualityAnalysisError as exc:
+        if (
+            exc.code == "pdf_renderer_not_available"
+            and item["input"]["kind"] in {"scanned_pdf", "hybrid_pdf"}
+        ):
+            analysis_status = "deferred_stage3_renderer"
+            analysis_error_code = exc.code
+        else:
+            raise CustodyExecutionError(
+                "quality_analysis_rejected",
+                "Quality analyzer rejected an otherwise authorized artifact.",
+                details={"analyzerErrorCode": exc.code},
+            ) from exc
+
+    receipt = {
+        "schemaVersion": SCHEMA_VERSION,
+        "contractVersion": CONTRACT_VERSION,
+        "status": analysis_status,
+        "datasetItemId": dataset_item_id,
+        "sourceDigest": {"algorithm": "sha256", "value": digest},
+        "byteSize": size,
+        "catalogInputKind": item["input"]["kind"],
+        "purpose": purpose,
+        "split": split,
+        "storageClass": storage_class,
+        "environment": environment,
+        "executionDate": when.isoformat(),
+        "authorizationReference": permission["authorizationReference"],
+        "analyzerVersion": ANALYZER_VERSION,
+        "analysisErrorCode": analysis_error_code,
+        "reportDigest": (
+            {"algorithm": "sha256", "value": report_digest}
+            if report_digest is not None
+            else None
+        ),
+        "reportHandling": {
+            "detailedReportExported": False,
+            "detailedReportPublic": False,
+            "custodyOnly": True,
+            "externalExportState": restriction_state["externalExportState"],
+        },
+        "assertions": {
+            "exactDigestMatched": True,
+            "exactByteSizeMatched": True,
+            "purposePermissionValid": True,
+            "splitRestrictionSatisfied": restriction_state["splitRestrictionSatisfied"],
+            "storageRestrictionSatisfied": restriction_state["storageRestrictionSatisfied"],
+            "environmentRestrictionSatisfied": restriction_state["environmentRestrictionSatisfied"],
+            "retentionRestrictionSatisfied": restriction_state["retentionRestrictionSatisfied"],
+            "heldOutThresholdTuningUsed": False,
+            "sourceBytesModified": False,
+            "realArtifactBytesInGit": False,
+            "trainingAuthorized": False,
+            "calibrationAuthorized": False,
+            "publicationAuthorized": False,
+        },
+        "limitations": [
+            "This receipt proves an authorized Stage 2 execution boundary, not musical correctness.",
+            "Detailed real-corpus metrics remain custody-only unless separately authorized for publication.",
+            "Scanned/hybrid PDFs remain deferred until the Stage 3 renderer boundary.",
+        ],
+    }
+    receipt["receiptDigest"] = {
+        "algorithm": "sha256",
+        "value": _receipt_digest(receipt),
+    }
+    return CustodyExecutionResult(
+        public_receipt=receipt,
+        _custody_report=custody_report,
+    )
+
+
+__all__ = [
+    "APPROVED_CUSTODY_ENVIRONMENT",
+    "CONTRACT_VERSION",
+    "SCHEMA_VERSION",
+    "CustodyExecutionError",
+    "CustodyExecutionResult",
+    "run_authorized_quality_execution",
+]

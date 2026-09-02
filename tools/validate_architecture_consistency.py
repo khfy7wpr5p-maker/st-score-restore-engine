@@ -59,10 +59,11 @@ def main() -> int:
         "dataset_card": _read("docs/stage-1-dataset-card.md"),
         "coverage_register": _read("docs/stage-1-coverage-and-bias-register.md"),
         "stage2_current": _read("docs/stage-2-current-status.md"),
+        "stage2_custody": _read("docs/stage-2-approved-custody-execution-contract.md"),
         "audit": _read("docs/architecture-consistency-audit.md"),
     }
 
-    for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
+    for name in ("README", "roadmap", "technical", "stage2_current", "stage2_custody", "audit"):
         lowered = docs[name].lower()
         require("stage 2" in lowered and "active" in lowered, f"{name} does not record Stage 2 ACTIVE")
         require("stage 3" in lowered and "blocked" in lowered, f"{name} does not preserve Stage 3 BLOCKED boundary")
@@ -141,12 +142,23 @@ def main() -> int:
 
     quality_source = _read("src/st_score_restore/quality_analysis.py")
     stage2_validator = _read("tools/validate_stage2_quality_analysis.py")
+    custody_source = _read("src/st_score_restore/stage2_custody_execution.py")
+    custody_validator = _read("tools/validate_stage2_custody_execution.py")
     workflow = _read(".github/workflows/repository-validation.yml")
     require("analyze_quality_bytes" in quality_source, "Stage 2 quality analyzer entry point missing")
     require("heldOutThresholdTuningUsed" in quality_source, "Stage 2 report does not declare held-out tuning state")
     require("CALIBRATION_STATE" in quality_source, "Stage 2 report does not declare calibration state")
     require("validate_stage2_quality_analysis.py" in workflow, "Stage 2 validator is not wired into CI")
     require("from st_score_restore.quality_analysis" in stage2_validator, "Stage 2 validator does not bind analyzer module")
+
+    require("run_authorized_quality_execution" in custody_source, "Stage 2 custody execution entry point missing")
+    require("exact_sha256_mismatch" in custody_source, "Stage 2 custody execution does not fail closed on digest mismatch")
+    require("exact_byte_size_mismatch" in custody_source, "Stage 2 custody execution does not fail closed on byte-size mismatch")
+    require("purpose_not_authorized_for_split" in custody_source, "Stage 2 custody execution does not enforce split/purpose separation")
+    require("restricted_report_for_custody" in custody_source, "Stage 2 custody execution lacks explicit private-report boundary")
+    require("detailedReportExported" in custody_source, "Stage 2 custody receipt does not bind non-export state")
+    require("validate_stage2_custody_execution.py" in workflow, "Stage 2 custody validator is not wired into CI")
+    require("from st_score_restore.stage2_custody_execution" in custody_validator, "Stage 2 custody validator does not bind execution module")
 
     require("python tools/build_stage1_expanded_snapshot.py --check" in workflow, "CI no longer checks committed expanded-v2 evidence")
     require("python tools/validate_stage1_exit_acceptance.py" in workflow, "CI no longer validates Stage 1 exit acceptance")
@@ -171,6 +183,7 @@ def main() -> int:
     print("- Stage 2 boundary: ACTIVE / uncalibrated / held-out non-tuning")
     print("- Stage 3 boundary: BLOCKED pending Stage 2 exit PASS")
     print("- Stage 2 analyzer/validator/CI: wired")
+    print("- Stage 2 approved-custody execution/validator/CI: wired")
     print("- evidence/stage1c: metadata-only")
     return 0
 
