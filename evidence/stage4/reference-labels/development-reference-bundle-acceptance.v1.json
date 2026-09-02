@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage4.reference-label-acceptance.beethoven-barley.v1",
+  "decision": "ACCEPT_REAL_REFERENCE_BUNDLE",
+  "acceptedOn": "2026-09-02",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260902-01",
+  "completionDigest": {
+    "algorithm": "sha256",
+    "value": "3434e74e7d993db2384711f9c6c31f31d148c65bc5896bd120f82b5dcab2e1fd"
+  },
+  "workPackageDigest": {
+    "algorithm": "sha256",
+    "value": "93e1a61bbdd698dbabf1ba88164453056acf3f2ea37fa159305a0f244b2253ba"
+  },
+  "purposeGrantDigest": {
+    "algorithm": "sha256",
+    "value": "4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc"
+  },
+  "bundleDigest": {
+    "algorithm": "sha256",
+    "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"
+  },
+  "acceptedReferenceReceipt": {
+    "schemaVersion": "1.0.0",
+    "contractVersion": "0.1.0",
+    "status": "reference_bundle_frozen",
+    "bundleId": "stage4.reference-labels.beethoven-barley.development.v1",
+    "bundleDigest": {
+      "algorithm": "sha256",
+      "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"
+    },
+    "scope": {
+      "split": "development",
+      "dataClass": "real",
+      "purpose": "safety_calibration",
+      "recordCount": 42,
+      "datasetItemCount": 2,
+      "sourceFamilyCount": 2,
+      "labelCounts": {
+        "clear": 36,
+        "not_assessed": 0,
+        "possible": 5,
+        "probable": 1
+      },
+      "reviewMethods": [
+        "human_expert_review"
+      ]
+    },
+    "assertions": {
+      "labelsAutomaticallyGenerated": false,
+      "modelPredictionsUsedAsReferenceLabels": false,
+      "heldOutCandidateDerivationAuthorized": false,
+      "realReferenceBundleAccepted": true,
+      "realDataCalibrationAuthorized": false,
+      "productionThresholdChangeAuthorized": false,
+      "productionResourceLimitChangeAuthorized": false,
+      "modelTrainingAuthorized": false,
+      "publicationAuthorized": false
+    },
+    "receiptDigest": {
+      "algorithm": "sha256",
+      "value": "f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33"
+    }
+  },
+  "scope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "recordCount": 42,
+    "datasetItemCount": 2,
+    "sourceFamilyCount": 2,
+    "candidateDerivationEligible": true,
+    "heldOutIncluded": false,
+    "heldOutTuningAuthorized": false
+  },
+  "assertions": {
+    "referenceBundleAccepted": true,
+    "humanLabelsPresent": true,
+    "labelsAutomaticallyGenerated": false,
+    "modelPredictionsUsedAsReferenceLabels": false,
+    "realDataCalibrationExecutionAuthorized": false,
+    "realDataCalibrationExecuted": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
