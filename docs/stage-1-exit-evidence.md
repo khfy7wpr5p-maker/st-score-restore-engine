@@ -1,114 +1,113 @@
 # Stage 1 Exit Evidence
 
-**Status:** BLOCKED — expanded-v2 acceptance and merge sequence not complete  
+**Status:** PASS DECISION RECORDED — effective when the Stage 1 exit acceptance PR is merged  
 **As of:** 2026-09-02  
-**Stage:** Stage 1C  
+**Stage:** Stage 1C / final exit acceptance  
 **Parent:** #32  
-**Active substage:** #47  
-**Current production main:** `53ae13d3a1b9bda08c79125674e1b7fca78ee8af`  
-**Active PR:** #81 (`stage1c-expanded-snapshot-v2`, Draft)  
+**Tracking:** #47  
+**Accepted evidence main:** `8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1`  
+**Post-merge repository validation:** Run #199 (`33573656067`) — Python 3.11 PASS / Python 3.12 PASS  
 **Artifact bytes stored in ordinary Git:** 0  
-**Stage 2 entry:** BLOCKED
+**Stage 2 entry:** BLOCKED until this acceptance record merges; after merge it is ELIGIBLE / NOT STARTED
 
-## 1. Decision rule
+## 1. Decision
 
-This record never converts a coverage improvement into Stage 1 PASS by implication. Stage 1 final exit requires accepted, deterministic, reviewable evidence on merged `main`, successful post-merge CI, and no unresolved governance/custody/rights/privacy/source-family/digest/review gate.
+Stage 1 final exit is accepted as **PASS**, subject only to this acceptance record being merged through the normal exact-head PR gate.
 
-Open-PR evidence is in-progress. Historical C15/C16 evidence remains immutable.
+This is a separate governance acceptance. It does not rewrite the deterministic expanded-v2 coverage report and does not turn that report into an automatic stage-transition authority.
 
-## 2. Current gate matrix
+The machine-readable acceptance is:
 
-| Gate | Current result | Evidence boundary |
-|---|---|---|
-| Stage 1A metadata governance | PASS | accepted contracts/validators |
-| Stage 1B custody/operations closure | PASS | accepted closure evidence |
-| Stage 1C authorization | PASS | Issue #47 authorization remains active |
-| Risk-tiered custody / catalog 1.3.0 / admission mechanism | PASS | C6-C11 merged |
-| Historical C15 snapshot integrity | PASS / HISTORICAL | immutable v1 catalog + frozen snapshot |
-| Historical C16 coverage decision | FAIL / HISTORICAL `insufficient` | immutable seven-gap report |
-| C17A combined staff+TAB | PASS / MERGED | exact artifact admitted |
-| C17B standalone guitar TAB | PASS / MERGED | exact Barley PDF admitted on current main |
-| C17C non-`none` degradation metadata v2 | PASS / MERGED | Chopin exact artifact, `noise` only |
-| C17D deidentified phone photo | PASS / MERGED | restricted held-out derivative admitted |
-| Expanded-v2 deterministic candidate | PASS AS CANDIDATE | Run #177, Python 3.11/3.12; not yet committed production evidence |
-| Expanded-v2 canonical evidence committed | PENDING | PR #81 must commit three v2 JSON files |
-| Expanded-v2 committed-evidence `--check` | PENDING | final PR head CI |
-| Expanded-v2 focused regression coverage | PENDING | final PR head CI |
-| PR #81 Ready/review/thread/head gates | PENDING | objective transition gates |
-| PR #81 merge | PENDING | cannot occur before exact-head green CI |
-| Post-merge main CI | PENDING | required before exit acceptance |
-| Stage 1 final exit acceptance | BLOCKED | separate decision after post-merge CI |
-| Stage 2 entry | BLOCKED | requires Stage 1 final PASS |
+`evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`
 
-## 3. Historical C15/C16 evidence — immutable
+## 2. Evidence bound to the decision
 
-Historical C15/C16 remains exactly the evidence produced for the original two-item corpus:
+The accepted production evidence boundary is merge commit:
 
-- catalog v1 canonical SHA-256: `059c40b619d3c7815f14377cc8b26fce9a6b0522f2419f481bd93b15ed60e937`;
-- snapshot v1 canonical SHA-256: `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`;
-- C16 report SHA-256: `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`;
-- 2 real items / 12 pages;
-- deterministic sufficiency `insufficient`;
-- `heldOutFrozen=true`;
-- `trainingUseActivated=false`.
+`8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1`
 
-The seven historical C16 gap codes remain historical facts. No C17 work rewrites them.
+Post-merge Repository validation Run #199 (`33573656067`) executed and succeeded on both supported Python versions. It included architecture consistency, all C17 admission gates, historical C15/C16 checks, committed expanded-v2 `--check`, full tests and compile.
 
-## 4. Current merged C17 expansion evidence
+Accepted canonical v2 digests:
 
-Current `main` contains the item-level evidence needed by the expanded candidate:
+- catalog v2: `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
+- expanded snapshot v2: `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
+- coverage report v2: `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-- C17A combined staff+TAB artifact SHA-256 `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
-- C17B standalone TAB artifact SHA-256 `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
-- C17C Chopin artifact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`, selected via metadata v2 only;
-- C17D deidentified phone-photo derivative SHA-256 `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
+Historical evidence remains immutable:
 
-The original Beethoven baseline supplies the fifth aggregate item. All remain purpose-bound. No aggregate evidence creates model-training or calibration permission.
+- C15 frozen snapshot canonical SHA-256: `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`;
+- C16 coverage report SHA-256: `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`;
+- historical C16 decision remains `insufficient` for its original two-item snapshot.
 
-## 5. PR #81 candidate evidence
+## 3. Accepted expanded-v2 boundary
 
-The last candidate-only exact head was `e733d19cf5cb64d86f70017118d8d06c6863c304`. Repository validation Run #177 (`33570409008`) succeeded for both Python 3.11 and 3.12.
+The accepted aggregate contains exactly 5 real items and 0 synthetic items:
 
-Both matrix jobs generated byte-identical copies of:
+- development: 3 items / 3 source families;
+- held out: 2 items / 2 source families;
+- unique exact artifact digests: 5;
+- cross-split source-family leakage: none;
+- Chopin metadata v2 selected exactly once; v1 excluded from the new aggregate;
+- ordinary Git real corpus artifact bytes: 0.
 
-- `catalog.v2.json`;
-- `snapshot.expanded.v2.json`;
-- `coverage-bias-report.v2.json`.
+Tracked coverage dimensions are present for staff notation, standalone guitar TAB, combined staff+TAB, scanned PDF, phone photo and non-`none` degradation. The seven historical C16 gap codes are absent from the expanded-v2 report.
 
-The candidate has:
+## 4. Why the source report remains fail-closed
 
-- exactly 5 real items / 0 synthetic;
-- development 3 items / 3 source families;
-- held out 2 items / 2 source families;
-- no cross-split source-family leakage;
-- no duplicate exact artifact digest;
-- Chopin v2 once and v1 excluded;
-- staff, guitar TAB, combined staff+TAB, scanned PDF, phone photo and non-`none` degradation all covered;
-- none of the seven historical C16 gap codes in the v2 candidate.
-
-Run #177 ceases to be merge evidence after any PR head movement. It remains useful proof that candidate generation was deterministic on that exact historical PR head.
-
-## 6. Why Stage 1 is still blocked
-
-The v2 candidate itself records:
+`coverage-bias-report.v2.json` deliberately remains:
 
 - `sufficiency.state = review_required`;
+- `requiresCorpusExpansion = false`;
 - `stage1ExitSupported = false`;
 - `stage2EntrySupported = false`.
 
-Coverage-target closure therefore does not establish representativeness, absence of bias, restoration effectiveness, OMR improvement or musical correctness.
+Those flags mean the deterministic metadata report does not automatically authorize a stage transition. This acceptance record performs the required separate governance review.
 
-Before Stage 1 exit can be decided, PR #81 must commit canonical v2 evidence, switch CI to fail-closed committed-evidence checking, add focused regression coverage, pass fresh exact-head 3.11/3.12 CI, clear review/thread/head gates, merge, and pass post-merge main CI.
+The source report is therefore not modified as part of Stage 1 exit acceptance.
 
-## 7. Exit acceptance record to be completed after merge
+## 5. Gate result
 
-If and only if the post-merge evidence is clean, this document must be updated with:
+| Gate | Result |
+|---|---|
+| Governance / dataset review | PASS |
+| Exact-artifact rights / provenance | PASS for accepted corpus items |
+| Privacy / de-identification | PASS for accepted corpus items |
+| Purpose authorization | PASS for Stage 1 evaluation use |
+| Custody/profile verification | PASS |
+| Development/held-out isolation | PASS |
+| Artifact digest uniqueness | PASS |
+| C17C v1/v2 de-duplication | PASS |
+| Historical C15/C16 immutability | PASS |
+| Ordinary Git real artifact bytes | PASS — zero |
+| Exact-head PR verification for PR #81 | PASS — Run #198 |
+| Post-merge main verification | PASS — Run #199 |
+| Review/thread reconciliation | PASS |
+| Remaining blocker codes | NONE |
 
-- accepted exact `main` SHA;
-- post-merge CI run id/number and Python 3.11/3.12 results;
-- canonical catalog v2 SHA-256;
-- canonical snapshot v2 SHA-256;
-- canonical coverage report v2 SHA-256;
-- explicit final Stage 1 decision and any remaining blocker codes.
+## 6. Accepted limitations
 
-Until that record exists, Stage 1 final exit is BLOCKED and Stage 2 must not start.
+Stage 1 PASS does **not** establish any of the following:
+
+- corpus representativeness;
+- absence of bias;
+- restoration effectiveness;
+- OMR improvement;
+- musical correctness;
+- model-training permission;
+- calibration permission.
+
+`source_selection_concentration` remains an accepted known limitation because the aggregate is public-domain-majority with one licensed item. This limitation does not require further corpus expansion for the agreed Stage 2 Complete Quality Analysis evaluation purpose.
+
+The separate user-provided sensitive phone-photo path remains blocked on real `high_assurance_vault` verification and is not required by the accepted corpus because C17D uses the separately admitted deidentified restricted derivative.
+
+## 7. Stage transition boundary
+
+After this acceptance record is merged and its exact-head/post-merge CI is green:
+
+- Stage 1 is COMPLETE / PASS;
+- Stage 2 entry becomes ELIGIBLE;
+- Stage 2 is still NOT STARTED;
+- a separate focused Stage 2 branch/PR is required before OpenCV Complete Quality Analysis work begins.
+
+No Stage 2 implementation is included in this acceptance slice.
