@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "decisionId": "stage2.exit.acceptance.v1",
+  "decision": "PASS",
+  "decidedOn": "2026-09-02",
+  "acceptanceAuthority": "issue-83-autonomous-objective-gates",
+  "evidenceMainSha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
+  "exactHeadPrVerification": {
+    "prNumber": 87,
+    "headSha": "7d6c812dd09a1ce42ae91d224f9d08992884b77a",
+    "runId": 33606224352,
+    "runNumber": 220,
+    "python311": "success",
+    "python312": "success"
+  },
+  "postMergeCi": {
+    "runId": 33607016064,
+    "runNumber": 221,
+    "event": "push",
+    "python311": "success",
+    "python312": "success"
+  },
+  "evidenceDigests": {
+    "corpusExecutionEvidenceCanonicalSha256": "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d",
+    "catalogV2CanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+    "snapshotV2CanonicalSha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
+    "coverageReportV2CanonicalSha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834"
+  },
+  "executionSummary": {
+    "itemCount": 5,
+    "analyzedCount": 2,
+    "vectorNotApplicableCount": 1,
+    "stage3DeferredCount": 2,
+    "developmentCount": 3,
+    "heldOutCount": 2,
+    "restrictedNoExportCount": 1,
+    "exactSha256Matches": 5,
+    "exactByteSizeMatches": 5
+  },
+  "gates": {
+    "deterministicAnalyzerContract": "pass",
+    "architectureAndStatusAlignment": "pass",
+    "approvedCustodyExecution": "pass",
+    "sourceIdentity": "pass_5_of_5_exact_sha256_and_byte_size",
+    "executionEvidence": "pass_frozen_digest_bound",
+    "purposeAndSplitIsolation": "pass",
+    "heldOutNonTuning": "pass",
+    "limitationsReview": "pass",
+    "publicEvidenceRedaction": "pass_no_metrics_findings_or_provider_locators",
+    "restrictedOutputBoundary": "pass_c17d_external_export_blocked",
+    "ordinaryGitArtifactBytes": "pass_zero_real_artifact_bytes",
+    "historicalStage1Immutability": "pass",
+    "exactHeadPrVerification": "pass_run_220",
+    "reviewAndThreadReconciliation": "pass",
+    "postMergeMainVerification": "pass_run_221"
+  },
+  "acceptedLimitations": [
+    "scanned/hybrid PDF pixel analysis remains intentionally deferred to the Stage 3 renderer boundary",
+    "digital PDF content remains vector-preserved and is not rasterized by Stage 2",
+    "Stage 2 thresholds remain uncalibrated engineering defaults; Stage 4 owns real-data calibration",
+    "detailed real-corpus metrics and findings remain custody-only unless separately authorized",
+    "C17D detailed held-out evidence remains managed_restricted with external_export=false",
+    "corpus representativeness is not established",
+    "absence of bias is not established",
+    "restoration effectiveness is not established",
+    "OMR improvement is not established",
+    "musical correctness is not established",
+    "training, calibration and publication permission are not inferred"
+  ],
+  "acceptedPurpose": "stage3-multi-page-pdf-pipeline-entry",
+  "stage2ExitPass": true,
+  "stage3EntryEligible": true,
+  "stage3Started": false,
+  "blockerCodes": [],
+  "claims": {
+    "thresholdsCalibrated": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "omrImprovementEstablished": false,
+    "musicalCorrectnessEstablished": false,
+    "trainingAuthorized": false,
+    "calibrationAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "separateSensitivePhonePhotoPath": {
+    "requiredForAcceptedCorpus": false,
+    "state": "blocked_pending_real_high_assurance_vault_verification"
+  }
+}

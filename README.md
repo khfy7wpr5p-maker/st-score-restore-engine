@@ -22,92 +22,68 @@ Selected visual source variant
 ScoreMosaic Safe Intake → OMR → MusicXML
 ```
 
-This repository is not an OMR engine. It produces visual analysis and restoration evidence. ADR 0015 keeps safety validation before comparator eligibility and preserves the immutable original as a selectable fallback. DocRes, ST Image AI, the multi-engine comparator, selector and learned restoration model remain future stages.
+This repository is not an OMR engine. Source bytes remain immutable, exact SHA-256 is the artifact identity boundary, and rejected candidates cannot replace the original fallback.
 
 ## Current production and stage state
 
-Accepted production main at Stage 2 entry is `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
+Accepted Stage 2 entry main is `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
 
 - **Stage 1 — real and explicitly authorized evaluation corpus:** COMPLETE / PASS.
-- **Stage 2 — Complete Quality Analysis:** ACTIVE under Issue #83 and PR #84.
-- **Stage 3 — multi-page PDF pipeline:** BLOCKED until explicit Stage 2 exit PASS.
-- **Stage 4 — real-data safety calibration:** NOT STARTED; Stage 2 thresholds remain uncalibrated engineering defaults.
+- **Stage 2 — Complete Quality Analysis:** COMPLETE / PASS acceptance recorded in this slice. The accepted evidence main is `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; post-merge Repository validation Run #221 (`33607016064`) succeeded on Python 3.11 and 3.12.
+- **Stage 3 — multi-page PDF pipeline:** ENTRY ELIGIBLE / NOT STARTED. Stage 3 work must begin only in a new focused branch after the Stage 2 acceptance commit is merged and its own post-merge main CI is green.
+- **Stage 4 — real-data safety calibration:** NOT STARTED. Stage 2 thresholds remain `uncalibrated_engineering_defaults`.
 
-Stage 1 exit acceptance is recorded in `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`. Post-merge Repository validation Run #203 (`33588190548`) passed on Python 3.11 and 3.12 for main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
+Stage 2 final acceptance is machine-readable at `evidence/stage2/corpus/stage2-exit-acceptance.v1.json`. The acceptance does not authorize training, calibration or publication and does not establish musical correctness, OMR improvement, restoration effectiveness, representativeness or absence of bias.
 
 ## Stage 1 accepted evidence
 
-Historical C15/C16 evidence remains immutable. The historical C16 result remains `insufficient` for its original two-item snapshot and is not rewritten by later evidence.
+Historical C15/C16 evidence remains immutable. Expanded-v2 contains 5 real / 0 synthetic items, with 3 development source families and 2 held-out source families, no source-family leakage, no duplicate artifact SHA-256, and Chopin metadata v2 selected once while v1 is excluded.
 
-Accepted expanded-v2 evidence contains 5 real items / 0 synthetic items, with development 3 items / 3 source families and held-out 2 items / 2 source families, no source-family leakage, no duplicate exact artifact SHA-256, and Chopin metadata v2 selected once while v1 is excluded.
-
-Canonical v2 digests:
+Canonical Stage 1 v2 digests:
 
 - catalog: `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
 - snapshot: `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
 - coverage report: `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-Accepted C17 exact-artifact bindings remain:
+Historical C15 snapshot: `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`. Historical C16 report: `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
-- C17A combined staff+TAB: `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
-- C17B standalone guitar TAB: `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
-- C17C held-out Chopin: `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
-- C17D deidentified phone photo: `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
+## Stage 2 accepted evidence
 
-Real corpus score/PDF/image bytes remain outside ordinary Git. Training and calibration permission are not inferred from evaluation admission.
+Production analyzer version is `0.1.1`; custody execution contract version is `0.1.0`. The accepted five-item corpus was exercised through approved custody with exact SHA-256 and exact byte-size gates before analysis.
 
-## Stage 2 quality-analysis core
+Frozen public execution evidence:
 
-PR #84 adds a deterministic OpenCV analyzer for accepted PNG/JPEG inputs. The report is bound to immutable source SHA-256 and configuration digest and records raw metrics separately from qualitative findings.
+- `evidence/stage2/corpus/execution-evidence.v1.json`
+- canonical digest `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`
 
-Current measured dimensions include:
+Controlled outcomes:
 
-- orientation metadata/display orientation;
-- skew angle and confidence;
-- page-boundary / perspective geometry and confidence;
-- crop/margin risk;
-- blur/sharpness;
-- glare/highlight clipping;
-- shadow/local darkness;
-- uneven illumination/background variation;
-- noise;
-- JPEG compression/quantization evidence where applicable;
-- low-resolution / DPI evidence;
-- geometric staff/TAB visibility indicators.
+- 2 raster items: `analyzed`;
+- 1 digital PDF: `not_applicable_vector_pdf`, vector preserved;
+- 2 scanned/hybrid PDFs: `deferred_stage3_renderer` with `pdf_renderer_not_available`;
+- held-out threshold tuning: false;
+- real corpus artifact bytes in ordinary Git: zero;
+- C17D detailed held-out report: `managed_restricted`, `external_export=false`.
 
-These are visual evidence only. They do not establish musical correctness, OMR accuracy, restoration effectiveness, training readiness or calibration readiness. Low-confidence or unsupported evidence fails closed to review-oriented or `not_assessed` states. Digital PDFs remain vector-preservation territory; scanned/hybrid PDF pixel analysis waits for the Stage 3 renderer boundary.
+The two scanned/hybrid PDF deferrals are accepted Stage 2 limitations. They deliberately preserve the Stage 3 renderer boundary rather than claiming pixel analysis that Stage 2 does not own.
 
 ## Binding development order
 
 ```text
 Stage 0  Roadmap update
-      ↓
 Stage 1  Real and explicitly authorized test dataset
-      ↓
 Stage 2  Complete quality-analysis system
-      ↓
 Stage 3  Multi-page PDF pipeline
-      ↓
 Stage 4  Safety calibration with real data
-      ↓
 Stage 5  Accessible teacher review interface
-      ↓
 Stage 6  Identity, network and production infrastructure
-      ↓
 Stage 7  Preview release
-      ↓
 Stage 8  DocRes optional candidate
-      ↓
 Stage 9  Multi-engine comparator
-      ↓
 Stage 10 ST Restore Selector
-      ↓
 Stage 11 ST Restore image model
-      ↓
 Stage 12 Music-application integrations
 ```
-
-Every transition remains evidence-gated. Head movement invalidates exact-head CI evidence.
 
 ## Development baseline
 
@@ -125,10 +101,12 @@ Validation includes:
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
 python tools/validate_architecture_consistency.py
-python tools/validate_fixture_catalog.py
 python tools/build_stage1_expanded_snapshot.py --check
 python tools/validate_stage1_exit_acceptance.py
 python tools/validate_stage2_quality_analysis.py
+python tools/validate_stage2_custody_execution.py
+python tools/validate_stage2_corpus_execution_evidence.py
+python tools/validate_stage2_exit_acceptance.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
@@ -138,8 +116,8 @@ python -m compileall -q src tools tests
 - `docs/technical-specification.md`
 - `docs/roadmap.md`
 - `docs/architecture-consistency-audit.md`
-- `docs/stage-1-exit-evidence.md`
 - `docs/stage-2-current-status.md`
+- `docs/stage-2-approved-custody-execution-contract.md`
 - `docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json`
 - ADR 0015 — restoration pipeline validation/comparator/OMR handoff
 - ADR 0016 — Stage 1C risk-tiered artifact custody

@@ -1,31 +1,36 @@
 # Architecture Consistency Audit — 2026-09-02
 
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Accepted Stage 2 entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
-**Active PR:** #84 / `stage2-complete-quality-analysis`  
 **Stage 1:** COMPLETE / PASS  
-**Stage 2:** ACTIVE  
-**Stage 3:** BLOCKED pending Stage 2 exit PASS
+**Stage 2:** COMPLETE / PASS acceptance recorded in this slice  
+**Stage 2 evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`  
+**Stage 3:** ENTRY ELIGIBLE / NOT STARTED
 
 ## Purpose
 
-This audit separates immutable historical evidence, accepted production-main truth and in-progress PR state. Authority order is merged `main` plus accepted deterministic evidence over stale status prose. Exact-head CI becomes stale after head movement.
+This audit separates immutable historical evidence, merged production truth and the final Stage 2 acceptance transition. Authority order is merged `main` plus deterministic accepted evidence. Open PR state is never production truth, and head movement invalidates exact-head CI.
 
 ## Fresh-read findings
 
 | Area | Result | Interpretation |
 |---|---|---|
-| Stage 1 final exit | PASS / EFFECTIVE | PR #82 merged; post-merge Run #203 green on Python 3.11/3.12 |
-| Stage 1 historical C15/C16 | PRESERVED | historical C16 remains `insufficient` for its original snapshot |
-| Expanded-v2 Stage 1 evidence | ACCEPTED | 5 real / 0 synthetic, 3 development families, 2 held-out families, no leakage/digest duplication |
-| Ordinary Git artifact custody | PASS | zero real corpus score/PDF/image bytes under Stage 1 evidence |
-| Stage 2 entry | SATISFIED | accepted purpose is Complete Quality Analysis evaluation |
-| Stage 2 Issue #83 | OPEN / ACTIVE | current stage tracking |
-| PR #84 | OPEN / DRAFT | initial deterministic OpenCV quality-analysis core plus docs reconciliation |
-| PR #84 core head `0abc5ec9…` | VERIFIED | Run #205 passed Python 3.11/3.12, Stage 2 validator, full tests and compile |
-| Architecture/status docs | RECONCILED IN CURRENT PR SLICE | Stage 1 COMPLETE, Stage 2 ACTIVE, Stage 3 BLOCKED |
-| Stage 2 thresholds | UNCALIBRATED | engineering defaults only; no held-out tuning |
-| Stage 3 | BLOCKED | requires separate Stage 2 exit PASS |
+| Stage 1 final exit | PASS / EFFECTIVE | accepted entry to Stage 2 remains valid |
+| Historical C15/C16 | PRESERVED | historical C16 remains insufficient for its original snapshot |
+| Expanded-v2 Stage 1 evidence | ACCEPTED | 5 real / 0 synthetic; 3 development families; 2 held-out families; no leakage or digest duplication |
+| Stage 2 quality analyzer | MERGED / VERIFIED | deterministic analyzer 0.1.1, uncalibrated engineering defaults |
+| Stage 2 custody execution contract | MERGED / VERIFIED | contract 0.1.0, exact source and permission gates |
+| Real accepted-corpus execution | PASS | 5/5 exact SHA-256 and byte-size identity bindings |
+| Frozen execution evidence | PASS | `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d` |
+| PR #87 exact-head CI | PASS | Run #220, Python 3.11/3.12 |
+| PR #87 merge | PASS | main `ffea7f5aa618187f3cabcfb49801804e3f6658bf` |
+| Post-merge main CI | PASS | Run #221, Python 3.11/3.12 |
+| Review/thread/head reconciliation | PASS | Ready head remained exact verified head; no reviews or unresolved threads |
+| Held-out threshold tuning | FALSE | held-out remained evaluation-only |
+| C17D detailed export | BLOCKED | `managed_restricted`, `external_export=false` |
+| Ordinary Git real artifact bytes | PASS | zero real score/PDF/image corpus bytes under evidence |
+| Limitations review | PASS | two scanned/hybrid PDF renderer deferrals explicitly accepted as Stage 2 boundary |
+| Stage 2 final exit | PASS decision recorded | separate machine-readable acceptance layer |
+| Stage 3 | ENTRY ELIGIBLE / NOT STARTED | must use a new focused branch after acceptance is production-effective |
 
 ## Stage 1 evidence retained
 
@@ -35,40 +40,38 @@ Canonical expanded-v2 digests:
 - snapshot `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
 - report `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-Exact C17 bindings remain:
+Historical C15 snapshot canonical SHA-256 remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; historical C16 report remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
-- C17A `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
-- C17B `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
-- C17C `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
-- C17D `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
+## Stage 2 execution truth
 
-Historical C15 snapshot canonical SHA-256 remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; historical C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
+The accepted five-item corpus produced controlled outcomes:
 
-## Stage 2 architecture truth
+1. Beethoven scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
+2. C17A combined staff+TAB PNG — `analyzed`;
+3. C17B digital guitar-TAB PDF — `not_applicable_vector_pdf`;
+4. C17C held-out Chopin scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
+5. C17D held-out deidentified JPEG — `analyzed` under `managed_restricted` custody.
 
-The pre-Stage-2 inspector exposed quality finding categories but intentionally left most raster pixel quality `not_assessed`. PR #84 closes that measurement gap with `src/st_score_restore/quality_analysis.py` while preserving the existing OpenCV restoration/safety boundaries.
+These results are source-digest-bound. Public evidence contains no detailed metrics/findings or provider/local custody locator. Detailed C17A/C17B/C17D reports remain external custody evidence; C17D export is explicitly blocked.
 
-The analyzer is deterministic and source-bound. It measures orientation, skew, page/perspective geometry, crop risk, blur, glare, shadow, uneven lighting, noise, JPEG compression evidence, low resolution/DPI and geometric staff/TAB visibility.
+## Limitations acceptance
 
-It does not perform OMR, musical inference, symbol completion or source modification. Digital PDFs remain vector-preservation territory. Scanned/hybrid PDF pixel analysis remains deferred to the Stage 3 renderer boundary.
+The two PDF deferrals are intentional fail-closed boundaries, not hidden failures. Stage 2 does not own scanned/hybrid PDF rendering; Stage 3 does. Digital PDFs remain vector-preserved. Thresholds remain uncalibrated until Stage 4.
 
-## CI and PR #84 gate
+No Stage 2 evidence establishes musical correctness, OMR correctness/improvement, restoration effectiveness, representativeness or absence of bias. Training, calibration and publication remain unauthorized.
 
-Run #205 (`33589252594`) succeeded on PR #84 head `0abc5ec924b65fdec6548e75923b1e7456ff4822` for Python 3.11 and 3.12. It validated Stage 1 gates, the new Stage 2 contract, all tests and compile.
+## Stage 2 exit decision
 
-This documentation/architecture reconciliation moves the PR head. Therefore Run #205 is historical verification of the code core, not final merge evidence after the reconciliation commit.
+`evidence/stage2/corpus/stage2-exit-acceptance.v1.json` records the separate `PASS` decision bound to:
 
-Final PR #84 merge requires:
+- evidence main `ffea7f5aa618187f3cabcfb49801804e3f6658bf`;
+- PR #87 exact head `7d6c812dd09a1ce42ae91d224f9d08992884b77a`;
+- exact-head Run #220 (`33606224352`) success on Python 3.11/3.12;
+- post-merge Run #221 (`33607016064`) success on Python 3.11/3.12;
+- frozen corpus execution evidence digest `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
 
-1. new exact-head Python 3.11/3.12 CI success;
-2. clean reviews and review threads;
-3. fresh base/head read;
-4. Draft → Ready only if gates remain clean;
-5. merge exact verified head;
-6. post-merge main CI success.
+The historical execution evidence remains immutable with `stage2ExitPass=false` and `stage3EntryAuthorized=false`; the PASS is intentionally a separate later acceptance layer.
 
-## Stage 2 exit boundary
+## Stage 3 boundary
 
-PR #84 merge is not Stage 2 final exit. Before Stage 2 can PASS, the accepted evaluation corpus must be exercised through approved custody without moving real bytes into ordinary Git. Execution evidence must be deterministic, source-digest-bound, reviewable and preserve held-out non-tuning. Known limitations must remain explicit.
-
-Stage 3 remains BLOCKED until a separate Stage 2 exit acceptance is PASS.
+Stage 3 is ENTRY ELIGIBLE / NOT STARTED. No Stage 3 renderer code belongs in this acceptance slice. After this acceptance commit is merged and post-merge main CI is green, Stage 3 may begin in a new focused branch/PR.

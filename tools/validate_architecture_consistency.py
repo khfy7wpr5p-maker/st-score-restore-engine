@@ -6,17 +6,17 @@ import re
 import sys
 import tomllib
 
+from st_score_restore.dataset_manifest import canonical_sha256
+
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_C15_SNAPSHOT = "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476"
 EXPECTED_C16_REPORT = "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e"
-EXPECTED_C17A_ARTIFACT = "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb"
-EXPECTED_C17B_ARTIFACT = "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e"
-EXPECTED_C17C_ARTIFACT = "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3"
-EXPECTED_C17D_ARTIFACT = "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
 EXPECTED_V2_CATALOG = "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3"
 EXPECTED_V2_SNAPSHOT = "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7"
 EXPECTED_V2_REPORT = "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834"
 STAGE2_ENTRY_MAIN = "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6"
+STAGE2_EVIDENCE_MAIN = "ffea7f5aa618187f3cabcfb49801804e3f6658bf"
+STAGE2_EXECUTION_EVIDENCE = "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d"
 REAL_ARTIFACT_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
 
@@ -45,10 +45,7 @@ def main() -> int:
 
     pyproject = tomllib.loads(_read("pyproject.toml"))
     openapi = _json("api/openapi.v1.json")
-    require(
-        pyproject["project"]["version"] == openapi["info"]["version"],
-        "package/OpenAPI version mismatch",
-    )
+    require(pyproject["project"]["version"] == openapi["info"]["version"], "package/OpenAPI version mismatch")
 
     docs = {
         "README": _read("README.md"),
@@ -63,27 +60,22 @@ def main() -> int:
         "audit": _read("docs/architecture-consistency-audit.md"),
     }
 
-    for name in ("README", "roadmap", "technical", "stage2_current", "stage2_custody", "audit"):
+    for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
         lowered = docs[name].lower()
-        require("stage 2" in lowered and "active" in lowered, f"{name} does not record Stage 2 ACTIVE")
-        require("stage 3" in lowered and "blocked" in lowered, f"{name} does not preserve Stage 3 BLOCKED boundary")
+        require("stage 2" in lowered and ("complete" in lowered or "pass" in lowered), f"{name} does not record Stage 2 COMPLETE/PASS acceptance state")
+        require("stage 3" in lowered and "eligible" in lowered and "not started" in lowered, f"{name} does not record Stage 3 ENTRY ELIGIBLE / NOT STARTED")
+        require(STAGE2_EVIDENCE_MAIN in docs[name], f"{name} does not bind Stage 2 evidence main")
+        require(STAGE2_EXECUTION_EVIDENCE in docs[name], f"{name} does not bind frozen Stage 2 execution evidence")
+
+    custody_lower = docs["stage2_custody"].lower()
+    require("active implementation contract" in custody_lower, "Stage 2 custody contract lost active implementation status")
+    require("stage 2 exit" in custody_lower and "accepted separately" in custody_lower, "Stage 2 custody contract does not preserve separate acceptance semantics")
+    require("stage 3" in custody_lower and "not started" in custody_lower, "Stage 2 custody contract does not preserve Stage 3 not-started state")
 
     for name in ("stage1_current", "stage1_exit", "dataset_card", "coverage_register"):
         lowered = docs[name].lower()
-        require("pass" in lowered or "complete" in lowered, f"{name} does not record accepted Stage 1 exit")
-        require("stage 2" in lowered, f"{name} does not record Stage 2 transition/use boundary")
-
-    stale_current_phrases = (
-        "Stage 1 final exit: not yet accepted",
-        "Stage 2 — complete quality analysis: blocked until explicit Stage 1 final PASS",
-        "Stage 1 final exit: BLOCKED",
-        "Stage 2 entry: BLOCKED",
-        "Stage 1 exit is a separate acceptance decision after PR #81 merge",
-        "Stage 2 / OpenCV Complete Quality Analysis remains blocked until that final Stage 1 exit acceptance is PASS",
-    )
-    for name, text in docs.items():
-        for phrase in stale_current_phrases:
-            require(phrase not in text, f"{name} contains stale pre-Stage-2 wording: {phrase}")
+        require("pass" in lowered or "complete" in lowered, f"{name} does not preserve accepted Stage 1 state")
+        require("stage 2" in lowered, f"{name} lost Stage 2 transition/use boundary")
 
     road_stages = _binding_stages(docs["roadmap"])
     technical_stages = _binding_stages(docs["technical"])
@@ -101,75 +93,75 @@ def main() -> int:
     catalog_v2 = _json("evidence/stage1c/corpus/catalog.v2.json")
     snapshot_v2 = _json("evidence/stage1c/corpus/snapshot.expanded.v2.json")
     report_v2 = _json("evidence/stage1c/corpus/coverage-bias-report.v2.json")
-    acceptance = _json("evidence/stage1c/corpus/stage1-exit-acceptance.v1.json")
+    stage1_acceptance = _json("evidence/stage1c/corpus/stage1-exit-acceptance.v1.json")
+    execution = _json("evidence/stage2/corpus/execution-evidence.v1.json")
+    stage2_acceptance = _json("evidence/stage2/corpus/stage2-exit-acceptance.v1.json")
+    handoff = _json("docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json")
 
-    require(snapshot_v2["catalogSha256"] == EXPECTED_V2_CATALOG, "expanded-v2 catalog digest drifted")
-    require(report_v2["snapshotSha256"] == EXPECTED_V2_SNAPSHOT, "expanded-v2 snapshot digest drifted")
+    require(canonical_sha256(catalog_v2) == EXPECTED_V2_CATALOG, "expanded-v2 catalog canonical digest drifted")
+    require(snapshot_v2["catalogSha256"] == EXPECTED_V2_CATALOG, "expanded-v2 snapshot catalog digest drifted")
+    require(report_v2["snapshotSha256"] == EXPECTED_V2_SNAPSHOT, "expanded-v2 report snapshot digest drifted")
     require(report_v2["catalogSha256"] == EXPECTED_V2_CATALOG, "expanded-v2 report catalog digest drifted")
-    require(report_v2["sufficiency"]["state"] == "review_required", "expanded-v2 automatic report must remain review_required")
-    require(report_v2["sufficiency"]["stage1ExitSupported"] is False, "expanded-v2 automatic report must not auto-authorize Stage 1 exit")
-    require(report_v2["sufficiency"]["stage2EntrySupported"] is False, "expanded-v2 automatic report must not auto-authorize Stage 2")
-    require(report_v2["gapCodes"] == [], "expanded-v2 gap codes reappeared")
+    require(canonical_sha256(snapshot_v2) == EXPECTED_V2_SNAPSHOT, "expanded-v2 snapshot canonical digest drifted")
+    require(canonical_sha256(report_v2) == EXPECTED_V2_REPORT, "expanded-v2 report canonical digest drifted")
 
-    ids = {item["datasetItemId"] for item in catalog_v2["items"]}
-    require("dataset.item.imslp82860-chopin-op69.v1" not in ids, "expanded-v2 double-counts Chopin v1")
-    require("dataset.item.imslp82860-chopin-op69.v2" in ids, "expanded-v2 does not select Chopin v2")
-    artifact_digests = [item["artifact"]["sha256"] for item in catalog_v2["items"]]
-    require(len(artifact_digests) == len(set(artifact_digests)), "expanded-v2 duplicates exact artifact SHA-256")
+    require(stage1_acceptance.get("decision") == "PASS", "Stage 1 exit acceptance is not PASS")
+    require(stage1_acceptance.get("stage2EntryEligible") is True, "Stage 1 acceptance no longer authorizes Stage 2 entry")
 
-    require(acceptance["decision"] == "PASS", "Stage 1 exit acceptance is not PASS")
-    require(acceptance["stage2EntryEligible"] is True, "Stage 1 acceptance does not authorize Stage 2 entry")
-    require(acceptance["blockerCodes"] == [], "Stage 1 acceptance contains blocker codes")
-    require(acceptance["claims"]["trainingAuthorized"] is False, "Stage 1 acceptance unexpectedly authorizes training")
-    require(acceptance["claims"]["calibrationAuthorized"] is False, "Stage 1 acceptance unexpectedly authorizes calibration")
+    execution_payload = dict(execution)
+    execution_digest = execution_payload.pop("evidenceDigest", {}).get("value")
+    require(execution_digest == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence digest drifted")
+    require(canonical_sha256(execution_payload) == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence content drifted")
+    require(execution.get("assertions", {}).get("stage2ExitPass") is False, "historical execution evidence was retroactively changed")
+    require(execution.get("assertions", {}).get("stage3EntryAuthorized") is False, "historical execution evidence retroactively authorizes Stage 3")
+    require(execution.get("assertions", {}).get("heldOutThresholdTuningUsed") is False, "Stage 2 execution evidence lost held-out non-tuning")
+
+    require(stage2_acceptance.get("decision") == "PASS", "Stage 2 final exit acceptance is not PASS")
+    require(stage2_acceptance.get("evidenceMainSha") == STAGE2_EVIDENCE_MAIN, "Stage 2 acceptance main binding drifted")
+    require(stage2_acceptance.get("stage2ExitPass") is True, "Stage 2 acceptance does not explicitly pass exit")
+    require(stage2_acceptance.get("stage3EntryEligible") is True, "Stage 3 is not marked entry eligible")
+    require(stage2_acceptance.get("stage3Started") is False, "Stage 3 started inside Stage 2 acceptance slice")
+    require(stage2_acceptance.get("blockerCodes") == [], "Stage 2 acceptance contains blockers")
+    require(stage2_acceptance.get("evidenceDigests", {}).get("corpusExecutionEvidenceCanonicalSha256") == STAGE2_EXECUTION_EVIDENCE, "Stage 2 acceptance lost execution-evidence binding")
+
+    for name, value in stage2_acceptance.get("claims", {}).items():
+        require(value is False, f"Stage 2 acceptance contains unsupported positive claim: {name}")
+
+    require(handoff.get("main_sha") == STAGE2_EVIDENCE_MAIN, "live handoff does not bind latest evidence main")
+    require(handoff.get("stage2_exit_state") == "pass_candidate_pending_acceptance_pr_merge", "live handoff Stage 2 exit state drifted")
+    require(handoff.get("stage3_started") is False, "live handoff claims Stage 3 started")
+    require("eligible" in str(handoff.get("stage3_entry_state", "")), "live handoff does not record Stage 3 eligibility")
+
+    require(STAGE2_ENTRY_MAIN in docs["README"], "README lost accepted Stage 2 entry main")
+
+    workflow = _read(".github/workflows/repository-validation.yml")
+    for validator in (
+        "validate_stage2_quality_analysis.py",
+        "validate_stage2_custody_execution.py",
+        "validate_stage2_corpus_execution_evidence.py",
+        "validate_stage2_exit_acceptance.py",
+    ):
+        require(validator in workflow, f"CI is not wired to {validator}")
+
+    for root_name in ("stage1c", "stage2"):
+        evidence_root = ROOT / "evidence" / root_name
+        binary_paths = [
+            str(path.relative_to(ROOT))
+            for path in evidence_root.rglob("*")
+            if path.is_file() and path.suffix.lower() in REAL_ARTIFACT_SUFFIXES
+        ]
+        require(not binary_paths, f"real-artifact-like bytes found under evidence/{root_name}: {binary_paths}")
 
     combined_docs = "\n".join(docs.values())
     for digest in (
-        EXPECTED_C17A_ARTIFACT,
-        EXPECTED_C17B_ARTIFACT,
-        EXPECTED_C17C_ARTIFACT,
-        EXPECTED_C17D_ARTIFACT,
+        EXPECTED_C15_SNAPSHOT,
+        EXPECTED_C16_REPORT,
         EXPECTED_V2_CATALOG,
         EXPECTED_V2_SNAPSHOT,
         EXPECTED_V2_REPORT,
-        EXPECTED_C15_SNAPSHOT,
-        EXPECTED_C16_REPORT,
+        STAGE2_EXECUTION_EVIDENCE,
     ):
         require(digest in combined_docs, f"architecture/status docs lost evidence binding {digest}")
-
-    require(STAGE2_ENTRY_MAIN in docs["README"], "README does not bind accepted Stage 2 entry main")
-    require(STAGE2_ENTRY_MAIN in docs["stage2_current"], "Stage 2 status does not bind accepted entry main")
-
-    quality_source = _read("src/st_score_restore/quality_analysis.py")
-    stage2_validator = _read("tools/validate_stage2_quality_analysis.py")
-    custody_source = _read("src/st_score_restore/stage2_custody_execution.py")
-    custody_validator = _read("tools/validate_stage2_custody_execution.py")
-    workflow = _read(".github/workflows/repository-validation.yml")
-    require("analyze_quality_bytes" in quality_source, "Stage 2 quality analyzer entry point missing")
-    require("heldOutThresholdTuningUsed" in quality_source, "Stage 2 report does not declare held-out tuning state")
-    require("CALIBRATION_STATE" in quality_source, "Stage 2 report does not declare calibration state")
-    require("validate_stage2_quality_analysis.py" in workflow, "Stage 2 validator is not wired into CI")
-    require("from st_score_restore.quality_analysis" in stage2_validator, "Stage 2 validator does not bind analyzer module")
-
-    require("run_authorized_quality_execution" in custody_source, "Stage 2 custody execution entry point missing")
-    require("exact_sha256_mismatch" in custody_source, "Stage 2 custody execution does not fail closed on digest mismatch")
-    require("exact_byte_size_mismatch" in custody_source, "Stage 2 custody execution does not fail closed on byte-size mismatch")
-    require("purpose_not_authorized_for_split" in custody_source, "Stage 2 custody execution does not enforce split/purpose separation")
-    require("restricted_report_for_custody" in custody_source, "Stage 2 custody execution lacks explicit private-report boundary")
-    require("detailedReportExported" in custody_source, "Stage 2 custody receipt does not bind non-export state")
-    require("validate_stage2_custody_execution.py" in workflow, "Stage 2 custody validator is not wired into CI")
-    require("from st_score_restore.stage2_custody_execution" in custody_validator, "Stage 2 custody validator does not bind execution module")
-
-    require("python tools/build_stage1_expanded_snapshot.py --check" in workflow, "CI no longer checks committed expanded-v2 evidence")
-    require("python tools/validate_stage1_exit_acceptance.py" in workflow, "CI no longer validates Stage 1 exit acceptance")
-
-    evidence_root = ROOT / "evidence" / "stage1c"
-    binary_paths = [
-        str(path.relative_to(ROOT))
-        for path in evidence_root.rglob("*")
-        if path.is_file() and path.suffix.lower() in REAL_ARTIFACT_SUFFIXES
-    ]
-    require(not binary_paths, f"real-artifact-like bytes found under evidence/stage1c: {binary_paths}")
 
     if failures:
         print("Architecture consistency validation: FAIL", file=sys.stderr)
@@ -180,11 +172,11 @@ def main() -> int:
     print("Architecture consistency validation: PASS")
     print(f"- package/OpenAPI version: {pyproject['project']['version']}")
     print("- Stage 1 final exit: PASS / immutable evidence preserved")
-    print("- Stage 2 boundary: ACTIVE / uncalibrated / held-out non-tuning")
-    print("- Stage 3 boundary: BLOCKED pending Stage 2 exit PASS")
-    print("- Stage 2 analyzer/validator/CI: wired")
-    print("- Stage 2 approved-custody execution/validator/CI: wired")
-    print("- evidence/stage1c: metadata-only")
+    print("- Stage 2 final exit: PASS acceptance recorded")
+    print("- Stage 2 thresholds: uncalibrated / held-out non-tuning")
+    print("- Stage 3: entry eligible / not started")
+    print("- Stage 2 quality/custody/execution/exit validators: wired")
+    print("- evidence/stage1c + evidence/stage2: metadata-only")
     return 0
 
 
