@@ -1,24 +1,31 @@
 # Stage 2 Current Status — Complete Quality Analysis
 
-**Status:** ACTIVE / DEVELOPMENT-CORPUS HARDENING  
+**Status:** ACTIVE / APPROVED-CUSTODY EXECUTION CONTRACT  
 **As of:** 2026-09-02  
 **Tracking:** Issue #83  
 **Stage 1 accepted entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
-**Production main:** `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`  
-**PR #84:** MERGED  
-**Post-merge main CI:** Run #207 (`33599776059`) — Python 3.11 / 3.12 SUCCESS  
-**Active hardening branch:** `stage2-dev-corpus-hardening`  
+**Production main:** `91aba998dc31bc415193a3e8a9e8e40ad0dc73ba`  
+**PR #84:** MERGED — Stage 2 quality-analysis core  
+**PR #85:** MERGED — development-corpus hardening  
+**PR #85 post-merge CI:** Run #211 (`33601886396`) — Python 3.11 / 3.12 SUCCESS  
+**Active branch:** `stage2-approved-custody-execution`  
+**Active PR:** #86 — Draft  
+**PR #86 preliminary CI:** Run #214 (`33603120734`) — Python 3.11 / 3.12 SUCCESS  
 **Stage 3:** BLOCKED until explicit Stage 2 exit PASS
 
 ## Entry and production baseline
 
-Stage 1 final exit is PASS and effective. PR #82 established the Stage 2 entry decision against accepted main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`. PR #84 subsequently merged the deterministic OpenCV Stage 2 quality-analysis core and architecture reconciliation into production main `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`. Repository validation Run #207 succeeded on that resulting exact main SHA on Python 3.11 and 3.12, including the Stage 2 contract validator, full tests and compile.
+Stage 1 final exit remains PASS and effective. PR #82 established Stage 2 entry against accepted main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
+
+PR #84 merged the deterministic OpenCV quality-analysis core. PR #85 then merged the development-corpus hardening that corrected localized glare semantics and page-boundary eligibility without using held-out data to tune thresholds. The resulting production main is `91aba998dc31bc415193a3e8a9e8e40ad0dc73ba`; post-merge Repository validation Run #211 passed on Python 3.11 and 3.12.
+
+Production analyzer version is `0.1.1`. Thresholds remain explicitly `uncalibrated_engineering_defaults`; Stage 4 owns real-data calibration.
 
 Historical Stage 1 C15/C16 evidence remains immutable. Real corpus score/PDF/image bytes remain outside ordinary Git.
 
-## Authorized-corpus custody recheck
+## Accepted corpus custody identity
 
-The accepted five-item Stage 1 expanded-v2 corpus was re-materialized from approved Google Drive custody only for transient Stage 2 evaluation. Exact byte size and SHA-256 identity matched the accepted catalog for all five items before any analysis decision was made.
+The accepted five-item Stage 1 expanded-v2 corpus was previously re-materialized transiently from approved custody and all five objects matched their admitted exact SHA-256 and byte size. That identity recheck does not itself constitute Stage 2 execution evidence.
 
 The accepted corpus remains:
 
@@ -30,61 +37,67 @@ The accepted corpus remains:
 
 The separate user-provided `Fly Me to the Moon` sensitive phone photo is not part of this accepted corpus and is not used by Stage 2.
 
-No real corpus bytes are committed to Git. Transient evaluation copies are not repository fixtures.
+## PR #86 — approved-custody execution boundary
 
-## Development-corpus hardening finding
+PR #86 adds a fail-closed runtime boundary before real corpus bytes may reach the Stage 2 analyzer. It requires:
 
-The first real development-raster exercise used C17A only. It exposed two measurement-semantics defects in analyzer `0.1.0`:
+1. canonical catalog validation;
+2. an admitted `external_available` artifact with approved dataset review and no active revocation/deletion state;
+3. valid retention on the execution date;
+4. exact Stage 2 split/purpose mapping:
+   - `development` → `quality_evaluation`;
+   - `held_out` → `held_out_evaluation`;
+5. a granted purpose permission valid on the execution date;
+6. enforcement of split, storage, environment, retention and external-export restrictions;
+7. exact admitted SHA-256 match;
+8. exact admitted byte-size match;
+9. deterministic public-safe receipt generation with no quality metrics/findings;
+10. custody-only handling for detailed real-corpus analyzer output.
 
-1. predominantly white score paper could be scored as glare because global white clipping contributed directly to the glare score;
-2. a small notation-region quadrilateral could be selected as a page boundary because page geometry lacked a minimum page-area eligibility rule.
+A source identity or permission mismatch fails before analysis.
 
-These are algorithm correctness defects, not Stage 4 calibration decisions. No held-out metric or threshold was used to choose the fixes.
+The default execution environment reuses the existing catalog-governed `stage1_offline` custody environment code. This is compatibility with the admitted restriction vocabulary, not a claim that Stage 2 is part of Stage 1.
 
-The focused hardening branch updates analyzer version to `0.1.1` and:
+## Output and held-out boundary
 
-- scores glare from **localized clipped-bright excess relative to the page/tile baseline**, while retaining global clipped fraction as evidence only;
-- requires a deterministic minimum page-area ratio before a quadrilateral may become page-boundary evidence;
-- fails perspective/crop closed to `not_assessed` when no qualifying page quadrilateral exists;
-- adds synthetic regressions that a white score background is not glare and a small inner rectangle is not a page boundary;
-- retains the existing regression that a large localized clipped patch is probable glare.
+Stage 2 execution does not grant publication. Public repository evidence may contain only the redacted execution receipt and approved opaque references; detailed quality metrics/findings remain custody-only unless separately authorized.
 
-The new page-area rule and glare semantics remain uncalibrated engineering defaults. Stage 4 still owns real-data threshold calibration.
+C17D remains held-out, `managed_restricted`, and explicitly `external_export=false`. Its detailed report must not be exported to public Git. Held-out C17C/C17D results must not tune thresholds or choose Stage 2 hardening constants.
 
-## Held-out boundary
+Training and calibration remain unauthorized by this execution contract.
 
-Held-out artifacts are not used to tune Stage 2 thresholds or choose hardening constants. In particular, C17D remains held-out and `managed_restricted`; its permission includes `external_export=false`.
+## PDF boundary
 
-Therefore detailed C17D-derived Stage 2 metrics or reports must not be exported to public Git. Any detailed held-out execution evidence must remain in approved private/restricted custody. Public repository evidence may record only safe execution-state facts and opaque/private evidence references permitted by the custody contract.
+Digital PDFs remain vector-preserved and may return `not_applicable_vector_pdf` without rasterization.
 
-C17C likewise remains held-out evaluation material and is not used for threshold selection.
+Accepted scanned/hybrid PDFs may pass custody/source-identity authorization but pixel analysis remains deferred until the approved Stage 3 renderer exists. Their controlled Stage 2 result is `deferred_stage3_renderer` with `pdf_renderer_not_available` rather than silently pulling Stage 3 work forward.
 
-## Current analyzer safety boundary
+This deferred result does not authorize Stage 3.
 
-Stage 2 analysis:
+## PR #86 preliminary verification
 
-- never modifies source bytes;
-- uses no generative operation or symbol completion;
-- performs no OMR recognition/correction;
-- does not establish musical correctness;
-- does not establish restoration effectiveness or OMR improvement;
-- does not infer training or calibration permission;
-- uses explicitly uncalibrated engineering defaults;
-- does not tune thresholds from held-out data;
-- preserves digital PDFs as vector content;
-- fails closed for scanned/hybrid PDF pixel analysis until the Stage 3 renderer boundary.
+Run #212 initially failed only in the new custody validator because its synthetic deidentified C17D fixture changed the artifact SHA-256 without changing the linked `privacy.deidentifiedArtifactSha256`. The canonical catalog validator correctly rejected that inconsistency. The validator was not weakened; both synthetic fixture builders were corrected to preserve the deidentification digest invariant.
 
-Staff/TAB visibility remains geometric image evidence only, not notation identity or OMR correctness.
+Run #214 then passed on Python 3.11 and 3.12, including:
+
+- repository and architecture consistency;
+- all historical Stage 1 admission/freeze/exit gates;
+- Stage 2 quality-analysis validator;
+- new approved-custody execution validator;
+- full repository tests;
+- Python compile.
+
+This status update intentionally moves PR #86 head. Therefore Run #214 is preliminary evidence only; a fresh exact-head CI run is required after the final status/live-handoff reconciliation.
 
 ## Stage 2 exit remains open
 
-Stage 2 is not complete after this hardening slice. Exit still requires:
+Stage 2 is **not complete** merely because the custody contract passes synthetic CI. Exit still requires:
 
-1. exact-head Python 3.11 / 3.12 CI and post-merge validation for the hardening slice;
-2. an approved-custody execution contract that verifies exact digest/size and purpose permission before analysis;
-3. safe handling of development versus held-out output, including restricted no-export evidence;
-4. deterministic corpus execution evidence without moving real artifact bytes into Git;
-5. limitations review;
-6. a separate Stage 2 exit acceptance bound to exact main and CI evidence.
+1. PR #86 final exact-head CI and post-merge main CI;
+2. real approved-custody execution against the five accepted items using the merged contract;
+3. deterministic public-safe execution receipts without real artifact bytes in Git;
+4. custody-only handling of detailed reports, especially C17D no-export evidence;
+5. explicit review of the intentional scanned-PDF Stage 3 deferrals and other limitations;
+6. a separate evidence-bound Stage 2 exit acceptance tied to exact main and CI evidence.
 
 Until those gates pass, Stage 3 remains **BLOCKED**.
