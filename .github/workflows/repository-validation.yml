@@ -178,6 +178,9 @@ jobs:
       - name: Validate Stage 3 authorized PDF execution boundary
         run: python tools/validate_stage3_custody_execution.py
 
+      - name: Validate Stage 3 real-corpus execution runner
+        run: python tools/validate_stage3_real_corpus_runner.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v

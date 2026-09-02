@@ -3,33 +3,24 @@
 **Status:** ACCEPTED Stage 1 evidence; historical C16 preserved  
 **As of:** 2026-09-02  
 **Stage 1 final exit:** PASS / COMPLETE  
-**Stage 2:** ACTIVE  
-**Stage 3:** BLOCKED pending Stage 2 exit PASS
+**Stage 2:** COMPLETE / PASS / production-effective  
+**Stage 3:** ACTIVE under Issue #90  
+**Stage 4:** NOT STARTED / BLOCKED pending Stage 3 final exit PASS
 
 ## Measurement boundary
 
-Coverage and bias findings here are metadata-derived. They do not inspect musical correctness, prove restoration effectiveness or measure OMR accuracy. Stage 2 now performs deterministic visual quality analysis separately.
+Coverage and bias findings here are metadata-derived. They do not inspect musical correctness, prove restoration effectiveness or measure OMR accuracy. Later Stage 2/3 work does not retroactively change these Stage 1 measurements.
 
 Two evidence generations coexist deliberately:
 
 - historical C16: immutable `snapshot.freeze.v1` + `coverage-bias-report.v1.json`, result `insufficient`;
 - accepted expanded-v2: `snapshot.expanded.v2.json` + `coverage-bias-report.v2.json`, accepted through separate Stage 1 exit governance evidence.
 
-Historical evidence is not rewritten when later coverage improves.
+Historical evidence is not rewritten when later coverage or processing capability improves.
 
 ## Historical C16 result
 
-Historical C16 measured 2 real items / 12 pages and recorded:
-
-- `coverage.missing-combined-staff-tab`
-- `coverage.missing-degraded-source`
-- `coverage.missing-guitar-tab`
-- `coverage.missing-phone-photo`
-- `coverage.single-item-development`
-- `coverage.single-item-held-out`
-- `coverage.two-item-corpus`
-
-C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
+Historical C16 measured 2 real items / 12 pages and recorded seven coverage gap codes. C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`; its bound C15 snapshot remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`.
 
 ## Accepted expanded-v2 coverage
 
@@ -46,14 +37,12 @@ Expanded-v2 contains 5 real items / 0 synthetic items with 3 development source 
 
 Aggregate invariants:
 
-- development: 3 items / 3 source families / 7 pages;
-- held out: 2 items / 2 source families / 9 pages;
-- total pages: 16;
+- development 3 items / 3 families / 7 pages;
+- held out 2 items / 2 families / 9 pages;
+- total pages 16;
 - exact artifact digests unique;
-- cross-split source-family leakage: none;
+- cross-split source-family leakage none;
 - Chopin v2 selected once, v1 excluded.
-
-The seven historical C16 gap codes are absent from expanded-v2. This does not alter historical C16.
 
 Canonical v2 digests:
 
@@ -63,18 +52,7 @@ Canonical v2 digests:
 
 ## Bias findings
 
-Expanded-v2 records:
-
-| Finding code | State | Interpretation |
-|---|---|---|
-| `capture_condition_concentration` | `controlled` | multiple capture kinds present |
-| `degradation_coverage_gap` | `controlled` | non-`none` degradation present |
-| `held_out_coverage_limit` | `controlled` | two held-out source families |
-| `notation_layout_concentration` | `controlled` | staff, TAB and combined layouts present |
-| `source_family_leakage_risk` | `controlled` | split families/digests separated |
-| `source_selection_concentration` | `observed` | public-domain majority with one licensed item |
-
-`controlled` means the specific deterministic concentration check no longer triggers; it does not establish absence of bias.
+Expanded-v2 records controlled checks for capture condition, degradation coverage, held-out coverage, notation layout and source-family leakage, plus observed `source_selection_concentration`. `controlled` means the deterministic concentration check no longer triggers; it does not establish absence of bias.
 
 ## Sufficiency interpretation
 
@@ -87,8 +65,8 @@ The expanded-v2 automatic report deliberately remains:
 
 Stage 1 PASS is therefore a separate evidence-bound governance acceptance and not a rewrite of automatic report fields.
 
-Unsupported claims remain: corpus representativeness, absence of bias, restoration effectiveness, OMR improvement, musical correctness, model-training permission and calibration permission.
+Unsupported claims remain corpus representativeness, absence of bias, restoration effectiveness, OMR improvement, musical correctness, model-training permission and calibration permission.
 
-## Stage 2 boundary
+## Later-stage boundary
 
-Stage 2 may use the accepted corpus for the approved quality-analysis evaluation purpose through approved custody. Held-out items remain evaluation-only and cannot tune thresholds. Stage 2 metrics and results do not retroactively change Stage 1 evidence.
+Stage 2 subsequently completed PASS using approved custody for its authorized quality-analysis purpose. Stage 3 is now ACTIVE and may use only the exact purposes granted under its own governance boundary. Beethoven/Barley Stage 3 purpose grants are a separate overlay and do not alter this Stage 1 register or `catalog.v2.json`. Held-out items remain evaluation-only and cannot tune Stage 2/3 thresholds, page policy or hardening constants.

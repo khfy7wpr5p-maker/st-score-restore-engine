@@ -1,40 +1,18 @@
 # ST Score Restore Engine — Technical Specification
 
 **Status:** Current architecture; Stage 3 ACTIVE  
-**Version:** 0.7.1-doc  
+**Version:** 0.8.1-doc  
 **Date:** 2026-09-02  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
-**Stage 3 core main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`
+**Production main before active PR #99:** `6ebe160309c562e9841a3c313d5ca507592f1386`
 
-## 1. Scope
+## 1. Scope and invariants
 
-ST Score Restore Engine is a safety-first visual restoration and validation service for music-score and guitar-TAB documents. Supported intake families include PDF, JPG/JPEG, PNG and phone-captured score images.
+ST Score Restore Engine is a safety-first visual restoration and validation service for music-score and guitar-TAB documents. It is not an OMR engine.
 
-This repository is not an OMR engine. It produces visual analysis and derivative evidence. Downstream OMR occurs only after a selected visual source crosses ScoreMosaic Safe Intake.
+Source bytes are immutable; exact SHA-256 defines artifact identity; derivatives never silently replace sources; rights/privacy/purpose/retention/provenance/custody are independent fail-closed gates; historical Stage 1/2 evidence is immutable; real corpus and derivative bytes remain outside ordinary Git; held-out data never tunes Stage 2/3 thresholds, page policy, hardening constants or renderer/resource limits; vector/hybrid PDF content is never silently rasterized; CI is exact-head scoped; Stage 4 remains blocked pending explicit Stage 3 final exit PASS.
 
-## 2. Architectural invariants
-
-1. Source bytes are immutable.
-2. A derivative never silently replaces the source.
-3. Music-score/TAB preservation has veto priority over cosmetic improvement.
-4. Safety validation precedes comparator eligibility.
-5. Rejected/unsupported candidates cannot win and the immutable original remains selectable.
-6. Exact SHA-256 is the artifact identity boundary.
-7. Rights, privacy, purpose, retention, provenance and custody remain independent fail-closed gates.
-8. Evaluation admission does not imply calibration, training or publication permission.
-9. Real corpus artifact bytes remain outside ordinary Git.
-10. Historical C15/C16 and Stage 2 execution evidence are immutable.
-11. CI evidence is exact-head scoped; head movement invalidates it.
-12. Stage 1 is COMPLETE / PASS.
-13. Stage 2 is COMPLETE / PASS / production-effective; its thresholds remain uncalibrated engineering defaults.
-14. Held-out data may not tune Stage 2/3 thresholds or hardening constants.
-15. Stage 3 is ACTIVE and owns the explicit multi-page PDF renderer boundary.
-16. Vector PDF page content must not be silently rasterized.
-17. Renderer capability never grants dataset purpose permission.
-18. Stage 4 is NOT STARTED / BLOCKED until explicit Stage 3 exit PASS.
-
-## 3. Processing architecture
+## 2. Processing architecture
 
 ```text
 Input document
@@ -55,165 +33,82 @@ OpenCV restoration candidate
     ↓
 Music-score / TAB safety validation
     ↓
-Comparator eligibility
-    ↓
-Original-aware selection
+Comparator eligibility / original fallback
     ↓
 Selected visual source variant
     ↓
-ScoreMosaic Safe Intake
-    ↓
-OMR → MusicXML
+ScoreMosaic Safe Intake → OMR → MusicXML
 ```
 
-ADR 0015 remains binding for validation/comparator/original-fallback ordering. ADR 0017 defines the Stage 3 PDF renderer and page-policy boundary.
+ADR 0015 remains binding for validation/comparator/original-fallback ordering. ADR 0017 defines the Stage 3 PDF renderer/page-policy boundary.
 
-## 4. Runtime baseline
+## 3. Runtime baseline
 
-- Python: `>=3.11,<3.13`;
-- CI: Python 3.11 and 3.12;
-- API: `0.5.0`;
-- OpenCV: `opencv-python-headless==4.13.0.92`;
-- NumPy: `2.3.5`;
-- PDF renderer binding: `pypdfium2==5.13.0` / PDFium;
-- source identity: exact SHA-256;
-- ordinary Git real corpus artifact bytes: zero.
+- Python `>=3.11,<3.13`
+- CI Python 3.11 / 3.12
+- API `0.5.0`
+- OpenCV `opencv-python-headless==4.13.0.92`
+- NumPy `2.3.5`
+- PDF renderer `pypdfium2==5.13.0` / PDFium
+- ordinary Git real corpus artifact bytes: zero
 
-## 5. Stage 1 accepted data boundary
+## 4. Stage 1 accepted boundary
 
-Stage 1 final acceptance remains at `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`. Accepted Stage 2 entry main: `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
+Stage 1 is COMPLETE / PASS. Accepted Stage 2 entry main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
 
-Expanded-v2 remains 5 real / 0 synthetic, development 3 items / 3 source families and held-out 2 items / 2 source families, with no source-family leakage or duplicate exact artifact digest.
+Canonical v2 SHA-256: catalog `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`; snapshot `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`; coverage report `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`. Historical C15/C16 remain `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476` / `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
-Canonical v2 SHA-256 values:
+## 5. Stage 2 Complete Quality Analysis
 
-- catalog: `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
-- snapshot: `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
-- coverage report: `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
+Stage 2 is COMPLETE / PASS / production-effective. Execution-evidence main `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; final acceptance / Stage 3 entry main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`; post-merge Run #228 (`33609061197`) Python 3.11/3.12 SUCCESS. Frozen execution evidence digest `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
 
-Historical C15 snapshot remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; historical C16 report remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
+Historical Stage 2 PDF deferrals/vector-preservation outcomes remain immutable now that Stage 3 owns the renderer.
 
-## 6. Stage 2 Complete Quality Analysis
-
-Stage 2 is COMPLETE / PASS / production-effective. Production analyzer version is `0.1.1`; approved-custody execution contract version is `0.1.0`.
-
-Frozen public execution evidence is `evidence/stage2/corpus/execution-evidence.v1.json`, canonical digest:
-
-`78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`
-
-Five accepted items matched exact SHA-256 and byte size before execution:
-
-- Beethoven scanned PDF — historical `deferred_stage3_renderer` / `pdf_renderer_not_available`;
-- C17A combined staff+TAB PNG — `analyzed`;
-- C17B digital guitar-TAB PDF — `not_applicable_vector_pdf`, vector preserved;
-- C17C held-out Chopin scanned PDF — historical `deferred_stage3_renderer` / `pdf_renderer_not_available`;
-- C17D held-out deidentified phone-photo JPEG — `analyzed`, `managed_restricted`, export blocked.
-
-Stage 2 evidence main is `ffea7f5aa618187f3cabcfb49801804e3f6658bf`. Final acceptance PR #89 merged to `87198a5a917ab6b3efc277762016a5f5b0dd3aab`; post-merge Run #228 (`33609061197`) passed Python 3.11/3.12.
-
-The earlier execution evidence remains immutable with its historical Stage 3 authorization fields unchanged; final Stage 2 PASS is a separate acceptance layer.
-
-## 7. Stage 3 Multi-page PDF Pipeline
+## 6. Stage 3 Multi-page PDF Pipeline
 
 **State:** ACTIVE under Issue #90.  
-**Entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`.  
-**Entry CI:** Run #228 (`33609061197`) SUCCESS on Python 3.11 / 3.12.  
-**Core merge main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`.  
-**Core post-merge CI:** Run #232 (`33615937390`) SUCCESS on Python 3.11 / 3.12.  
-**Current branch:** `stage3-authorized-pdf-execution`.
+**Core main / CI:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa` / Run #232 (`33615937390`).  
+**Authorized-execution main / CI:** `d834ed42e3f553308aef7f6adb7e8cb873593f0b` / Run #235 (`33618108204`).  
+**Purpose-grant main / CI:** `6ebe160309c562e9841a3c313d5ca507592f1386` / Run #238 (`33620323970`).  
+**Active branch / PR:** `stage3-real-corpus-runner` / **non-draft PR #99**.
 
-### 7.1 Renderer decision
+PR #99 replaces Draft PR #98 after the Draft→Ready GraphQL connector failed on `Repository.fullDatabaseId`. PR #98 was closed unmerged; no merge/review gate was bypassed. Head `7778cdf790daa806efd166d9d3bf1f5a011ecc71` passed Run #243 (`33639819769`) on Python 3.11/3.12 before replacement. This PR-number reconciliation moves the head, so final PR #99 exact-head CI must run again.
 
-ADR 0017 selects PDFium through `pypdfium2==5.13.0`. PR #92 merged the core implementation and Run #232 made it production-effective.
+### 6.1 Page policy
 
-The renderer is used only after immutable input inspection. PDFium provides authoritative Stage 3 page enumeration, page geometry, page-object inspection and raster rendering for eligible pages.
+`src/st_score_restore/pdf_pipeline.py` classifies before rendering: `raster_only` may render; `vector_only` is preserved; `hybrid` is preserved/reviewed; `unknown_or_empty` uses original fallback/review. Unknown content never authorizes rasterization.
 
-### 7.2 Page-level policy
+### 6.2 Resource bounds
 
-`src/st_score_restore/pdf_pipeline.py` classifies page evidence before rendering:
+Uncalibrated engineering defaults only: 200 DPI; 64 pages; 40,000,000 pixels/page; 160,000,000 aggregate pixels; 8,000-pixel maximum dimension; page-object traversal depth 15.
 
-- `raster_only`: image evidence with no detected text/path/shading vector evidence; may render;
-- `vector_only`: text/path/shading evidence without image evidence; preserve vector page, no raster derivative;
-- `hybrid`: image and vector evidence coexist; preserve original page and require review;
-- `unknown_or_empty`: original fallback and review.
+### 6.3 Authorized corpus execution
 
-Form content is traversed only to a bounded depth. Unknown content does not authorize rasterization.
+`src/st_score_restore/stage3_custody_execution.py` requires canonical catalog validation, admitted PDF kind, approved review, non-revoked/non-deletion state, valid retention, exact split-specific purpose/restrictions, exact SHA-256 and exact byte size.
 
-### 7.3 Raster derivative contract
+Development → `pdf_pipeline_evaluation`; held-out → `held_out_evaluation`. Public receipts are redacted; detailed page records, metrics/findings and rendered derivatives remain custody-only.
 
-An eligible raster-only page is rendered as a deterministic PNG derivative. The page record binds:
+### 6.4 Purpose-grant overlay
 
-- exact source SHA-256;
-- source page index;
-- derivative SHA-256;
-- PNG media type;
-- render DPI;
-- pixel dimensions/count;
-- subsequent deterministic Stage 2 quality-analysis result.
+Historical `catalog.v2.json` remains unchanged. Production-effective overlay `evidence/stage3/governance/purpose-grants.v1.json`: grant set `stage3.purpose-grants.beethoven-barley.v1`, canonical SHA-256 `3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8`.
 
-Derivative bytes remain separate from the public-safe manifest. The source PDF remains unchanged and selectable.
+It grants `pdf_pipeline_evaluation` only to exact Beethoven and Barley development artifacts, restricted to development / `managed_standard` / `stage1_offline` / `external_export=false`. Training, calibration, publication, demonstration and held-out permission changes remain unauthorized. Chopin remains existing held-out evaluation only.
 
-### 7.4 Resource bounds
+### 6.5 Real-corpus runner — PR #99
 
-Initial engineering defaults:
+`src/st_score_restore/stage3_real_corpus_execution.py` and `tools/run_stage3_real_corpus_execution.py` implement the fail-closed batch for exactly Beethoven, Barley and Chopin. The runner requires exact renderer/catalog/item identities, keeps source/private-output paths outside ordinary Git, executes Beethoven/Barley through the purpose-grant wrapper and Chopin through held-out custody, and produces redacted public evidence while detailed manifests/metrics/PNG derivatives remain custody-only.
 
-- render DPI 200;
-- maximum pages 64;
-- maximum rendered pixels/page 40,000,000;
-- maximum aggregate rendered pixels 160,000,000;
-- maximum render dimension 8,000 pixels;
-- maximum page-object depth 15.
+The runner records `heldOutThresholdTuningUsed=false`, `stage3ExitPass=false`, and `stage4EntryAuthorized=false`.
 
-Page-count overflow rejects the PDF. Per-page render limits produce fail-closed original fallback/review. These values are uncalibrated and were not tuned with held-out data.
+### 6.6 Stage 3 exit
 
-### 7.5 Determinism and non-claims
+Stage 3 exit is not PASS. It requires final PR #99 exact-head CI, clean review/thread/base/head gates, exact-head merge, post-merge main CI, exact approved custody bytes, production runner execution, public-safe evidence, explicit limitations review and separate versioned exit acceptance.
 
-The Stage 3 manifest records stable source identity, page order, renderer/binding version, configuration digest, page policy, derivative provenance and explicit false claims for OMR, musical correctness, restoration effectiveness, calibration and training authorization.
+## 7. Stage 4 boundary
 
-Stage 3 is a document/rendering pipeline, not an OMR system or musical-correction system.
+**State:** NOT STARTED / BLOCKED pending Stage 3 final exit PASS. Stage 4 owns real-data safety calibration.
 
-### 7.6 Core validation
-
-`tools/validate_stage3_pdf_pipeline.py` and `tests/test_pdf_pipeline.py` use synthetic PDFs only and require deterministic output, source/page provenance, raster-only rendering, vector preservation, original fallback, resource limits and Python 3.11/3.12 compatibility.
-
-### 7.7 Authorized corpus execution boundary
-
-`src/st_score_restore/stage3_custody_execution.py` is a separate Stage 3 execution layer. It does not change historical `stage2_custody_execution.py` behavior.
-
-Before calling `process_pdf_bytes(...)`, it requires:
-
-- canonical dataset catalog validation;
-- admitted PDF input kind;
-- `external_available` artifact state;
-- approved dataset review;
-- non-revoked/non-deletion state;
-- valid retention;
-- exact split-specific purpose;
-- granted/date-valid purpose permission;
-- split/storage/environment/retention/export restrictions;
-- exact artifact SHA-256;
-- exact artifact byte size.
-
-Purpose mapping is normative:
-
-- development → `pdf_pipeline_evaluation`;
-- held-out → `held_out_evaluation`.
-
-`quality_evaluation` is not a substitute for development Stage 3 authorization. General user approval to continue repository development is also not a dataset-purpose grant.
-
-The public receipt contains only source identity, permission binding, renderer/pipeline versions, manifest digest and aggregate page counts. Detailed page records, quality metrics/findings and rendered bytes remain custody-only.
-
-Current accepted development PDF records have `pdf_pipeline_evaluation=not_requested`; they must fail closed. The held-out Chopin record has `held_out_evaluation=granted`, but real execution still requires exact custody bytes. The repository stores only opaque custody locators and metadata, not the real PDF bytes.
-
-`tools/validate_stage3_custody_execution.py` therefore validates split-purpose semantics, exact-byte gating and redaction with synthetic bytes while explicitly retaining `real Stage 3 corpus execution: not complete`.
-
-## 8. Stage 4 boundary
-
-**State:** NOT STARTED / BLOCKED pending Stage 3 exit PASS.
-
-Stage 4 owns real-data threshold calibration. Stage 2/3 engineering defaults must not be described as calibrated.
-
-## 9. Binding development sequence
+## 8. Binding development sequence
 
 ```text
 Stage 1  Real and explicitly authorized test dataset
@@ -230,26 +125,10 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-## 10. Validation commands
+## 9. Required validation
 
-```bash
-python tools/validate_dependency_lock.py
-python tools/validate_repository.py
-python tools/validate_architecture_consistency.py
-python tools/build_stage1_snapshot.py --check
-python tools/evaluate_stage1_coverage_bias.py --check --require-insufficient
-python tools/build_stage1_expanded_snapshot.py --check
-python tools/validate_stage1_exit_acceptance.py
-python tools/validate_stage2_quality_analysis.py
-python tools/validate_stage2_custody_execution.py
-python tools/validate_stage2_corpus_execution_evidence.py
-python tools/validate_stage2_exit_acceptance.py
-python tools/validate_stage3_pdf_pipeline.py
-python tools/validate_stage3_custody_execution.py
-python -m unittest discover -s tests -p "test_*.py" -v
-python -m compileall -q src tools tests
-```
+CI must run dependency/repository/architecture validators, Stage 1/2 accepted-evidence validators, `validate_stage3_pdf_pipeline.py`, `validate_stage3_custody_execution.py`, `validate_stage3_real_corpus_runner.py`, full unit tests and Python compile on 3.11 and 3.12.
 
-## 11. Prohibited scope in Stage 3
+## 10. Prohibited Stage 3 scope
 
-Do not rewrite historical evidence, add real corpus bytes to ordinary Git, infer dataset permission from general approval, infer training/calibration/publication rights, tune thresholds on held-out items, perform OMR/musical inference, silently rasterize vector/hybrid content, or begin Stage 4 calibration.
+Do not rewrite historical evidence, put real corpus/derivative bytes in ordinary Git, infer dataset permission from general approval, tune on held-out data, perform OMR/musical inference, silently rasterize vector/hybrid content, claim musical/restoration/OMR correctness, or begin Stage 4 calibration.
