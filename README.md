@@ -26,6 +26,8 @@ This repository is not an OMR engine. Source bytes remain immutable, exact SHA-2
 
 ## Current production and stage state
 
+Accepted Stage 2 entry main is `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
+
 - **Stage 1 — real and explicitly authorized evaluation corpus:** COMPLETE / PASS.
 - **Stage 2 — Complete Quality Analysis:** COMPLETE / PASS acceptance recorded in this slice. The accepted evidence main is `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; post-merge Repository validation Run #221 (`33607016064`) succeeded on Python 3.11 and 3.12.
 - **Stage 3 — multi-page PDF pipeline:** ENTRY ELIGIBLE / NOT STARTED. Stage 3 work must begin only in a new focused branch after the Stage 2 acceptance commit is merged and its own post-merge main CI is green.
