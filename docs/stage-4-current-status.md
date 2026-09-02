@@ -6,13 +6,14 @@
 **Framework production main:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`  
 **Post-merge CI:** Run #259 (`33659753403`) — Python 3.11 / 3.12 SUCCESS  
 **Entry/start decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`  
-**Decision canonical SHA-256:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`
+**Decision canonical SHA-256:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`  
+**Real-data calibration:** BLOCKED / NOT AUTHORIZED
 
 ## What ACTIVE means
 
 Stage 4 has started only for calibration framework and governance work. The production framework can define and validate calibration observations, threshold candidates, reference-label comparisons, deterministic evidence, metrics and anti-leakage behavior.
 
-ACTIVE does **not** mean real-data calibration is authorized or executed.
+ACTIVE does **not** mean real-data calibration has run. Real-data calibration is **not authorized** in the current state.
 
 ## Production framework
 
