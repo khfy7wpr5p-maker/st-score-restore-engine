@@ -7,6 +7,18 @@ import sys
 import tomllib
 
 from st_score_restore.dataset_contract_common import canonical_sha256
+from st_score_restore.stage4_execution_authorization import (
+    AUTHORIZATION_CANONICAL_SHA256,
+    validate_stage4_execution_authorization,
+)
+from st_score_restore.stage4_purpose_grants import (
+    APPROVED_GRANT_CANONICAL_SHA256,
+    validate_stage4_purpose_grants,
+)
+from st_score_restore.stage4_reference_label_acceptance import (
+    ACCEPTANCE_CANONICAL_SHA256,
+    validate_reference_label_acceptance,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,12 +34,19 @@ STAGE3_LIMITATIONS = "5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87
 STAGE3_ACCEPTANCE = "e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90"
 STAGE4_ENTRY_START = "013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8"
 STAGE3_ACCEPTANCE_MAIN = "c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0"
-STAGE3_TRUTH_MAIN = "2aac96faffcf46e71c41cfb2a37b36597e95e664"
 STAGE4_FRAMEWORK_MAIN = "4a5c3db2d767dac235fe12a6bd0e18ba500e7362"
-STAGE4_RUN_ID = 33659753403
-STAGE4_RUN_NUMBER = 259
+STAGE4_FRAMEWORK_RUN_ID = 33659753403
+STAGE4_FRAMEWORK_RUN_NUMBER = 259
+STAGE4_AUTH_MAIN = "76f5643dde72c8cc4b02b517133331e9dea00146"
+STAGE4_AUTH_RUN_ID = 33686039783
+STAGE4_AUTH_RUN_NUMBER = 287
 RENDERER = "pypdfium2==5.13.0"
 BINARY_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".webp"}
+READINESS_BLOCKERS = {
+    "no_real_development_calibration_evidence_is_accepted",
+    "no_real_held_out_evaluation_evidence_is_accepted",
+    "no_stage4_metric_acceptance_target_policy_is_accepted",
+}
 
 
 def read(path: str) -> str:
@@ -78,6 +97,10 @@ def main() -> int:
         "evidence/stage3/corpus/limitations-review.v1.json",
         "evidence/stage3/corpus/stage3-exit-acceptance.v1.json",
         "evidence/stage4/governance/stage4-entry-start.v1.json",
+        "evidence/stage4/governance/purpose-grants.v1.json",
+        "evidence/stage4/governance/real-development-calibration-execution-authorization.v1.json",
+        "evidence/stage4/reference-labels/development-human-label-completion.v1.json",
+        "evidence/stage4/reference-labels/development-reference-bundle-acceptance.v1.json",
         ".github/workflows/repository-validation.yml",
     )
     for path in required_paths:
@@ -105,23 +128,24 @@ def main() -> int:
         lower = text.lower()
         require("stage 3" in lower and "pass" in lower, f"{name} lost Stage 3 PASS")
         require("stage 4" in lower and "active" in lower, f"{name} lost Stage 4 ACTIVE state")
-        require(
-            "framework" in lower and ("governance" in lower or "framework/governance" in lower),
-            f"{name} does not constrain Stage 4 to framework/governance scope",
-        )
-        require(
-            "not authorized" in lower or "calibrationauthorized=false" in lower or "calibration_authorized" in lower,
-            f"{name} lost real-calibration non-authorization",
-        )
-        require(STAGE4_FRAMEWORK_MAIN in text, f"{name} lost Stage 4 framework production main")
+        require(STAGE4_FRAMEWORK_MAIN in text, f"{name} lost Stage 4 framework production anchor")
         require(STAGE4_ENTRY_START in text, f"{name} lost Stage 4 entry/start digest")
 
     for name in ("README", "roadmap", "technical", "audit", "stage3"):
         for digest in (STAGE3_PURPOSE, STAGE3_EXECUTION, STAGE3_LIMITATIONS, STAGE3_ACCEPTANCE):
             require(digest in docs[name], f"{name} lost Stage 3 evidence binding {digest}")
 
-    require("stage 5" in docs["roadmap"].lower() and "blocked" in docs["roadmap"].lower(), "roadmap lost Stage 5 block")
-    require("stage 5" in docs["stage4"].lower() and "blocked" in docs["stage4"].lower(), "Stage 4 status lost Stage 5 block")
+    for name in ("README", "roadmap", "technical", "audit", "stage4"):
+        text = docs[name]
+        lower = text.lower()
+        require(STAGE4_AUTH_MAIN in text, f"{name} lost Stage 4 authorization production main")
+        require(str(STAGE4_AUTH_RUN_NUMBER) in text, f"{name} lost Stage 4 authorization Run #{STAGE4_AUTH_RUN_NUMBER}")
+        require(AUTHORIZATION_CANONICAL_SHA256 in text, f"{name} lost Stage 4 authorization digest")
+        require("authorized" in lower and ("not yet executed" in lower or "executed=false" in lower), f"{name} lost authorized/not-executed distinction")
+        require("private" in lower and "metric" in lower, f"{name} lost private metric dependency")
+        require("stage 5" in lower and "blocked" in lower, f"{name} lost Stage 5 block")
+        for blocker in READINESS_BLOCKERS:
+            require(blocker in text, f"{name} lost readiness blocker {blocker}")
 
     roadmap_sequence = stage_sequence(docs["roadmap"])
     technical_sequence = stage_sequence(docs["technical"])
@@ -146,6 +170,12 @@ def main() -> int:
         canonical_sha256(report) == REPORT and report.get("snapshotSha256") == SNAPSHOT and report.get("catalogSha256") == CATALOG,
         "coverage report v2 digest/binding drifted",
     )
+    historical_safety = [
+        item.get("datasetItemId")
+        for item in catalog.get("items", [])
+        if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
+    ]
+    require(not historical_safety, f"historical catalog was rewritten with later safety-calibration grants: {historical_safety}")
 
     stage1 = load("evidence/stage1c/corpus/stage1-exit-acceptance.v1.json")
     require(stage1.get("decision") == "PASS" and stage1.get("stage2EntryEligible") is True, "Stage 1 acceptance drifted")
@@ -209,59 +239,73 @@ def main() -> int:
         "Stage 3 final acceptance semantics drifted",
     )
 
-    stage4_decision = load("evidence/stage4/governance/stage4-entry-start.v1.json")
+    entry = load("evidence/stage4/governance/stage4-entry-start.v1.json")
     require(
-        stage4_decision.get("decisionDigest", {}).get("value") == STAGE4_ENTRY_START
-        and digest_without(stage4_decision, "decisionDigest") == STAGE4_ENTRY_START,
+        entry.get("decisionDigest", {}).get("value") == STAGE4_ENTRY_START
+        and digest_without(entry, "decisionDigest") == STAGE4_ENTRY_START,
         "Stage 4 entry/start decision digest drifted",
     )
-    require(stage4_decision.get("decision") == "APPROVE_FRAMEWORK_START", "Stage 4 entry/start decision drifted")
-    scope = stage4_decision.get("scope", {})
-    require(scope.get("frameworkImplementationAuthorized") is True, "Stage 4 framework authorization missing")
-    for key in (
-        "realDataCalibrationExecutionAuthorized",
-        "productionThresholdChangesAuthorized",
-        "productionResourceLimitChangesAuthorized",
-        "modelTrainingAuthorized",
-        "publicationAuthorized",
-    ):
-        require(scope.get(key) is False, f"Stage 4 historical start decision unexpectedly authorizes {key}")
-    decision_claims = stage4_decision.get("claims", {})
-    require(decision_claims.get("stage4Started") is False, "historical Stage 4 pre-start decision was rewritten")
-    require(decision_claims.get("calibrationAuthorized") is False, "Stage 4 decision unexpectedly claims calibration authorization")
+    require(entry.get("decision") == "APPROVE_FRAMEWORK_START", "Stage 4 entry/start decision drifted")
+    require(entry.get("scope", {}).get("frameworkImplementationAuthorized") is True, "Stage 4 framework authorization missing")
+    require(entry.get("scope", {}).get("realDataCalibrationExecutionAuthorized") is False, "historical Stage 4 entry was rewritten with later execution authorization")
+    require(entry.get("claims", {}).get("stage4Started") is False, "historical Stage 4 pre-start claim was rewritten")
+    require(entry.get("claims", {}).get("calibrationAuthorized") is False, "historical Stage 4 entry claim was rewritten")
 
-    granted_safety = [
-        item.get("datasetItemId")
-        for item in catalog.get("items", [])
-        if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
-    ]
-    require(not granted_safety, f"catalog now has safety_calibration grants but current truth says blocked: {granted_safety}")
+    purpose_raw = load("evidence/stage4/governance/purpose-grants.v1.json")
+    purpose = validate_stage4_purpose_grants(purpose_raw)
+    require(canonical_sha256(purpose) == APPROVED_GRANT_CANONICAL_SHA256, "Stage 4 purpose-grant overlay digest drifted")
+    require(purpose.get("assertions", {}).get("realDataCalibrationExecutionAuthorized") is False, "historical purpose grant was rewritten with later execution authorization")
+    require(purpose.get("assertions", {}).get("referenceLabelBundleAccepted") is False, "historical purpose grant was rewritten with later acceptance")
+
+    completion = load("evidence/stage4/reference-labels/development-human-label-completion.v1.json")
+    acceptance_raw = load("evidence/stage4/reference-labels/development-reference-bundle-acceptance.v1.json")
+    acceptance = validate_reference_label_acceptance(acceptance_raw, completion)
+    require(canonical_sha256(acceptance) == ACCEPTANCE_CANONICAL_SHA256, "Stage 4 reference acceptance digest drifted")
+    require(acceptance.get("assertions", {}).get("referenceBundleAccepted") is True, "Stage 4 real reference bundle is not accepted")
+    require(acceptance.get("assertions", {}).get("realDataCalibrationExecutionAuthorized") is False, "historical reference acceptance was rewritten with later execution authorization")
+
+    auth_raw = load("evidence/stage4/governance/real-development-calibration-execution-authorization.v1.json")
+    auth = validate_stage4_execution_authorization(auth_raw, purpose_raw, acceptance_raw, completion)
+    require(canonical_sha256(auth) == AUTHORIZATION_CANONICAL_SHA256, "Stage 4 execution-authorization digest drifted")
+    require(auth.get("assertions", {}).get("realDataCalibrationExecutionAuthorized") is True, "Stage 4 exact development execution is not authorized")
+    require(auth.get("assertions", {}).get("realDataCalibrationExecuted") is False, "authorization falsely claims execution")
+    require(auth.get("scope", {}).get("heldOutIncluded") is False, "authorization crossed held-out boundary")
+    require(auth.get("scope", {}).get("heldOutEvaluationAuthorized") is False, "authorization prematurely opened held-out evaluation")
+    require(auth.get("scope", {}).get("heldOutTuningAuthorized") is False, "authorization opened held-out tuning")
+    require(auth.get("scope", {}).get("privateObservationMetricsRequired") is True, "authorization lost private metric requirement")
+    require(auth.get("scope", {}).get("rawObservationMetricsAllowedInOrdinaryGit") is False, "authorization allowed raw metrics in ordinary Git")
 
     handoff = load("docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json")
-    require(handoff.get("main_sha") == STAGE4_FRAMEWORK_MAIN, "live handoff lost Stage 4 framework main")
+    require(handoff.get("main_sha") == STAGE4_FRAMEWORK_MAIN, "live handoff lost historical Stage 4 framework main")
     require(
-        handoff.get("latest_main_ci_run_number") == STAGE4_RUN_NUMBER
-        and handoff.get("latest_main_ci_run_id") == STAGE4_RUN_ID
+        handoff.get("latest_main_ci_run_number") == STAGE4_FRAMEWORK_RUN_NUMBER
+        and handoff.get("latest_main_ci_run_id") == STAGE4_FRAMEWORK_RUN_ID
         and handoff.get("latest_main_ci_status") == "success_python_3_11_and_3_12",
-        "live handoff lost Stage 4 framework post-merge CI",
+        "live handoff lost historical Stage 4 framework post-merge CI",
+    )
+    require(handoff.get("repository_main_sha") == STAGE4_AUTH_MAIN, "live handoff current production main drifted")
+    require(
+        handoff.get("latest_repository_ci_run_number") == STAGE4_AUTH_RUN_NUMBER
+        and handoff.get("latest_repository_ci_run_id") == STAGE4_AUTH_RUN_ID
+        and handoff.get("latest_repository_ci_status") == "success_python_3_11_and_3_12",
+        "live handoff current production CI drifted",
     )
     require(handoff.get("stage3_exit_state") == "pass_effective", "live handoff lost Stage 3 PASS")
-    require(handoff.get("stage4_entry_state") == "active_framework_governance_only", "live handoff Stage 4 state drifted")
-    require(handoff.get("stage4_started") is True, "live handoff does not mark Stage 4 framework started")
+    require(handoff.get("stage4_entry_state") == "active_framework_governance_only", "historical Stage 4 entry-state anchor drifted")
+    require(handoff.get("stage4_started") is True, "live handoff does not mark Stage 4 started")
     require(handoff.get("stage5_entry_state") == "blocked_pending_stage4_exit", "live handoff Stage 5 block drifted")
 
     s4 = handoff.get("stage4", {})
     require(s4.get("tracking_issue") == 104, "live handoff Stage 4 issue binding drifted")
-    require(s4.get("framework_merge_pr") == 105, "live handoff Stage 4 PR binding drifted")
-    require(s4.get("framework_exact_head_sha") == "f1582cccd95e42a1e466ce634ea7019a7f1671d1", "live handoff Stage 4 exact head drifted")
-    require(s4.get("framework_exact_head_ci_run_number") == 258, "live handoff Stage 4 exact-head CI drifted")
     require(s4.get("framework_main_sha") == STAGE4_FRAMEWORK_MAIN, "live handoff Stage 4 framework main drifted")
-    require(s4.get("framework_postmerge_ci_run_number") == STAGE4_RUN_NUMBER, "live handoff Stage 4 post-merge run drifted")
     require(s4.get("framework_production_effective") is True, "live handoff Stage 4 framework not production-effective")
-    require(s4.get("stage4_state") == "active_framework_governance_only" and s4.get("stage4_started") is True, "live handoff Stage 4 active semantics drifted")
+    require(s4.get("execution_authorization_main_sha") == STAGE4_AUTH_MAIN, "live handoff authorization main drifted")
+    require(s4.get("execution_authorization_postmerge_ci_run_number") == STAGE4_AUTH_RUN_NUMBER, "live handoff authorization run drifted")
+    require(s4.get("execution_authorization_canonical_sha256") == AUTHORIZATION_CANONICAL_SHA256, "live handoff authorization digest drifted")
+    require(s4.get("execution_authorization_production_effective") is True, "live handoff authorization not production-effective")
+    require(s4.get("real_data_calibration_execution_authorized") is True, "live handoff lost execution authorization")
+    require(s4.get("calibration_authorized") is True, "live handoff lost development calibration authorization")
     for key in (
-        "real_data_calibration_execution_authorized",
-        "calibration_authorized",
         "real_data_calibration_executed",
         "thresholds_calibrated",
         "resource_limits_calibrated",
@@ -271,17 +315,17 @@ def main() -> int:
         "publication_authorized",
         "held_out_tuning_used",
         "stage5_entry_eligible",
+        "stage5_entry_authorized",
     ):
         require(s4.get(key) is False, f"live handoff unsafe Stage 4 flag became true: {key}")
     require(s4.get("calibration_state") == "uncalibrated_engineering_defaults", "live handoff calibration state drifted")
-    require(
-        s4.get("blocker_codes") == [
-            "no_real_artifact_has_granted_safety_calibration_permission",
-            "no_real_calibration_reference_label_bundle_is_accepted",
-        ],
-        "live handoff Stage 4 blocker set drifted",
-    )
-    require(s4.get("stage4_exit_state") == "not_yet_pass", "live handoff prematurely exits Stage 4")
+    require(set(s4.get("readiness_blocker_codes", [])) == READINESS_BLOCKERS, "live handoff Stage 4 readiness blocker set drifted")
+    require(s4.get("readiness_blocker_count") == 3, "live handoff Stage 4 readiness blocker count drifted")
+    require(s4.get("current_execution_blocker_codes") == ["private_observation_metrics_not_available"], "live handoff execution dependency drifted")
+    require(s4.get("private_observation_metrics_required") is True, "live handoff private metric requirement missing")
+    require(s4.get("private_observation_metrics_available") is False, "live handoff falsely claims private metrics available")
+    require(s4.get("raw_observation_metrics_allowed_in_ordinary_git") is False, "live handoff allows raw metrics in ordinary Git")
+    require(s4.get("stage4_exit_state") == "not_yet_pass" and s4.get("stage4_exit_pass") is False, "live handoff prematurely exits Stage 4")
 
     stage4_code = read("src/st_score_restore/stage4_calibration.py")
     for token in (
@@ -308,6 +352,11 @@ def main() -> int:
         "validate_stage3_real_corpus_execution_evidence.py",
         "validate_stage3_exit_acceptance.py",
         "validate_stage4_entry_start.py",
+        "validate_stage4_purpose_grants.py",
+        "validate_stage4_reference_label_acceptance.py",
+        "validate_stage4_execution_authorization.py",
+        "validate_stage4_exit_readiness.py",
+        "validate_stage4_current_truth.py",
     )
     for validator in validators:
         require(validator in workflow, f"CI is not wired to {validator}")
@@ -336,6 +385,9 @@ def main() -> int:
         STAGE3_LIMITATIONS,
         STAGE3_ACCEPTANCE,
         STAGE4_ENTRY_START,
+        APPROVED_GRANT_CANONICAL_SHA256,
+        ACCEPTANCE_CANONICAL_SHA256,
+        AUTHORIZATION_CANONICAL_SHA256,
     ):
         require(digest in combined, f"current architecture docs lost evidence binding {digest}")
 
@@ -349,9 +401,10 @@ def main() -> int:
     print("- Stage 1: PASS / historical evidence preserved")
     print("- Stage 2: PASS / production-effective")
     print(f"- Stage 3: PASS / production-effective; acceptance {STAGE3_ACCEPTANCE_MAIN}")
-    print(f"- Stage 4: ACTIVE framework/governance only at {STAGE4_FRAMEWORK_MAIN} / Run #{STAGE4_RUN_NUMBER}")
-    print("- Real-data calibration: blocked / calibrationAuthorized=false")
-    print("- Held-out tuning: false / production thresholds and resource limits unchanged")
+    print(f"- Stage 4 framework anchor: {STAGE4_FRAMEWORK_MAIN} / Run #{STAGE4_FRAMEWORK_RUN_NUMBER}")
+    print(f"- Stage 4 execution authorization: production-effective at {STAGE4_AUTH_MAIN} / Run #{STAGE4_AUTH_RUN_NUMBER}")
+    print("- Real development calibration: AUTHORIZED / NOT YET EXECUTED; private metrics pending")
+    print("- Readiness: NOT_READY / 3 blockers; held-out tuning false; production defaults unchanged")
     print("- Stage 5: blocked pending Stage 4 exit PASS")
     return 0
 
