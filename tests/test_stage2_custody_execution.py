@@ -57,8 +57,11 @@ def _catalog_for(item_id: str, data: bytes) -> dict:
     catalog = _load_catalog()
     source = next(item for item in catalog["items"] if item["datasetItemId"] == item_id)
     item = deepcopy(source)
-    item["artifact"]["sha256"] = hashlib.sha256(data).hexdigest()
+    digest = hashlib.sha256(data).hexdigest()
+    item["artifact"]["sha256"] = digest
     item["artifact"]["byteSize"] = len(data)
+    if item["privacy"]["deidentifiedArtifactSha256"] is not None:
+        item["privacy"]["deidentifiedArtifactSha256"] = digest
     catalog["items"] = [item]
     return catalog
 
