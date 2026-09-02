@@ -7,7 +7,7 @@
 
 ## Safety boundary
 
-This guide prepares human reference evidence; it does not create it. Automated metrics, model predictions, OMR output or assistant judgment must not be copied into `referenceLabel` as ground truth. The reviewer must inspect the source page and make the judgment independently.
+This guide prepares human reference evidence; it does not create it. Automated metrics, Model predictions, OMR output or assistant judgment must not be copied into `referenceLabel` as ground truth. The reviewer must inspect the source page and make the judgment independently.
 
 Chopin is excluded from this development review package. It remains `held_out_evaluation` only and must not be inspected for threshold/candidate selection or tuning.
 
