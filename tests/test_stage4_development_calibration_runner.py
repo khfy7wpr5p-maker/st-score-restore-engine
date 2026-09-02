@@ -25,8 +25,8 @@ def read_json(path: str) -> dict:
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
 
-AUTH = read_json("evidence/stage4/governance/development-calibration-execution-authorization.v1.json")
-PURPOSE = read_json("evidence/stage4/governance/safety-calibration-purpose-grants.v1.json")
+AUTH = read_json("evidence/stage4/governance/real-development-calibration-execution-authorization.v1.json")
+PURPOSE = read_json("evidence/stage4/governance/purpose-grants.v1.json")
 ACCEPTANCE = read_json("evidence/stage4/reference-labels/development-reference-bundle-acceptance.v1.json")
 COMPLETION = read_json("evidence/stage4/reference-labels/development-human-label-completion.v1.json")
 
@@ -153,10 +153,8 @@ class Stage4DevelopmentCalibrationRunnerTests(unittest.TestCase):
         batch["records"][0]["metricName"] = "inventedMetric"
         self.assert_rejected(batch, "metric_name_mismatch")
         batch = synthetic_private_batch()
-        batch["records"][0]["direction"] = "lower_is_worse"
         expected = METRIC_SPECS[batch["records"][0]["findingType"]]["direction"]
-        if expected == "lower_is_worse":
-            batch["records"][0]["direction"] = "higher_is_worse"
+        batch["records"][0]["direction"] = "higher_is_worse" if expected == "lower_is_worse" else "lower_is_worse"
         self.assert_rejected(batch, "metric_direction_mismatch")
 
     def test_nonfinite_and_out_of_range_values_fail_closed(self) -> None:
