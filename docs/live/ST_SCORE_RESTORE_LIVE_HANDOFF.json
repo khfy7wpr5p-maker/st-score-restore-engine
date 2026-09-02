@@ -1,44 +1,52 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T07:02:00+03:00",
+  "last_updated_at": "2026-09-02T09:24:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
   "active_branch": "stage2-complete-quality-analysis",
   "active_pr": 84,
   "active_pr_state": "open_draft",
-  "latest_ci_run_id": 33588190548,
-  "latest_ci_run_number": 203,
-  "latest_ci_status": "success_on_post_merge_main_936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6_python_3_11_and_3_12",
+  "active_pr_head_sha_at_last_fresh_read": "0abc5ec924b65fdec6548e75923b1e7456ff4822",
+  "latest_ci_run_id": 33589252594,
+  "latest_ci_run_number": 205,
+  "latest_ci_status": "success_on_pr84_head_0abc5ec924b65fdec6548e75923b1e7456ff4822_python_3_11_and_3_12_before_final_docs_reconciliation",
   "completed": [
     "PR 81 merged deterministic expanded-v2 Stage 1 corpus evidence",
     "PR 82 merged evidence-bound Stage 1 final exit acceptance",
     "post-merge Repository validation Run 203 succeeded on Python 3.11 and 3.12",
     "Stage 1 final decision is PASS and effective",
-    "Stage 1C Issue 47 closed as completed",
-    "Stage 1 parent Issue 32 closed as completed",
+    "Stage 1 Issues 47 and 32 closed completed",
     "Stage 2 entry gate satisfied",
-    "Stage 2 tracking Issue 83 created",
-    "Stage 2 focused branch created from accepted main",
-    "initial Stage 2 analyzer/test/validator/status slice committed at d809e723443908ea590ee74bd322c4407a81204a",
-    "Draft PR 84 opened for Issue 83"
+    "Stage 2 Issue 83 created",
+    "Stage 2 PR 84 opened",
+    "deterministic OpenCV quality-analysis core implemented",
+    "Stage 2 synthetic regression suite implemented",
+    "Stage 2 CI contract validator implemented",
+    "PR 84 Run 205 succeeded on Python 3.11 and 3.12 for head 0abc5ec924b65fdec6548e75923b1e7456ff4822",
+    "final architecture/status reconciliation prepared without changing historical C15/C16 evidence"
   ],
   "in_progress": [
-    "PR 84 exact-head Python 3.11/3.12 CI after this handoff-binding commit",
-    "Stage 2 architecture/documentation reconciliation",
-    "authorized-corpus execution design through approved custody"
+    "commit final Stage 2 architecture/documentation reconciliation on PR 84",
+    "fresh exact-head Python 3.11/3.12 CI after reconciliation commit",
+    "PR 84 review/thread/base/head reconciliation",
+    "PR 84 Draft -> Ready -> merge objective gates",
+    "authorized-corpus execution design through approved custody after core merge"
   ],
   "blocked": [
     "Stage 3 remains blocked until explicit Stage 2 exit PASS",
     "Stage 4 real-data threshold calibration must not be pulled into Stage 2",
+    "held-out data must not tune Stage 2 thresholds",
     "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "final handoff-bound PR 84 head must pass Python 3.11 and 3.12 repository validation",
-    "new Stage 2 quality-analysis validator and full tests must pass",
-    "reviews and review threads must be clean before Ready/merge",
-    "architecture/docs must be reconciled before Ready/merge",
+    "final reconciliation commit moves PR 84 head, invalidating Run 205 as final merge evidence",
+    "new exact-head Repository validation must pass on Python 3.11 and 3.12",
+    "Stage 2 quality-analysis validator and full tests must remain green",
+    "reviews and review threads must be clean",
+    "base and head must be fresh-read before Ready and merge",
+    "post-merge main CI must pass",
     "authorized evaluation corpus execution through approved custody is required before Stage 2 exit",
     "Stage 2 exit requires separate evidence-bound acceptance"
   ],
@@ -47,7 +55,11 @@
     "snapshot_v2_canonical_sha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
     "coverage_report_v2_canonical_sha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834",
     "historical_c15_snapshot_canonical_sha256": "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476",
-    "historical_c16_report_sha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e"
+    "historical_c16_report_sha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e",
+    "c17a_artifact_sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+    "c17b_artifact_sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+    "c17c_artifact_sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "c17d_artifact_sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
   },
   "stage1_exit_acceptance": {
     "decision": "PASS",
@@ -67,8 +79,9 @@
   },
   "stage2": {
     "tracking_issue": 83,
+    "active_pr": 84,
     "entry_state": "satisfied",
-    "implementation_state": "active_initial_slice",
+    "implementation_state": "active_core_implemented_docs_reconciliation",
     "analyzer_version": "0.1.0",
     "calibration_state": "uncalibrated_engineering_defaults",
     "held_out_threshold_tuning_used": false,
@@ -89,15 +102,18 @@
     ],
     "source_bytes_modified": false,
     "generative_operations_used": false,
+    "symbol_completion_used": false,
     "omr_performed": false,
-    "stage2_exit_state": "not_yet_evaluated"
+    "musical_correctness_assessed": false,
+    "stage2_exit_state": "not_yet_evaluated",
+    "authorized_corpus_execution_state": "pending_after_core_merge"
   },
   "stage1_exit_state": "pass_effective",
   "stage2_entry_state": "satisfied",
   "stage2_started": true,
   "stage2_exit_state": "not_yet_evaluated",
   "stage3_entry_state": "blocked_pending_stage2_exit",
-  "next_safe_action": "require exact-head CI for PR 84 after the handoff-binding commit; fix any root cause without weakening Stage 1 or Stage 2 safety boundaries; then reconcile remaining architecture docs before Ready/merge",
+  "next_safe_action": "atomically commit architecture/status reconciliation on PR 84; require fresh exact-head Python 3.11/3.12 CI; if clean, reconcile reviews/threads/base/head, transition Ready, merge exact verified head, and verify post-merge main before beginning approved-custody corpus execution evidence",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "Real corpus artifact bytes remain outside ordinary Git.",
@@ -115,29 +131,28 @@
     },
     {
       "at": "2026-09-02T06:45:27+03:00",
-      "event": "post-merge Run 203 fully green on Python 3.11 and 3.12; Stage 1 PASS became effective"
-    },
-    {
-      "at": "2026-09-02T06:46:18+03:00",
-      "event": "Stage 1 Issues 47 and 32 closed as completed"
+      "event": "Run 203 green on Python 3.11/3.12; Stage 1 PASS effective"
     },
     {
       "at": "2026-09-02T06:48:15+03:00",
       "event": "Stage 2 tracking Issue 83 created"
     },
     {
-      "at": "2026-09-02T06:50:00+03:00",
-      "event": "Stage 2 focused branch active; initial deterministic OpenCV quality-analysis slice prepared"
-    },
-    {
       "at": "2026-09-02T07:01:25+03:00",
-      "event": "Draft PR 84 opened for the initial Stage 2 deterministic quality-analysis slice"
+      "event": "Draft PR 84 opened"
     },
     {
       "at": "2026-09-02T07:02:00+03:00",
-      "event": "canonical live handoff bound to PR 84 before exact-head verification"
+      "event": "PR 84 handoff bound before core exact-head verification"
+    },
+    {
+      "at": "2026-09-02T07:05:00+03:00",
+      "event": "Run 205 passed Stage 2 validator, full tests and compile on Python 3.11/3.12 for head 0abc5ec924b65fdec6548e75923b1e7456ff4822"
+    },
+    {
+      "at": "2026-09-02T09:24:00+03:00",
+      "event": "final Stage 2 architecture/status reconciliation prepared; next commit will require fresh exact-head CI"
     }
   ],
-  "active_pr_head_sha_at_last_fresh_read": "d809e723443908ea590ee74bd322c4407a81204a",
-  "head_scope_note": "This handoff update moves PR 84 head once. Exact-head CI must run on the resulting head before any Ready/merge decision."
+  "head_scope_note": "Run 205 is valid for pre-reconciliation head 0abc5ec924b65fdec6548e75923b1e7456ff4822. The reconciliation commit intentionally moves the PR head; only the new head CI may authorize Ready/merge."
 }

@@ -1,79 +1,74 @@
 # Stage 2 Current Status — Complete Quality Analysis
 
-**Status:** ACTIVE / INITIAL IMPLEMENTATION SLICE  
+**Status:** ACTIVE / PR #84 IMPLEMENTATION + ARCHITECTURE RECONCILIATION  
 **As of:** 2026-09-02  
 **Tracking:** Issue #83  
+**Active PR:** #84 / `stage2-complete-quality-analysis`  
 **Stage 1 accepted main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
 **Stage 1 post-merge CI:** Run #203 (`33588190548`) — Python 3.11 / 3.12 SUCCESS  
-**Stage 3 entry:** BLOCKED until explicit Stage 2 exit acceptance
+**Latest verified PR #84 head before documentation reconciliation:** `0abc5ec924b65fdec6548e75923b1e7456ff4822`  
+**PR #84 CI:** Run #205 (`33589252594`) — Python 3.11 / 3.12 SUCCESS  
+**Stage 3:** BLOCKED until explicit Stage 2 exit PASS
 
-## 1. Entry gate
+## Entry gate
 
-Stage 1 final exit is PASS / effective. PR #82 merged the evidence-bound acceptance and Run #203 succeeded on the resulting `main`. Stage 2 may therefore begin on a separate focused branch.
+Stage 1 final exit is PASS and effective. PR #82 merged the evidence-bound acceptance and Run #203 succeeded on the resulting main. Stage 2 is therefore the authorized active stage.
 
-Historical Stage 1 C15/C16 evidence remains immutable. The expanded-v2 automatic report remains `review_required`; the Stage 1 PASS is the separate accepted governance decision and does not rewrite historical or automatic evidence.
+Historical Stage 1 C15/C16 evidence remains immutable. The expanded-v2 automatic report remains fail-closed; Stage 1 PASS is the separate governance acceptance.
 
-## 2. Repository reality at Stage 2 entry
+## Implemented Stage 2 core
 
-The repository already has a deterministic OpenCV restoration baseline with:
+PR #84 introduces a versioned deterministic OpenCV quality report bound to immutable source SHA-256 and configuration digest. Raw metrics are separate from qualitative finding states.
 
-- bounded PNG/JPEG decode;
-- EXIF display-orientation handling;
-- Hough-line deskew estimation;
-- page quadrilateral detection and optional perspective/crop operations;
-- illumination normalization;
-- conservative denoise;
-- CLAHE contrast handling;
-- protected notation-pixel preservation.
+Image evidence covers:
 
-The pre-Stage-2 `input_inspection` contract lists perspective, crop, glare, shadow, blur, noise, compression and low-resolution finding categories, but intentionally leaves most raster pixel-quality findings `not_assessed`. Stage 2 closes that measurement gap without converting the analyzer into an OMR engine or restoration selector.
-
-## 3. Initial Stage 2 analyzer contract
-
-The focused implementation branch `stage2-complete-quality-analysis` introduces a versioned deterministic quality report bound to the immutable source SHA-256.
-
-Image metrics cover:
-
-- EXIF/display orientation evidence;
+- EXIF/display orientation;
 - skew angle, confidence and line support;
 - page quadrilateral, area ratio, perspective asymmetry and crop margins;
-- Laplacian-variance sharpness / blur evidence;
+- Laplacian-variance sharpness / blur;
 - highlight clipping and spatial glare concentration;
-- tile-based local shadow strength;
+- local shadow strength;
 - uneven-lighting background variation;
-- edge-excluded high-frequency noise residuals;
-- JPEG block-boundary evidence and JPEG DQT quantization severity;
+- high-frequency noise residuals;
+- JPEG block-boundary and DQT quantization evidence;
 - pixel dimensions and DPI-based low-resolution evidence;
-- geometric five-line / six-line visibility indicators for staff-like and TAB-like structures.
+- geometric five-line / six-line staff/TAB visibility indicators.
 
-The analyzer uses deterministic engineering thresholds only. These thresholds are explicitly **not held-out calibrated** and are not evidence of production operating points.
+Run #205 successfully validated the initial Stage 2 core, dedicated validator, synthetic regressions, full repository tests and compile on Python 3.11 and 3.12.
 
-## 4. Safety and interpretation boundary
+## Safety and interpretation boundary
 
-Stage 2 quality analysis:
+Stage 2 analysis:
 
 - never modifies source bytes;
-- uses no generative operation;
-- performs no symbol completion;
-- performs no OMR recognition or correction;
+- uses no generative operation or symbol completion;
+- performs no OMR recognition/correction;
 - does not establish musical correctness;
 - does not establish restoration effectiveness or OMR improvement;
-- does not infer model-training or calibration permission;
-- does not infer a phone-photo/scanner origin when provenance is not deterministically known;
+- does not infer training or calibration permission;
+- uses engineering thresholds that remain explicitly uncalibrated;
+- never tunes thresholds using held-out data;
 - preserves digital PDFs as vector content;
-- rejects scanned/hybrid PDF pixel analysis until the Stage 3 renderer boundary exists.
+- fails closed for scanned/hybrid PDF pixel analysis until the Stage 3 renderer boundary.
 
-Staff/TAB visibility outputs are geometric evidence only. They are not notation identity, voice/fingering interpretation, or OMR correctness claims.
+Staff/TAB visibility is geometric image evidence only, not notation or OMR correctness.
 
-## 5. Stage 2 exit is not yet satisfied
+## Current PR #84 gate
 
-This initial implementation slice does **not** complete Stage 2. Before Stage 2 exit can be accepted, the project still requires:
+Run #205 is valid for head `0abc5ec924b65fdec6548e75923b1e7456ff4822`. The architecture/documentation reconciliation commit intentionally moves the head and therefore requires a new exact-head Python 3.11/3.12 CI run before Ready or merge.
 
-1. exact-head Python 3.11 / 3.12 CI for every merged Stage 2 slice;
-2. architecture/documentation reconciliation;
-3. deterministic regression evidence for all quality dimensions;
-4. approved-custody execution against authorized evaluation corpus items without moving real corpus bytes into ordinary Git;
-5. explicit limitations and measurement evidence review;
-6. a separate Stage 2 exit acceptance bound to exact `main` and CI evidence.
+Before PR #84 merge:
 
-Until those gates are complete, Stage 3 remains BLOCKED.
+1. architecture/current-state documents must show Stage 1 COMPLETE, Stage 2 ACTIVE and Stage 3 BLOCKED;
+2. architecture consistency validation must enforce that state without weakening historical evidence or custody rules;
+3. exact-head CI must pass on both supported Python versions;
+4. reviews and review threads must be clean;
+5. base/head must be fresh-read;
+6. Draft → Ready → merge must occur only at the verified head;
+7. post-merge main CI must pass.
+
+## Stage 2 exit remains open
+
+PR #84 code merge does not itself complete Stage 2. Exit additionally requires approved-custody execution against the accepted evaluation corpus without moving real artifact bytes into ordinary Git, deterministic source-bound execution evidence, limitations review and a separate Stage 2 exit acceptance.
+
+Until that exit acceptance is PASS, Stage 3 remains BLOCKED.

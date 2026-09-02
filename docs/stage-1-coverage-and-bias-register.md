@@ -1,26 +1,25 @@
 # Stage 1 Coverage and Bias Register
 
-**Status:** Historical C16 register preserved; expanded-v2 candidate requires acceptance  
+**Status:** ACCEPTED Stage 1 evidence; historical C16 preserved  
 **As of:** 2026-09-02  
-**Stage:** Stage 1C  
-**Parent issue:** #47  
-**Stage 1 final exit:** BLOCKED  
-**Stage 2 entry:** BLOCKED
+**Stage 1 final exit:** PASS / COMPLETE  
+**Stage 2:** ACTIVE  
+**Stage 3:** BLOCKED pending Stage 2 exit PASS
 
-## 1. Measurement boundary
+## Measurement boundary
 
-Coverage and bias findings in this repository are metadata-derived. They do not inspect score pixels, run restoration, measure OMR accuracy or establish musical correctness.
+Coverage and bias findings here are metadata-derived. They do not inspect musical correctness, prove restoration effectiveness or measure OMR accuracy. Stage 2 now performs deterministic visual quality analysis separately.
 
-Two evidence versions coexist deliberately:
+Two evidence generations coexist deliberately:
 
-- historical C16: `dataset.snapshot.stage1c-freeze.v1` + `coverage-bias-report.v1.json`, immutable and `insufficient`;
-- PR #81 expanded candidate: `dataset.snapshot.stage1c-expanded.v2` + `coverage-bias-report.v2.json`, in-progress until committed, checked, merged and post-merge validated.
+- historical C16: immutable `snapshot.freeze.v1` + `coverage-bias-report.v1.json`, result `insufficient`;
+- accepted expanded-v2: `snapshot.expanded.v2.json` + `coverage-bias-report.v2.json`, accepted through separate Stage 1 exit governance evidence.
 
 Historical evidence is not rewritten when later coverage improves.
 
-## 2. Historical C16 result — immutable
+## Historical C16 result
 
-Historical C16 measured 2 real items / 12 pages and produced the following gap codes:
+Historical C16 measured 2 real items / 12 pages and recorded:
 
 - `coverage.missing-combined-staff-tab`
 - `coverage.missing-degraded-source`
@@ -30,86 +29,66 @@ Historical C16 measured 2 real items / 12 pages and produced the following gap c
 - `coverage.single-item-held-out`
 - `coverage.two-item-corpus`
 
-Historical deterministic sufficiency remains `insufficient`. C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
+C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
-## 3. Expanded-v2 candidate coverage
+## Accepted expanded-v2 coverage
 
-The PR #81 deterministic candidate selects 5 real items / 0 synthetic items with 3 development source families and 2 held-out source families.
+Expanded-v2 contains 5 real items / 0 synthetic items with 3 development source families and 2 held-out source families.
 
-| Coverage target | Observed items | Candidate state |
+| Coverage target | Observed items | State |
 |---|---:|---|
 | `notation.staff` | 3 | `covered` |
 | `notation.guitar_tab` | 1 | `covered` |
 | `notation.combined_staff_tab` | 1 | `covered` |
-| `capture.scanned_pdf` | 2 | `covered` |
+| `capture.scanned_pdf` | 3 | `covered` |
 | `capture.phone_photo` | 1 | `covered` |
 | `degradation.non_none` | 1 | `covered` |
 
-Candidate aggregate counts:
+Aggregate invariants:
 
-- real items: 5;
-- synthetic items: 0;
 - development: 3 items / 3 source families / 7 pages;
 - held out: 2 items / 2 source families / 9 pages;
 - total pages: 16;
-- source families: 5;
-- unique exact artifact digests: 5;
+- exact artifact digests unique;
 - cross-split source-family leakage: none;
-- Chopin v1/v2 double-counting: prohibited; v2 selected once, v1 excluded.
+- Chopin v2 selected once, v1 excluded.
 
-The seven historical C16 gap codes are absent from the v2 candidate. This observation does not alter the historical C16 report.
+The seven historical C16 gap codes are absent from expanded-v2. This does not alter historical C16.
 
-## 4. Candidate bias findings
+Canonical v2 digests:
 
-The deterministic v2 candidate currently records:
+- catalog `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
+- snapshot `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
+- report `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-| Finding code | Candidate state | Evidence basis |
+## Bias findings
+
+Expanded-v2 records:
+
+| Finding code | State | Interpretation |
 |---|---|---|
-| `capture_condition_concentration` | `controlled` | multiple capture kinds |
+| `capture_condition_concentration` | `controlled` | multiple capture kinds present |
 | `degradation_coverage_gap` | `controlled` | non-`none` degradation present |
 | `held_out_coverage_limit` | `controlled` | two held-out source families |
 | `notation_layout_concentration` | `controlled` | staff, TAB and combined layouts present |
-| `source_family_leakage_risk` | `controlled` | distinct source families and digests across splits |
+| `source_family_leakage_risk` | `controlled` | split families/digests separated |
 | `source_selection_concentration` | `observed` | public-domain majority with one licensed item |
 
-`controlled` means the specific deterministic concentration check no longer triggers. It does **not** mean absence of bias has been established.
+`controlled` means the specific deterministic concentration check no longer triggers; it does not establish absence of bias.
 
-## 5. Sufficiency and interpretation
+## Sufficiency interpretation
 
-The expanded-v2 candidate deliberately reports:
+The expanded-v2 automatic report deliberately remains:
 
 - `sufficiency.state = review_required`;
 - `requiresCorpusExpansion = false`;
 - `stage1ExitSupported = false`;
 - `stage2EntrySupported = false`.
 
-Therefore the following claims remain unsupported:
+Stage 1 PASS is therefore a separate evidence-bound governance acceptance and not a rewrite of automatic report fields.
 
-- corpus representativeness;
-- absence of bias;
-- restoration effectiveness;
-- OMR improvement;
-- musical correctness;
-- training/calibration readiness;
-- Stage 1 final PASS;
-- Stage 2 entry.
+Unsupported claims remain: corpus representativeness, absence of bias, restoration effectiveness, OMR improvement, musical correctness, model-training permission and calibration permission.
 
-## 6. Machine-readable evidence boundary
+## Stage 2 boundary
 
-Historical machine-readable evidence remains:
-
-- `evidence/stage1c/corpus/catalog.v1.json`;
-- `evidence/stage1c/corpus/snapshot.freeze.v1.json`;
-- `evidence/stage1c/corpus/coverage-bias-report.v1.json`.
-
-PR #81 is responsible for adding, without mutating the historical files:
-
-- `evidence/stage1c/corpus/catalog.v2.json`;
-- `evidence/stage1c/corpus/snapshot.expanded.v2.json`;
-- `evidence/stage1c/corpus/coverage-bias-report.v2.json`.
-
-The final PR head must validate the committed v2 evidence with `python tools/build_stage1_expanded_snapshot.py --check` on Python 3.11 and 3.12.
-
-## 7. Safety statement
-
-This register grants no new permission, changes no historical evidence, stores no real score/PDF/image corpus bytes in ordinary Git, authorizes no model training or calibration, and does not start Stage 2.
+Stage 2 may use the accepted corpus for the approved quality-analysis evaluation purpose through approved custody. Held-out items remain evaluation-only and cannot tune thresholds. Stage 2 metrics and results do not retroactively change Stage 1 evidence.

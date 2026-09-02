@@ -1,61 +1,29 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved binding sequence; Stage 1C active  
-**Version:** 0.2.7  
+**Document status:** Approved binding sequence; Stage 2 ACTIVE  
+**Version:** 0.3.0  
 **Date:** 2026-09-02  
-**Decision record:** Issue #31  
-**Current Stage 1 tracking:** Issue #47  
-**Current production main at refresh:** `53ae13d3a1b9bda08c79125674e1b7fca78ee8af`
+**Current Stage 2 tracking:** Issue #83 / PR #84  
+**Accepted Stage 2 entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`
 
-## 1. Purpose and authority
+## 1. Authority and invariant rules
 
-This roadmap defines the binding development order. The project is data-first, measurement-first and gate-controlled. A later stage may not begin merely because implementation is technically possible.
+This roadmap is the binding development order. Repository truth is merged `main` plus accepted deterministic evidence; open PR work is in progress until merged. Historical evidence is not rewritten to make later results retroactive.
 
-Current-state details are reconciled in `docs/stage-1c-current-status.md`. Historical C15/C16 evidence is immutable. Open-PR work is in-progress and is not production truth. Exact-head CI evidence is invalid after head movement.
+Non-negotiable rules:
 
-## 2. Non-negotiable roadmap rules
+1. Original source bytes remain immutable.
+2. Music-score/TAB preservation has veto priority over cosmetic improvement.
+3. A later stage cannot start before the previous stage has explicit accepted exit evidence.
+4. Draft, Ready-for-review, exact-head CI, review/thread reconciliation and merge are separate gates.
+5. Rights, privacy, purpose, provenance, retention and custody remain independent fail-closed controls.
+6. Teacher approval, evaluation admission, calibration permission and training consent are separate decisions.
+7. Real corpus artifact bytes remain outside ordinary Git.
+8. Held-out data is not used for threshold tuning.
+9. A queued, cancelled, skipped, zero-job or old-head CI run is not transition evidence.
+10. Stage 3 remains blocked until explicit Stage 2 exit PASS.
 
-1. The original source remains immutable.
-2. Music-score and guitar-TAB preservation has veto priority over visual improvement.
-3. Only the authorized stage may be active.
-4. Each implementation slice starts with a fresh repository read and focused branch/PR.
-5. Draft, Ready-for-review and merge are separate objective gates.
-6. Every stage publishes objective exit evidence before transition.
-7. Rights, privacy, purpose, retention, provenance, custody and dataset review are independent fail-closed gates.
-8. Teacher approval, dataset inclusion, calibration permission and training consent are separate decisions.
-9. Real corpus artifact bytes remain outside ordinary Git.
-10. A queued, cancelled, skipped, zero-job or old-head CI run is not transition evidence.
-11. Historical evidence is never rewritten to make later results retroactive.
-12. Stage 2 cannot start until Stage 1 final exit is explicitly accepted as PASS.
-
-## 3. Completed foundation
-
-The repository already contains the baseline architecture for immutable input inspection, deterministic OpenCV restoration candidates, conservative music-score/TAB validation, a versioned non-production job/review API, optional durable local storage, attempt-bound worker fencing/recovery, a strict local HTTP/multipart boundary, immutable review evidence and append-only audit behavior.
-
-This baseline is not a production deployment and does not satisfy later real-data, complete quality-analysis, PDF, calibration, accessible UI, production infrastructure, preview or AI-candidate gates by itself.
-
-## 4. Stage 1 current state
-
-Stage 1A metadata governance and Stage 1B custody/operations closure are complete. Stage 1C authorized artifact onboarding/corpus realization is active.
-
-Historical baseline:
-
-- C15 froze the two-item v1 corpus;
-- C16 measured exactly that snapshot and concluded `insufficient`;
-- C15/C16 files remain immutable historical evidence.
-
-Merged C17 expansion on current main:
-
-- **C17A / PR #68:** exact combined staff+TAB PNG admitted as `combined_staff_tab` only;
-- **C17B:** exact standalone guitar-TAB PDF admitted, SHA-256 `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
-- **C17C / PR #72:** exact held-out Chopin artifact represented by metadata v2 with degradation `noise` only; v2 replaces v1 in new aggregate snapshots and the same artifact must never be double-counted;
-- **C17D:** exact deidentified phone-photo derivative admitted, SHA-256 `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
-
-PR #81 is the active expanded-v2 acceptance slice. It commits a deterministic 5-real-item / 0-synthetic aggregate with development 3 items / 3 source families and held out 2 items / 2 source families. It covers staff, guitar TAB, combined staff+TAB, scanned PDF, phone photo and non-`none` degradation without cross-split source-family leakage or duplicate artifact digests.
-
-The expanded-v2 coverage report remains `review_required`, with `stage1ExitSupported=false` and `stage2EntrySupported=false`. Coverage closure is not final Stage 1 acceptance.
-
-## 5. Binding delivery sequence
+## 2. Binding delivery sequence
 
 ```text
 Stage 0  Roadmap update
@@ -85,128 +53,145 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-## 6. Stage 0 — Roadmap update
+## 3. Stage 0 — Roadmap update
 
-**Goal:** record the approved sequence and gates.  
-**Exit:** binding order accepted and repository validation green.  
 **State:** COMPLETE.
 
-## 7. Stage 1 — Real and explicitly authorized test dataset
+## 4. Stage 1 — Real and explicitly authorized test dataset
 
-**Goal:** establish a trustworthy evaluation corpus before expanding quality analysis or calibration.
+**State:** COMPLETE / PASS.
 
-Required scope includes exact-artifact rights/provenance, independent purpose permissions, privacy/de-identification review, retention/deletion/revocation, immutable digest/size identity, dataset review, development/held-out isolation, representative notation/capture/degradation categories, managed custody outside ordinary Git and a documented bias/coverage register.
+Stage 1 final exit acceptance is machine-readable at `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`. PR #82 merged into main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`; post-merge Repository validation Run #203 (`33588190548`) passed on Python 3.11 and 3.12.
 
-**Current gate:** ACTIVE / NOT EXITED.
+Accepted expanded-v2 structure:
 
-PR #81 must complete all of the following before exit evaluation:
+- 5 real items / 0 synthetic items;
+- development: 3 items / 3 source families;
+- held out: 2 items / 2 source families;
+- no cross-split source-family leakage;
+- no duplicate exact artifact SHA-256;
+- Chopin metadata v2 selected exactly once; v1 excluded from the new aggregate;
+- ordinary Git contains zero real corpus artifact bytes.
 
-1. canonical expanded-v2 catalog/snapshot/report committed;
-2. committed-evidence `--check` wired into CI;
-3. regression coverage for exact membership, split/source-family isolation, digest uniqueness, C17C v1/v2 dedup, historical immutability and zero artifact bytes in ordinary Git;
-4. fresh exact-head Python 3.11/3.12 CI success;
-5. review/thread/head reconciliation;
-6. Ready transition only with clean objective gates;
-7. exact verified-head merge;
-8. successful post-merge main CI;
-9. separate Stage 1 exit evidence review.
+Canonical v2 evidence digests:
 
-**Exit gate:** every included item remains auditable and authorized; split assignments are frozen/digest-addressed; coverage and known concentrations are measured; repository remains metadata-only for real corpus bytes; and the evidence supports the agreed Stage 2 evaluation purpose without inferring training rights.
+- catalog `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
+- snapshot `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
+- coverage report `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-If any governance, custody, rights, privacy, source-family, digest, CI or review blocker remains, Stage 1 exit is FAIL/BLOCKED.
+Historical C15/C16 remain immutable. Stage 1 PASS does not establish corpus representativeness, absence of bias, restoration effectiveness, OMR improvement, musical correctness, model-training permission or calibration permission. `source_selection_concentration` remains an accepted known limitation for the Stage 2 evaluation purpose.
 
-## 8. Stage 2 — Complete quality-analysis system
+## 5. Stage 2 — Complete quality-analysis system
 
-**Goal:** measure document degradation comprehensively and reproducibly before adding new restoration engines.
+**State:** ACTIVE.  
+**Tracking:** Issue #83.  
+**Implementation PR:** #84 / `stage2-complete-quality-analysis`.
 
-Planned categories include skew, perspective, blur, motion blur, glare, shadow, uneven lighting, noise, compression, low resolution, page boundary/orientation/DPI evidence, page type and staff/TAB visibility indicators.
+**Goal:** measure document degradation comprehensively and reproducibly before Stage 3 PDF expansion or Stage 4 real-data threshold calibration.
 
-**Entry gate:** explicit Stage 1 final PASS bound to exact main SHA, CI run and accepted v2 evidence digests.
+Required quality dimensions:
 
-**State:** BLOCKED.
+- orientation/display-orientation evidence;
+- skew angle and confidence;
+- page/perspective geometry and confidence;
+- crop/page-boundary risk;
+- blur/sharpness and motion-blur-oriented evidence where deterministically supportable;
+- glare/highlight clipping;
+- shadow/local darkness;
+- uneven illumination/background variation;
+- noise;
+- JPEG/compression artifact evidence where applicable;
+- low resolution / DPI evidence;
+- capture/page-type evidence where deterministically knowable;
+- staff/TAB geometric visibility indicators that do not claim OMR or musical correctness.
 
-No Stage 2 implementation or execution is authorized by PR #81 coverage closure alone.
+PR #84 initial slice provides a versioned deterministic OpenCV analyzer for accepted PNG/JPEG inputs, source SHA-256 binding, configuration digest, separate raw metrics and findings, bounded decode, synthetic deterministic regressions and a dedicated CI validator.
 
-## 9. Stage 3 — Multi-page PDF pipeline
+Stage 2 interpretation rules:
 
-**Goal:** safely process supported multi-page PDFs while preserving page order, source identity and vector-content policy.
+- thresholds are engineering defaults and remain **uncalibrated** until Stage 4;
+- held-out threshold tuning is forbidden;
+- unsupported/ambiguous evidence fails closed;
+- analysis never modifies source bytes;
+- no generative operation, symbol completion, OMR correction or musical inference;
+- digital PDFs remain vector preservation; scanned/hybrid PDF pixel analysis is not pulled forward before Stage 3 renderer approval.
 
-Entry requires Stage 2 quality reports and an approved PDF renderer/dependency decision. Unsupported pages fail safely with original fallback. Vector pages must not be silently rasterized.
+Stage 2 is not complete merely because the analyzer code exists or synthetic tests pass.
 
-**State:** NOT STARTED.
+**Stage 2 exit requires all of the following:**
 
-## 10. Stage 4 — Safety calibration with real data
+1. deterministic analyzer/report contract merged and exact-head CI green on Python 3.11/3.12;
+2. current architecture/status documentation aligned;
+3. authorized development/evaluation corpus can be exercised through approved custody without moving real artifact bytes into ordinary Git;
+4. execution evidence is source-digest-bound, reproducible and reviewable;
+5. held-out items remain evaluation-only and are not used for threshold selection;
+6. known limitations are recorded, including categories that remain `not_assessed` or uncalibrated;
+7. review/thread/head reconciliation is clean;
+8. post-merge main validation is green;
+9. a separate Stage 2 exit acceptance explicitly returns PASS.
 
-**Goal:** calibrate validation/review thresholds on authorized real data plus controlled mutations.
+Until all exit gates pass, **Stage 3 remains BLOCKED**.
 
-Held-out data is evaluation-only and cannot be used for threshold selection. Calibration must report false negatives, false positives, mandatory-review rates and limitations.
+## 6. Stage 3 — Multi-page PDF pipeline
 
-**State:** NOT STARTED.
+**State:** BLOCKED pending Stage 2 exit PASS.
 
-## 11. Stage 5 — Accessible teacher review interface
+Goal: safely process supported multi-page PDFs while preserving source identity, page order and vector-content policy. Requires an approved renderer/dependency decision. Unsupported pages fail safely with original fallback; vector pages are not silently rasterized.
 
-**Goal:** deliver a keyboard- and assistive-technology-usable review UI without weakening evidence binding.
-
-Required behavior includes source/candidate comparison, risk overlays, stale-screen rejection, keyboard operation, screen-reader semantics and append-only decision audit.
-
-**State:** NOT STARTED.
-
-## 12. Stage 6 — Identity, network and production infrastructure
-
-**Goal:** replace development-only controls with deployable identity, encrypted storage, durable queue/database, secrets, network protection, observability, backup/restore and incident controls.
-
-No public production exposure occurs before security acceptance.
-
-**State:** NOT STARTED.
-
-## 13. Stage 7 — Preview release
-
-**Goal:** run a bounded, reversible preview using the deterministic OpenCV baseline and human review before AI candidates.
-
-Requires Stages 1-6 accepted, explicit cohort/support/retention limits, monitoring, kill switches and rollback/original fallback.
-
-**State:** NOT STARTED.
-
-## 14. Stage 8 — DocRes optional candidate
-
-**Goal:** evaluate DocRes only as an optional restoration candidate after preview evidence exists.
-
-DocRes may not bypass safety validation, comparator ordering or original fallback.
-
-**State:** NOT STARTED.
-
-## 15. Stage 9 — Multi-engine comparator
-
-**Goal:** compare eligible restoration candidates under a deterministic, safety-first policy.
-
-Rejected candidates cannot win and the immutable original remains selectable.
+## 7. Stage 4 — Safety calibration with real data
 
 **State:** NOT STARTED.
 
-## 16. Stage 10 — ST Restore Selector
+Goal: calibrate decision/review thresholds on authorized development/calibration evidence while preserving held-out isolation. Stage 2 engineering defaults must not be presented as calibrated thresholds.
 
-**Goal:** choose eligible engine/profile candidates while preserving ADR 0015 ordering and auditability.
-
-The selector may not override a safety rejection or remove original fallback.
+## 8. Stage 5 — Accessible teacher review interface
 
 **State:** NOT STARTED.
 
-## 17. Stage 11 — ST Restore image model
+Goal: accessible, evidence-bound source/candidate/risk review with stale-screen rejection and append-only decisions.
 
-**Goal:** consider a project-owned learned restoration candidate only after earlier deterministic and preview evidence exists.
-
-Training requires explicit dataset/training authorization independent of evaluation permissions.
+## 9. Stage 6 — Identity, network and production infrastructure
 
 **State:** NOT STARTED.
 
-## 18. Stage 12 — Music-application integrations
+Goal: deployable identity, encrypted storage, production queue/database, network protection, observability, backup/restore and incident controls.
 
-**Goal:** integrate the accepted restoration service with music applications through versioned contracts.
-
-Repository boundaries remain independent. A selected visual source must still cross ScoreMosaic Safe Intake before OMR.
+## 10. Stage 7 — Preview release
 
 **State:** NOT STARTED.
 
-## 19. Current next safe action
+Goal: bounded, reversible preview after Stages 1–6 are accepted.
 
-Finish PR #81 documentation/validator reconciliation, run committed-evidence and full repository validation on the exact final head, reconcile review/thread/head movement, then Ready/merge only if all gates are clean. After successful post-merge main CI, perform the separate Stage 1 exit acceptance. Stage 2 remains blocked unless that decision is PASS.
+## 11. Stage 8 — DocRes optional candidate
+
+**State:** NOT STARTED.
+
+DocRes may only be evaluated as an optional candidate and cannot bypass safety validation or original fallback.
+
+## 12. Stage 9 — Multi-engine comparator
+
+**State:** NOT STARTED.
+
+Rejected candidates cannot win; immutable original remains selectable.
+
+## 13. Stage 10 — ST Restore Selector
+
+**State:** NOT STARTED.
+
+Selector may not override safety rejection or remove original fallback.
+
+## 14. Stage 11 — ST Restore image model
+
+**State:** NOT STARTED.
+
+Any model training requires independent explicit training authorization.
+
+## 15. Stage 12 — Music-application integrations
+
+**State:** NOT STARTED.
+
+Integration remains through versioned contracts. A selected visual source must still cross ScoreMosaic Safe Intake before downstream OMR.
+
+## 16. Current next safe action
+
+Finish PR #84 architecture/documentation reconciliation; require fresh exact-head Python 3.11/3.12 validation; reconcile reviews/threads/base/head; move Draft → Ready and merge only if those gates remain clean; verify post-merge main CI. Then continue Stage 2 with authorized-corpus execution evidence through approved custody. Do not declare Stage 2 PASS or begin Stage 3 before a separate exit acceptance.

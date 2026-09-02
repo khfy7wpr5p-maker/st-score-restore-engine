@@ -1,28 +1,25 @@
 # Stage 1 Dataset Card
 
-**Status:** Historical C15/C16 baseline preserved; expanded-v2 evidence under PR #81 acceptance  
+**Status:** ACCEPTED / Stage 1 COMPLETE  
 **As of:** 2026-09-02  
-**Stage:** Stage 1C  
-**Parent issue:** #47  
+**Accepted main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
 **Artifact bytes stored in ordinary Git:** 0  
 **Model training authorized:** No  
-**Stage 2 entry:** BLOCKED
+**Calibration authorized:** No  
+**Stage 2 evaluation use:** Active / purpose-bound
 
-## 1. Scope and evidence versions
+## Evidence generations
 
-This card distinguishes two evidence generations that must not be conflated.
+Historical C15/C16 remains immutable. `dataset.snapshot.stage1c-freeze.v1` contains the original two-item corpus and historical C16 concluded `insufficient`. That historical evidence is not rewritten.
 
-### Historical C15/C16 baseline — immutable
+Expanded-v2 is the accepted Stage 1 aggregate. Its machine-readable evidence is:
 
-`dataset.snapshot.stage1c-freeze.v1` remains the historical frozen snapshot, with canonical snapshot SHA-256 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`. It contains 2 real items / 12 pages and C16 concluded `insufficient`. Neither the historical catalog, frozen snapshot nor C16 report is rewritten by C17.
+- `evidence/stage1c/corpus/catalog.v2.json`;
+- `evidence/stage1c/corpus/snapshot.expanded.v2.json`;
+- `evidence/stage1c/corpus/coverage-bias-report.v2.json`;
+- `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`.
 
-### Expanded-v2 evidence — PR #81, not yet production evidence
-
-PR #81 deterministically builds and now commits a new five-item aggregate from already admitted item-level evidence. Until the committed v2 files pass fresh exact-head CI, review/thread/head gates, merge and post-merge validation, this evidence remains in-progress rather than `main` production truth.
-
-## 2. Expanded-v2 membership
-
-The required membership is exactly:
+## Accepted membership
 
 - `dataset.item.imslp799143-beethoven-op48-no3.v1` — development;
 - `dataset.item.wikimedia-guitar-technical-exercise-no1.v1` — development;
@@ -30,11 +27,9 @@ The required membership is exactly:
 - `dataset.item.imslp82860-chopin-op69.v2` — held out;
 - `dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1` — held out.
 
-`dataset.item.imslp82860-chopin-op69.v1` is excluded. Metadata v2 represents the same exact Chopin artifact and replaces v1 for this aggregate; both versions must never be counted as independent real items.
+Chopin metadata v1 is excluded from expanded-v2; v2 represents the same exact artifact and replaces v1 for this aggregate.
 
-## 3. Corpus structure
-
-The deterministic expanded-v2 evidence reports:
+## Corpus structure
 
 | Dimension | Observation |
 |---|---:|
@@ -49,53 +44,36 @@ The deterministic expanded-v2 evidence reports:
 | Staff notation items | 3 |
 | Guitar TAB items | 1 |
 | Combined staff/TAB items | 1 |
-| Scanned-PDF items | 2 |
 | Phone-photo items | 1 |
-| Items with non-`none` degradation metadata | 1 |
+| Non-`none` degradation items | 1 |
 
-Development and held-out source-family sets are disjoint. Exact artifact SHA-256 values are unique across selected items.
+Development and held-out source-family sets are disjoint. Selected exact artifact SHA-256 values are unique.
 
-## 4. Rights, privacy, custody and purpose boundary
+Canonical expanded-v2 digests:
 
-Every selected item is backed by its own admitted artifact metadata and evidence. The aggregate does not relax item-level gates.
+- catalog `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`;
+- snapshot `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
+- report `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-- open-corpus items remain under `managed_standard`;
-- the C17D deidentified phone-photo derivative remains `restricted_corpus -> managed_restricted`;
-- development permissions remain `quality_evaluation` only where granted;
-- held-out permissions remain `held_out_evaluation` only where granted;
-- no aggregate membership creates model-training, calibration, publication or demonstration permission.
+## Rights, privacy, custody and purpose
 
-Public availability, possession of bytes, provider identity or teacher approval never substitutes for exact-artifact rights/privacy/custody/purpose admission.
+Every selected item remains governed by its own admitted exact-artifact evidence. Aggregate membership grants no new rights.
 
-## 5. Coverage interpretation
+- open-corpus items use `managed_standard`;
+- C17D remains `restricted_corpus -> managed_restricted` and deidentified;
+- development use remains `quality_evaluation` where granted;
+- held-out use remains `held_out_evaluation` where granted;
+- model training and calibration are not inferred or activated;
+- real corpus bytes remain outside ordinary Git.
 
-The expanded-v2 evidence closes the explicit historical target gaps for:
+## Coverage and limitations
 
-- staff notation;
-- standalone guitar TAB;
-- combined staff+TAB;
-- scanned PDF;
-- phone photo;
-- non-`none` degradation;
-- one-item development/held-out thinness;
-- two-item-corpus size.
+Expanded-v2 covers the tracked Stage 1 targets for staff notation, standalone guitar TAB, combined staff+TAB, scanned PDF, phone photo and non-`none` degradation. The historical seven C16 gap codes are absent from the expanded-v2 report.
 
-That result is a metadata coverage observation only. It does not establish that the corpus is representative, unbiased, musically correct, restoration-effective, or OMR-improving.
+This does not establish representativeness, absence of bias, musical correctness, restoration effectiveness or OMR improvement. `source_selection_concentration` remains an accepted known limitation.
 
-The coverage report remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`. Therefore Stage 2 entry remains **BLOCKED**.
+The automatic coverage report remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`; Stage 1 PASS is recorded separately in the governance acceptance evidence.
 
-## 6. Authorized and prohibited uses
+## Stage 2 use boundary
 
-Authorized use remains item-specific and purpose-bound. This card does not authorize:
-
-- model training;
-- quality or safety calibration;
-- publication or demonstration;
-- synthetic derivation;
-- Stage 2 execution.
-
-## 7. Acceptance boundary
-
-The deterministic v2 catalog/snapshot/report are committed and CI is wired to committed-evidence `--check`. PR #81 must still pass fresh exact-head Python 3.11/3.12 CI, focused regressions, review/thread/head gates, merge, and post-merge `main` CI.
-
-Only after those steps may Stage 1 final exit be evaluated separately. Stage 2 remains BLOCKED until explicit Stage 1 final PASS.
+The accepted corpus may be exercised for the expressly accepted Stage 2 Complete Quality Analysis evaluation purpose through approved custody. Held-out items are evaluation-only and must not be used to tune Stage 2 thresholds. No real artifact bytes may be copied into ordinary Git for Stage 2 execution.
