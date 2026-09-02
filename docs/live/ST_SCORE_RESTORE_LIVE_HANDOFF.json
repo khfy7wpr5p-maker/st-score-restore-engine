@@ -2,37 +2,38 @@
   "schema_version": "1.2.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T03:09:00+03:00",
+  "last_updated_at": "2026-09-02T03:10:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
   "active_branch": "stage1-exit-acceptance-v1",
   "active_pr": 82,
   "active_pr_state": "open_draft",
-  "active_pr_head_sha_at_last_fresh_read": "64dffee7391b58231da534c68e383326e2f50ceb",
-  "head_scope_note": "This handoff update moves the PR head once. Final Ready/merge decisions require fresh exact-head CI for the resulting head and no further branch write afterward.",
-  "latest_ci_run_id": 33573656067,
-  "latest_ci_run_number": 199,
-  "latest_ci_status": "success_on_post_merge_main_8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1_python_3_11_and_3_12",
+  "active_pr_head_sha_at_last_fresh_read": "38f808debfd6dfd4d304520cfd938305b08d556b",
+  "latest_ci_run_id": 33574095380,
+  "latest_ci_run_number": 201,
+  "latest_ci_status": "failed_at_architecture_consistency_on_head_38f808debfd6dfd4d304520cfd938305b08d556b_root_cause_fixed",
   "completed": [
     "PR 81 merged into main at 8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
     "post-merge Repository validation Run 199 succeeded on Python 3.11 and 3.12",
     "expanded-v2 committed evidence remains deterministic and checked",
     "historical C15/C16 evidence remains immutable",
-    "Stage 1 exit evidence gate review found no governance, custody, rights, privacy, source-family, digest, CI or review blocker",
     "Stage 1 PASS decision recorded as separate governance acceptance without modifying automatic report fail-closed flags",
-    "Draft PR 82 created for focused Stage 1 exit acceptance"
+    "Draft PR 82 created for focused Stage 1 exit acceptance",
+    "Run 201 root cause identified: Stage 1 exit document omitted exact C17B and C17D artifact SHA-256 bindings",
+    "Run 201 root cause fixed by restoring the exact C17A/C17B/C17C/C17D artifact bindings in the exit evidence; no validator or safety gate was weakened"
   ],
   "in_progress": [
-    "PR 82 exact-head Python 3.11/3.12 CI",
+    "fresh exact-head Python 3.11/3.12 CI after Run 201 documentation fix",
     "PR 82 final review/thread/base/head reconciliation",
     "PR 82 Draft -> Ready -> merge objective gates"
   ],
   "blocked": [
+    "PR 82 cannot become Ready or merge until fresh exact-head CI is green after the Run 201 fix",
     "Stage 2 remains blocked until PR 82 is merged and post-merge verification is green",
     "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "final PR 82 exact-head CI must pass on Python 3.11 and 3.12",
+    "new exact-head CI must pass on Python 3.11 and 3.12",
     "reviews and review threads must be clean on the final head",
     "base and head must be fresh-read before Ready and merge",
     "PR 82 must transition Draft -> Ready before merge",
@@ -43,7 +44,9 @@
     "snapshot_v2_canonical_sha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
     "coverage_report_v2_canonical_sha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834",
     "historical_c15_snapshot_canonical_sha256": "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476",
-    "historical_c16_report_sha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e"
+    "historical_c16_report_sha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e",
+    "c17b_artifact_sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+    "c17d_artifact_sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
   },
   "expanded_v2": {
     "item_count": 5,
@@ -78,10 +81,20 @@
     "training_authorized": false,
     "calibration_authorized": false
   },
+  "ci_failure_history": [
+    {
+      "run_number": 201,
+      "run_id": 33574095380,
+      "head_sha": "38f808debfd6dfd4d304520cfd938305b08d556b",
+      "failure_step": "Validate architecture consistency",
+      "root_cause": "docs/stage-1-exit-evidence.md omitted the exact C17B and C17D artifact SHA-256 values required by the architecture consistency contract",
+      "resolution": "restore exact C17A/C17B/C17C/C17D artifact bindings in the exit evidence without weakening the validator"
+    }
+  ],
   "stage1_exit_state": "pass_decision_pending_pr82_merge_and_post_merge_ci",
   "stage2_entry_state": "blocked_pending_stage1_acceptance_merge",
   "stage2_started": false,
-  "next_safe_action": "require exact-head Repository validation for the final PR 82 handoff head; if both Python jobs and review/base/head gates are clean, transition Ready and merge without further branch writes",
+  "next_safe_action": "require fresh exact-head Repository validation after the Run 201 documentation fix; if both Python jobs and review/base/head gates are clean, transition Ready and merge without further branch writes",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "The expanded-v2 automatic report remains review_required and must not be rewritten to auto-authorize a stage transition.",
@@ -100,12 +113,12 @@
       "event": "post-merge Run 199 fully green on Python 3.11 and 3.12"
     },
     {
-      "at": "2026-09-02T03:08:00+03:00",
-      "event": "Stage 1 PASS decision prepared as separate governance acceptance on focused branch"
+      "at": "2026-09-02T03:09:00+03:00",
+      "event": "Draft PR 82 created and canonical handoff bound"
     },
     {
-      "at": "2026-09-02T03:09:00+03:00",
-      "event": "Draft PR 82 created and canonical handoff bound before final no-write exact-head verification"
+      "at": "2026-09-02T03:10:00+03:00",
+      "event": "Run 201 architecture-consistency failure root cause identified and fixed by restoring C17B/C17D exact digests in exit evidence"
     }
   ]
 }

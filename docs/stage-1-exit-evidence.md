@@ -34,6 +34,13 @@ Accepted canonical v2 digests:
 - expanded snapshot v2: `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
 - coverage report v2: `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
+Accepted C17 exact-artifact bindings retained in this exit record:
+
+- C17A combined staff+TAB artifact SHA-256: `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
+- C17B standalone guitar TAB artifact SHA-256: `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
+- C17C held-out Chopin exact artifact SHA-256: `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
+- C17D deidentified phone-photo derivative SHA-256: `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
+
 Historical evidence remains immutable:
 
 - C15 frozen snapshot canonical SHA-256: `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`;
