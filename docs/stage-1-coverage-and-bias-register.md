@@ -4,8 +4,8 @@
 **As of:** 2026-09-02  
 **Stage 1 final exit:** PASS / COMPLETE  
 **Stage 2:** COMPLETE / PASS / production-effective  
-**Stage 3:** ACTIVE under Issue #90  
-**Stage 4:** NOT STARTED / BLOCKED pending Stage 3 final exit PASS
+**Stage 3:** COMPLETE / PASS / production-effective; final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0` / Run #253  
+**Stage 4:** ENTRY ELIGIBLE / NOT STARTED
 
 ## Measurement boundary
 
@@ -69,4 +69,4 @@ Unsupported claims remain corpus representativeness, absence of bias, restoratio
 
 ## Later-stage boundary
 
-Stage 2 subsequently completed PASS using approved custody for its authorized quality-analysis purpose. Stage 3 is now ACTIVE and may use only the exact purposes granted under its own governance boundary. Beethoven/Barley Stage 3 purpose grants are a separate overlay and do not alter this Stage 1 register or `catalog.v2.json`. Held-out items remain evaluation-only and cannot tune Stage 2/3 thresholds, page policy or hardening constants.
+Stage 2 subsequently completed PASS using approved custody for its authorized quality-analysis purpose. Stage 3 subsequently completed PASS at final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`, Run #253, using only its own purpose/custody boundaries; its Beethoven/Barley overlay does not alter this Stage 1 register or `catalog.v2.json`. Held-out data did not tune Stage 2/3 thresholds, page policy, resource limits or hardening constants. Stage 4 is entry eligible but has not started.
