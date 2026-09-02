@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "stage4.reference-label-review.beethoven-barley.v1",
+  "state": "awaiting_human_labels",
+  "contractVersion": "0.1.0",
+  "purposeGrantDigest": "4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc",
+  "reviewScope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "reviewMethodRequired": "human_expert_review",
+    "acceptedRealReferenceBundle": false,
+    "realDataCalibrationExecutionAuthorized": false,
+    "modelPredictionsAllowedAsReference": false
+  },
+  "labelVocabulary": ["clear", "not_assessed", "possible", "probable"],
+  "findingTypes": ["blur", "compression", "glare", "noise", "shadow", "skew", "uneven_lighting"],
+  "items": [
+    {
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+      "artifactSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+      "pageCount": 4,
+      "pages": [
+        {"pageNumber": 1, "reviews": [
+          {"labelId":"stage4.label.beethoven.p1.blur.v1","observationId":"stage4.obs.beethoven.p1.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.compression.v1","observationId":"stage4.obs.beethoven.p1.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.glare.v1","observationId":"stage4.obs.beethoven.p1.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.noise.v1","observationId":"stage4.obs.beethoven.p1.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.shadow.v1","observationId":"stage4.obs.beethoven.p1.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.skew.v1","observationId":"stage4.obs.beethoven.p1.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p1.uneven_lighting.v1","observationId":"stage4.obs.beethoven.p1.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]},
+        {"pageNumber": 2, "reviews": [
+          {"labelId":"stage4.label.beethoven.p2.blur.v1","observationId":"stage4.obs.beethoven.p2.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.compression.v1","observationId":"stage4.obs.beethoven.p2.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.glare.v1","observationId":"stage4.obs.beethoven.p2.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.noise.v1","observationId":"stage4.obs.beethoven.p2.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.shadow.v1","observationId":"stage4.obs.beethoven.p2.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.skew.v1","observationId":"stage4.obs.beethoven.p2.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p2.uneven_lighting.v1","observationId":"stage4.obs.beethoven.p2.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]},
+        {"pageNumber": 3, "reviews": [
+          {"labelId":"stage4.label.beethoven.p3.blur.v1","observationId":"stage4.obs.beethoven.p3.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.compression.v1","observationId":"stage4.obs.beethoven.p3.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.glare.v1","observationId":"stage4.obs.beethoven.p3.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.noise.v1","observationId":"stage4.obs.beethoven.p3.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.shadow.v1","observationId":"stage4.obs.beethoven.p3.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.skew.v1","observationId":"stage4.obs.beethoven.p3.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p3.uneven_lighting.v1","observationId":"stage4.obs.beethoven.p3.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]},
+        {"pageNumber": 4, "reviews": [
+          {"labelId":"stage4.label.beethoven.p4.blur.v1","observationId":"stage4.obs.beethoven.p4.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.compression.v1","observationId":"stage4.obs.beethoven.p4.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.glare.v1","observationId":"stage4.obs.beethoven.p4.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.noise.v1","observationId":"stage4.obs.beethoven.p4.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.shadow.v1","observationId":"stage4.obs.beethoven.p4.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.skew.v1","observationId":"stage4.obs.beethoven.p4.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.beethoven.p4.uneven_lighting.v1","observationId":"stage4.obs.beethoven.p4.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]}
+      ]
+    },
+    {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "artifactSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+      "pageCount": 2,
+      "pages": [
+        {"pageNumber": 1, "reviews": [
+          {"labelId":"stage4.label.barley.p1.blur.v1","observationId":"stage4.obs.barley.p1.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.compression.v1","observationId":"stage4.obs.barley.p1.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.glare.v1","observationId":"stage4.obs.barley.p1.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.noise.v1","observationId":"stage4.obs.barley.p1.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.shadow.v1","observationId":"stage4.obs.barley.p1.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.skew.v1","observationId":"stage4.obs.barley.p1.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p1.uneven_lighting.v1","observationId":"stage4.obs.barley.p1.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]},
+        {"pageNumber": 2, "reviews": [
+          {"labelId":"stage4.label.barley.p2.blur.v1","observationId":"stage4.obs.barley.p2.blur.v1","findingType":"blur","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.compression.v1","observationId":"stage4.obs.barley.p2.compression.v1","findingType":"compression","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.glare.v1","observationId":"stage4.obs.barley.p2.glare.v1","findingType":"glare","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.noise.v1","observationId":"stage4.obs.barley.p2.noise.v1","findingType":"noise","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.shadow.v1","observationId":"stage4.obs.barley.p2.shadow.v1","findingType":"shadow","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.skew.v1","observationId":"stage4.obs.barley.p2.skew.v1","findingType":"skew","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null},
+          {"labelId":"stage4.label.barley.p2.uneven_lighting.v1","observationId":"stage4.obs.barley.p2.uneven_lighting.v1","findingType":"uneven_lighting","referenceLabel":null,"reviewerReference":null,"provenanceReference":null,"reviewedOn":null}
+        ]}
+      ]
+    }
+  ],
+  "heldOutExclusions": [{
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "includedInDevelopmentReview": false,
+    "candidateDerivationAuthorized": false
+  }],
+  "assertions": {
+    "humanLabelsPresent": false,
+    "referenceBundleAccepted": false,
+    "labelsAutomaticallyGenerated": false,
+    "modelPredictionsUsedAsReferenceLabels": false,
+    "heldOutIncludedInDevelopmentReview": false,
+    "realDataCalibrationExecuted": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}

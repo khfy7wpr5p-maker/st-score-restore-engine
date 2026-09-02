@@ -196,6 +196,9 @@ jobs:
       - name: Validate Stage 4 reference-label evidence contract
         run: python tools/validate_stage4_reference_labels.py
 
+      - name: Validate Stage 4 human reference-label work package
+        run: python tools/validate_stage4_reference_label_work_package.py
+
       - name: Validate Stage 4 public calibration evidence contract
         run: python tools/validate_stage4_calibration_evidence.py
 
