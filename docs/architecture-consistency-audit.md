@@ -5,12 +5,13 @@
 **Stage 2:** COMPLETE / PASS / production-effective  
 **Stage 2 execution-evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`  
 **Stage 2 final acceptance main / Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
+**Stage 3 core main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`  
 **Stage 3:** ACTIVE under Issue #90  
 **Stage 4:** NOT STARTED / BLOCKED pending Stage 3 exit PASS
 
 ## Purpose
 
-This audit separates immutable historical evidence, merged production truth and active Stage 3 branch work. Authority order is merged `main` plus deterministic accepted evidence. Open PR state is never production truth, and head movement invalidates exact-head CI.
+This audit separates immutable historical evidence, merged production truth and active Stage 3 authorization work. Authority order is merged `main` plus deterministic accepted evidence. Open PR state is never production truth, and head movement invalidates exact-head CI.
 
 ## Fresh-read findings
 
@@ -24,13 +25,16 @@ This audit separates immutable historical evidence, merged production truth and 
 | Frozen Stage 2 execution evidence | PASS / IMMUTABLE | `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d` |
 | Stage 2 final acceptance | PASS / EFFECTIVE | PR #89 merged to `87198a5a917ab6b3efc277762016a5f5b0dd3aab` |
 | Stage 2 acceptance post-merge CI | PASS | Run #228, Python 3.11/3.12 |
+| Stage 3 core merge | PASS / EFFECTIVE | PR #92 merged to `29b4244eeaeb2239ff959e6dd6d4128311f005fa` |
+| Stage 3 core post-merge CI | PASS | Run #232 (`33615937390`), Python 3.11/3.12 |
+| Stage 3 renderer | PRODUCTION-EFFECTIVE CORE | PDFium via `pypdfium2==5.13.0`, ADR 0017 |
+| Stage 3 vector policy | FAIL-CLOSED | vector/hybrid pages not silently rasterized |
+| Stage 3 development PDF purpose | BLOCKED | `pdf_pipeline_evaluation=not_requested` on accepted development PDFs |
+| Stage 3 held-out Chopin purpose | GRANTED | `held_out_evaluation=granted`; exact custody bytes still required |
+| Stage 3 real corpus execution | NOT COMPLETE | no purpose/custody bypass permitted |
 | Held-out threshold tuning | FALSE | held-out remains non-tuning |
 | C17D detailed export | BLOCKED | `managed_restricted`, `external_export=false` |
 | Ordinary Git real artifact bytes | PASS | zero real score/PDF/image corpus bytes under evidence |
-| Stage 3 entry | SATISFIED | Stage 2 PASS + Run #228 allow focused Stage 3 branch |
-| Stage 3 renderer decision | ACTIVE CANDIDATE | PDFium via `pypdfium2==5.13.0`, ADR 0017 |
-| Stage 3 vector policy | FAIL-CLOSED | vector/hybrid pages not silently rasterized |
-| Stage 3 core tests | SYNTHETIC ONLY | no real corpus bytes added to Git |
 | Stage 4 | BLOCKED | requires separate Stage 3 exit PASS |
 
 ## Stage 1 evidence retained
@@ -53,30 +57,34 @@ The accepted five-item corpus produced historical controlled outcomes:
 4. C17C held-out Chopin scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
 5. C17D held-out deidentified JPEG — `analyzed` under `managed_restricted` custody.
 
-The execution evidence remains source-digest-bound and immutable. The separate Stage 2 acceptance record supplies final PASS; it does not rewrite the earlier execution assertions.
+The execution evidence remains source-digest-bound and immutable. Final Stage 2 PASS is supplied by the separate acceptance record.
 
-Final acceptance PR #89 merged to main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`. Post-merge Run #228 (`33609061197`) succeeded on Python 3.11 and 3.12, including Stage 2 final-exit validation, full tests and compile.
+## Stage 3 core production truth
 
-## Stage 3 architecture truth
+PR #92 merged `src/st_score_restore/pdf_pipeline.py`, exact `pypdfium2==5.13.0`, page-level raster/vector/hybrid policy, synthetic tests and the Stage 3 validator to main `29b4244eeaeb2239ff959e6dd6d4128311f005fa`.
 
-Stage 3 started only after the Stage 2 acceptance became production-effective.
+Post-merge Run #232 (`33615937390`) succeeded on Python 3.11 and 3.12, including dependency/repository/architecture gates, historical Stage 1/2 validators, Stage 3 PDF validation, tests and compile.
 
-ADR 0017 selects PDFium through `pypdfium2==5.13.0`. `src/st_score_restore/pdf_pipeline.py` is the focused core implementation candidate.
+The pipeline preserves exact source identity and page order. Raster-only pages may produce deterministic PNG derivatives; vector-only pages remain vector; hybrid and unknown/over-limit pages preserve original fallback/review. Initial limits are uncalibrated engineering defaults and held-out data did not choose them.
 
-The pipeline preserves exact source identity and evaluates every page before rendering:
+## Stage 3 authorized execution truth
 
-- raster-only pages may render to deterministic PNG derivatives;
-- vector-only pages remain vector and produce no raster derivative;
-- hybrid pages remain original/review-required in the first core slice;
-- unknown/empty or over-limit pages use original fallback/review.
+Renderer availability is not dataset authorization. The new Stage 3 execution boundary requires canonical catalog state, PDF kind, review, revocation/deletion, retention, split-specific purpose permission, restrictions and exact SHA-256/byte size before invoking the PDF pipeline.
 
-Raster derivatives bind source SHA-256, page index and derivative SHA-256 and are analyzed by the existing Stage 2 quality analyzer. Source bytes remain immutable.
+Normative purpose mapping:
 
-Initial render/page limits are engineering defaults and are not calibrated. Held-out data did not choose them.
+- development → `pdf_pipeline_evaluation`;
+- held-out → `held_out_evaluation`.
+
+Current accepted development PDF records remain `pdf_pipeline_evaluation=not_requested`. They must not be executed simply because Stage 3 code exists or because the project owner approved continued development.
+
+The held-out Chopin record has `held_out_evaluation=granted`, but the real exact PDF bytes remain in approved external custody and are not present in ordinary Git. Therefore synthetic contract validation is permitted while real corpus execution remains incomplete.
+
+Public receipts are redacted to identity/authorization/renderer/manifest-digest/page-summary metadata. Detailed page records, metrics/findings and derivative bytes remain custody-only.
 
 ## CI boundary
 
-The Stage 3 core branch must pass exact-head Repository validation on Python 3.11 and 3.12. CI includes the new Stage 3 validator before the full test suite and compile.
+The current authorized-execution branch must pass exact-head Repository validation on Python 3.11 and 3.12. CI includes both Stage 3 validators before the full test suite and compile.
 
 No branch head may be merged based on an older run. Review/thread/base/head reconciliation and post-merge main validation remain mandatory.
 

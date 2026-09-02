@@ -1,10 +1,11 @@
 # ST Score Restore Engine — Technical Specification
 
 **Status:** Current architecture; Stage 3 ACTIVE  
-**Version:** 0.7.0-doc  
+**Version:** 0.7.1-doc  
 **Date:** 2026-09-02  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`
+**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
+**Stage 3 core main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`
 
 ## 1. Scope
 
@@ -30,7 +31,8 @@ This repository is not an OMR engine. It produces visual analysis and derivative
 14. Held-out data may not tune Stage 2/3 thresholds or hardening constants.
 15. Stage 3 is ACTIVE and owns the explicit multi-page PDF renderer boundary.
 16. Vector PDF page content must not be silently rasterized.
-17. Stage 4 is NOT STARTED / BLOCKED until explicit Stage 3 exit PASS.
+17. Renderer capability never grants dataset purpose permission.
+18. Stage 4 is NOT STARTED / BLOCKED until explicit Stage 3 exit PASS.
 
 ## 3. Processing architecture
 
@@ -39,10 +41,12 @@ Input document
     ↓
 Immutable source registration / structural inspection
     ↓
+Dataset rights / privacy / purpose / custody / exact-byte gates when corpus-backed
+    ↓
 If PDF: Stage 3 page enumeration + page-object policy
     ├─ raster_only → bounded PDFium PNG derivative
     ├─ vector_only → preserve vector page
-    ├─ hybrid → preserve + review in core slice
+    ├─ hybrid → preserve + review
     └─ unknown/over-limit → original fallback + review
     ↓
 Deterministic quality analysis for raster inputs/derivatives
@@ -114,13 +118,15 @@ The earlier execution evidence remains immutable with its historical Stage 3 aut
 **State:** ACTIVE under Issue #90.  
 **Entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`.  
 **Entry CI:** Run #228 (`33609061197`) SUCCESS on Python 3.11 / 3.12.  
-**Core branch:** `stage3-multipage-pdf-core`.
+**Core merge main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`.  
+**Core post-merge CI:** Run #232 (`33615937390`) SUCCESS on Python 3.11 / 3.12.  
+**Current branch:** `stage3-authorized-pdf-execution`.
 
 ### 7.1 Renderer decision
 
-ADR 0017 selects PDFium through `pypdfium2==5.13.0`. The binding is pinned as an exact runtime dependency and must be available as a wheel in both supported Python versions.
+ADR 0017 selects PDFium through `pypdfium2==5.13.0`. PR #92 merged the core implementation and Run #232 made it production-effective.
 
-The renderer is used only after existing immutable input inspection. PDFium provides authoritative Stage 3 page enumeration, page geometry, page-object inspection and raster rendering for eligible pages.
+The renderer is used only after immutable input inspection. PDFium provides authoritative Stage 3 page enumeration, page geometry, page-object inspection and raster rendering for eligible pages.
 
 ### 7.2 Page-level policy
 
@@ -128,7 +134,7 @@ The renderer is used only after existing immutable input inspection. PDFium prov
 
 - `raster_only`: image evidence with no detected text/path/shading vector evidence; may render;
 - `vector_only`: text/path/shading evidence without image evidence; preserve vector page, no raster derivative;
-- `hybrid`: image and vector evidence coexist; preserve original page and require review in first core slice;
+- `hybrid`: image and vector evidence coexist; preserve original page and require review;
 - `unknown_or_empty`: original fallback and review.
 
 Form content is traversed only to a bounded depth. Unknown content does not authorize rasterization.
@@ -166,19 +172,40 @@ The Stage 3 manifest records stable source identity, page order, renderer/bindin
 
 Stage 3 is a document/rendering pipeline, not an OMR system or musical-correction system.
 
-### 7.6 Validation
+### 7.6 Core validation
 
-`tools/validate_stage3_pdf_pipeline.py` and `tests/test_pdf_pipeline.py` use synthetic PDFs only and require:
+`tools/validate_stage3_pdf_pipeline.py` and `tests/test_pdf_pipeline.py` use synthetic PDFs only and require deterministic output, source/page provenance, raster-only rendering, vector preservation, original fallback, resource limits and Python 3.11/3.12 compatibility.
 
-- deterministic output for identical bytes/configuration;
-- source SHA-256 preservation;
-- page-order preservation;
-- raster-only rendering;
-- vector-page preservation;
-- no silent vector rasterization;
-- original fallback;
-- page/resource limits;
-- Python 3.11/3.12 compatibility.
+### 7.7 Authorized corpus execution boundary
+
+`src/st_score_restore/stage3_custody_execution.py` is a separate Stage 3 execution layer. It does not change historical `stage2_custody_execution.py` behavior.
+
+Before calling `process_pdf_bytes(...)`, it requires:
+
+- canonical dataset catalog validation;
+- admitted PDF input kind;
+- `external_available` artifact state;
+- approved dataset review;
+- non-revoked/non-deletion state;
+- valid retention;
+- exact split-specific purpose;
+- granted/date-valid purpose permission;
+- split/storage/environment/retention/export restrictions;
+- exact artifact SHA-256;
+- exact artifact byte size.
+
+Purpose mapping is normative:
+
+- development → `pdf_pipeline_evaluation`;
+- held-out → `held_out_evaluation`.
+
+`quality_evaluation` is not a substitute for development Stage 3 authorization. General user approval to continue repository development is also not a dataset-purpose grant.
+
+The public receipt contains only source identity, permission binding, renderer/pipeline versions, manifest digest and aggregate page counts. Detailed page records, quality metrics/findings and rendered bytes remain custody-only.
+
+Current accepted development PDF records have `pdf_pipeline_evaluation=not_requested`; they must fail closed. The held-out Chopin record has `held_out_evaluation=granted`, but real execution still requires exact custody bytes. The repository stores only opaque custody locators and metadata, not the real PDF bytes.
+
+`tools/validate_stage3_custody_execution.py` therefore validates split-purpose semantics, exact-byte gating and redaction with synthetic bytes while explicitly retaining `real Stage 3 corpus execution: not complete`.
 
 ## 8. Stage 4 boundary
 
@@ -218,10 +245,11 @@ python tools/validate_stage2_custody_execution.py
 python tools/validate_stage2_corpus_execution_evidence.py
 python tools/validate_stage2_exit_acceptance.py
 python tools/validate_stage3_pdf_pipeline.py
+python tools/validate_stage3_custody_execution.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-## 11. Prohibited scope in Stage 3 core
+## 11. Prohibited scope in Stage 3
 
-Do not rewrite historical evidence, add real corpus bytes to ordinary Git, infer training/calibration/publication rights, tune thresholds on held-out items, perform OMR/musical inference, silently rasterize vector/hybrid content, or begin Stage 4 calibration.
+Do not rewrite historical evidence, add real corpus bytes to ordinary Git, infer dataset permission from general approval, infer training/calibration/publication rights, tune thresholds on held-out items, perform OMR/musical inference, silently rasterize vector/hybrid content, or begin Stage 4 calibration.

@@ -1,10 +1,11 @@
 # ST Score Restore Engine — Development Roadmap
 
 **Document status:** Approved binding sequence; Stage 3 ACTIVE  
-**Version:** 0.4.0  
+**Version:** 0.4.1  
 **Date:** 2026-09-02  
 **Stage 3 tracking:** Issue #90  
-**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`
+**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
+**Stage 3 core main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`
 
 ## 1. Authority and invariant rules
 
@@ -21,6 +22,7 @@ Repository truth is merged `main` plus accepted deterministic evidence. Historic
 9. A queued, cancelled, skipped, zero-job or old-head CI run is not transition evidence.
 10. Vector PDF content must not be silently rasterized.
 11. Stage 4 starts only after explicit Stage 3 exit PASS.
+12. General project-development approval does not grant a dataset purpose permission.
 
 ## 2. Binding delivery sequence
 
@@ -77,34 +79,53 @@ Accepted limitations remain binding: the historical scanned/hybrid PDF execution
 **Tracking:** Issue #90.  
 **Entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`.  
 **Entry verification:** Run #228 (`33609061197`) SUCCESS on Python 3.11 / 3.12.  
-**Focused branch:** `stage3-multipage-pdf-core`.
+**Core merge main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`.  
+**Core post-merge verification:** Run #232 (`33615937390`) SUCCESS on Python 3.11 / 3.12.  
+**Current focused branch:** `stage3-authorized-pdf-execution`.
 
-### Stage 3 first core slice
+### Stage 3 production-effective core
 
-ADR 0017 selects `pypdfium2==5.13.0` / PDFium for the first renderer boundary.
+ADR 0017 selects `pypdfium2==5.13.0` / PDFium. PR #92 merged the first core slice and Run #232 verified it on both supported Python versions.
 
-Core requirements:
+Core invariants:
 
 1. preserve exact source SHA-256 and immutable source bytes;
 2. use PDFium page enumeration for stable Stage 3 page count/order;
 3. inspect page content before rendering;
 4. render only `raster_only` pages;
 5. preserve `vector_only` pages without rasterization;
-6. preserve `hybrid` pages and require review in the first slice;
+6. preserve `hybrid` pages and require review;
 7. fail unknown/empty or over-limit pages to original fallback/review;
 8. bind every derivative to source SHA-256 and page index;
 9. run existing Stage 2 quality analysis on raster derivatives;
 10. keep held-out tuning false and thresholds uncalibrated;
-11. use synthetic PDFs for ordinary-Git tests;
+11. keep real corpus bytes out of ordinary Git;
 12. keep Stage 4 blocked until a separate Stage 3 exit PASS.
 
 Initial engineering bounds: 200 DPI, 64 pages, 40M pixels/page, 160M aggregate rendered pixels, 8,000-pixel render dimension and page-object depth 15.
 
-The core slice does not authorize OMR, musical inference, calibration, training, publication, DocRes, selector logic or Stage 4 work.
+### Stage 3 authorized corpus execution
+
+The current slice adds a Stage 3-specific custody execution boundary rather than changing historical Stage 2 behavior.
+
+Required split-purpose mapping:
+
+- development → `pdf_pipeline_evaluation`;
+- held-out → `held_out_evaluation`.
+
+The execution boundary must validate canonical catalog state, PDF kind, review, revocation/deletion, retention, exact purpose permission, restrictions, exact SHA-256 and exact byte size before invoking the PDF pipeline. Detailed page manifests, quality metrics/findings and derivative bytes remain custody-only.
+
+Current accepted-corpus state:
+
+- Beethoven development PDF: `pdf_pipeline_evaluation=not_requested` — fail-closed blocker;
+- Barley development digital PDF: `pdf_pipeline_evaluation=not_requested` — fail-closed blocker;
+- Chopin held-out PDF: `held_out_evaluation=granted`, but exact custody bytes still must be materialized through approved custody for real execution.
+
+No general project approval may be converted into a dataset permission grant. This slice validates the contract with synthetic data and records the real authorization/custody gaps without bypassing them.
 
 ### Stage 3 exit boundary
 
-Stage 3 exit is not established by starting the renderer core. Exit will require merged/verified pipeline behavior, real authorized-corpus execution where permitted, explicit limitations review, exact-head/post-merge CI and a separate acceptance decision. Until then Stage 4 remains blocked.
+Stage 3 exit is not established by the renderer core or the execution-contract implementation. Exit will require merged/verified pipeline behavior, real authorized-corpus execution where permitted, explicit limitations review, frozen public-safe execution evidence, exact-head/post-merge CI and a separate acceptance decision. Until then Stage 4 remains blocked.
 
 ## 7. Stage 4 — Safety calibration with real data
 
@@ -146,4 +167,4 @@ Stage 4 owns real-data threshold calibration. Stage 2/3 engineering defaults mus
 
 ## 16. Current next safe action
 
-Complete the focused Stage 3 core slice, require exact-head Python 3.11/3.12 CI, reconcile review/thread/base/head state, merge only the exact verified head, and require post-merge main CI. Do not begin Stage 4 or real-data calibration.
+Merge and verify the Stage 3 authorized PDF execution boundary only if exact-head Python 3.11/3.12 CI is green. After that, resolve real corpus execution through existing purpose/custody governance: do not grant development `pdf_pipeline_evaluation` implicitly, do not expose real bytes in Git, do not use held-out results for tuning, and do not start Stage 4 before a separate Stage 3 exit PASS.

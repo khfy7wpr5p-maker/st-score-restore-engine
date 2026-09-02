@@ -1,77 +1,98 @@
 # Stage 3 Current Status — Multi-page PDF Pipeline
 
-**Status:** ACTIVE — CORE SLICE  
+**Status:** ACTIVE — CORE PRODUCTION-EFFECTIVE / AUTHORIZED EXECUTION SLICE  
 **As of:** 2026-09-02  
 **Tracking:** Issue #90  
 **Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
 **Entry CI:** Run #228 (`33609061197`) — Python 3.11 / 3.12 SUCCESS  
-**Active branch:** `stage3-multipage-pdf-core`  
+**Core merge main:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa`  
+**Core post-merge CI:** Run #232 (`33615937390`) — Python 3.11 / 3.12 SUCCESS  
+**Active branch:** `stage3-authorized-pdf-execution`  
 **Stage 4:** NOT STARTED / BLOCKED pending explicit Stage 3 exit PASS
 
-## Entry state
+## Production-effective core
 
-Stage 2 final exit is production-effective. PR #89 merged the separate Stage 2 acceptance into main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`; post-merge Repository validation Run #228 succeeded on Python 3.11 and 3.12, including the Stage 2 final-exit validator, full tests and compile.
+PR #92 merged the deterministic PDFium core. Run #232 passed dependency, repository, architecture, Stage 1/2, Stage 3 PDF pipeline, full test and compile gates on Python 3.11 and 3.12.
 
-Stage 3 therefore started in a new focused branch. Stage 2 historical evidence remains immutable.
+Production core:
 
-## First core slice
+- `src/st_score_restore/pdf_pipeline.py`;
+- `pypdfium2==5.13.0` / PDFium;
+- exact source SHA-256 identity;
+- stable PDFium page ordering;
+- page-object inspection before rendering;
+- `raster_only` rendering only;
+- `vector_only` preservation;
+- `hybrid` preservation + review;
+- unknown/over-limit original fallback;
+- source/page/derivative SHA-256 provenance;
+- deterministic Stage 2 quality analysis on raster derivatives.
 
-The first core slice introduces `src/st_score_restore/pdf_pipeline.py` and selects `pypdfium2==5.13.0` / PDFium as the renderer boundary.
+Initial limits remain uncalibrated engineering defaults: 200 DPI, 64 pages, 40M pixels/page, 160M total rendered pixels, 8,000-pixel dimension and object depth 15. Held-out data did not tune them.
 
-The pipeline:
+## Authorized execution slice
 
-- preserves the exact source PDF SHA-256 and byte identity;
-- uses PDFium page enumeration for Stage 3 page count/order;
-- inspects page objects before any rendering decision;
-- renders only pages classified `raster_only`;
-- preserves `vector_only` pages without rasterization;
-- preserves `hybrid` pages and requires review in the first slice;
-- sends rendered PNG derivatives through the existing deterministic Stage 2 quality analyzer;
-- records derivative SHA-256, source SHA-256 and page index provenance;
-- keeps original fallback available for every page;
-- applies bounded page-count, dimension and pixel limits;
-- uses synthetic PDFs only in Git tests/validation.
+The current slice adds `src/st_score_restore/stage3_custody_execution.py`. Renderer capability does not imply dataset permission.
 
-## Initial engineering bounds
+Before the PDF pipeline can run on a corpus object, the Stage 3 execution boundary requires:
 
-- render DPI: 200;
-- maximum pages: 64;
-- maximum rendered page pixels: 40,000,000;
-- maximum total rendered pixels: 160,000,000;
-- maximum render dimension: 8,000;
-- maximum object traversal depth: 15.
+1. canonical catalog validation;
+2. PDF input kind;
+3. `external_available` artifact state;
+4. approved dataset review;
+5. non-revoked and non-deletion state;
+6. valid retention;
+7. exact split-specific purpose;
+8. granted/date-valid purpose permission;
+9. split/storage/environment/retention/export restrictions;
+10. exact artifact SHA-256;
+11. exact artifact byte size.
 
-These are uncalibrated engineering defaults. Held-out data was not used to select them. Stage 4 owns real-data calibration.
+Split-purpose mapping:
 
-## Vector-content policy
+- development → `pdf_pipeline_evaluation`;
+- held-out → `held_out_evaluation`.
 
-Vector content is not silently rasterized.
+A broad project-development approval or historical `quality_evaluation` permission is not reinterpreted as Stage 3 PDF authorization.
 
-- `raster_only` → render to PNG derivative;
-- `vector_only` → preserve original PDF page;
-- `hybrid` → preserve original page + review required;
-- `unknown_or_empty` → original fallback + review required.
+## Current real-corpus authorization state
 
-This page-level policy replaces the Stage 2 document-level renderer deferral without rewriting Stage 2 evidence.
+Accepted PDF corpus items:
+
+- Beethoven development scanned PDF — `pdf_pipeline_evaluation=not_requested` → **blocked**;
+- Barley development digital guitar-TAB PDF — `pdf_pipeline_evaluation=not_requested` → **blocked**;
+- Chopin C17C held-out scanned PDF — `held_out_evaluation=granted` → purpose gate satisfied, but exact custody bytes must still be materialized through approved custody before execution.
+
+Ordinary Git contains no real corpus PDF/image bytes and does not expose the opaque custody objects as local files. Therefore this slice can validate the execution contract with synthetic bytes but cannot claim real Stage 3 corpus execution complete.
+
+## Output boundary
+
+Public-safe receipts may include:
+
+- dataset item ID;
+- source SHA-256 and byte size;
+- split/purpose/storage/environment/date;
+- authorization reference;
+- pipeline/renderer versions;
+- deterministic manifest digest;
+- aggregate page classification/status counts.
+
+Detailed page manifests, quality metrics/findings and rendered derivative bytes remain custody-only. No receipt authorizes export, calibration, training, publication, OMR or musical correctness claims.
+
+## Remaining Stage 3 exit gates
+
+Stage 3 exit is **not yet PASS**. Remaining gates include:
+
+- real authorized-corpus execution where permissions and custody access permit;
+- explicit limitations review;
+- frozen public-safe execution evidence without real bytes;
+- exact-head and post-merge Python 3.11/3.12 CI;
+- separate Stage 3 exit acceptance decision.
+
+Development-purpose permission must be handled in a dedicated governance slice if Stage 3 execution of those development PDFs is desired. It must not be inferred from the user's general approval to continue development.
 
 ## Safety/non-claims
 
 Stage 3 does not perform OMR, symbol completion or musical inference. It does not establish musical correctness, OMR improvement, restoration effectiveness, representativeness or absence of bias. Training, calibration and publication remain unauthorized.
 
-Real accepted-corpus artifact bytes remain outside ordinary Git. Detailed restricted evidence rules, including C17D `external_export=false`, remain unchanged.
-
-## Core-slice validation
-
-CI must verify:
-
-1. exact runtime dependency pin `pypdfium2==5.13.0`;
-2. deterministic synthetic multi-page processing;
-3. exact source and derivative digest provenance;
-4. stable page order;
-5. raster-only rendering;
-6. no silent vector rasterization;
-7. original fallback under render bounds;
-8. Stage 1/Stage 2 historical evidence immutability;
-9. Python 3.11 and 3.12 full repository validation.
-
-Stage 3 is active, but **Stage 3 exit is not yet PASS**. Stage 4 remains blocked until a separate Stage 3 exit decision is accepted.
+C17D `external_export=false`, historical Stage 1/2 evidence immutability and the separate sensitive phone-photo block remain unchanged.
