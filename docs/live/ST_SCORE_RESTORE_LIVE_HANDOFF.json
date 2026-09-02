@@ -1,14 +1,14 @@
 {
-  "schema_version": "1.8.0",
+  "schema_version": "1.8.1",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T11:22:00+03:00",
+  "last_updated_at": "2026-09-02T11:25:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
   "active_branch": "stage2-exit-acceptance",
   "active_pr": 88,
   "active_pr_state": "open_draft",
-  "active_pr_parent_head_before_handoff": "4120ba643de21a63ef79ac175151766a3e054426",
+  "active_pr_parent_head_before_handoff": "fd11535507e123bfa67a17b233ca52f2ecb9d4af",
   "latest_main_ci_run_id": 33607016064,
   "latest_main_ci_run_number": 221,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
@@ -19,18 +19,19 @@
     "PR 86 merged approved-custody execution contract 0.1.0",
     "PR 87 exact-head Run 220 succeeded on Python 3.11 and 3.12",
     "PR 87 merged frozen five-item corpus execution evidence into main ffea7f5aa618187f3cabcfb49801804e3f6658bf",
-    "post-merge Run 221 succeeded on Python 3.11 and 3.12 including Stage 2 quality, custody and corpus-execution validators",
+    "post-merge Run 221 succeeded on Python 3.11 and 3.12",
     "five accepted corpus objects matched exact SHA-256 and exact byte size",
     "real corpus execution outcomes were 2 analyzed, 1 vector not-applicable and 2 controlled Stage-3-renderer deferrals",
     "held-out threshold tuning remained false",
     "C17D detailed evidence remained managed_restricted with external_export=false",
-    "public execution evidence contains no detailed metrics/findings or provider/local custody locators",
     "Stage 2 limitations review completed with no fail-closed blocker",
     "separate machine-readable Stage 2 exit decision prepared as PASS",
-    "Draft PR 88 opened for final Stage 2 exit acceptance"
+    "Draft PR 88 opened for final Stage 2 exit acceptance",
+    "Run 223 root cause isolated to missing accepted Stage 2 entry-main reference in README",
+    "README entry-main binding restored without weakening architecture or safety validation"
   ],
   "in_progress": [
-    "fresh exact-head Python 3.11/3.12 validation for PR 88 after this final handoff write",
+    "fresh exact-head Python 3.11/3.12 validation for PR 88 after this final corrective handoff write",
     "PR 88 review/thread/base/head reconciliation",
     "PR 88 Draft to Ready to merge objective gates",
     "post-merge main CI for the Stage 2 acceptance commit"
@@ -55,10 +56,7 @@
     "snapshot_v2_canonical_sha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
     "coverage_report_v2_canonical_sha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834",
     "stage2_corpus_execution_evidence_sha256": "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d",
-    "stage2_evidence_main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
-    "c17a_quality_report_sha256": "e8e466ee8f4d0a3ff3ea10ec6c626f2316d8cedf9feec28d3c7b03a8be5453f6",
-    "c17b_vector_report_sha256": "0ec6f6d0bed4589e14f70cb954ecaa3c92ecd2b877e75fd106e8afced13f044b",
-    "c17d_restricted_quality_report_sha256": "fa04245f53719e9704b49b7a37d0820b7998d4414bcf3a962476dbf9ca38ff57"
+    "stage2_evidence_main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf"
   },
   "stage1_exit_state": "pass_effective",
   "stage2": {
@@ -94,6 +92,15 @@
   "stage3_entry_state": "eligible_pending_stage2_acceptance_pr_merge_and_postmerge_ci",
   "stage3_started": false,
   "stage4_entry_state": "not_started",
+  "ci_failure_history": [
+    {
+      "run_number": 223,
+      "run_id": 33608372005,
+      "failure_step": "Validate architecture consistency",
+      "root_cause": "README omitted the immutable accepted Stage 2 entry main 936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6 during Stage 2 exit documentation transition",
+      "resolution": "restore the accepted Stage 2 entry-main reference; architecture validator and safety gates unchanged"
+    }
+  ],
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "Real corpus artifact bytes remain outside ordinary Git.",
@@ -104,6 +111,6 @@
     "The final Stage 2 PASS is a separate acceptance layer.",
     "Stage 3 implementation begins only after PR 88 is merged and its post-merge main CI succeeds."
   ],
-  "next_safe_action": "Treat this handoff update as the final intended PR 88 branch write. Require fresh exact-head Python 3.11/3.12 CI. If green, reconcile reviews/threads/base/head, transition Ready, merge the exact verified head and require post-merge main CI. Only after that success may Stage 3 begin in a new focused branch.",
-  "head_scope_note": "The handoff records parent head 4120ba643de21a63ef79ac175151766a3e054426 because a JSON file cannot contain the SHA of the commit that contains itself without moving the branch again. This is the final intended PR 88 branch write; only CI on the resulting exact head may authorize Ready/merge."
+  "next_safe_action": "Treat this handoff update as the final intended PR 88 branch write after the Run 223 documentation-root-cause correction. Require fresh exact-head Python 3.11/3.12 CI. If green, reconcile reviews/threads/base/head, transition Ready, merge the exact verified head and require post-merge main CI. Only after that success may Stage 3 begin in a new focused branch.",
+  "head_scope_note": "The handoff records parent head fd11535507e123bfa67a17b233ca52f2ecb9d4af because a JSON file cannot contain the SHA of the commit that contains itself without moving the branch again. This is the final intended PR 88 branch write; only CI on the resulting exact head may authorize Ready/merge."
 }
