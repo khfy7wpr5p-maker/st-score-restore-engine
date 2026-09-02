@@ -20,8 +20,11 @@ STAGE2_EXECUTION_EVIDENCE = "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b
 STAGE3_ENTRY_MAIN = "87198a5a917ab6b3efc277762016a5f5b0dd3aab"
 STAGE3_ENTRY_CI_RUN_ID = 33609061197
 STAGE3_ENTRY_CI_RUN_NUMBER = 228
+STAGE3_CORE_MAIN = "29b4244eeaeb2239ff959e6dd6d4128311f005fa"
+STAGE3_CORE_POSTMERGE_CI_RUN_ID = 33615937390
+STAGE3_CORE_POSTMERGE_CI_RUN_NUMBER = 232
 STAGE3_ISSUE = 90
-STAGE3_BRANCH = "stage3-multipage-pdf-core"
+STAGE3_BRANCH = "stage3-authorized-pdf-execution"
 STAGE3_RENDERER_BINDING = "pypdfium2==5.13.0"
 REAL_ARTIFACT_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
@@ -74,6 +77,9 @@ def main() -> int:
         require("stage 3" in lowered and "active" in lowered, f"{name} does not record Stage 3 ACTIVE")
         require("stage 4" in lowered and ("not started" in lowered or "blocked" in lowered), f"{name} does not preserve Stage 4 NOT STARTED/BLOCKED boundary")
         require(STAGE3_ENTRY_MAIN in docs[name], f"{name} does not bind Stage 3 entry main")
+
+    for name in ("README", "roadmap", "technical", "stage3_current", "audit"):
+        require(STAGE3_CORE_MAIN in docs[name], f"{name} does not bind production-effective Stage 3 core main")
 
     for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
         require(STAGE2_EVIDENCE_MAIN in docs[name], f"{name} does not bind Stage 2 evidence main")
@@ -138,7 +144,9 @@ def main() -> int:
     for name, value in stage2_acceptance.get("claims", {}).items():
         require(value is False, f"Stage 2 acceptance contains unsupported positive claim: {name}")
 
-    require(handoff.get("main_sha") == STAGE3_ENTRY_MAIN, "live handoff does not bind Stage 3 entry main")
+    require(handoff.get("main_sha") == STAGE3_CORE_MAIN, "live handoff does not bind production-effective Stage 3 core main")
+    require(handoff.get("latest_main_ci_run_id") == STAGE3_CORE_POSTMERGE_CI_RUN_ID, "live handoff Stage 3 core post-merge CI id drifted")
+    require(handoff.get("latest_main_ci_run_number") == STAGE3_CORE_POSTMERGE_CI_RUN_NUMBER, "live handoff Stage 3 core post-merge CI run number drifted")
     require(handoff.get("stage2_exit_state") == "pass_effective", "live handoff does not record Stage 2 PASS effective")
     require(handoff.get("stage3_entry_state") == "satisfied", "live handoff does not record Stage 3 entry satisfied")
     require(handoff.get("stage3_started") is True, "live handoff does not record Stage 3 started")
@@ -150,12 +158,16 @@ def main() -> int:
     require(stage3.get("entry_main_sha") == STAGE3_ENTRY_MAIN, "live handoff Stage 3 entry SHA drifted")
     require(stage3.get("entry_ci_run_id") == STAGE3_ENTRY_CI_RUN_ID, "live handoff Stage 3 entry CI id drifted")
     require(stage3.get("entry_ci_run_number") == STAGE3_ENTRY_CI_RUN_NUMBER, "live handoff Stage 3 entry CI run number drifted")
+    require(stage3.get("core_merge_main_sha") == STAGE3_CORE_MAIN, "live handoff Stage 3 core merge main drifted")
+    require(stage3.get("core_postmerge_ci_run_id") == STAGE3_CORE_POSTMERGE_CI_RUN_ID, "live handoff Stage 3 core post-merge CI id drifted")
     require(stage3.get("renderer") == "pdfium", "live handoff Stage 3 renderer drifted")
     require(stage3.get("renderer_binding") == "pypdfium2", "live handoff Stage 3 renderer binding drifted")
     require(stage3.get("renderer_binding_version") == "5.13.0", "live handoff Stage 3 renderer version drifted")
     require(stage3.get("vector_pages_rasterized") is False, "live handoff allows vector-page rasterization")
     require(stage3.get("hybrid_pages_rasterized") is False, "live handoff allows hybrid-page rasterization")
     require(stage3.get("held_out_tuning_used") is False, "live handoff claims Stage 3 held-out tuning")
+    require(stage3.get("real_corpus_execution_complete") is False, "live handoff prematurely claims real Stage 3 corpus execution complete")
+    require(stage3.get("development_pdf_pipeline_permission_state") == "not_requested", "live handoff does not preserve current development permission blocker")
 
     require(STAGE2_ENTRY_MAIN in docs["README"], "README lost accepted Stage 2 entry main")
 
@@ -164,7 +176,9 @@ def main() -> int:
     require(STAGE3_RENDERER_BINDING in _read("requirements.lock"), "runtime lock lost exact Stage 3 renderer dependency")
 
     pdf_pipeline = _read("src/st_score_restore/pdf_pipeline.py")
+    stage3_custody = _read("src/st_score_restore/stage3_custody_execution.py")
     stage3_validator = _read("tools/validate_stage3_pdf_pipeline.py")
+    stage3_custody_validator = _read("tools/validate_stage3_custody_execution.py")
     workflow = _read(".github/workflows/repository-validation.yml")
     require("process_pdf_bytes" in pdf_pipeline, "Stage 3 PDF pipeline entry point missing")
     require("pypdfium2" in pdf_pipeline, "Stage 3 PDF pipeline is not bound to pypdfium2")
@@ -173,10 +187,19 @@ def main() -> int:
     require("vectorPagesRasterized" in pdf_pipeline, "Stage 3 manifest does not explicitly bind vector rasterization state")
     require("originalFallbackAvailable" in pdf_pipeline, "Stage 3 manifest lost original fallback")
     require("heldOutTuningUsed" in pdf_pipeline, "Stage 3 manifest lost held-out non-tuning assertion")
+    require("run_authorized_pdf_pipeline_execution" in stage3_custody, "Stage 3 custody execution entry point missing")
+    require('"development": "pdf_pipeline_evaluation"' in stage3_custody, "Stage 3 development purpose boundary drifted")
+    require('"held_out": "held_out_evaluation"' in stage3_custody, "Stage 3 held-out purpose boundary drifted")
+    require("exact_sha256_mismatch" in stage3_custody, "Stage 3 custody execution lost exact-byte digest gate")
+    require("detailedManifestPublic" in stage3_custody, "Stage 3 custody receipt lost detailed-manifest redaction state")
+    require("heldOutThresholdTuningUsed" in stage3_custody, "Stage 3 custody receipt lost held-out non-tuning assertion")
     require("from st_score_restore.pdf_pipeline" in stage3_validator, "Stage 3 validator does not bind PDF pipeline module")
-    require("validate_stage3_pdf_pipeline.py" in workflow, "Stage 3 validator is not wired into CI")
+    require("from st_score_restore.stage3_custody_execution" in stage3_custody_validator, "Stage 3 custody validator does not bind execution module")
+    require("validate_stage3_pdf_pipeline.py" in workflow, "Stage 3 PDF validator is not wired into CI")
+    require("validate_stage3_custody_execution.py" in workflow, "Stage 3 custody validator is not wired into CI")
     require("pypdfium2" in workflow and "5.13.0" in workflow, "CI does not verify Stage 3 renderer dependency version")
     require("pypdfium2==5.13.0" in docs["stage3_adr"], "ADR 0017 lost exact renderer binding")
+    require("accepted" in docs["stage3_adr"].lower(), "ADR 0017 does not record production-effective acceptance")
     require("not silently rasterized" in docs["stage3_adr"].lower(), "ADR 0017 lost no-silent-vector-rasterization rule")
 
     for validator in (
@@ -185,6 +208,7 @@ def main() -> int:
         "validate_stage2_corpus_execution_evidence.py",
         "validate_stage2_exit_acceptance.py",
         "validate_stage3_pdf_pipeline.py",
+        "validate_stage3_custody_execution.py",
     ):
         require(validator in workflow, f"CI is not wired to {validator}")
 
@@ -219,8 +243,10 @@ def main() -> int:
     print("- Stage 1 final exit: PASS / immutable evidence preserved")
     print("- Stage 2 final exit: PASS / production-effective")
     print(f"- Stage 3 entry main: {STAGE3_ENTRY_MAIN}")
-    print("- Stage 3: ACTIVE / PDFium page-level pipeline")
-    print("- Stage 3 vector/hybrid silent rasterization: prohibited")
+    print(f"- Stage 3 core main: {STAGE3_CORE_MAIN} / post-merge Run #232 PASS")
+    print("- Stage 3: ACTIVE / authorized PDF execution boundary in progress")
+    print("- development real PDF pipeline permission: not_requested / fail closed")
+    print("- Stage 3 real corpus execution: not complete")
     print("- Stage 4: NOT STARTED / blocked pending Stage 3 exit PASS")
     print("- evidence/stage1c + evidence/stage2: metadata-only")
     return 0

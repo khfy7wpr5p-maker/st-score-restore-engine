@@ -1,51 +1,52 @@
 {
-  "schema_version": "1.9.0",
+  "schema_version": "1.10.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T12:07:00+03:00",
+  "last_updated_at": "2026-09-02T12:45:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
-  "main_sha": "87198a5a917ab6b3efc277762016a5f5b0dd3aab",
-  "active_branch": "stage3-multipage-pdf-core",
+  "main_sha": "29b4244eeaeb2239ff959e6dd6d4128311f005fa",
+  "active_branch": "stage3-authorized-pdf-execution",
   "active_pr": null,
-  "active_pr_state": "pre_pr_core_slice",
-  "latest_main_ci_run_id": 33609061197,
-  "latest_main_ci_run_number": 228,
+  "active_pr_state": "pre_pr_authorized_execution_slice",
+  "latest_main_ci_run_id": 33615937390,
+  "latest_main_ci_run_number": 232,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
   "completed": [
     "Stage 1 final decision PASS remains effective",
-    "Stage 2 deterministic quality-analysis, development hardening, approved-custody execution and frozen real-corpus execution evidence are merged",
-    "Stage 2 execution-evidence main is ffea7f5aa618187f3cabcfb49801804e3f6658bf",
-    "Stage 2 final exit acceptance PR 89 merged to main 87198a5a917ab6b3efc277762016a5f5b0dd3aab",
-    "post-merge Repository validation Run 228 succeeded on Python 3.11 and 3.12 including Stage 2 final-exit validation, tests and compile",
-    "Stage 2 final exit is PASS and production-effective",
-    "Stage 3 entry is satisfied",
-    "Stage 3 tracking Issue 90 created",
-    "focused branch stage3-multipage-pdf-core created from exact Stage 3 entry main",
-    "Stage 3 renderer decision selects PDFium via pypdfium2 5.13.0 for the first core slice"
+    "Stage 2 final exit PASS remains production-effective",
+    "Stage 3 entry main 87198a5a917ab6b3efc277762016a5f5b0dd3aab remains valid",
+    "Stage 3 PDFium core exact head 508bf980cf01ce11802feb68dabac377639a2697 passed replacement PR Run 231",
+    "Stage 3 core replacement PR 92 merged to main 29b4244eeaeb2239ff959e6dd6d4128311f005fa",
+    "post-merge Repository validation Run 232 succeeded on Python 3.11 and 3.12 including Stage 3 PDF validation, tests and compile",
+    "Stage 3 PDFium core is production-effective",
+    "Stage 3 renderer remains pypdfium2 5.13.0 with raster-only rendering and vector/hybrid preservation",
+    "Stage 3 authorized-execution governance review identified separate development pdf_pipeline_evaluation permission requirement"
   ],
   "in_progress": [
-    "Stage 3 deterministic multi-page PDF core implementation",
-    "page-level raster/vector/hybrid/unknown policy",
-    "bounded PDFium raster-only page rendering",
-    "synthetic multi-page regression tests",
-    "Stage 3 validator and repository CI wiring",
-    "architecture/status reconciliation for Stage 3 ACTIVE state"
+    "Stage 3 authorized PDF execution boundary",
+    "split-specific purpose enforcement: development pdf_pipeline_evaluation, held-out held_out_evaluation",
+    "exact-byte and custody gates before PDFium execution",
+    "public receipt versus custody-only detailed manifest/derivative separation",
+    "synthetic contract tests and CI validator"
   ],
   "blocked": [
+    "Accepted development PDFs currently have pdf_pipeline_evaluation=not_requested; no implicit permission grant is allowed",
+    "Held-out Chopin has held_out_evaluation=granted but exact custody bytes are not present in ordinary Git and must be materialized through approved custody",
+    "Stage 3 real corpus execution is not complete",
     "Stage 4 real-data safety calibration remains blocked until explicit Stage 3 exit PASS",
     "held-out data must not tune Stage 2 or Stage 3 thresholds/hardening constants",
     "C17D detailed held-out metrics cannot be exported because external_export=false",
     "separate user-provided sensitive Fly Me to the Moon phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "Stage 3 core branch must pass exact-head Python 3.11 and 3.12 Repository validation",
-    "Stage 3 dependency pin, PDF pipeline validator, tests and compile must remain green",
-    "vector and hybrid pages must not be silently rasterized",
+    "Stage 3 authorized-execution branch must pass exact-head Python 3.11 and 3.12 Repository validation",
+    "Stage 3 PDF and custody execution validators, tests and compile must remain green",
+    "development pdf_pipeline_evaluation permission must remain fail-closed unless separately authorized",
     "real corpus artifact bytes must remain outside ordinary Git",
     "reviews and unresolved review threads must be clean before merge",
     "base and head must be fresh-read before merge",
-    "post-merge main CI is required before any Stage 3 core slice is production truth",
-    "Stage 3 final exit will require a later separate evidence-bound acceptance decision before Stage 4"
+    "post-merge main CI is required before the authorized-execution slice becomes production truth",
+    "Stage 3 final exit still requires real authorized-corpus execution where permitted, limitations review, frozen evidence and separate acceptance"
   ],
   "latest_evidence_digests": {
     "catalog_v2_canonical_sha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
@@ -53,7 +54,8 @@
     "coverage_report_v2_canonical_sha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834",
     "stage2_corpus_execution_evidence_sha256": "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d",
     "stage2_evidence_main_sha": "ffea7f5aa618187f3cabcfb49801804e3f6658bf",
-    "stage2_acceptance_main_sha": "87198a5a917ab6b3efc277762016a5f5b0dd3aab"
+    "stage2_acceptance_main_sha": "87198a5a917ab6b3efc277762016a5f5b0dd3aab",
+    "stage3_core_main_sha": "29b4244eeaeb2239ff959e6dd6d4128311f005fa"
   },
   "stage1_exit_state": "pass_effective",
   "stage2": {
@@ -67,20 +69,6 @@
     "production_custody_contract_version": "0.1.0",
     "calibration_state": "uncalibrated_engineering_defaults",
     "held_out_threshold_tuning_used": false,
-    "real_corpus_execution": {
-      "item_count": 5,
-      "exact_sha256_matches": 5,
-      "exact_byte_size_matches": 5,
-      "analyzed": 2,
-      "vector_not_applicable": 1,
-      "stage3_renderer_deferred": 2,
-      "development_items": 3,
-      "held_out_items": 2,
-      "restricted_no_export_items": 1,
-      "real_artifact_bytes_in_git": 0,
-      "public_detailed_metrics_or_findings": false
-    },
-    "limitations_review": "pass",
     "exit_decision": "PASS",
     "stage2_exit_state": "pass_effective"
   },
@@ -93,16 +81,25 @@
     "entry_main_sha": "87198a5a917ab6b3efc277762016a5f5b0dd3aab",
     "entry_ci_run_id": 33609061197,
     "entry_ci_run_number": 228,
-    "active_branch": "stage3-multipage-pdf-core",
+    "core_merge_main_sha": "29b4244eeaeb2239ff959e6dd6d4128311f005fa",
+    "core_postmerge_ci_run_id": 33615937390,
+    "core_postmerge_ci_run_number": 232,
+    "active_branch": "stage3-authorized-pdf-execution",
     "renderer": "pdfium",
     "renderer_binding": "pypdfium2",
     "renderer_binding_version": "5.13.0",
     "pipeline_version": "0.1.0",
+    "authorized_execution_contract_version": "0.1.0",
     "render_policy": "raster_only_pages",
     "vector_pages_rasterized": false,
     "hybrid_pages_rasterized": false,
     "held_out_tuning_used": false,
     "calibration_state": "uncalibrated_engineering_defaults",
+    "development_required_purpose": "pdf_pipeline_evaluation",
+    "held_out_required_purpose": "held_out_evaluation",
+    "development_pdf_pipeline_permission_state": "not_requested",
+    "held_out_chopin_permission_state": "granted",
+    "real_corpus_execution_complete": false,
     "stage3_exit_state": "not_yet_evaluated"
   },
   "stage3_entry_state": "satisfied",
@@ -114,16 +111,23 @@
       "run_number": 223,
       "run_id": 33608372005,
       "failure_step": "Validate architecture consistency",
-      "root_cause": "README omitted immutable accepted Stage 2 entry main 936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6 during Stage 2 exit documentation transition",
+      "root_cause": "README omitted immutable accepted Stage 2 entry main during Stage 2 exit documentation transition",
       "resolution": "accepted entry-main reference restored; validator and safety gates unchanged"
+    },
+    {
+      "run_number": 229,
+      "run_id": 33614097788,
+      "failure_step": "Validate repository contract",
+      "root_cause": "repository runtime dependency whitelist still expected the pre-Stage-3 two-package graph after pypdfium2 was added",
+      "resolution": "repository whitelist and dependency/license review records were aligned to the approved three-package graph without weakening validation"
     }
   ],
   "connector_limitations": [
     {
       "operation": "Draft to Ready",
-      "affected_pr": 88,
+      "affected_pr": 91,
       "error": "Repository.fullDatabaseId is unavailable in the connector GraphQL response projection",
-      "resolution": "draft was closed unmerged and non-draft replacement PR 89 was required to pass fresh exact-head CI before merge"
+      "resolution": "draft PR 91 was closed unmerged; non-draft replacement PR 92 used the identical verified head and passed fresh exact-head Run 231 before merge"
     }
   ],
   "hard_rules": [
@@ -131,14 +135,15 @@
     "Real corpus artifact bytes remain outside ordinary Git.",
     "Stage 2 and Stage 3 thresholds remain uncalibrated engineering defaults; Stage 4 owns real-data calibration.",
     "Held-out data must not be used to tune thresholds or hardening constants.",
-    "C17D external_export=false prohibits public export of detailed held-out metrics or reports.",
-    "Stage 3 source PDFs remain immutable and exact SHA-256 bound.",
-    "Vector and hybrid PDF pages are not silently rasterized by the Stage 3 core slice.",
-    "Raster derivatives remain separate, source/page-provenance-bound evidence.",
-    "Original fallback remains available.",
+    "A general project-development approval is not a dataset purpose grant.",
+    "Development Stage 3 corpus execution requires granted pdf_pipeline_evaluation permission.",
+    "Held-out Stage 3 evaluation remains held_out_evaluation only.",
+    "Exact SHA-256 and byte size must match before Stage 3 PDF processing.",
+    "Detailed Stage 3 page manifests, metrics/findings and derivative bytes remain custody-only unless separately authorized.",
+    "Vector and hybrid PDF pages are not silently rasterized.",
     "Stage 3 does not perform OMR or musical inference.",
     "Stage 4 must not start until explicit Stage 3 final exit PASS."
   ],
-  "next_safe_action": "Commit the focused Stage 3 PDFium core, open a Draft PR for Issue 90, require fresh exact-head Python 3.11/3.12 CI, fix only demonstrated root causes without weakening safety gates, then reconcile final PR state before merge. Do not start Stage 4.",
-  "head_scope_note": "This handoff binds the immutable Stage 3 entry main and the active pre-PR branch state. After a PR is opened, any handoff update that records its number moves the branch head and therefore requires fresh exact-head CI."
+  "next_safe_action": "Commit the Stage 3 authorized PDF execution boundary, open a Draft PR, require fresh exact-head Python 3.11/3.12 CI, fix only demonstrated root causes without weakening purpose/custody gates, reconcile reviews/threads/base/head, merge only the exact verified head and require post-merge main CI. Real development PDF execution remains blocked unless pdf_pipeline_evaluation is separately granted.",
+  "head_scope_note": "This handoff binds production-effective Stage 3 core main 29b4244eeaeb2239ff959e6dd6d4128311f005fa and the pre-PR authorized-execution branch. Recording a later PR number in this file would move the branch head and require fresh exact-head CI."
 }

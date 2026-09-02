@@ -175,6 +175,9 @@ jobs:
       - name: Validate Stage 3 multi-page PDF pipeline
         run: python tools/validate_stage3_pdf_pipeline.py
 
+      - name: Validate Stage 3 authorized PDF execution boundary
+        run: python tools/validate_stage3_custody_execution.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
