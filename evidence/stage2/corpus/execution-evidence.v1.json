@@ -1,0 +1,117 @@
+{
+  "analyzerVersion": "0.1.1",
+  "assertions": {
+    "calibrationAuthorized": false,
+    "detailedMetricsInPublicEvidence": false,
+    "heldOutThresholdTuningUsed": false,
+    "publicationAuthorized": false,
+    "realArtifactBytesInGit": false,
+    "sourceBytesModified": false,
+    "stage2ExitPass": false,
+    "stage3EntryAuthorized": false,
+    "trainingAuthorized": false
+  },
+  "calibrationState": "uncalibrated_engineering_defaults",
+  "catalogCanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+  "contractVersion": "0.1.0",
+  "evidenceDigest": {
+    "algorithm": "sha256",
+    "value": "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d"
+  },
+  "evidenceId": "stage2.corpus.execution.expanded-v2.v1",
+  "executionDate": "2026-09-02",
+  "items": [
+    {
+      "analysisErrorCode": "pdf_renderer_not_available",
+      "byteSize": 1182561,
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "detailedEvidenceReference": null,
+      "externalExportState": "not_authorized_by_stage2_execution",
+      "publicReceiptSha256": "8ba95676ec30dbca3548cacc55cbda43de9d34a177b3b6766dcddc5a76ea88c3",
+      "purpose": "quality_evaluation",
+      "reportSha256": null,
+      "sourceSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+      "split": "development",
+      "status": "deferred_stage3_renderer",
+      "storageClass": "managed_standard"
+    },
+    {
+      "analysisErrorCode": null,
+      "byteSize": 34636,
+      "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "detailedEvidenceReference": "evidence:opq_d9d84c66e02282d5b7dfec5368a0381c",
+      "externalExportState": "not_authorized_by_stage2_execution",
+      "publicReceiptSha256": "086d266afe0fc0f31161a2cda9b598695b8e086056d4605306ed3394dc41d532",
+      "purpose": "quality_evaluation",
+      "reportSha256": "e8e466ee8f4d0a3ff3ea10ec6c626f2316d8cedf9feec28d3c7b03a8be5453f6",
+      "sourceSha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+      "split": "development",
+      "status": "analyzed",
+      "storageClass": "managed_standard"
+    },
+    {
+      "analysisErrorCode": null,
+      "byteSize": 84689,
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "detailedEvidenceReference": "evidence:opq_a569c5f4bd74372655d4bf893487c15a",
+      "externalExportState": "not_authorized_by_stage2_execution",
+      "publicReceiptSha256": "1a110095e63f59b366331532bb5146617255316a2db46acfa3112cc55b3ae7ca",
+      "purpose": "quality_evaluation",
+      "reportSha256": "0ec6f6d0bed4589e14f70cb954ecaa3c92ecd2b877e75fd106e8afced13f044b",
+      "sourceSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+      "split": "development",
+      "status": "not_applicable_vector_pdf",
+      "storageClass": "managed_standard"
+    },
+    {
+      "analysisErrorCode": "pdf_renderer_not_available",
+      "byteSize": 1114479,
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "detailedEvidenceReference": null,
+      "externalExportState": "not_authorized_by_stage2_execution",
+      "publicReceiptSha256": "4031f38278249e61992009eaba08b24ac209aad4b3d01563f39d6f8c72dc9d49",
+      "purpose": "held_out_evaluation",
+      "reportSha256": null,
+      "sourceSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+      "split": "held_out",
+      "status": "deferred_stage3_renderer",
+      "storageClass": "managed_standard"
+    },
+    {
+      "analysisErrorCode": null,
+      "byteSize": 647003,
+      "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+      "detailedEvidenceReference": "evidence:opq_fe3d89899bb8658f5189b02c94039710",
+      "externalExportState": "explicitly_blocked",
+      "publicReceiptSha256": "06ad5c71192b918b49b589e09acf025aec282e44cdd28498f5b5110946a71f66",
+      "purpose": "held_out_evaluation",
+      "reportSha256": "fa04245f53719e9704b49b7a37d0820b7998d4414bcf3a962476dbf9ca38ff57",
+      "sourceSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+      "split": "held_out",
+      "status": "analyzed",
+      "storageClass": "managed_restricted"
+    }
+  ],
+  "limitations": [
+    "Scanned/hybrid PDF pixel analysis remains deferred to the Stage 3 renderer boundary.",
+    "Detailed real-corpus reports remain custody-only; C17D external export is explicitly blocked.",
+    "This evidence does not establish musical correctness, OMR improvement, restoration effectiveness, representativeness, or absence of bias."
+  ],
+  "postMergeValidation": {
+    "python311": "success",
+    "python312": "success",
+    "runId": 33604394945,
+    "runNumber": 217
+  },
+  "repositoryMainSha": "6ab6e603550559ef701bfba9b2a200c2e5f794b9",
+  "schemaVersion": "1.0.0",
+  "summary": {
+    "analyzedCount": 2,
+    "developmentCount": 3,
+    "heldOutCount": 2,
+    "itemCount": 5,
+    "restrictedNoExportCount": 1,
+    "stage3DeferredCount": 2,
+    "vectorNotApplicableCount": 1
+  }
+}
