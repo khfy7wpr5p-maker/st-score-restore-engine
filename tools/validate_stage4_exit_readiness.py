@@ -15,10 +15,13 @@ from st_score_restore.stage4_exit_readiness import (
     evaluate_stage4_exit_readiness,
 )
 from st_score_restore.stage4_purpose_grants import validate_stage4_purpose_grants
+from st_score_restore.stage4_reference_label_acceptance import validate_reference_label_acceptance
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "evidence/stage1c/corpus/catalog.v2.json"
 PURPOSE_GRANTS = ROOT / "evidence/stage4/governance/purpose-grants.v1.json"
+REFERENCE_COMPLETION = ROOT / "evidence/stage4/reference-labels/development-human-label-completion.v1.json"
+REFERENCE_ACCEPTANCE = ROOT / "evidence/stage4/reference-labels/development-reference-bundle-acceptance.v1.json"
 LIVE_HANDOFF = ROOT / "docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json"
 STATUS = ROOT / "docs/stage-4-current-status.md"
 WORKFLOW = ROOT / ".github/workflows/repository-validation.yml"
@@ -26,7 +29,6 @@ MODULE = ROOT / "src/st_score_restore/stage4_exit_readiness.py"
 STAGE4_GOVERNANCE = ROOT / "evidence/stage4/governance"
 
 EXPECTED_CANDIDATE_BLOCKERS = {
-    BLOCK_NO_REFERENCE_BUNDLE,
     BLOCK_NO_DEVELOPMENT_EVIDENCE,
     BLOCK_NO_HELDOUT_EVIDENCE,
     BLOCK_NO_METRIC_TARGET_POLICY,
@@ -40,7 +42,17 @@ def require(condition: bool, message: str, failures: list[str]) -> None:
 
 def main() -> int:
     failures: list[str] = []
-    for path in (CATALOG, PURPOSE_GRANTS, LIVE_HANDOFF, STATUS, WORKFLOW, MODULE, STAGE4_GOVERNANCE):
+    for path in (
+        CATALOG,
+        PURPOSE_GRANTS,
+        REFERENCE_COMPLETION,
+        REFERENCE_ACCEPTANCE,
+        LIVE_HANDOFF,
+        STATUS,
+        WORKFLOW,
+        MODULE,
+        STAGE4_GOVERNANCE,
+    ):
         require(path.exists(), f"required Stage 4 readiness input missing: {path.relative_to(ROOT)}", failures)
     if failures:
         for failure in failures:
@@ -49,6 +61,11 @@ def main() -> int:
 
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     purpose_grants = validate_stage4_purpose_grants(json.loads(PURPOSE_GRANTS.read_text(encoding="utf-8")))
+    completion = json.loads(REFERENCE_COMPLETION.read_text(encoding="utf-8"))
+    acceptance = validate_reference_label_acceptance(
+        json.loads(REFERENCE_ACCEPTANCE.read_text(encoding="utf-8")),
+        completion,
+    )
     handoff = json.loads(LIVE_HANDOFF.read_text(encoding="utf-8"))
     status = STATUS.read_text(encoding="utf-8")
     workflow = WORKFLOW.read_text(encoding="utf-8")
@@ -64,6 +81,9 @@ def main() -> int:
     require(not historical_catalog_grants, f"historical catalog was rewritten with safety_calibration grants: {historical_catalog_grants}", failures)
     overlay_grants = purpose_grants.get("grants", [])
     require(len(overlay_grants) == 2, "Stage 4 safety-calibration overlay must grant exactly two development artifacts", failures)
+    require(acceptance.get("decision") == "ACCEPT_REAL_REFERENCE_BUNDLE", "real reference bundle acceptance is not effective in candidate state", failures)
+    require(acceptance.get("assertions", {}).get("referenceBundleAccepted") is True, "reference bundle acceptance assertion missing", failures)
+    require(acceptance.get("assertions", {}).get("realDataCalibrationExecutionAuthorized") is False, "reference acceptance improperly authorized execution", failures)
 
     stage4 = handoff.get("stage4", {})
     require(stage4.get("stage4_state") == "active_framework_governance_only", "Stage 4 current state drifted", failures)
@@ -77,14 +97,12 @@ def main() -> int:
     require(stage4.get("stage5_entry_eligible") is False, "Stage 5 unexpectedly eligible", failures)
     require(handoff.get("stage5_entry_state") == "blocked_pending_stage4_exit", "Stage 5 current block drifted", failures)
 
-    # The live handoff is the last production checkpoint and is intentionally not
-    # rewritten inside this grant PR. It may still list the pre-grant blocker until
-    # this slice merges and a separate current-truth checkpoint becomes effective.
-    current_existing_blockers = set(stage4.get("blocker_codes", []))
+    # Live handoff remains the previous production checkpoint during this PR. It is
+    # intentionally not rewritten until acceptance merges and gets post-merge CI.
+    current_existing_blockers = set(stage4.get("readiness_blocker_codes", []))
     require(
-        BLOCK_NO_SAFETY_CALIBRATION_PERMISSION in current_existing_blockers
-        and BLOCK_NO_REFERENCE_BUNDLE in current_existing_blockers,
-        "pre-grant production handoff lost its frozen blockers before grant production-effectiveness",
+        BLOCK_NO_REFERENCE_BUNDLE in current_existing_blockers,
+        "pre-acceptance production handoff lost the frozen reference-bundle blocker before acceptance production-effectiveness",
         failures,
     )
     require("BLOCKED / NOT AUTHORIZED" in status, "Stage 4 status lost real-calibration execution block", failures)
@@ -99,7 +117,7 @@ def main() -> int:
 
     candidate = Stage4ReadinessInput(
         safety_calibration_artifact_count=len(overlay_grants),
-        accepted_real_reference_bundle_count=0,
+        accepted_real_reference_bundle_count=1,
         accepted_real_development_evidence_count=0,
         accepted_real_held_out_evaluation_evidence_count=0,
         accepted_metric_target_policy=False,
@@ -111,10 +129,11 @@ def main() -> int:
         production_resource_limit_change_authorized=bool(stage4.get("production_resource_limit_changes_authorized")),
     )
     result = evaluate_stage4_exit_readiness(candidate)
-    require(result.get("decision") == "NOT_READY", "Stage 4 grant candidate must remain NOT_READY", failures)
-    require(set(result.get("blockerCodes", [])) == EXPECTED_CANDIDATE_BLOCKERS, "Stage 4 grant-candidate blocker set drifted", failures)
-    require(result.get("blockerCount") == 4, "Stage 4 grant candidate must have four remaining blockers", failures)
-    require(BLOCK_NO_SAFETY_CALIBRATION_PERMISSION not in result.get("blockerCodes", []), "validated safety-calibration overlay did not resolve the purpose prerequisite", failures)
+    require(result.get("decision") == "NOT_READY", "Stage 4 reference-acceptance candidate must remain NOT_READY", failures)
+    require(set(result.get("blockerCodes", [])) == EXPECTED_CANDIDATE_BLOCKERS, "Stage 4 reference-acceptance blocker set drifted", failures)
+    require(result.get("blockerCount") == 3, "Stage 4 reference-acceptance candidate must have three remaining blockers", failures)
+    require(BLOCK_NO_SAFETY_CALIBRATION_PERMISSION not in result.get("blockerCodes", []), "purpose prerequisite regressed", failures)
+    require(BLOCK_NO_REFERENCE_BUNDLE not in result.get("blockerCodes", []), "accepted reference bundle did not resolve its readiness prerequisite", failures)
     assertions = result.get("assertions", {})
     require(assertions.get("readinessPrerequisitesSatisfied") is False, "readiness prerequisites unexpectedly satisfied", failures)
     require(assertions.get("finalGovernanceAcceptanceStillRequired") is True, "final governance acceptance requirement lost", failures)
@@ -156,16 +175,13 @@ def main() -> int:
         '"stage5EntryAuthorized": False',
     ):
         require(token in module, f"Stage 4 readiness module lost safety token: {token}", failures)
-    require(
-        "python tools/validate_stage4_exit_readiness.py" in workflow,
-        "Repository validation does not run Stage 4 exit-readiness validator",
-        failures,
-    )
-    require(
-        "python tools/validate_stage4_purpose_grants.py" in workflow,
-        "Repository validation does not run Stage 4 purpose-grant validator",
-        failures,
-    )
+    for validator in (
+        "python tools/validate_stage4_purpose_grants.py",
+        "python tools/validate_stage4_reference_label_completion.py",
+        "python tools/validate_stage4_reference_label_acceptance.py",
+        "python tools/validate_stage4_exit_readiness.py",
+    ):
+        require(validator in workflow, f"Repository validation does not run required Stage 4 validator: {validator}", failures)
 
     if failures:
         print("Stage 4 exit-readiness validation: FAIL", file=sys.stderr)
@@ -174,12 +190,13 @@ def main() -> int:
         return 1
 
     print("Stage 4 exit-readiness validation: PASS")
-    print("- grant candidate decision: NOT_READY")
     print("- safety_calibration artifacts: 2 exact development items")
-    print("- remaining blockers: 4")
+    print("- accepted real development reference bundles: 1")
+    print("- candidate decision: NOT_READY")
+    print("- remaining blockers: 3")
     for blocker in sorted(EXPECTED_CANDIDATE_BLOCKERS):
         print(f"  - {blocker}")
-    print("- real calibration execution: still blocked pending accepted reference-label evidence")
+    print("- real calibration execution: still NOT AUTHORIZED")
     print("- hypothetical complete prerequisites: READY_FOR_FINAL_ACCEPTANCE_REVIEW only")
     print("- Stage 4 PASS: false / Stage 5 entry: false")
     return 0
