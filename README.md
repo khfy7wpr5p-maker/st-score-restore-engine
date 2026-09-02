@@ -31,7 +31,7 @@ ScoreMosaic Safe Intake → OMR → MusicXML
 ## Current production truth — 2026-09-02
 
 - **Stage 1:** COMPLETE / PASS / production-effective.
-- **Stage 2:** COMPLETE / PASS / production-effective. Frozen execution evidence digest: `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
+- **Stage 2:** COMPLETE / PASS / production-effective. Execution-evidence main: `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; frozen execution evidence digest: `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
 - **Stage 3:** **COMPLETE / PASS / production-effective.** Final acceptance merged through PR #102 to main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`; post-merge Repository validation Run #253 (`33646323461`) passed Python 3.11 and 3.12.
 - **Stage 4:** **ENTRY ELIGIBLE / NOT STARTED.** Stage 4 owns real-data safety calibration. Eligibility is not calibration authorization and does not imply work has started.
 
