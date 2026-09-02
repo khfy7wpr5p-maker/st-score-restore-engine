@@ -1,0 +1,54 @@
+{
+  "acceptedLimitations": [
+    "The real Stage 3 batch contains raster-only and vector-only pages but no real hybrid page; hybrid preservation remains covered by deterministic synthetic tests rather than this real-corpus batch.",
+    "The real Stage 3 batch does not exercise malformed, encrypted, empty, page-limit, pixel-limit, dimension-limit, or unclassified-page fallback cases; those remain contract/test coverage rather than observed real-corpus outcomes.",
+    "The three-item, fourteen-page Stage 3 batch is not evidence of corpus representativeness or absence of bias.",
+    "Stage 3 engineering defaults remain uncalibrated; Stage 4 owns real-data safety calibration and held-out data was not used to tune thresholds or resource limits.",
+    "Detailed page manifests, quality evidence, metrics, findings, and rendered derivatives remain custody-only unless separately authorized.",
+    "Stage 3 does not perform OMR or musical inference and does not establish musical correctness, OMR improvement, or restoration effectiveness."
+  ],
+  "claims": {
+    "absenceOfBiasEstablished": false,
+    "musicalCorrectnessEstablished": false,
+    "omrImprovementEstablished": false,
+    "representativenessEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "stage3ExitPass": false,
+    "stage4EntryAuthorized": false,
+    "thresholdsCalibrated": false
+  },
+  "decision": "PASS_WITH_ACCEPTED_LIMITATIONS",
+  "executionEvidenceCanonicalSha256": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+  "observedCoverage": {
+    "developmentCount": 2,
+    "heldOutCount": 1,
+    "hybridPageCount": 0,
+    "itemCount": 3,
+    "pageCount": 14,
+    "preservedVectorPageCount": 2,
+    "rasterOnlyPageCount": 12,
+    "renderedPageCount": 12,
+    "reviewRequiredCount": 0,
+    "vectorOnlyPageCount": 2
+  },
+  "reviewDigest": {
+    "algorithm": "sha256",
+    "value": "5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d"
+  },
+  "reviewId": "stage3.real-corpus.limitations-review.v1",
+  "reviewedOn": "2026-09-02",
+  "schemaVersion": "1.0.0",
+  "verifiedInvariants": {
+    "calibrationAuthorized": false,
+    "detailedManifestsPublic": false,
+    "exactSourceIdentity": true,
+    "heldOutThresholdTuningUsed": false,
+    "pageOrderPreserved": true,
+    "publicationAuthorized": false,
+    "realCorpusBytesInGit": false,
+    "renderedDerivativesPublic": false,
+    "sourceBytesModified": false,
+    "trainingAuthorized": false,
+    "vectorPagesRasterized": false
+  }
+}
