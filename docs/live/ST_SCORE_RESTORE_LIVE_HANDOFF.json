@@ -1,43 +1,54 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.4.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T03:10:00+03:00",
+  "last_updated_at": "2026-09-02T09:24:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
-  "main_sha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
-  "active_branch": "stage1-exit-acceptance-v1",
-  "active_pr": 82,
+  "main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
+  "active_branch": "stage2-complete-quality-analysis",
+  "active_pr": 84,
   "active_pr_state": "open_draft",
-  "active_pr_head_sha_at_last_fresh_read": "38f808debfd6dfd4d304520cfd938305b08d556b",
-  "latest_ci_run_id": 33574095380,
-  "latest_ci_run_number": 201,
-  "latest_ci_status": "failed_at_architecture_consistency_on_head_38f808debfd6dfd4d304520cfd938305b08d556b_root_cause_fixed",
+  "active_pr_head_sha_at_last_fresh_read": "0abc5ec924b65fdec6548e75923b1e7456ff4822",
+  "latest_ci_run_id": 33589252594,
+  "latest_ci_run_number": 205,
+  "latest_ci_status": "success_on_pr84_head_0abc5ec924b65fdec6548e75923b1e7456ff4822_python_3_11_and_3_12_before_final_docs_reconciliation",
   "completed": [
-    "PR 81 merged into main at 8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
-    "post-merge Repository validation Run 199 succeeded on Python 3.11 and 3.12",
-    "expanded-v2 committed evidence remains deterministic and checked",
-    "historical C15/C16 evidence remains immutable",
-    "Stage 1 PASS decision recorded as separate governance acceptance without modifying automatic report fail-closed flags",
-    "Draft PR 82 created for focused Stage 1 exit acceptance",
-    "Run 201 root cause identified: Stage 1 exit document omitted exact C17B and C17D artifact SHA-256 bindings",
-    "Run 201 root cause fixed by restoring the exact C17A/C17B/C17C/C17D artifact bindings in the exit evidence; no validator or safety gate was weakened"
+    "PR 81 merged deterministic expanded-v2 Stage 1 corpus evidence",
+    "PR 82 merged evidence-bound Stage 1 final exit acceptance",
+    "post-merge Repository validation Run 203 succeeded on Python 3.11 and 3.12",
+    "Stage 1 final decision is PASS and effective",
+    "Stage 1 Issues 47 and 32 closed completed",
+    "Stage 2 entry gate satisfied",
+    "Stage 2 Issue 83 created",
+    "Stage 2 PR 84 opened",
+    "deterministic OpenCV quality-analysis core implemented",
+    "Stage 2 synthetic regression suite implemented",
+    "Stage 2 CI contract validator implemented",
+    "PR 84 Run 205 succeeded on Python 3.11 and 3.12 for head 0abc5ec924b65fdec6548e75923b1e7456ff4822",
+    "final architecture/status reconciliation prepared without changing historical C15/C16 evidence"
   ],
   "in_progress": [
-    "fresh exact-head Python 3.11/3.12 CI after Run 201 documentation fix",
-    "PR 82 final review/thread/base/head reconciliation",
-    "PR 82 Draft -> Ready -> merge objective gates"
+    "commit final Stage 2 architecture/documentation reconciliation on PR 84",
+    "fresh exact-head Python 3.11/3.12 CI after reconciliation commit",
+    "PR 84 review/thread/base/head reconciliation",
+    "PR 84 Draft -> Ready -> merge objective gates",
+    "authorized-corpus execution design through approved custody after core merge"
   ],
   "blocked": [
-    "PR 82 cannot become Ready or merge until fresh exact-head CI is green after the Run 201 fix",
-    "Stage 2 remains blocked until PR 82 is merged and post-merge verification is green",
+    "Stage 3 remains blocked until explicit Stage 2 exit PASS",
+    "Stage 4 real-data threshold calibration must not be pulled into Stage 2",
+    "held-out data must not tune Stage 2 thresholds",
     "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "new exact-head CI must pass on Python 3.11 and 3.12",
-    "reviews and review threads must be clean on the final head",
+    "final reconciliation commit moves PR 84 head, invalidating Run 205 as final merge evidence",
+    "new exact-head Repository validation must pass on Python 3.11 and 3.12",
+    "Stage 2 quality-analysis validator and full tests must remain green",
+    "reviews and review threads must be clean",
     "base and head must be fresh-read before Ready and merge",
-    "PR 82 must transition Draft -> Ready before merge",
-    "post-merge main CI must pass before Stage 2 work begins"
+    "post-merge main CI must pass",
+    "authorized evaluation corpus execution through approved custody is required before Stage 2 exit",
+    "Stage 2 exit requires separate evidence-bound acceptance"
   ],
   "latest_evidence_digests": {
     "catalog_v2_canonical_sha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
@@ -45,32 +56,17 @@
     "coverage_report_v2_canonical_sha256": "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834",
     "historical_c15_snapshot_canonical_sha256": "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476",
     "historical_c16_report_sha256": "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e",
+    "c17a_artifact_sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
     "c17b_artifact_sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+    "c17c_artifact_sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
     "c17d_artifact_sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
-  },
-  "expanded_v2": {
-    "item_count": 5,
-    "real_item_count": 5,
-    "synthetic_item_count": 0,
-    "development_items": 3,
-    "development_source_families": 3,
-    "held_out_items": 2,
-    "held_out_source_families": 2,
-    "source_family_leakage": false,
-    "duplicate_artifact_sha256": false,
-    "chopin_v1_selected": false,
-    "chopin_v2_selected_once": true,
-    "historical_seven_gap_codes_remaining": 0,
-    "automatic_sufficiency_state": "review_required",
-    "automatic_stage1_exit_supported": false,
-    "automatic_stage2_entry_supported": false,
-    "requires_corpus_expansion": false
   },
   "stage1_exit_acceptance": {
     "decision": "PASS",
-    "effective_state": "pending_pr82_merge_and_post_merge_ci",
-    "evidence_main_sha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
-    "post_merge_ci_run": 199,
+    "effective_state": "effective",
+    "accepted_main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
+    "post_merge_ci_run": 203,
+    "post_merge_ci_run_id": 33588190548,
     "blocker_codes": [],
     "source_selection_concentration": "accepted_known_limitation",
     "representativeness_established": false,
@@ -81,44 +77,82 @@
     "training_authorized": false,
     "calibration_authorized": false
   },
-  "ci_failure_history": [
-    {
-      "run_number": 201,
-      "run_id": 33574095380,
-      "head_sha": "38f808debfd6dfd4d304520cfd938305b08d556b",
-      "failure_step": "Validate architecture consistency",
-      "root_cause": "docs/stage-1-exit-evidence.md omitted the exact C17B and C17D artifact SHA-256 values required by the architecture consistency contract",
-      "resolution": "restore exact C17A/C17B/C17C/C17D artifact bindings in the exit evidence without weakening the validator"
-    }
-  ],
-  "stage1_exit_state": "pass_decision_pending_pr82_merge_and_post_merge_ci",
-  "stage2_entry_state": "blocked_pending_stage1_acceptance_merge",
-  "stage2_started": false,
-  "next_safe_action": "require fresh exact-head Repository validation after the Run 201 documentation fix; if both Python jobs and review/base/head gates are clean, transition Ready and merge without further branch writes",
+  "stage2": {
+    "tracking_issue": 83,
+    "active_pr": 84,
+    "entry_state": "satisfied",
+    "implementation_state": "active_core_implemented_docs_reconciliation",
+    "analyzer_version": "0.1.0",
+    "calibration_state": "uncalibrated_engineering_defaults",
+    "held_out_threshold_tuning_used": false,
+    "required_findings": [
+      "orientation",
+      "skew",
+      "perspective",
+      "crop",
+      "blur",
+      "glare",
+      "shadow",
+      "uneven_lighting",
+      "noise",
+      "compression",
+      "low_resolution",
+      "staff_visibility",
+      "tab_visibility"
+    ],
+    "source_bytes_modified": false,
+    "generative_operations_used": false,
+    "symbol_completion_used": false,
+    "omr_performed": false,
+    "musical_correctness_assessed": false,
+    "stage2_exit_state": "not_yet_evaluated",
+    "authorized_corpus_execution_state": "pending_after_core_merge"
+  },
+  "stage1_exit_state": "pass_effective",
+  "stage2_entry_state": "satisfied",
+  "stage2_started": true,
+  "stage2_exit_state": "not_yet_evaluated",
+  "stage3_entry_state": "blocked_pending_stage2_exit",
+  "next_safe_action": "atomically commit architecture/status reconciliation on PR 84; require fresh exact-head Python 3.11/3.12 CI; if clean, reconcile reviews/threads/base/head, transition Ready, merge exact verified head, and verify post-merge main before beginning approved-custody corpus execution evidence",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
-    "The expanded-v2 automatic report remains review_required and must not be rewritten to auto-authorize a stage transition.",
-    "Stage 1 PASS is a separate evidence-bound governance acceptance.",
-    "Coverage closure does not establish representativeness, absence of bias, restoration effectiveness, OMR improvement or musical correctness.",
     "Real corpus artifact bytes remain outside ordinary Git.",
-    "Stage 2 must not start until Stage 1 acceptance is merged and post-merge CI is green."
+    "Stage 1 PASS does not infer training or calibration permission.",
+    "Stage 2 thresholds are uncalibrated engineering defaults; Stage 4 owns real-data calibration.",
+    "Held-out data must not be used to tune Stage 2 thresholds.",
+    "Staff/TAB visibility is geometric evidence only and must not be presented as OMR or musical correctness.",
+    "Digital PDFs remain vector; scanned/hybrid PDF pixel analysis waits for the Stage 3 renderer boundary.",
+    "Stage 3 must not start until explicit Stage 2 final exit PASS."
   ],
   "history": [
     {
-      "at": "2026-09-02T03:02:46+03:00",
-      "event": "PR 81 merged into main"
+      "at": "2026-09-02T06:44:35+03:00",
+      "event": "PR 82 merged Stage 1 final exit acceptance into main"
     },
     {
-      "at": "2026-09-02T03:03:38+03:00",
-      "event": "post-merge Run 199 fully green on Python 3.11 and 3.12"
+      "at": "2026-09-02T06:45:27+03:00",
+      "event": "Run 203 green on Python 3.11/3.12; Stage 1 PASS effective"
     },
     {
-      "at": "2026-09-02T03:09:00+03:00",
-      "event": "Draft PR 82 created and canonical handoff bound"
+      "at": "2026-09-02T06:48:15+03:00",
+      "event": "Stage 2 tracking Issue 83 created"
     },
     {
-      "at": "2026-09-02T03:10:00+03:00",
-      "event": "Run 201 architecture-consistency failure root cause identified and fixed by restoring C17B/C17D exact digests in exit evidence"
+      "at": "2026-09-02T07:01:25+03:00",
+      "event": "Draft PR 84 opened"
+    },
+    {
+      "at": "2026-09-02T07:02:00+03:00",
+      "event": "PR 84 handoff bound before core exact-head verification"
+    },
+    {
+      "at": "2026-09-02T07:05:00+03:00",
+      "event": "Run 205 passed Stage 2 validator, full tests and compile on Python 3.11/3.12 for head 0abc5ec924b65fdec6548e75923b1e7456ff4822"
+    },
+    {
+      "at": "2026-09-02T09:24:00+03:00",
+      "event": "final Stage 2 architecture/status reconciliation prepared; next commit will require fresh exact-head CI"
     }
-  ]
+  ],
+  "head_scope_note": "Run 205 is valid for pre-reconciliation head 0abc5ec924b65fdec6548e75923b1e7456ff4822. The reconciliation commit intentionally moves the PR head; only the new head CI may authorize Ready/merge."
 }

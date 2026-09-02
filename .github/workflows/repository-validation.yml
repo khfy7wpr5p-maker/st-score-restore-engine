@@ -159,6 +159,9 @@ jobs:
       - name: Validate Stage 1 final exit acceptance
         run: python tools/validate_stage1_exit_acceptance.py
 
+      - name: Validate Stage 2 quality analysis contract
+        run: python tools/validate_stage2_quality_analysis.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
