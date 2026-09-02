@@ -1,0 +1,281 @@
+{
+  "assertions": {
+    "calibrationAuthorized": false,
+    "detailedManifestsPublic": false,
+    "heldOutThresholdTuningUsed": false,
+    "publicationAuthorized": false,
+    "realCorpusBytesInGit": false,
+    "renderedDerivativesPublic": false,
+    "sourceBytesModified": false,
+    "stage3ExitPass": false,
+    "stage4EntryAuthorized": false,
+    "trainingAuthorized": false
+  },
+  "catalogCanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+  "evidenceDigest": {
+    "algorithm": "sha256",
+    "value": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6"
+  },
+  "executionDate": "2026-09-02",
+  "itemIds": [
+    "dataset.item.imslp799143-beethoven-op48-no3.v1",
+    "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+    "dataset.item.imslp82860-chopin-op69.v2"
+  ],
+  "limitations": [
+    "This execution evidence does not by itself accept Stage 3 exit.",
+    "Detailed manifests, quality evidence and rendered derivatives remain custody-only.",
+    "Held-out execution is evaluation-only and must not tune thresholds or resource limits."
+  ],
+  "postMergeValidation": {
+    "runId": 33641537118,
+    "runNumber": 246
+  },
+  "receipts": [
+    {
+      "assertions": {
+        "calibrationAuthorized": false,
+        "environmentRestrictionSatisfied": true,
+        "exactByteSizeMatched": true,
+        "exactDigestMatched": true,
+        "heldOutThresholdTuningUsed": false,
+        "musicalCorrectnessEstablished": false,
+        "omrPerformed": false,
+        "publicationAuthorized": false,
+        "purposePermissionValid": true,
+        "realArtifactBytesInGit": false,
+        "retentionRestrictionSatisfied": true,
+        "sourceBytesModified": false,
+        "splitRestrictionSatisfied": true,
+        "storageRestrictionSatisfied": true,
+        "trainingAuthorized": false
+      },
+      "authorizationReference": "evidence:opq_dd8bd76ebeb30b1ca0b7d701c0afe5cd",
+      "byteSize": 1182561,
+      "catalogInputKind": "scanned_pdf",
+      "contractVersion": "0.1.0",
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "environment": "stage1_offline",
+      "executionDate": "2026-09-02",
+      "limitations": [
+        "This receipt proves an authorized Stage 3 PDF execution boundary, not musical correctness or restoration effectiveness.",
+        "Detailed page manifests, quality findings, metrics, and rendered derivatives remain custody-only unless separately authorized.",
+        "Stage 3 engineering limits remain uncalibrated; Stage 4 owns real-data safety calibration."
+      ],
+      "manifestDigest": {
+        "algorithm": "sha256",
+        "value": "839250a525121759e5bb3606d94d3bb65fcc1985cb896e025e0ec7e2d67762c7"
+      },
+      "pageSummary": {
+        "classificationCounts": {
+          "raster_only": 4
+        },
+        "pageCount": 4,
+        "pageOrderPreserved": true,
+        "renderedPageCount": 4,
+        "reviewRequiredCount": 0,
+        "statusCounts": {
+          "rendered_raster_page": 4
+        },
+        "vectorPagesRasterized": false
+      },
+      "pipelineVersion": "0.1.0",
+      "purpose": "pdf_pipeline_evaluation",
+      "receiptDigest": {
+        "algorithm": "sha256",
+        "value": "3cc43f9f0ab9315e1cbb17e9f8a99a7dba91f08ea19266504e1f462ad11d3618"
+      },
+      "renderer": {
+        "binding": "pypdfium2",
+        "bindingVersion": "5.13.0",
+        "name": "pdfium"
+      },
+      "reportHandling": {
+        "custodyOnly": true,
+        "derivativeBytesExported": false,
+        "detailedManifestExported": false,
+        "detailedManifestPublic": false,
+        "externalExportState": "explicitly_blocked"
+      },
+      "schemaVersion": "1.0.0",
+      "sourceDigest": {
+        "algorithm": "sha256",
+        "value": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c"
+      },
+      "split": "development",
+      "status": "completed",
+      "storageClass": "managed_standard"
+    },
+    {
+      "assertions": {
+        "calibrationAuthorized": false,
+        "environmentRestrictionSatisfied": true,
+        "exactByteSizeMatched": true,
+        "exactDigestMatched": true,
+        "heldOutThresholdTuningUsed": false,
+        "musicalCorrectnessEstablished": false,
+        "omrPerformed": false,
+        "publicationAuthorized": false,
+        "purposePermissionValid": true,
+        "realArtifactBytesInGit": false,
+        "retentionRestrictionSatisfied": true,
+        "sourceBytesModified": false,
+        "splitRestrictionSatisfied": true,
+        "storageRestrictionSatisfied": true,
+        "trainingAuthorized": false
+      },
+      "authorizationReference": "evidence:opq_dd8bd76ebeb30b1ca0b7d701c0afe5cd",
+      "byteSize": 84689,
+      "catalogInputKind": "digital_pdf",
+      "contractVersion": "0.1.0",
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "environment": "stage1_offline",
+      "executionDate": "2026-09-02",
+      "limitations": [
+        "This receipt proves an authorized Stage 3 PDF execution boundary, not musical correctness or restoration effectiveness.",
+        "Detailed page manifests, quality findings, metrics, and rendered derivatives remain custody-only unless separately authorized.",
+        "Stage 3 engineering limits remain uncalibrated; Stage 4 owns real-data safety calibration."
+      ],
+      "manifestDigest": {
+        "algorithm": "sha256",
+        "value": "72c13d7ea3200bdb8fd97052dae4ca938d5d3835dc259ab931dfc7caf5068c67"
+      },
+      "pageSummary": {
+        "classificationCounts": {
+          "vector_only": 2
+        },
+        "pageCount": 2,
+        "pageOrderPreserved": true,
+        "renderedPageCount": 0,
+        "reviewRequiredCount": 0,
+        "statusCounts": {
+          "preserved_vector_page": 2
+        },
+        "vectorPagesRasterized": false
+      },
+      "pipelineVersion": "0.1.0",
+      "purpose": "pdf_pipeline_evaluation",
+      "receiptDigest": {
+        "algorithm": "sha256",
+        "value": "780620a937f816271528f94df4f74cc875ae2e34d061189274910ff7c76ef699"
+      },
+      "renderer": {
+        "binding": "pypdfium2",
+        "bindingVersion": "5.13.0",
+        "name": "pdfium"
+      },
+      "reportHandling": {
+        "custodyOnly": true,
+        "derivativeBytesExported": false,
+        "detailedManifestExported": false,
+        "detailedManifestPublic": false,
+        "externalExportState": "explicitly_blocked"
+      },
+      "schemaVersion": "1.0.0",
+      "sourceDigest": {
+        "algorithm": "sha256",
+        "value": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e"
+      },
+      "split": "development",
+      "status": "completed",
+      "storageClass": "managed_standard"
+    },
+    {
+      "assertions": {
+        "calibrationAuthorized": false,
+        "environmentRestrictionSatisfied": true,
+        "exactByteSizeMatched": true,
+        "exactDigestMatched": true,
+        "heldOutThresholdTuningUsed": false,
+        "musicalCorrectnessEstablished": false,
+        "omrPerformed": false,
+        "publicationAuthorized": false,
+        "purposePermissionValid": true,
+        "realArtifactBytesInGit": false,
+        "retentionRestrictionSatisfied": true,
+        "sourceBytesModified": false,
+        "splitRestrictionSatisfied": true,
+        "storageRestrictionSatisfied": true,
+        "trainingAuthorized": false
+      },
+      "authorizationReference": "evidence:opq_c2bb8aac4b0381fc44e96ffb3729eabc",
+      "byteSize": 1114479,
+      "catalogInputKind": "scanned_pdf",
+      "contractVersion": "0.1.0",
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "environment": "stage1_offline",
+      "executionDate": "2026-09-02",
+      "limitations": [
+        "This receipt proves an authorized Stage 3 PDF execution boundary, not musical correctness or restoration effectiveness.",
+        "Detailed page manifests, quality findings, metrics, and rendered derivatives remain custody-only unless separately authorized.",
+        "Stage 3 engineering limits remain uncalibrated; Stage 4 owns real-data safety calibration."
+      ],
+      "manifestDigest": {
+        "algorithm": "sha256",
+        "value": "7a7e281f5ea4e00f5ce0d319143ebba656620b4ec3ee280a204db1785843a145"
+      },
+      "pageSummary": {
+        "classificationCounts": {
+          "raster_only": 8
+        },
+        "pageCount": 8,
+        "pageOrderPreserved": true,
+        "renderedPageCount": 8,
+        "reviewRequiredCount": 0,
+        "statusCounts": {
+          "rendered_raster_page": 8
+        },
+        "vectorPagesRasterized": false
+      },
+      "pipelineVersion": "0.1.0",
+      "purpose": "held_out_evaluation",
+      "receiptDigest": {
+        "algorithm": "sha256",
+        "value": "6c61bfcc1197779aa6fc7de68d536a39b2fba62c230cafdee50d5616005e1ce9"
+      },
+      "renderer": {
+        "binding": "pypdfium2",
+        "bindingVersion": "5.13.0",
+        "name": "pdfium"
+      },
+      "reportHandling": {
+        "custodyOnly": true,
+        "derivativeBytesExported": false,
+        "detailedManifestExported": false,
+        "detailedManifestPublic": false,
+        "externalExportState": "not_authorized_by_stage3_execution"
+      },
+      "schemaVersion": "1.0.0",
+      "sourceDigest": {
+        "algorithm": "sha256",
+        "value": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3"
+      },
+      "split": "held_out",
+      "status": "completed",
+      "storageClass": "managed_standard"
+    }
+  ],
+  "rendererBindingVersion": "5.13.0",
+  "repositoryMainSha": "5e682f1933a7167fc142689306352fe53b4b1833",
+  "runnerVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
+  "status": "executed",
+  "summary": {
+    "allPageOrderPreserved": true,
+    "anyVectorPagesRasterized": false,
+    "classificationCounts": {
+      "raster_only": 12,
+      "vector_only": 2
+    },
+    "developmentCount": 2,
+    "heldOutCount": 1,
+    "itemCount": 3,
+    "pageCount": 14,
+    "renderedPageCount": 12,
+    "reviewRequiredCount": 0,
+    "statusCounts": {
+      "preserved_vector_page": 2,
+      "rendered_raster_page": 12
+    }
+  }
+}
