@@ -106,6 +106,26 @@ def _write_custody_result(
     }
 
 
+def _aggregate_page_summary(receipts: list[dict[str, Any]]) -> dict[str, Any]:
+    classification_counts: dict[str, int] = {}
+    status_counts: dict[str, int] = {}
+    for receipt in receipts:
+        page_summary = receipt.get("pageSummary", {})
+        for key, count in page_summary.get("classificationCounts", {}).items():
+            classification_counts[str(key)] = classification_counts.get(str(key), 0) + int(count)
+        for key, count in page_summary.get("statusCounts", {}).items():
+            status_counts[str(key)] = status_counts.get(str(key), 0) + int(count)
+    return {
+        "pageCount": sum(int(item.get("pageSummary", {}).get("pageCount", 0)) for item in receipts),
+        "renderedPageCount": sum(int(item.get("pageSummary", {}).get("renderedPageCount", 0)) for item in receipts),
+        "reviewRequiredCount": sum(int(item.get("pageSummary", {}).get("reviewRequiredCount", 0)) for item in receipts),
+        "classificationCounts": dict(sorted(classification_counts.items())),
+        "statusCounts": dict(sorted(status_counts.items())),
+        "allPageOrderPreserved": all(item.get("pageSummary", {}).get("pageOrderPreserved") is True for item in receipts),
+        "anyVectorPagesRasterized": any(item.get("pageSummary", {}).get("vectorPagesRasterized") is True for item in receipts),
+    }
+
+
 def execute_stage3_real_corpus_batch(
     catalog: Mapping[str, Any],
     purpose_grants: Mapping[str, Any],
@@ -201,10 +221,7 @@ def execute_stage3_real_corpus_batch(
         "itemCount": len(receipts),
         "developmentCount": sum(1 for item in receipts if item.get("split") == "development"),
         "heldOutCount": sum(1 for item in receipts if item.get("split") == "held_out"),
-        "pageCount": sum(int(item.get("pageSummary", {}).get("pageCount", 0)) for item in receipts),
-        "renderedRasterPageCount": sum(int(item.get("pageSummary", {}).get("renderedRasterPageCount", 0)) for item in receipts),
-        "preservedVectorPageCount": sum(int(item.get("pageSummary", {}).get("preservedVectorPageCount", 0)) for item in receipts),
-        "reviewRequiredPageCount": sum(int(item.get("pageSummary", {}).get("reviewRequiredPageCount", 0)) for item in receipts),
+        **_aggregate_page_summary(receipts),
     }
     public_evidence: dict[str, Any] = {
         "schemaVersion": SCHEMA_VERSION,
