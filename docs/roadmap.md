@@ -3,14 +3,14 @@
 **Document status:** Binding sequence; Stage 4 ACTIVE — framework/governance only / readiness NOT_READY  
 **Date:** 2026-09-02  
 **Stage 4 tracking:** Issue #104  
-**Latest Stage 4 purpose-grant production main:** `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272 (`33672903071`) SUCCESS  
-**Real-data calibration:** BLOCKED / NOT AUTHORIZED
+**Latest Stage 4 reference-bundle acceptance production main:** `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282 (`33680628749`) SUCCESS  
+**Real-data calibration execution:** BLOCKED / NOT AUTHORIZED
 
 ## Authority and invariants
 
 Merged `main` plus accepted deterministic evidence is production truth. Historical evidence is immutable. Real corpus/derivative bytes remain outside ordinary Git. Held-out evidence never tunes thresholds/resource limits. Exact-head and post-merge CI are mandatory.
 
-Stage 4 is active for framework/governance work. Beethoven + Barley now have exact production-effective `safety_calibration` purpose grants, but this does **not** authorize real calibration execution. Human-reviewed reference-label evidence must be separately accepted first.
+Stage 4 is active for framework/governance work. Beethoven + Barley have exact production-effective `safety_calibration` purpose grants and an accepted 42-record human-reviewed development reference bundle. This makes the bundle candidate-derivation eligible, but it does **not** authorize real calibration execution. A separate exact-scope execution authorization is required.
 
 ## Binding delivery sequence
 
@@ -41,9 +41,11 @@ Stage 3: COMPLETE / PASS / production-effective. Purpose-grant digest `3350b8540
 ## Stage 4 — Safety calibration with real data
 
 **State:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY.  
-**Readiness:** NOT_READY / 4 remaining blockers.  
+**Readiness:** NOT_READY / 3 remaining blockers.  
 **Entry/start digest:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.  
-**Safety-calibration grant digest:** `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`.
+**Safety-calibration grant digest:** `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`.  
+**Accepted reference-bundle digest:** `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`.  
+**Reference-bundle acceptance digest:** `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`.
 
 Production chain:
 
@@ -51,22 +53,26 @@ Production chain:
 - reference-label contract PR #107 / main `b184f5e5b780213671597ffa9f4380aa4a1adb47` / Run #263;
 - public evidence contract PR #108 / main `4c936353ede322f41d009d503bcb4ca7fa64b2b9` / Run #265;
 - exit-readiness PR #109 / main `d4dff6b8c672cec1b2afa864f89bb7a03f29cd75` / Run #267;
-- purpose-grant PR #111 / main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272.
+- purpose-grant PR #111 / main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272;
+- human review work package PR #113 / main `7e2552c38b74abc7c60ed6bc6c74c3fc97d62c12` / Run #278;
+- human label completion PR #114 / main `58266dffed529a5d7d247e58651865bbda83981e` / Run #280;
+- accepted development reference bundle PR #115 / main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282.
 
-Authorized purpose scope:
+Development scope:
 
-- Beethoven development exact artifact: `safety_calibration` granted;
-- Barley development exact artifact: `safety_calibration` granted;
+- Beethoven: development-only `safety_calibration` granted;
+- Barley: development-only `safety_calibration` granted;
+- 42 human reference labels accepted: 36 clear, 5 possible, 1 probable, 0 not_assessed;
+- accepted receipt digest `f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33`;
 - Chopin remains `held_out_evaluation` only; candidate derivation/tuning forbidden;
 - historical Stage 1 catalog remains unchanged;
-- external export, training, publication and real calibration execution remain unauthorized.
+- external export, training, publication, production threshold/resource changes and real calibration execution remain unauthorized.
 
 Remaining blockers:
 
-1. `no_real_calibration_reference_label_bundle_is_accepted`
-2. `no_real_development_calibration_evidence_is_accepted`
-3. `no_real_held_out_evaluation_evidence_is_accepted`
-4. `no_stage4_metric_acceptance_target_policy_is_accepted`
+1. `no_real_development_calibration_evidence_is_accepted`
+2. `no_real_held_out_evaluation_evidence_is_accepted`
+3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
 Stage 4 readiness may advance only to `READY_FOR_FINAL_ACCEPTANCE_REVIEW`; separate final acceptance is mandatory and `stage4ExitPass=false` remains until then.
 
@@ -76,4 +82,4 @@ Stage 4 readiness may advance only to `READY_FOR_FINAL_ACCEPTANCE_REVIEW`; separ
 
 ## Current next safe action
 
-Prepare the real reference-label work package for Beethoven + Barley. Do not fabricate human labels, execute calibration, change production thresholds/resources, or use Chopin for tuning before an accepted human-reviewed reference-label bundle exists.
+Create a separate governance decision that explicitly authorizes one real **development calibration execution** on Beethoven + Barley using the accepted human reference bundle. Until that decision exists, execution remains NOT AUTHORIZED. Chopin must remain isolated for later held-out evaluation and cannot tune the candidate.
