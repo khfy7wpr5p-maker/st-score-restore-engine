@@ -11,40 +11,23 @@
 
 ## Overlay semantics
 
-Historical Stage 1 catalog evidence is immutable. `evidence/stage1c/corpus/catalog.v2.json` therefore remains byte/content stable with its original `pdf_pipeline_evaluation=not_requested` fields. The later Stage 3 authorization is represented separately at:
-
-`evidence/stage3/governance/purpose-grants.v1.json`
-
-Runtime accepts that overlay only when its canonical SHA-256 equals the approved digest above. An arbitrary caller-created grant object cannot widen Stage 3 permissions.
+Historical Stage 1 catalog evidence is immutable. `evidence/stage1c/corpus/catalog.v2.json` remains unchanged with original `pdf_pipeline_evaluation=not_requested` fields. Later Stage 3 authorization is stored separately at `evidence/stage3/governance/purpose-grants.v1.json` and runtime accepts only its approved canonical digest.
 
 ## Granted items
-
-The overlay grants `pdf_pipeline_evaluation` only for these exact development artifacts:
 
 - Beethoven: `dataset.item.imslp799143-beethoven-op48-no3.v1`, SHA-256 `c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c`;
 - Barley: `dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1`, SHA-256 `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`.
 
-Restrictions:
+Restrictions: split `development`; storage `managed_standard`; environment `stage1_offline`; external export `false`.
 
-- split `development`;
-- storage class `managed_standard`;
-- environment `stage1_offline`;
-- external export `false`.
+## Non-grants
 
-## Explicit non-grants
-
-This authorization does **not** grant model training, Stage 4 calibration, publication, demonstration, external export, held-out permission changes, OMR claims or musical-correctness claims.
-
-Chopin remains governed only by its existing `held_out_evaluation` permission. Historical Stage 1/2 evidence remains unchanged.
+No model training, Stage 4 calibration, publication, demonstration, external export or held-out permission change is granted. Chopin remains governed only by existing `held_out_evaluation`.
 
 ## Runtime boundary
 
-`src/st_score_restore/stage3_purpose_grants.py` validates the immutable overlay, confirms the exact item/artifact/purpose tuple, refuses to override a historical catalog state other than `not_requested`, applies the grant only to an in-memory catalog copy, and delegates to the Stage 3 custody executor.
-
-All existing gates still apply: approved dataset review, revocation/retention state, split/storage/environment restrictions, exact artifact SHA-256, exact byte size, PDF policy, resource bounds, vector/hybrid preservation and custody-only detailed output.
-
-The grant therefore advances Beethoven and Barley only to the exact-byte custody gate. It does not fabricate or bypass source bytes.
+`src/st_score_restore/stage3_purpose_grants.py` validates the immutable overlay, exact item/artifact/purpose tuple and historical baseline state, applies the grant only in memory, and delegates to the existing Stage 3 custody executor. Approved review, retention/revocation, storage/environment, exact SHA-256, exact byte size, PDF policy/resource limits and vector/hybrid preservation still apply.
 
 ## Current execution state
 
-PR #98 adds a separate fail-closed real-corpus runner. The grant itself is already production-effective; real Stage 3 corpus execution is still not frozen/accepted. The runner must use the exact approved artifacts and must keep `stage3ExitPass=false` and `stage4EntryAuthorized=false` until separate exit evidence is accepted.
+The grant itself is already production-effective. The Stage 3 real-corpus runner is carried by **non-draft PR #99** on `stage3-real-corpus-runner`. Draft PR #98 was closed unmerged after the Draft→Ready connector failed; no authorization or merge gate was bypassed. Real Stage 3 corpus execution is still not frozen/accepted, and the runner keeps `stage3ExitPass=false` and `stage4EntryAuthorized=false` until separate exit evidence is accepted.

@@ -36,10 +36,10 @@ This repository is not an OMR engine. Source bytes remain immutable, exact SHA-2
 
 - **Stage 1:** COMPLETE / PASS. Accepted Stage 2 entry main: `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
 - **Stage 2:** COMPLETE / PASS / production-effective. Execution-evidence main: `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; final acceptance main / Stage 3 entry main: `87198a5a917ab6b3efc277762016a5f5b0dd3aab`; post-merge Run #228 (`33609061197`) passed Python 3.11/3.12.
-- **Stage 3:** ACTIVE under Issue #90. PDFium core main: `29b4244eeaeb2239ff959e6dd6d4128311f005fa` / Run #232. Authorized-execution main: `d834ed42e3f553308aef7f6adb7e8cb873593f0b` / Run #235. Purpose-grant main: `6ebe160309c562e9841a3c313d5ca507592f1386` / Run #238. Active focused PR: #98 (`stage3-real-corpus-runner`) for the fail-closed real-corpus runner.
+- **Stage 3:** ACTIVE under Issue #90. PDFium core main: `29b4244eeaeb2239ff959e6dd6d4128311f005fa` / Run #232. Authorized-execution main: `d834ed42e3f553308aef7f6adb7e8cb873593f0b` / Run #235. Purpose-grant main: `6ebe160309c562e9841a3c313d5ca507592f1386` / Run #238. Active focused PR: **#99** (`stage3-real-corpus-runner`), replacing Draft PR #98 after the Draft→Ready connector failed; #98 is closed unmerged.
 - **Stage 4:** NOT STARTED / BLOCKED pending explicit Stage 3 final exit PASS.
 
-PR #98 exact head `696729f825ed23ee89edc972cbf46303f3ebba73` passed Repository validation Run #242 (`33621535491`) on Python 3.11 and 3.12 before this architecture-refresh commit. Any head movement requires a fresh exact-head run.
+PR #98 exact head `7778cdf790daa806efd166d9d3bf1f5a011ecc71` passed Repository validation Run #243 (`33639819769`) on Python 3.11 and 3.12 before replacement. PR #99 points to the same branch/head lineage, but the replacement itself requires fresh exact-head CI after this reconciliation commit.
 
 ## Immutable Stage 1/2 evidence
 
@@ -73,9 +73,9 @@ Restrictions: development split only, `managed_standard`, `stage1_offline`, `ext
 
 ## Stage 3 real-corpus runner
 
-PR #98 adds a fail-closed offline runner for exactly Beethoven, Barley and Chopin. It requires `pypdfium2==5.13.0`, the accepted catalog digest, exact admitted identities and custody paths outside the ordinary Git working tree. Public output is redacted; detailed manifests, quality findings and rendered derivatives remain custody-only. The runner explicitly keeps `heldOutThresholdTuningUsed=false`, `stage3ExitPass=false`, and `stage4EntryAuthorized=false`.
+PR #99 carries the fail-closed offline runner for exactly Beethoven, Barley and Chopin. It requires `pypdfium2==5.13.0`, the accepted catalog digest, exact admitted identities and custody paths outside the ordinary Git working tree. Public output is redacted; detailed manifests, quality findings and rendered derivatives remain custody-only. The runner explicitly keeps `heldOutThresholdTuningUsed=false`, `stage3ExitPass=false`, and `stage4EntryAuthorized=false`.
 
-Real Stage 3 corpus execution is not yet frozen as accepted evidence. Stage 3 exit still requires approved-custody execution, public-safe evidence, limitations review, separate final-exit acceptance, exact-head CI and post-merge main CI.
+Real Stage 3 corpus execution is not yet frozen as accepted evidence. Stage 3 exit still requires runner merge + post-merge CI, approved-custody execution, public-safe evidence, limitations review, separate final-exit acceptance, exact-head CI and post-merge main CI.
 
 ## Binding development order
 
