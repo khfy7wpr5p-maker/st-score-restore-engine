@@ -1,42 +1,65 @@
 # Stage 2 Current Status — Complete Quality Analysis
 
-**Status:** ACTIVE / PR #84 IMPLEMENTATION + ARCHITECTURE RECONCILIATION  
+**Status:** ACTIVE / DEVELOPMENT-CORPUS HARDENING  
 **As of:** 2026-09-02  
 **Tracking:** Issue #83  
-**Active PR:** #84 / `stage2-complete-quality-analysis`  
-**Stage 1 accepted main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
-**Stage 1 post-merge CI:** Run #203 (`33588190548`) — Python 3.11 / 3.12 SUCCESS  
-**Latest verified PR #84 head before documentation reconciliation:** `0abc5ec924b65fdec6548e75923b1e7456ff4822`  
-**PR #84 CI:** Run #205 (`33589252594`) — Python 3.11 / 3.12 SUCCESS  
+**Stage 1 accepted entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
+**Production main:** `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`  
+**PR #84:** MERGED  
+**Post-merge main CI:** Run #207 (`33599776059`) — Python 3.11 / 3.12 SUCCESS  
+**Active hardening branch:** `stage2-dev-corpus-hardening`  
 **Stage 3:** BLOCKED until explicit Stage 2 exit PASS
 
-## Entry gate
+## Entry and production baseline
 
-Stage 1 final exit is PASS and effective. PR #82 merged the evidence-bound acceptance and Run #203 succeeded on the resulting main. Stage 2 is therefore the authorized active stage.
+Stage 1 final exit is PASS and effective. PR #82 established the Stage 2 entry decision against accepted main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`. PR #84 subsequently merged the deterministic OpenCV Stage 2 quality-analysis core and architecture reconciliation into production main `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`. Repository validation Run #207 succeeded on that resulting exact main SHA on Python 3.11 and 3.12, including the Stage 2 contract validator, full tests and compile.
 
-Historical Stage 1 C15/C16 evidence remains immutable. The expanded-v2 automatic report remains fail-closed; Stage 1 PASS is the separate governance acceptance.
+Historical Stage 1 C15/C16 evidence remains immutable. Real corpus score/PDF/image bytes remain outside ordinary Git.
 
-## Implemented Stage 2 core
+## Authorized-corpus custody recheck
 
-PR #84 introduces a versioned deterministic OpenCV quality report bound to immutable source SHA-256 and configuration digest. Raw metrics are separate from qualitative finding states.
+The accepted five-item Stage 1 expanded-v2 corpus was re-materialized from approved Google Drive custody only for transient Stage 2 evaluation. Exact byte size and SHA-256 identity matched the accepted catalog for all five items before any analysis decision was made.
 
-Image evidence covers:
+The accepted corpus remains:
 
-- EXIF/display orientation;
-- skew angle, confidence and line support;
-- page quadrilateral, area ratio, perspective asymmetry and crop margins;
-- Laplacian-variance sharpness / blur;
-- highlight clipping and spatial glare concentration;
-- local shadow strength;
-- uneven-lighting background variation;
-- high-frequency noise residuals;
-- JPEG block-boundary and DQT quantization evidence;
-- pixel dimensions and DPI-based low-resolution evidence;
-- geometric five-line / six-line staff/TAB visibility indicators.
+- Beethoven development scanned PDF;
+- C17A development combined staff+TAB PNG;
+- C17B development guitar-TAB PDF;
+- C17C held-out Chopin scanned PDF metadata-v2 representation;
+- C17D held-out deidentified phone-photo JPEG in `managed_restricted` custody.
 
-Run #205 successfully validated the initial Stage 2 core, dedicated validator, synthetic regressions, full repository tests and compile on Python 3.11 and 3.12.
+The separate user-provided `Fly Me to the Moon` sensitive phone photo is not part of this accepted corpus and is not used by Stage 2.
 
-## Safety and interpretation boundary
+No real corpus bytes are committed to Git. Transient evaluation copies are not repository fixtures.
+
+## Development-corpus hardening finding
+
+The first real development-raster exercise used C17A only. It exposed two measurement-semantics defects in analyzer `0.1.0`:
+
+1. predominantly white score paper could be scored as glare because global white clipping contributed directly to the glare score;
+2. a small notation-region quadrilateral could be selected as a page boundary because page geometry lacked a minimum page-area eligibility rule.
+
+These are algorithm correctness defects, not Stage 4 calibration decisions. No held-out metric or threshold was used to choose the fixes.
+
+The focused hardening branch updates analyzer version to `0.1.1` and:
+
+- scores glare from **localized clipped-bright excess relative to the page/tile baseline**, while retaining global clipped fraction as evidence only;
+- requires a deterministic minimum page-area ratio before a quadrilateral may become page-boundary evidence;
+- fails perspective/crop closed to `not_assessed` when no qualifying page quadrilateral exists;
+- adds synthetic regressions that a white score background is not glare and a small inner rectangle is not a page boundary;
+- retains the existing regression that a large localized clipped patch is probable glare.
+
+The new page-area rule and glare semantics remain uncalibrated engineering defaults. Stage 4 still owns real-data threshold calibration.
+
+## Held-out boundary
+
+Held-out artifacts are not used to tune Stage 2 thresholds or choose hardening constants. In particular, C17D remains held-out and `managed_restricted`; its permission includes `external_export=false`.
+
+Therefore detailed C17D-derived Stage 2 metrics or reports must not be exported to public Git. Any detailed held-out execution evidence must remain in approved private/restricted custody. Public repository evidence may record only safe execution-state facts and opaque/private evidence references permitted by the custody contract.
+
+C17C likewise remains held-out evaluation material and is not used for threshold selection.
+
+## Current analyzer safety boundary
 
 Stage 2 analysis:
 
@@ -46,29 +69,22 @@ Stage 2 analysis:
 - does not establish musical correctness;
 - does not establish restoration effectiveness or OMR improvement;
 - does not infer training or calibration permission;
-- uses engineering thresholds that remain explicitly uncalibrated;
-- never tunes thresholds using held-out data;
+- uses explicitly uncalibrated engineering defaults;
+- does not tune thresholds from held-out data;
 - preserves digital PDFs as vector content;
 - fails closed for scanned/hybrid PDF pixel analysis until the Stage 3 renderer boundary.
 
-Staff/TAB visibility is geometric image evidence only, not notation or OMR correctness.
-
-## Current PR #84 gate
-
-Run #205 is valid for head `0abc5ec924b65fdec6548e75923b1e7456ff4822`. The architecture/documentation reconciliation commit intentionally moves the head and therefore requires a new exact-head Python 3.11/3.12 CI run before Ready or merge.
-
-Before PR #84 merge:
-
-1. architecture/current-state documents must show Stage 1 COMPLETE, Stage 2 ACTIVE and Stage 3 BLOCKED;
-2. architecture consistency validation must enforce that state without weakening historical evidence or custody rules;
-3. exact-head CI must pass on both supported Python versions;
-4. reviews and review threads must be clean;
-5. base/head must be fresh-read;
-6. Draft → Ready → merge must occur only at the verified head;
-7. post-merge main CI must pass.
+Staff/TAB visibility remains geometric image evidence only, not notation identity or OMR correctness.
 
 ## Stage 2 exit remains open
 
-PR #84 code merge does not itself complete Stage 2. Exit additionally requires approved-custody execution against the accepted evaluation corpus without moving real artifact bytes into ordinary Git, deterministic source-bound execution evidence, limitations review and a separate Stage 2 exit acceptance.
+Stage 2 is not complete after this hardening slice. Exit still requires:
 
-Until that exit acceptance is PASS, Stage 3 remains BLOCKED.
+1. exact-head Python 3.11 / 3.12 CI and post-merge validation for the hardening slice;
+2. an approved-custody execution contract that verifies exact digest/size and purpose permission before analysis;
+3. safe handling of development versus held-out output, including restricted no-export evidence;
+4. deterministic corpus execution evidence without moving real artifact bytes into Git;
+5. limitations review;
+6. a separate Stage 2 exit acceptance bound to exact main and CI evidence.
+
+Until those gates pass, Stage 3 remains **BLOCKED**.

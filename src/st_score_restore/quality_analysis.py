@@ -14,7 +14,7 @@ import numpy as np
 from .input_inspection import inspect_bytes
 
 SCHEMA_VERSION = "1.0.0"
-ANALYZER_VERSION = "0.1.0"
+ANALYZER_VERSION = "0.1.1"
 CALIBRATION_STATE = "uncalibrated_engineering_defaults"
 
 FINDING_TYPES = (
@@ -70,6 +70,7 @@ class QualityAnalysisConfig:
     skew_max_degrees: float = 15.0
     skew_possible_degrees: float = 0.20
     skew_probable_degrees: float = 1.00
+    page_min_area_ratio: float = 0.20
     blur_possible_laplacian_variance: float = 120.0
     blur_probable_laplacian_variance: float = 60.0
     glare_possible_score: float = 0.08
@@ -101,6 +102,7 @@ class QualityAnalysisConfig:
                 self._invalid(name)
 
         bounded_unit_fields = (
+            "page_min_area_ratio",
             "glare_possible_score",
             "glare_probable_score",
             "shadow_possible_strength",
@@ -136,6 +138,8 @@ class QualityAnalysisConfig:
             if not math.isfinite(float(value)) or float(value) <= 0:
                 self._invalid(name)
 
+        if not 0 < self.page_min_area_ratio <= 1:
+            self._invalid("page_min_area_ratio")
         if not 0 < self.skew_probable_degrees <= self.skew_max_degrees:
             self._invalid("skew_probable_degrees")
         if self.skew_possible_degrees > self.skew_probable_degrees:
@@ -597,21 +601,29 @@ def _page_geometry_metrics(
     contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     best = None
     best_area = 0.0
+    image_area = float(small.shape[0] * small.shape[1])
     for contour in contours:
         perimeter = cv2.arcLength(contour, True)
         if perimeter <= 0:
             continue
         candidate = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
-        area = cv2.contourArea(contour)
-        if len(candidate) == 4 and cv2.isContourConvex(candidate) and area > best_area:
+        area = float(cv2.contourArea(contour))
+        area_ratio = area / image_area
+        if (
+            len(candidate) == 4
+            and cv2.isContourConvex(candidate)
+            and area_ratio >= config.page_min_area_ratio
+            and area > best_area
+        ):
             best = candidate.reshape(4, 2).astype(np.float32)
-            best_area = float(area)
+            best_area = area
     if best is None:
         return {
             "perspective": {
                 "detected": False,
                 "confidence": 0.0,
                 "areaRatio": 0.0,
+                "minimumAreaRatio": round(float(config.page_min_area_ratio), 6),
                 "edgeScaleAsymmetry": None,
                 "quad": None,
             },
@@ -623,7 +635,7 @@ def _page_geometry_metrics(
         }
 
     quad = _order_points(best / scale)
-    area_ratio = best_area / float(small.shape[0] * small.shape[1])
+    area_ratio = best_area / image_area
     tl, tr, br, bl = quad
     top = float(np.linalg.norm(tr - tl))
     bottom = float(np.linalg.norm(br - bl))
@@ -633,7 +645,15 @@ def _page_geometry_metrics(
     height_asymmetry = abs(left - right) / max(left, right, 1.0)
     asymmetry = max(width_asymmetry, height_asymmetry)
     rectangularity = max(0.0, 1.0 - asymmetry)
-    confidence = min(1.0, max(0.0, 0.55 + 0.30 * min(1.0, area_ratio / 0.55) + 0.15 * rectangularity))
+    confidence = min(
+        1.0,
+        max(
+            0.0,
+            0.55
+            + 0.30 * min(1.0, area_ratio / max(config.page_min_area_ratio, 1e-9))
+            + 0.15 * rectangularity,
+        ),
+    )
 
     xs = quad[:, 0]
     ys = quad[:, 1]
@@ -649,6 +669,7 @@ def _page_geometry_metrics(
             "detected": True,
             "confidence": round(float(confidence), 6),
             "areaRatio": round(float(area_ratio), 6),
+            "minimumAreaRatio": round(float(config.page_min_area_ratio), 6),
             "edgeScaleAsymmetry": round(float(asymmetry), 6),
             "quad": [[round(float(x), 3), round(float(y), 3)] for x, y in quad],
         },
@@ -690,21 +711,26 @@ def _glare_metrics(
     clipped = np.asarray(tiles["clipped"], dtype=np.float64)
     global_clipped = float(np.mean(gray >= 250))
     if clipped.size == 0:
+        baseline_clipped = 0.0
         concentration = 0.0
-        hot_fraction = 0.0
+        localized_hot_fraction = 0.0
     else:
-        concentration = max(0.0, float(np.max(clipped)) - float(np.median(clipped)))
-        hot_fraction = float(np.mean(clipped >= 0.20))
+        baseline_clipped = float(np.median(clipped))
+        excess = np.maximum(clipped - baseline_clipped, 0.0)
+        concentration = float(np.max(excess))
+        localized_hot_fraction = float(np.mean(excess >= 0.20))
     p995 = float(np.percentile(gray, 99.5))
     p005 = float(np.percentile(gray, 0.5))
     dynamic = max(0.0, min(1.0, (p995 - p005) / 180.0))
-    score = min(1.0, concentration * 0.75 + hot_fraction * 0.15 + global_clipped * 0.10)
+    score = min(1.0, concentration * 0.85 + localized_hot_fraction * 0.15)
     score *= dynamic
     return {
         "score": round(float(score), 6),
         "globalClippedFraction": round(global_clipped, 6),
-        "spatialConcentration": round(concentration, 6),
-        "hotTileFraction": round(hot_fraction, 6),
+        "clippedTileMedian": round(float(baseline_clipped), 6),
+        "spatialConcentration": round(float(concentration), 6),
+        "hotTileFraction": round(float(localized_hot_fraction), 6),
+        "localizedHotTileFraction": round(float(localized_hot_fraction), 6),
         "dynamicRangeFactor": round(dynamic, 6),
     }
 

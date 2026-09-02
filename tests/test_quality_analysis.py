@@ -158,6 +158,34 @@ class QualityAnalysisTests(unittest.TestCase):
         self.assertGreater(report["metrics"]["glare"]["score"], 0.22)
         self.assertEqual("probable", _finding(report, "glare")["status"])
 
+    def test_white_score_background_is_not_glare(self):
+        image = np.full((800, 1000), 255, dtype=np.uint8)
+        for start in (180, 430):
+            for offset in range(5):
+                y = start + offset * 12
+                cv2.line(image, (80, y), (920, y), 0, 2)
+        report = analyze_quality_bytes(_encode_png(image), source_name="white-score.png")
+
+        self.assertGreater(report["metrics"]["glare"]["globalClippedFraction"], 0.80)
+        self.assertLess(report["metrics"]["glare"]["score"], 0.08)
+        self.assertEqual("unlikely", _finding(report, "glare")["status"])
+
+    def test_small_inner_rectangle_is_not_page_boundary(self):
+        image = np.full((800, 1000), 245, dtype=np.uint8)
+        cv2.rectangle(image, (390, 280), (610, 460), 40, 3)
+        for offset in range(5):
+            y = 330 + offset * 12
+            cv2.line(image, (410, y), (590, y), 0, 2)
+        report = analyze_quality_bytes(_encode_png(image), source_name="inner-box.png")
+
+        perspective = report["metrics"]["perspective"]
+        crop = report["metrics"]["crop"]
+        self.assertFalse(perspective["detected"])
+        self.assertEqual(0.20, perspective["minimumAreaRatio"])
+        self.assertFalse(crop["assessed"])
+        self.assertEqual("not_assessed", _finding(report, "perspective")["status"])
+        self.assertEqual("not_assessed", _finding(report, "crop")["status"])
+
     def test_jpeg_quantization_detects_heavy_compression(self):
         source = _staff_page()
         high = analyze_quality_bytes(
