@@ -48,10 +48,7 @@ def _require_mapping(name: str, value: Any) -> Mapping[str, Any]:
 
 def _require_digest(name: str, value: Any) -> str:
     if not isinstance(value, str) or not _SHA256_RE.fullmatch(value):
-        raise Stage4CalibrationEvidenceError(
-            "invalid_digest",
-            f"{name} must be a lowercase SHA-256 hex digest.",
-        )
+        raise Stage4CalibrationEvidenceError("invalid_digest", f"{name} must be a lowercase SHA-256 hex digest.")
     return value
 
 
@@ -62,7 +59,7 @@ def _digest_value(name: str, value: Any) -> str:
     return _require_digest(f"{name}.value", mapping.get("value"))
 
 
-def _require_bool_false(name: str, value: Any) -> None:
+def _require_false(name: str, value: Any) -> None:
     if value is not False:
         raise Stage4CalibrationEvidenceError(
             "unsafe_authorization_claim",
@@ -82,7 +79,7 @@ def _safe_rate(name: str, value: Any, *, allow_none: bool = False) -> float | No
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise Stage4CalibrationEvidenceError("invalid_metric", f"{name} must be a finite rate.")
     number = float(value)
-    if not math.isfinite(number) or number < 0.0 or number > 1.0:
+    if not math.isfinite(number) or not 0.0 <= number <= 1.0:
         raise Stage4CalibrationEvidenceError("invalid_metric", f"{name} must be within [0, 1].")
     return number
 
@@ -93,7 +90,6 @@ def _require_synthetic_candidate_manifest(candidate_manifest: Mapping[str, Any])
         raise Stage4CalibrationEvidenceError("invalid_candidate_manifest", "Candidate manifest is not frozen.")
     candidate_digest = _digest_value("candidateDigest", manifest.get("candidateDigest"))
     manifest_digest = _digest_value("manifestDigest", manifest.get("manifestDigest"))
-
     without_digest = dict(manifest)
     without_digest.pop("manifestDigest", None)
     if _canonical_digest(without_digest) != manifest_digest:
@@ -111,34 +107,40 @@ def _require_synthetic_candidate_manifest(candidate_manifest: Mapping[str, Any])
         raise Stage4CalibrationEvidenceError("invalid_candidate_manifest", "Candidate derivation counts must be positive.")
 
     assertions = _require_mapping("candidate_manifest.assertions", manifest.get("assertions"))
-    _require_bool_false("candidate.realDataExecutionAuthorized", assertions.get("realDataExecutionAuthorized"))
-    _require_bool_false("candidate.heldOutThresholdTuningUsed", assertions.get("heldOutThresholdTuningUsed"))
-    _require_bool_false("candidate.productionThresholdChangeAuthorized", assertions.get("productionThresholdChangeAuthorized"))
-    _require_bool_false("candidate.productionResourceLimitChangeAuthorized", assertions.get("productionResourceLimitChangeAuthorized"))
-    _require_bool_false("candidate.modelTrainingAuthorized", assertions.get("modelTrainingAuthorized"))
-    _require_bool_false("candidate.publicationAuthorized", assertions.get("publicationAuthorized"))
+    for key in (
+        "heldOutThresholdTuningUsed",
+        "realDataExecutionAuthorized",
+        "productionThresholdChangeAuthorized",
+        "productionResourceLimitChangeAuthorized",
+        "modelTrainingAuthorized",
+        "publicationAuthorized",
+    ):
+        _require_false(f"candidate.{key}", assertions.get(key))
     return candidate_digest, manifest_digest, observation_count, source_family_count
 
 
 def _require_reference_receipt(reference_receipt: Mapping[str, Any]) -> tuple[str, str, int]:
     receipt = _require_mapping("reference_receipt", reference_receipt)
-    if receipt.get("status") != "reference_bundle_frozen" or receipt.get("dataClass") != "synthetic_test":
+    if receipt.get("status") != "reference_bundle_frozen":
+        raise Stage4CalibrationEvidenceError("invalid_reference_receipt", "Reference-label receipt is not frozen.")
+    scope = _require_mapping("reference_receipt.scope", receipt.get("scope"))
+    if scope.get("dataClass") != "synthetic_test":
         raise Stage4CalibrationEvidenceError(
             "real_reference_evidence_forbidden",
-            "Public calibration evidence requires a synthetic reference-label receipt in this slice.",
+            "This public-evidence slice accepts only synthetic reference-label receipts.",
         )
-    if receipt.get("split") != "development":
+    if scope.get("split") != "development" or scope.get("purpose") != "synthetic_contract_test":
         raise Stage4CalibrationEvidenceError(
-            "reference_split_mismatch",
-            "Candidate evidence requires a development reference bundle.",
+            "reference_scope_mismatch",
+            "Candidate evidence requires a synthetic development reference-label bundle.",
         )
-    bundle_digest = _digest_value("referenceLabelBundleDigest", receipt.get("referenceLabelBundleDigest"))
+    bundle_digest = _digest_value("bundleDigest", receipt.get("bundleDigest"))
     receipt_digest = _digest_value("receiptDigest", receipt.get("receiptDigest"))
     without_digest = dict(receipt)
     without_digest.pop("receiptDigest", None)
     if _canonical_digest(without_digest) != receipt_digest:
         raise Stage4CalibrationEvidenceError("reference_receipt_digest_mismatch", "Reference receipt digest is invalid.")
-    label_count = _safe_count("reference_receipt.labelCount", receipt.get("labelCount"))
+    label_count = _safe_count("reference_receipt.scope.recordCount", scope.get("recordCount"))
     if label_count < 1:
         raise Stage4CalibrationEvidenceError("invalid_reference_receipt", "Reference receipt must contain labels.")
     assertions = _require_mapping("reference_receipt.assertions", receipt.get("assertions"))
@@ -153,7 +155,7 @@ def _require_reference_receipt(reference_receipt: Mapping[str, Any]) -> tuple[st
         "modelTrainingAuthorized",
         "publicationAuthorized",
     ):
-        _require_bool_false(f"reference.{key}", assertions.get(key))
+        _require_false(f"reference.{key}", assertions.get(key))
     return bundle_digest, receipt_digest, label_count
 
 
@@ -161,18 +163,21 @@ def _require_binding_receipt(binding_receipt: Mapping[str, Any], reference_bundl
     receipt = _require_mapping("binding_receipt", binding_receipt)
     if receipt.get("status") != "bindings_valid":
         raise Stage4CalibrationEvidenceError("invalid_binding_receipt", "Observation bindings are not valid.")
-    if _digest_value("binding.referenceLabelBundleDigest", receipt.get("referenceLabelBundleDigest")) != reference_bundle_digest:
+    if _digest_value("binding.bundleDigest", receipt.get("bundleDigest")) != reference_bundle_digest:
         raise Stage4CalibrationEvidenceError("binding_reference_mismatch", "Binding receipt references another label bundle.")
     binding_digest = _digest_value("bindingDigest", receipt.get("bindingDigest"))
+    without_digest = dict(receipt)
+    without_digest.pop("bindingDigest", None)
+    if _canonical_digest(without_digest) != binding_digest:
+        raise Stage4CalibrationEvidenceError("binding_digest_mismatch", "Observation binding digest is invalid.")
     observation_count = _safe_count("binding.observationCount", receipt.get("observationCount"))
     if observation_count < 1:
         raise Stage4CalibrationEvidenceError("invalid_binding_receipt", "Binding receipt must contain observations.")
     assertions = _require_mapping("binding.assertions", receipt.get("assertions"))
     if assertions.get("oneToOneObservationBinding") is not True:
         raise Stage4CalibrationEvidenceError("invalid_binding_receipt", "One-to-one observation binding is not asserted.")
-    _require_bool_false("binding.predictionFieldsAcceptedAsReferenceEvidence", assertions.get("predictionFieldsAcceptedAsReferenceEvidence"))
-    _require_bool_false("binding.heldOutCandidateDerivationAuthorized", assertions.get("heldOutCandidateDerivationAuthorized"))
-    _require_bool_false("binding.realDataCalibrationAuthorized", assertions.get("realDataCalibrationAuthorized"))
+    _require_false("binding.predictionFieldsAcceptedAsReferenceEvidence", assertions.get("predictionFieldsAcceptedAsReferenceEvidence"))
+    _require_false("binding.heldOutCandidateDerivationAuthorized", assertions.get("heldOutCandidateDerivationAuthorized"))
     return binding_digest, observation_count
 
 
@@ -181,7 +186,7 @@ def build_public_candidate_evidence(
     reference_receipt: Mapping[str, Any],
     binding_receipt: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Build a redacted, synthetic-only candidate evidence receipt."""
+    """Build a redacted synthetic-only candidate evidence receipt."""
 
     candidate_digest, manifest_digest, observation_count, source_family_count = _require_synthetic_candidate_manifest(candidate_manifest)
     reference_bundle_digest, reference_receipt_digest, label_count = _require_reference_receipt(reference_receipt)
@@ -214,7 +219,9 @@ def build_public_candidate_evidence(
     return evidence
 
 
-def _require_synthetic_evaluation_report(evaluation_report: Mapping[str, Any], candidate_digest: str) -> tuple[str, str, dict[str, Any]]:
+def _require_synthetic_evaluation_report(
+    evaluation_report: Mapping[str, Any], candidate_digest: str
+) -> tuple[str, str, dict[str, Any]]:
     report = _require_mapping("evaluation_report", evaluation_report)
     if report.get("status") != "evaluated":
         raise Stage4CalibrationEvidenceError("invalid_evaluation_report", "Evaluation report is not completed.")
@@ -267,7 +274,7 @@ def _require_synthetic_evaluation_report(evaluation_report: Mapping[str, Any], c
         "modelTrainingAuthorized",
         "publicationAuthorized",
     ):
-        _require_bool_false(f"evaluation.{key}", assertions.get(key))
+        _require_false(f"evaluation.{key}", assertions.get(key))
     return split, report_digest, metrics
 
 
