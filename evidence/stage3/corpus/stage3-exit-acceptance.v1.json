@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0.0",
+  "decisionId": "stage3.exit.acceptance.v1",
+  "decision": "PASS",
+  "decidedOn": "2026-09-02",
+  "acceptanceAuthority": "issue-90-autonomous-objective-gates",
+  "evidenceMainSha": "b15d91ff3fbf21b47a0e484b5a337c4611a17355",
+  "exactHeadPrVerification": {
+    "prNumber": 101,
+    "headSha": "88737a8dec70e8c84075e141dd9364794b3605bf",
+    "runId": 33645447424,
+    "runNumber": 250,
+    "python311": "success",
+    "python312": "success"
+  },
+  "postMergeCi": {
+    "runId": 33645607053,
+    "runNumber": 251,
+    "event": "push",
+    "python311": "success",
+    "python312": "success"
+  },
+  "evidenceDigests": {
+    "realCorpusExecutionEvidenceCanonicalSha256": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "limitationsReviewCanonicalSha256": "5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d",
+    "purposeGrantCanonicalSha256": "3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8",
+    "catalogV2CanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3"
+  },
+  "executionSummary": {
+    "itemCount": 3,
+    "pageCount": 14,
+    "renderedPageCount": 12,
+    "preservedVectorPageCount": 2,
+    "reviewRequiredCount": 0,
+    "developmentCount": 2,
+    "heldOutCount": 1
+  },
+  "gates": {
+    "pdfPipelineContract": "pass",
+    "authorizedCustodyExecution": "pass",
+    "purposeAndSplitIsolation": "pass",
+    "exactSourceIdentity": "pass_3_of_3_exact_sha256_and_byte_size",
+    "realCorpusExecution": "pass_frozen_digest_bound",
+    "rendererBinding": "pass_pypdfium2_5_13_0",
+    "pageOrderPreservation": "pass",
+    "vectorPreservation": "pass_no_silent_vector_rasterization",
+    "heldOutNonTuning": "pass",
+    "publicEvidenceRedaction": "pass",
+    "limitationsReview": "pass_with_accepted_limitations",
+    "ordinaryGitArtifactBytes": "pass_zero_real_artifact_or_derivative_bytes",
+    "historicalEvidenceImmutability": "pass",
+    "exactHeadEvidenceVerification": "pass_run_250",
+    "evidencePostMergeVerification": "pass_run_251"
+  },
+  "acceptedLimitations": [
+    "The real Stage 3 batch contains raster-only and vector-only pages but no real hybrid page; hybrid preservation remains covered by deterministic synthetic tests rather than this real-corpus batch.",
+    "The real Stage 3 batch does not exercise malformed, encrypted, empty, page-limit, pixel-limit, dimension-limit, or unclassified-page fallback cases; those remain contract/test coverage rather than observed real-corpus outcomes.",
+    "The three-item, fourteen-page Stage 3 batch is not evidence of corpus representativeness or absence of bias.",
+    "Stage 3 engineering defaults remain uncalibrated; Stage 4 owns real-data safety calibration and held-out data was not used to tune thresholds or resource limits.",
+    "Detailed page manifests, quality evidence, metrics, findings, and rendered derivatives remain custody-only unless separately authorized.",
+    "Stage 3 does not perform OMR or musical inference and does not establish musical correctness, OMR improvement, or restoration effectiveness."
+  ],
+  "acceptedPurpose": "stage4-safety-calibration-entry",
+  "stage3ExitPass": true,
+  "stage4EntryEligible": true,
+  "stage4Started": false,
+  "blockerCodes": [],
+  "claims": {
+    "thresholdsCalibrated": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "omrImprovementEstablished": false,
+    "musicalCorrectnessEstablished": false,
+    "trainingAuthorized": false,
+    "calibrationAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "separateSensitivePhonePhotoPath": {
+    "requiredForAcceptedCorpus": false,
+    "state": "blocked_pending_real_high_assurance_vault_verification"
+  }
+}
