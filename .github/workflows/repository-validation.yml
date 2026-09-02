@@ -196,6 +196,9 @@ jobs:
       - name: Validate Stage 4 public calibration evidence contract
         run: python tools/validate_stage4_calibration_evidence.py
 
+      - name: Validate Stage 4 exit readiness
+        run: python tools/validate_stage4_exit_readiness.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
