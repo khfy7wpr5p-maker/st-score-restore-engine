@@ -1,51 +1,62 @@
 # Stage 4 Current Status — Safety Calibration
 
-**State:** ENTRY/START CANDIDATE / NOT YET PRODUCTION-EFFECTIVE  
+**State:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY  
 **Tracking:** Issue #104  
-**Stage 3 production truth:** `2aac96faffcf46e71c41cfb2a37b36597e95e664` / Run #257 (`33655490406`) — Python 3.11 / 3.12 SUCCESS  
-**Stage 4 framework decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`  
+**Framework start PR:** #105  
+**Framework production main:** `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`  
+**Post-merge CI:** Run #259 (`33659753403`) — Python 3.11 / 3.12 SUCCESS  
+**Entry/start decision:** `evidence/stage4/governance/stage4-entry-start.v1.json`  
 **Decision canonical SHA-256:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`
 
-## Scope of this start slice
+## What ACTIVE means
 
-This slice authorizes only the Stage 4 calibration framework and synthetic contract tests after it becomes production-effective. It does **not** authorize real-data calibration, production threshold changes, resource-limit changes, model training or publication.
+Stage 4 has started only for calibration framework and governance work. The production framework can define and validate calibration observations, threshold candidates, reference-label comparisons, deterministic evidence, metrics and anti-leakage behavior.
 
-`src/st_score_restore/stage4_calibration.py` introduces deterministic observation/candidate contracts, candidate provenance freeze, held-out evaluation, false-negative/false-positive/coverage metrics and source-family anti-leakage checks. It deliberately does not contain an automatic real-data threshold-selection routine.
+ACTIVE does **not** mean real-data calibration is authorized or executed.
+
+## Production framework
+
+`src/st_score_restore/stage4_calibration.py` provides:
+
+- deterministic `CalibrationObservation` contracts;
+- deterministic `ThresholdCandidate` contracts;
+- development-only candidate provenance freeze;
+- held-out evaluation without feedback into candidate selection;
+- cross-split source-family leakage rejection;
+- exact-match, false-negative, false-positive and coverage/not-assessed metrics;
+- candidate/report canonical digests;
+- fail-closed real-data execution by default.
+
+Synthetic contract tests prove held-out observations cannot derive a candidate and source-family overlap is rejected.
 
 ## Real-data permission state
 
-The accepted Stage 1 catalog currently has no granted `safety_calibration` permission. Existing Stage 3 purpose grants are `pdf_pipeline_evaluation` only and explicitly retain `calibrationAuthorized=false`.
+The accepted Stage 1 catalog currently has **zero granted `safety_calibration` permissions**. Stage 3 purpose grants remain exact `pdf_pipeline_evaluation` grants and retain `calibrationAuthorized=false`.
 
-Therefore:
-
-- real development calibration requires a separate exact-artifact `safety_calibration` grant;
-- held-out real evidence remains `held_out_evaluation` only;
-- held-out observations may evaluate a frozen candidate but may never derive, select or tune a candidate;
-- real data stays fail-closed in the Stage 4 framework until a separate purpose-bound execution layer authorizes it;
-- real corpus and derivative bytes remain outside ordinary Git.
-
-## Anti-leakage invariants
-
-1. Candidate derivation is development-only.
-2. Held-out observations cannot enter candidate derivation.
-3. Candidate derivation source families cannot overlap held-out evaluation source families.
-4. Evaluation results are never fed back into the candidate.
-5. General project approval is not treated as a dataset purpose grant.
-6. No production threshold/resource-limit change is authorized by this framework slice.
-
-## Metrics defined by the framework
-
-Where reference labels exist, the framework can report exact-match, false-negative and false-positive counts/rates, coverage/not-assessed rates, deterministic candidate/report digests and source-family leakage count.
-
-Numerical acceptance targets are intentionally **not invented** before purpose-authorized real calibration evidence and accepted reference labels exist.
+Real development calibration therefore requires a new, exact-artifact, production-effective `safety_calibration` purpose grant. Held-out real evidence remains `held_out_evaluation` only and may never tune or select thresholds/resource limits.
 
 ## Current blockers for real calibration
 
 - `no_real_artifact_has_granted_safety_calibration_permission`;
 - `no_real_calibration_reference_label_bundle_is_accepted`.
 
-These blockers do not prevent framework implementation or synthetic anti-leakage tests. They do prevent real-data threshold or resource-limit calibration.
+Until both are resolved through separate evidence-bound governance, the following remain false:
 
-## Transition rule
+- `calibrationAuthorized`;
+- `realDataCalibrationExecuted`;
+- `thresholdsCalibrated`;
+- `resourceLimitsCalibrated`;
+- `stage4ExitPass`;
+- `stage5EntryEligible`.
 
-Until this entry/start slice passes exact-head CI, merges and receives successful post-merge main CI, repository truth remains **Stage 4 ENTRY ELIGIBLE / NOT STARTED**. After that production checkpoint, a separate current-truth update may mark Stage 4 ACTIVE for framework/governance work while keeping `calibrationAuthorized=false` and `realDataCalibrationExecuted=false`.
+## Production behavior unchanged
+
+Stage 2 quality thresholds and Stage 3 PDF/resource limits remain `uncalibrated_engineering_defaults`. Framework start does not change 200 DPI, 64 pages, 40M pixels/page, 160M aggregate pixels, 8,000-pixel maximum dimension or page-object depth 15.
+
+No model training, publication, OMR, musical inference, or real corpus byte export is authorized.
+
+## Next autonomous safe work
+
+Continue framework/governance hardening: define reference-label evidence contracts, calibration-candidate public-safe evidence schemas and deterministic validators. Do not execute real-data calibration or propose production threshold/resource-limit changes until explicit purpose grants and accepted reference-label provenance exist.
+
+Stage 5 remains NOT STARTED / BLOCKED pending a separate Stage 4 final exit PASS.
