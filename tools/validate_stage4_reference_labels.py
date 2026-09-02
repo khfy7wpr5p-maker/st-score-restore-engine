@@ -108,18 +108,33 @@ def main() -> int:
 
     require(REFERENCE_LABEL_CONTRACT_VERSION == "0.1.0", "Stage 4 reference-label contract version drifted", errors)
     require(
-        "no_real_calibration_reference_label_bundle_is_accepted" in stage4_status,
-        "Stage 4 status lost the real reference-label bundle blocker",
+        "no_real_calibration_reference_label_bundle_is_accepted" in stage4_status
+        and "Resolved" in stage4_status,
+        "Stage 4 status lost the historical reference-bundle blocker/resolution record",
         errors,
     )
-    require("BLOCKED / NOT AUTHORIZED" in stage4_status, "Stage 4 status lost real calibration block", errors)
+    require(
+        "realDataCalibrationExecutionAuthorized=true" in stage4_status,
+        "Stage 4 status lost the later separate execution authorization",
+        errors,
+    )
+    require(
+        "realDataCalibrationExecuted=false" in stage4_status,
+        "Stage 4 status falsely claims real calibration execution",
+        errors,
+    )
+    require(
+        "private observation metrics" in stage4_status.lower(),
+        "Stage 4 status lost the private observation-metric execution dependency",
+        errors,
+    )
 
     granted_safety = [
         item.get("datasetItemId")
         for item in catalog.get("items", [])
         if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
     ]
-    require(not granted_safety, f"real safety_calibration permission unexpectedly exists: {granted_safety}", errors)
+    require(not granted_safety, f"historical catalog was rewritten with later safety_calibration grants: {granted_safety}", errors)
     require(
         (stage3_grants.get("assertions") or {}).get("calibrationAuthorized") is False,
         "Stage 3 purpose grants unexpectedly authorize calibration",
@@ -128,7 +143,7 @@ def main() -> int:
     start_scope = stage4_start.get("scope") or {}
     require(
         start_scope.get("realDataCalibrationExecutionAuthorized") is False,
-        "Stage 4 historical start decision unexpectedly authorizes real calibration",
+        "Stage 4 historical start decision was rewritten with later real-calibration authorization",
         errors,
     )
     require(
@@ -270,9 +285,11 @@ def main() -> int:
     print("Stage 4 reference-label validation: PASS")
     print("- contract version: 0.1.0")
     print("- real labels require purpose grant + human review + separate bundle acceptance")
+    print("- historical reference contract/entry evidence remains immutable")
+    print("- later exact development execution authorization is separate from reference truth")
     print("- held-out labels cannot derive candidates")
     print("- prediction fields cannot become reference evidence")
-    print("- real-data calibration remains blocked / not authorized")
+    print("- real development execution: authorized separately / not yet executed")
     return 0
 
 

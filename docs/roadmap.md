@@ -1,16 +1,16 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Binding sequence; Stage 4 ACTIVE — framework/governance only / readiness NOT_READY  
-**Date:** 2026-09-02  
+**Document status:** Binding sequence; Stage 4 ACTIVE — exact real development calibration execution authorized / not yet executed / readiness NOT_READY  
+**Date:** 2026-09-03  
 **Stage 4 tracking:** Issue #104  
-**Latest Stage 4 reference-bundle acceptance production main:** `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282 (`33680628749`) SUCCESS  
-**Real-data calibration execution:** BLOCKED / NOT AUTHORIZED
+**Latest Stage 4 execution-authorization production main:** `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287 (`33686039783`) SUCCESS  
+**Real-data development calibration execution:** AUTHORIZED / NOT YET EXECUTED; private observation metrics required
 
 ## Authority and invariants
 
-Merged `main` plus accepted deterministic evidence is production truth. Historical evidence is immutable. Real corpus/derivative bytes remain outside ordinary Git. Held-out evidence never tunes thresholds/resource limits. Exact-head and post-merge CI are mandatory.
+Merged `main` plus accepted deterministic evidence is production truth. Historical evidence is immutable. Real corpus/derivative bytes and private raw observation metrics remain outside ordinary Git. Held-out evidence never tunes thresholds/resource limits. Exact-head and post-merge CI are mandatory.
 
-Stage 4 is active for framework/governance work. Beethoven + Barley have exact production-effective `safety_calibration` purpose grants and an accepted 42-record human-reviewed development reference bundle. This makes the bundle candidate-derivation eligible, but it does **not** authorize real calibration execution. A separate exact-scope execution authorization is required.
+Stage 4 framework/governance remains active. Beethoven + Barley have exact production-effective `safety_calibration` purpose grants, an accepted 42-record human-reviewed development reference bundle, and a separate exact-scope real development calibration execution authorization. Authorization does **not** prove execution: the actual run remains pending the private observation metrics required by the calibration contract.
 
 ## Binding delivery sequence
 
@@ -40,12 +40,13 @@ Stage 3: COMPLETE / PASS / production-effective. Purpose-grant digest `3350b8540
 
 ## Stage 4 — Safety calibration with real data
 
-**State:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY.  
+**State:** ACTIVE — EXACT DEVELOPMENT EXECUTION AUTHORIZED / NOT YET EXECUTED.  
 **Readiness:** NOT_READY / 3 remaining blockers.  
 **Entry/start digest:** `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.  
 **Safety-calibration grant digest:** `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`.  
 **Accepted reference-bundle digest:** `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`.  
-**Reference-bundle acceptance digest:** `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`.
+**Reference-bundle acceptance digest:** `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`.  
+**Execution-authorization digest:** `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
 
 Production chain:
 
@@ -56,19 +57,22 @@ Production chain:
 - purpose-grant PR #111 / main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272;
 - human review work package PR #113 / main `7e2552c38b74abc7c60ed6bc6c74c3fc97d62c12` / Run #278;
 - human label completion PR #114 / main `58266dffed529a5d7d247e58651865bbda83981e` / Run #280;
-- accepted development reference bundle PR #115 / main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282.
+- accepted development reference bundle PR #115 / main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282;
+- reference current-truth PR #116 / main `0c267cb9489cfe023a4d5e26104f5ae684cb95fb` / Run #285;
+- exact development execution authorization PR #117 exact head `b42ad45656299651897be33b7ea98d940217095c` / Run #286 (`33685839142`) SUCCESS → main `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287 (`33686039783`) SUCCESS.
 
 Development scope:
 
-- Beethoven: development-only `safety_calibration` granted;
-- Barley: development-only `safety_calibration` granted;
+- Beethoven: development-only `safety_calibration` granted; exact execution authorized;
+- Barley: development-only `safety_calibration` granted; exact execution authorized;
 - 42 human reference labels accepted: 36 clear, 5 possible, 1 probable, 0 not_assessed;
 - accepted receipt digest `f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33`;
-- Chopin remains `held_out_evaluation` only; candidate derivation/tuning forbidden;
-- historical Stage 1 catalog remains unchanged;
-- external export, training, publication, production threshold/resource changes and real calibration execution remain unauthorized.
+- private `metricName` + `rawValue` inputs are required and raw values are forbidden in ordinary Git;
+- Chopin remains `held_out_evaluation` only; candidate derivation/tuning forbidden and this development authorization does not authorize held-out evaluation;
+- historical Stage 1 catalog, purpose grant and reference acceptance remain unchanged;
+- external export, training, publication and production threshold/resource changes remain unauthorized.
 
-Remaining blockers:
+Remaining readiness blockers:
 
 1. `no_real_development_calibration_evidence_is_accepted`
 2. `no_real_held_out_evaluation_evidence_is_accepted`
@@ -82,4 +86,4 @@ Stage 4 readiness may advance only to `READY_FOR_FINAL_ACCEPTANCE_REVIEW`; separ
 
 ## Current next safe action
 
-Create a separate governance decision that explicitly authorizes one real **development calibration execution** on Beethoven + Barley using the accepted human reference bundle. Until that decision exists, execution remains NOT AUTHORIZED. Chopin must remain isolated for later held-out evaluation and cannot tune the candidate.
+Build/finalize the fail-closed private observation-metric input and real development calibration runner contract. It must validate the exact Beethoven + Barley identities, execution authorization, accepted 42-label bundle and 1:1 observation binding; it must keep raw metrics outside ordinary Git and emit only public-safe digest/aggregate evidence. Actual execution occurs only when those private metrics are available. No metric values or numerical acceptance targets may be fabricated, and Chopin remains isolated for later held-out evaluation.
