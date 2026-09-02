@@ -1,51 +1,62 @@
 {
-  "schema_version": "1.5.1",
+  "schema_version": "1.6.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T09:24:00+03:00",
+  "last_updated_at": "2026-09-02T10:23:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
-  "main_sha": "28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
-  "active_branch": "stage2-dev-corpus-hardening",
-  "active_pr": 85,
+  "main_sha": "91aba998dc31bc415193a3e8a9e8e40ad0dc73ba",
+  "active_branch": "stage2-approved-custody-execution",
+  "active_pr": 86,
   "active_pr_state": "open_draft",
-  "latest_ci_run_id": 33600977793,
-  "latest_ci_run_number": 208,
-  "latest_ci_status": "failed_at_architecture_consistency_on_head_527bd3705d88484ac23cbb1f0cd0e45fc2712c76_root_cause_fixed",
+  "active_pr_parent_head_before_handoff": "16ef1079e599f301a502ff7cf0213f25f7c3a285",
+  "latest_ci_run_id": 33603120734,
+  "latest_ci_run_number": 214,
+  "latest_ci_status": "success_on_pre_handoff_pr86_head_2bf17b835b81fcededa8940edfbaafa62b58c2d0_python_3_11_and_3_12",
   "completed": [
     "Stage 1 final decision PASS remains effective",
-    "PR 84 merged deterministic Stage 2 OpenCV quality-analysis core into main 28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
-    "post-merge Repository validation Run 207 succeeded on Python 3.11 and 3.12",
-    "accepted expanded-v2 corpus custody objects located for all five items",
-    "all five transiently re-materialized custody objects matched accepted exact byte size and SHA-256 before Stage 2 evaluation",
-    "no real corpus artifact bytes were added to ordinary Git",
-    "development C17A exercise identified two Stage 2 measurement-semantics defects without using held-out thresholds",
-    "analyzer 0.1.1 hardening and focused synthetic regressions implemented",
-    "Draft PR 85 opened",
-    "Run 208 root cause identified: Stage 2 current-status refresh replaced the historical Stage 1 accepted entry-main binding with only the newer production main",
-    "Run 208 root cause fixed by restoring accepted Stage 1 entry main 936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6 while retaining current production main 28aa17c28eb826b4fd860917f5f7b2f72a01bdad; no validator was weakened"
+    "PR 84 merged deterministic Stage 2 OpenCV quality-analysis core",
+    "PR 85 merged development-corpus glare/page-boundary hardening into main 91aba998dc31bc415193a3e8a9e8e40ad0dc73ba",
+    "post-merge Repository validation Run 211 succeeded on Python 3.11 and 3.12",
+    "production analyzer version is 0.1.1",
+    "accepted expanded-v2 corpus custody identity was previously rechecked 5/5 for exact SHA-256 and byte size without adding real corpus bytes to Git",
+    "PR 86 opened for approved-custody Stage 2 execution boundary",
+    "approved-custody execution module implemented with canonical catalog, exact source identity, purpose, split, storage, environment and retention gates",
+    "development and held-out purposes are fail-closed separated",
+    "public-safe execution receipt excludes quality metrics and findings",
+    "detailed real-corpus reports are custody-only",
+    "C17D external_export=false is preserved as an explicit no-export state",
+    "digital PDF vector boundary remains preserved",
+    "scanned/hybrid PDF analysis remains controlled-deferred until Stage 3 renderer",
+    "new custody execution validator and regression tests are wired into CI",
+    "Run 212 root cause identified as synthetic deidentified-fixture digest inconsistency; canonical validation remained unchanged",
+    "synthetic fixture builders corrected to preserve privacy.deidentifiedArtifactSha256 binding",
+    "Run 214 succeeded on Python 3.11 and 3.12 including custody validator, full tests and compile",
+    "Stage 2 current status reconciled to PR 86 and Run 214 reality"
   ],
   "in_progress": [
-    "fresh exact-head Python 3.11/3.12 CI after Run 208 documentation-binding fix",
-    "PR 85 review/thread/base/head reconciliation",
-    "PR 85 Draft -> Ready -> merge objective gates",
-    "approved-custody corpus execution contract design after hardening merge"
+    "fresh final exact-head Python 3.11/3.12 CI after this live-handoff commit",
+    "PR 86 review/thread/base/head reconciliation",
+    "PR 86 Draft -> Ready -> merge objective gates",
+    "post-merge main CI for PR 86",
+    "real approved-custody five-item Stage 2 execution evidence after contract merge"
   ],
   "blocked": [
     "Stage 3 remains blocked until explicit Stage 2 exit PASS",
     "Stage 4 real-data threshold calibration must not be pulled into Stage 2",
-    "held-out data must not tune Stage 2 thresholds",
+    "held-out data must not tune Stage 2 thresholds or hardening constants",
     "C17D detailed held-out metrics cannot be exported to public Git because external_export=false",
-    "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
+    "separate user-provided sensitive Fly Me to the Moon phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "PR 85 final head must pass exact-head Python 3.11 and 3.12 repository validation",
-    "Stage 2 validator and all regressions must remain green",
+    "PR 86 resulting final head must pass exact-head Python 3.11 and 3.12 repository validation",
+    "Stage 2 quality-analysis and approved-custody validators must remain green",
     "reviews and review threads must be clean before Ready/merge",
     "base and head must be fresh-read before merge",
     "post-merge main CI must pass",
-    "approved-custody runner must verify exact digest, byte size and purpose authorization before execution",
-    "development and held-out output policies must remain separated",
-    "restricted held-out detailed evidence must remain private",
+    "real accepted corpus execution must be performed only through the merged custody contract",
+    "public execution evidence must contain no real artifact bytes and no detailed metrics/findings",
+    "restricted detailed evidence must remain private/custody-only",
+    "Stage 2 limitations must be reviewed",
     "Stage 2 exit requires separate evidence-bound acceptance"
   ],
   "latest_evidence_digests": {
@@ -63,29 +74,34 @@
   "stage1_exit_state": "pass_effective",
   "stage2": {
     "tracking_issue": 83,
-    "active_pr": 85,
+    "active_pr": 86,
     "entry_state": "satisfied",
     "accepted_entry_main_sha": "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6",
-    "current_production_main_sha": "28aa17c28eb826b4fd860917f5f7b2f72a01bdad",
-    "implementation_state": "active_development_corpus_hardening",
-    "production_analyzer_version": "0.1.0",
-    "candidate_analyzer_version": "0.1.1",
+    "current_production_main_sha": "91aba998dc31bc415193a3e8a9e8e40ad0dc73ba",
+    "implementation_state": "active_approved_custody_execution_contract",
+    "production_analyzer_version": "0.1.1",
+    "candidate_custody_contract_version": "0.1.0",
     "calibration_state": "uncalibrated_engineering_defaults",
     "held_out_threshold_tuning_used": false,
-    "development_hardening_inputs": [
-      "dataset.item.wikimedia-guitar-technical-exercise-no1.v1"
-    ],
     "held_out_used_for_hardening_decisions": false,
-    "hardening_changes": [
-      "localized glare score relative to tile clipping baseline; global white clipping retained as evidence only",
-      "minimum page-area ratio required before quadrilateral may become page-boundary evidence",
-      "perspective and crop fail closed when no qualifying page quadrilateral exists"
-    ],
     "authorized_corpus_identity_recheck": {
       "item_count": 5,
       "exact_sha256_matches": 5,
       "exact_byte_size_matches": 5,
       "real_artifact_bytes_in_git": 0
+    },
+    "execution_contract": {
+      "canonical_catalog_validation": true,
+      "exact_sha256_gate": true,
+      "exact_byte_size_gate": true,
+      "purpose_permission_date_gate": true,
+      "split_purpose_separation": true,
+      "storage_restriction_gate": true,
+      "environment_restriction_gate": true,
+      "retention_restriction_gate": true,
+      "public_receipt_contains_metrics_or_findings": false,
+      "detailed_report_custody_only": true,
+      "scanned_pdf_state": "deferred_stage3_renderer"
     },
     "restricted_held_out_policy": {
       "c17d_external_export_allowed": false,
@@ -102,45 +118,54 @@
     {
       "run_number": 208,
       "run_id": 33600977793,
-      "head_sha": "527bd3705d88484ac23cbb1f0cd0e45fc2712c76",
       "failure_step": "Validate architecture consistency",
-      "root_cause": "docs/stage-2-current-status.md no longer contained the accepted Stage 1 entry main SHA required to distinguish Stage 2 authorization evidence from the later production main",
-      "resolution": "restore accepted entry main SHA alongside current production main; validator unchanged"
+      "root_cause": "Stage 2 status temporarily omitted the immutable accepted Stage 1 entry-main binding",
+      "resolution": "accepted entry main restored alongside production main; validator unchanged"
+    },
+    {
+      "run_number": 212,
+      "run_id": 33602888504,
+      "head_sha": "4cd6179a553dda2eee2e75fff50047f36569cf23",
+      "failure_step": "Validate Stage 2 approved-custody execution contract",
+      "root_cause": "synthetic C17D fixture changed artifact SHA-256 without changing linked privacy.deidentifiedArtifactSha256",
+      "resolution": "fixture builders update both synthetic digests together; canonical dataset validator unchanged"
     }
   ],
-  "next_safe_action": "require fresh exact-head Python 3.11/3.12 CI after the Run 208 binding fix; if clean, reconcile reviews/threads/base/head, transition Ready and merge exact verified head, then verify post-merge main before implementing the approved-custody execution contract",
+  "next_safe_action": "treat this handoff commit as the final PR 86 branch write; require fresh exact-head Python 3.11/3.12 CI; if green, reconcile reviews/threads/base/head, transition Ready, merge exact verified head and verify post-merge main before real approved-custody corpus execution evidence",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "Real corpus artifact bytes remain outside ordinary Git.",
     "Stage 1 PASS does not infer training or calibration permission.",
     "Stage 2 thresholds are uncalibrated engineering defaults; Stage 4 owns real-data calibration.",
     "Held-out data must not be used to tune Stage 2 thresholds or choose hardening constants.",
+    "Development and held-out Stage 2 purposes are not interchangeable.",
+    "Exact admitted SHA-256 and byte size must match before real corpus analysis.",
     "C17D external_export=false prohibits public export of detailed held-out metrics or reports.",
-    "Staff/TAB visibility is geometric evidence only and must not be presented as OMR or musical correctness.",
+    "Public Stage 2 execution receipts contain no detailed quality metrics or findings.",
     "Digital PDFs remain vector; scanned/hybrid PDF pixel analysis waits for the Stage 3 renderer boundary.",
     "Stage 3 must not start until explicit Stage 2 final exit PASS."
   ],
   "history": [
     {
-      "at": "2026-09-02T06:38:45Z",
-      "event": "PR 84 merged Stage 2 quality-analysis core into main 28aa17c28eb826b4fd860917f5f7b2f72a01bdad"
+      "at": "2026-09-02T07:05:40Z",
+      "event": "PR 85 merged development-corpus hardening into main 91aba998dc31bc415193a3e8a9e8e40ad0dc73ba"
     },
     {
-      "at": "2026-09-02T06:39:00Z",
-      "event": "post-merge Run 207 succeeded on Python 3.11 and 3.12"
+      "at": "2026-09-02T07:06:35Z",
+      "event": "post-merge Run 211 succeeded on Python 3.11 and 3.12"
     },
     {
-      "at": "2026-09-02T09:24:00+03:00",
-      "event": "accepted five-item corpus exact-byte custody identity rechecked; development C17A exposed glare and page-boundary semantics defects; hardening started without held-out tuning"
+      "at": "2026-09-02T07:18:06Z",
+      "event": "Draft PR 86 opened for approved-custody execution boundary"
     },
     {
-      "at": "2026-09-02T06:54:17Z",
-      "event": "Draft PR 85 opened for development-corpus hardening"
+      "at": "2026-09-02T07:18:24Z",
+      "event": "Run 212 exposed synthetic deidentified-fixture digest inconsistency; canonical catalog validation correctly failed closed"
     },
     {
-      "at": "2026-09-02T06:54:38Z",
-      "event": "Run 208 failed architecture consistency because Stage 2 status omitted accepted entry-main binding; documentation-only root cause fixed without weakening validation"
+      "at": "2026-09-02T07:21:01Z",
+      "event": "Run 214 started after fixture invariant fix and later passed Python 3.11/3.12, new custody validator, full tests and compile"
     }
   ],
-  "head_scope_note": "This handoff update moves PR 85 head one final time. Only the resulting exact-head CI may authorize Ready/merge; make no further branch writes after that run is green."
+  "head_scope_note": "The handoff records parent head 16ef1079e599f301a502ff7cf0213f25f7c3a285 because a JSON document cannot contain the SHA of the commit that contains itself without moving the head again. This update is the final intended PR 86 branch write; only the resulting exact-head CI may authorize Ready/merge."
 }
