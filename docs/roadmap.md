@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Approved binding sequence; Stage 2 exit PASS acceptance slice  
-**Version:** 0.3.1  
+**Document status:** Approved binding sequence; Stage 3 ACTIVE  
+**Version:** 0.4.0  
 **Date:** 2026-09-02  
-**Stage 2 tracking:** Issue #83  
-**Stage 2 accepted evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`
+**Stage 3 tracking:** Issue #90  
+**Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`
 
 ## 1. Authority and invariant rules
 
@@ -19,7 +19,8 @@ Repository truth is merged `main` plus accepted deterministic evidence. Historic
 7. Real corpus artifact bytes remain outside ordinary Git.
 8. Held-out data is not used for threshold tuning or hardening decisions.
 9. A queued, cancelled, skipped, zero-job or old-head CI run is not transition evidence.
-10. Stage 3 starts only after the Stage 2 PASS acceptance is production-effective.
+10. Vector PDF content must not be silently rasterized.
+11. Stage 4 starts only after explicit Stage 3 exit PASS.
 
 ## 2. Binding delivery sequence
 
@@ -59,53 +60,57 @@ Canonical v2 digests:
 
 ## 5. Stage 2 — Complete quality-analysis system
 
-**State:** COMPLETE / PASS acceptance recorded in this slice.  
-**Tracking:** Issue #83.  
-**Accepted evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`.  
-**Post-merge verification:** Run #221 (`33607016064`) SUCCESS on Python 3.11 / 3.12.
+**State:** COMPLETE / PASS / production-effective.  
+**Accepted execution-evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`.  
+**Final acceptance merge main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`.  
+**Acceptance post-merge verification:** Run #228 (`33609061197`) SUCCESS on Python 3.11 / 3.12.
 
-Stage 2 delivers deterministic, non-generative, measurement-first quality analysis with source SHA-256 binding, raw metrics separated from findings, fail-closed unsupported states, bounded decoding, and approved-custody execution.
-
-Measured/evidence dimensions include orientation, skew, perspective/page geometry, crop risk, blur, glare, shadow, uneven illumination, noise, JPEG compression evidence, low resolution/DPI and geometric staff/TAB visibility indicators.
-
-### Stage 2 production chain
-
-- PR #84 — deterministic quality-analysis core: merged;
-- PR #85 — development-corpus hardening: merged;
-- PR #86 — approved-custody execution boundary: merged;
-- PR #87 — frozen five-item real-corpus execution evidence and validator: merged as `ffea7f5aa618187f3cabcfb49801804e3f6658bf`;
-- PR #87 exact-head Run #220 (`33606224352`): Python 3.11 / 3.12 SUCCESS;
-- post-merge main Run #221 (`33607016064`): Python 3.11 / 3.12 SUCCESS.
+Stage 2 delivers deterministic, non-generative, measurement-first quality analysis with source SHA-256 binding, raw metrics separated from findings, fail-closed unsupported states, bounded decoding and approved-custody execution.
 
 Frozen execution evidence digest: `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
 
-### Stage 2 exit gates
-
-All objective exit gates are satisfied by the separate `stage2.exit.acceptance.v1` decision:
-
-1. deterministic analyzer/report contract merged and CI green;
-2. architecture/status evidence reconciled in the acceptance slice;
-3. authorized five-item corpus exercised through approved custody with exact SHA-256 and byte-size gates;
-4. execution evidence is source-digest-bound, deterministic and reviewable;
-5. held-out items remained evaluation-only and did not tune thresholds;
-6. limitations explicitly reviewed;
-7. PR #87 review/thread/head reconciliation clean;
-8. post-merge main validation green;
-9. separate machine-readable Stage 2 exit acceptance returns PASS.
-
-Accepted limitations remain binding: scanned/hybrid PDF pixel analysis is deferred to the Stage 3 renderer; digital PDFs remain vector-preserved; thresholds remain `uncalibrated_engineering_defaults` until Stage 4; detailed real-corpus reports remain custody-only; C17D remains `external_export=false`; no representativeness, bias absence, restoration, OMR or musical-correctness claim is established.
+Accepted limitations remain binding: the historical scanned/hybrid PDF execution outcomes remain `deferred_stage3_renderer`; digital PDFs remained vector-preserved; thresholds remain `uncalibrated_engineering_defaults`; detailed real-corpus reports remain custody-only; C17D remains `external_export=false`; no representativeness, bias-absence, restoration, OMR or musical-correctness claim is established.
 
 ## 6. Stage 3 — Multi-page PDF pipeline
 
-**State:** ENTRY ELIGIBLE / NOT STARTED.
+**State:** ACTIVE.  
+**Tracking:** Issue #90.  
+**Entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`.  
+**Entry verification:** Run #228 (`33609061197`) SUCCESS on Python 3.11 / 3.12.  
+**Focused branch:** `stage3-multipage-pdf-core`.
 
-Stage 3 must begin only in a new focused branch after this Stage 2 acceptance slice is merged and its post-merge main CI is green. Its goal is to safely process supported multi-page PDFs while preserving source identity, page order and vector-content policy. It requires an explicit renderer/dependency decision. Unsupported pages fail safely with original fallback; vector pages are not silently rasterized.
+### Stage 3 first core slice
+
+ADR 0017 selects `pypdfium2==5.13.0` / PDFium for the first renderer boundary.
+
+Core requirements:
+
+1. preserve exact source SHA-256 and immutable source bytes;
+2. use PDFium page enumeration for stable Stage 3 page count/order;
+3. inspect page content before rendering;
+4. render only `raster_only` pages;
+5. preserve `vector_only` pages without rasterization;
+6. preserve `hybrid` pages and require review in the first slice;
+7. fail unknown/empty or over-limit pages to original fallback/review;
+8. bind every derivative to source SHA-256 and page index;
+9. run existing Stage 2 quality analysis on raster derivatives;
+10. keep held-out tuning false and thresholds uncalibrated;
+11. use synthetic PDFs for ordinary-Git tests;
+12. keep Stage 4 blocked until a separate Stage 3 exit PASS.
+
+Initial engineering bounds: 200 DPI, 64 pages, 40M pixels/page, 160M aggregate rendered pixels, 8,000-pixel render dimension and page-object depth 15.
+
+The core slice does not authorize OMR, musical inference, calibration, training, publication, DocRes, selector logic or Stage 4 work.
+
+### Stage 3 exit boundary
+
+Stage 3 exit is not established by starting the renderer core. Exit will require merged/verified pipeline behavior, real authorized-corpus execution where permitted, explicit limitations review, exact-head/post-merge CI and a separate acceptance decision. Until then Stage 4 remains blocked.
 
 ## 7. Stage 4 — Safety calibration with real data
 
-**State:** NOT STARTED.
+**State:** NOT STARTED / BLOCKED pending Stage 3 exit PASS.
 
-Stage 4 owns real-data threshold calibration. Stage 2 engineering defaults must not be presented as calibrated thresholds.
+Stage 4 owns real-data threshold calibration. Stage 2/3 engineering defaults must not be presented as calibrated thresholds.
 
 ## 8. Stage 5 — Accessible teacher review interface
 
@@ -141,4 +146,4 @@ Stage 4 owns real-data threshold calibration. Stage 2 engineering defaults must 
 
 ## 16. Current next safe action
 
-Validate the Stage 2 acceptance slice on exact head, reconcile review/thread/base/head state, merge only if objective gates remain clean, and require post-merge main CI. Only then create a new focused Stage 3 branch. Do not combine Stage 3 implementation into the Stage 2 acceptance PR.
+Complete the focused Stage 3 core slice, require exact-head Python 3.11/3.12 CI, reconcile review/thread/base/head state, merge only the exact verified head, and require post-merge main CI. Do not begin Stage 4 or real-data calibration.
