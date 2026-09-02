@@ -109,7 +109,12 @@
     "publication_authorized": false,
     "held_out_tuning_used": false,
     "calibration_state": "uncalibrated_engineering_defaults",
+    "blocker_codes_scope": "historical_pre_purpose_grant_compatibility_snapshot",
     "blocker_codes": [
+      "no_real_artifact_has_granted_safety_calibration_permission",
+      "no_real_calibration_reference_label_bundle_is_accepted"
+    ],
+    "current_execution_blocker_codes": [
       "no_real_calibration_reference_label_bundle_is_accepted"
     ],
     "stage4_exit_state": "not_yet_pass",
@@ -127,5 +132,5 @@
     "Production thresholds and resource limits remain unchanged until separate accepted evidence and final governance acceptance."
   ],
   "next_safe_action": "Prepare a human-review reference-label work package for the exact authorized Beethoven and Barley development artifacts. Do not fabricate labels or execute real calibration until a real reference-label bundle is human-reviewed and separately accepted.",
-  "head_scope_note": "Stage 4 safety-calibration purpose grants are production-effective at main c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd / Run 272. Readiness remains NOT_READY with four blockers; real calibration execution remains fail-closed."
+  "head_scope_note": "Stage 4 safety-calibration purpose grants are production-effective at main c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd / Run 272. Readiness remains NOT_READY with four current blockers; real calibration execution remains fail-closed. blocker_codes is retained only as a historical compatibility snapshot; readiness_blocker_codes is the current readiness truth."
 }
