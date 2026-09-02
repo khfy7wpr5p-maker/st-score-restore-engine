@@ -2,12 +2,14 @@
   "schema_version": "1.2.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T03:08:00+03:00",
+  "last_updated_at": "2026-09-02T03:09:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
   "active_branch": "stage1-exit-acceptance-v1",
-  "active_pr": null,
-  "active_pr_state": "pending_creation",
+  "active_pr": 82,
+  "active_pr_state": "open_draft",
+  "active_pr_head_sha_at_last_fresh_read": "64dffee7391b58231da534c68e383326e2f50ceb",
+  "head_scope_note": "This handoff update moves the PR head once. Final Ready/merge decisions require fresh exact-head CI for the resulting head and no further branch write afterward.",
   "latest_ci_run_id": 33573656067,
   "latest_ci_run_number": 199,
   "latest_ci_status": "success_on_post_merge_main_8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1_python_3_11_and_3_12",
@@ -17,22 +19,23 @@
     "expanded-v2 committed evidence remains deterministic and checked",
     "historical C15/C16 evidence remains immutable",
     "Stage 1 exit evidence gate review found no governance, custody, rights, privacy, source-family, digest, CI or review blocker",
-    "Stage 1 PASS decision prepared as separate governance acceptance without modifying automatic report fail-closed flags"
+    "Stage 1 PASS decision recorded as separate governance acceptance without modifying automatic report fail-closed flags",
+    "Draft PR 82 created for focused Stage 1 exit acceptance"
   ],
   "in_progress": [
-    "Stage 1 exit acceptance v1 focused branch",
-    "machine-readable Stage 1 exit acceptance validation",
-    "acceptance PR creation and exact-head CI"
+    "PR 82 exact-head Python 3.11/3.12 CI",
+    "PR 82 final review/thread/base/head reconciliation",
+    "PR 82 Draft -> Ready -> merge objective gates"
   ],
   "blocked": [
-    "Stage 2 remains blocked until the Stage 1 exit acceptance PR is merged and post-merge verification is green",
+    "Stage 2 remains blocked until PR 82 is merged and post-merge verification is green",
     "separate user-provided sensitive phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "create focused Stage 1 exit acceptance PR as Draft",
-    "exact-head Python 3.11 and 3.12 CI must pass",
-    "review and review-thread reconciliation must be clean",
-    "Draft -> Ready -> merge must preserve exact-head evidence",
+    "final PR 82 exact-head CI must pass on Python 3.11 and 3.12",
+    "reviews and review threads must be clean on the final head",
+    "base and head must be fresh-read before Ready and merge",
+    "PR 82 must transition Draft -> Ready before merge",
     "post-merge main CI must pass before Stage 2 work begins"
   ],
   "latest_evidence_digests": {
@@ -62,7 +65,7 @@
   },
   "stage1_exit_acceptance": {
     "decision": "PASS",
-    "effective_state": "pending_acceptance_pr_merge",
+    "effective_state": "pending_pr82_merge_and_post_merge_ci",
     "evidence_main_sha": "8b5bdf3ff58898cfb85b8ef4d4f22c21e3b774e1",
     "post_merge_ci_run": 199,
     "blocker_codes": [],
@@ -75,10 +78,10 @@
     "training_authorized": false,
     "calibration_authorized": false
   },
-  "stage1_exit_state": "pass_decision_pending_acceptance_pr_merge",
+  "stage1_exit_state": "pass_decision_pending_pr82_merge_and_post_merge_ci",
   "stage2_entry_state": "blocked_pending_stage1_acceptance_merge",
   "stage2_started": false,
-  "next_safe_action": "commit the focused Stage 1 exit acceptance slice, create Draft PR, require exact-head Python 3.11/3.12 CI, then Ready/merge only if all objective gates remain clean",
+  "next_safe_action": "require exact-head Repository validation for the final PR 82 handoff head; if both Python jobs and review/base/head gates are clean, transition Ready and merge without further branch writes",
   "hard_rules": [
     "Historical C15/C16 evidence is immutable.",
     "The expanded-v2 automatic report remains review_required and must not be rewritten to auto-authorize a stage transition.",
@@ -88,10 +91,6 @@
     "Stage 2 must not start until Stage 1 acceptance is merged and post-merge CI is green."
   ],
   "history": [
-    {
-      "at": "2026-09-02T02:53:00+03:00",
-      "event": "PR 81 prepared for final exact-head verification"
-    },
     {
       "at": "2026-09-02T03:02:46+03:00",
       "event": "PR 81 merged into main"
@@ -103,6 +102,10 @@
     {
       "at": "2026-09-02T03:08:00+03:00",
       "event": "Stage 1 PASS decision prepared as separate governance acceptance on focused branch"
+    },
+    {
+      "at": "2026-09-02T03:09:00+03:00",
+      "event": "Draft PR 82 created and canonical handoff bound before final no-write exact-head verification"
     }
   ]
 }
