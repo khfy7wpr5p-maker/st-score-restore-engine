@@ -1,13 +1,18 @@
 {
-  "schema_version": "1.13.0",
+  "schema_version": "1.14.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T17:30:00+03:00",
+  "last_updated_at": "2026-09-02T17:45:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "5e682f1933a7167fc142689306352fe53b4b1833",
+  "main_sha_scope": "Stage 3 runtime production baseline used for real-corpus execution",
+  "repository_checkpoint_main_sha": "a86bcd4a4a88fb17e2defa36b10b5f4eb824de0d",
+  "repository_checkpoint_ci_run_id": 33642820505,
+  "repository_checkpoint_ci_run_number": 248,
+  "repository_checkpoint_ci_status": "success_python_3_11_and_3_12",
   "active_branch": "main",
   "active_pr": null,
-  "active_pr_state": "none_production_checkpoint",
+  "active_pr_state": "real_corpus_evidence_freeze_candidate_not_yet_accepted",
   "latest_main_ci_run_id": 33641537118,
   "latest_main_ci_run_number": 246,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
@@ -18,38 +23,37 @@
     "Stage 3 authorized PDF execution merged through PR 94 and Run 235 succeeded",
     "Stage 3 Beethoven/Barley purpose-grant overlay merged through PR 96 and Run 238 succeeded",
     "Purpose-grant canonical SHA-256 remains 3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8",
-    "Draft PR 98 was closed unmerged after connector-only Draft-to-Ready failure",
     "Replacement non-draft PR 99 exact head a579e82853fe4d674c1013da0531edf995f48aa7 passed Run 245 on Python 3.11 and 3.12",
-    "PR 99 merged to main 5e682f1933a7167fc142689306352fe53b4b1833",
-    "Post-merge Run 246 succeeded on Python 3.11 and 3.12",
+    "PR 99 merged to runtime production main 5e682f1933a7167fc142689306352fe53b4b1833",
+    "Runner post-merge Run 246 succeeded on Python 3.11 and 3.12",
+    "Post-merge documentation checkpoint PR 100 merged and Run 248 succeeded on Python 3.11 and 3.12",
     "Fail-closed Stage 3 real-corpus runner is production-effective",
-    "Beethoven, Barley and Chopin exact source bytes were materialized transiently outside ordinary Git and independently re-hashed to the accepted SHA-256 and byte-size identities",
+    "Beethoven, Barley and Chopin exact source bytes were materialized outside ordinary Git and re-hashed to the accepted SHA-256 and byte-size identities",
+    "An isolated exact pypdfium2 5.13.0 runtime was acquired and verified without weakening the production gate",
+    "The exact Beethoven/Barley/Chopin Stage 3 batch completed under runtime main 5e682f1933a7167fc142689306352fe53b4b1833 and Run 246",
+    "Public-safe execution evidence canonical SHA-256 is a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "Limitations review PASS_WITH_ACCEPTED_LIMITATIONS canonical SHA-256 is 5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d",
     "Historical Stage 1 and Stage 2 evidence remains immutable"
   ],
   "in_progress": [
-    "Execute the exact Beethoven/Barley/Chopin Stage 3 batch in an approved offline custody host with pypdfium2==5.13.0",
-    "Freeze public-safe execution evidence only after successful exact-runtime execution",
-    "Perform explicit Stage 3 limitations review",
-    "Create separate versioned Stage 3 final-exit acceptance"
+    "Freeze the public-safe Stage 3 execution evidence and limitations review through exact-head and post-merge CI",
+    "Create a separate versioned Stage 3 final-exit acceptance only after the evidence freeze is production-effective"
   ],
   "blocked": [
-    "The current transient execution host exposes pypdfium2 5.8.0 rather than the required production binding 5.13.0 and cannot acquire packages through its blocked outbound network path",
-    "Stage 3 real corpus execution is therefore not yet accepted or frozen",
-    "Stage 3 final exit is not PASS",
+    "Stage 3 final exit is not PASS until the public-safe execution evidence and limitations review are production-effective and a separate final acceptance passes",
     "Stage 4 calibration remains blocked until explicit Stage 3 final exit PASS is production-effective",
     "Held-out Chopin must not tune thresholds, page policies, renderer/resource limits or hardening constants",
     "C17D detailed held-out metrics remain non-exportable because external_export=false",
     "Separate sensitive Fly Me to the Moon phone-photo path remains blocked pending real high_assurance_vault verification"
   ],
   "open_gates": [
-    "Use the exact production runner from main 5e682f1933a7167fc142689306352fe53b4b1833",
-    "Execution host must use pypdfium2==5.13.0 without bypassing the renderer-version gate",
-    "Beethoven, Barley and Chopin bytes must re-match accepted SHA-256 and byte size immediately before processing",
-    "Beethoven and Barley must execute only under the exact production pdf_pipeline_evaluation purpose-grant overlay",
-    "Chopin must execute only as held_out_evaluation and must not tune any thresholds or limits",
-    "Real corpus and rendered derivative bytes must remain outside ordinary Git",
-    "Only public-safe receipts/evidence may be frozen in Git",
-    "Stage 3 exit requires successful real authorized-corpus execution, no held-out tuning, no silent vector/hybrid rasterization, explicit limitations review and separate final acceptance"
+    "Validate the frozen public-safe Stage 3 execution evidence canonical digest and exact runtime bindings",
+    "Validate limitations review linkage and accepted non-claims",
+    "Require exact-head Python 3.11/3.12 CI for the evidence-freeze slice",
+    "Require clean review/thread/base/head checks before evidence-freeze merge",
+    "Require post-merge main Python 3.11/3.12 CI after the evidence-freeze merge",
+    "Create a separate machine-readable Stage 3 final-exit acceptance bound to the production-effective evidence and limitations digests",
+    "Stage 4 must remain blocked unless the separate Stage 3 final acceptance is PASS and production-effective"
   ],
   "latest_evidence_digests": {
     "catalog_v2_canonical_sha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
@@ -62,7 +66,9 @@
     "stage3_authorized_execution_main_sha": "d834ed42e3f553308aef7f6adb7e8cb873593f0b",
     "stage3_purpose_grant_main_sha": "6ebe160309c562e9841a3c313d5ca507592f1386",
     "stage3_purpose_grant_canonical_sha256": "3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8",
-    "stage3_real_corpus_runner_main_sha": "5e682f1933a7167fc142689306352fe53b4b1833"
+    "stage3_real_corpus_runner_main_sha": "5e682f1933a7167fc142689306352fe53b4b1833",
+    "stage3_real_corpus_execution_evidence_canonical_sha256": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "stage3_limitations_review_canonical_sha256": "5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d"
   },
   "stage1_exit_state": "pass_effective",
   "stage2": {
@@ -126,7 +132,21 @@
     "barley_exact_bytes_verified": true,
     "chopin_exact_bytes_verified": true,
     "source_bytes_in_ordinary_git": false,
-    "real_corpus_execution_complete": false,
+    "real_corpus_execution_complete": true,
+    "real_corpus_execution_status": "executed_public_evidence_freeze_candidate",
+    "real_corpus_execution_date": "2026-09-02",
+    "real_corpus_execution_evidence_canonical_sha256": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "real_corpus_summary": {
+      "item_count": 3,
+      "page_count": 14,
+      "rendered_raster_page_count": 12,
+      "preserved_vector_page_count": 2,
+      "review_required_count": 0,
+      "all_page_order_preserved": true,
+      "vector_pages_rasterized": false
+    },
+    "limitations_review_state": "pass_with_accepted_limitations",
+    "limitations_review_canonical_sha256": "5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d",
     "stage3_exit_state": "not_yet_pass"
   },
   "stage3_entry_state": "satisfied",
@@ -145,9 +165,10 @@
     "Detailed Stage 3 page manifests, metrics/findings and derivative bytes remain custody-only unless separately authorized.",
     "Vector and hybrid PDF pages are not silently rasterized.",
     "Stage 3 does not perform OMR or musical inference.",
-    "The pypdfium2==5.13.0 production binding requirement must not be weakened to fit a transient execution host.",
+    "The pypdfium2==5.13.0 production binding requirement must not be weakened.",
+    "Stage 3 execution evidence cannot itself declare Stage 3 exit PASS.",
     "Stage 4 must not start until explicit Stage 3 final exit PASS."
   ],
-  "next_safe_action": "Execute the exact verified Beethoven/Barley/Chopin batch in an approved offline custody host that has the production runner from main 5e682f1933a7167fc142689306352fe53b4b1833 and exact pypdfium2==5.13.0; then freeze only public-safe evidence and perform limitations review before a separate Stage 3 final-exit acceptance.",
-  "head_scope_note": "This is a production checkpoint. PR #99 is merged and post-merge Run #246 is green. The current documentation-refresh branch does not change Stage 3 runtime behavior and must not be treated as real-corpus execution evidence."
+  "next_safe_action": "Validate and merge the public-safe Stage 3 execution-evidence plus limitations-review slice with exact-head and post-merge Python 3.11/3.12 CI, then create a separate machine-readable Stage 3 final-exit acceptance bound to the production-effective evidence digests.",
+  "head_scope_note": "The real Stage 3 batch is complete. This evidence-freeze candidate intentionally preserves stage3ExitPass=false and stage4EntryAuthorized=false; final exit is a separate decision."
 }
