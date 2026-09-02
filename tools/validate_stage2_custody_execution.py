@@ -60,8 +60,11 @@ def _encode_jpeg() -> bytes:
 def _synthetic_catalog(catalog: dict, item_id: str, raw: bytes) -> dict:
     source = next(item for item in catalog["items"] if item["datasetItemId"] == item_id)
     item = deepcopy(source)
-    item["artifact"]["sha256"] = hashlib.sha256(raw).hexdigest()
+    digest = hashlib.sha256(raw).hexdigest()
+    item["artifact"]["sha256"] = digest
     item["artifact"]["byteSize"] = len(raw)
+    if item["privacy"]["deidentifiedArtifactSha256"] is not None:
+        item["privacy"]["deidentifiedArtifactSha256"] = digest
     result = deepcopy(catalog)
     result["items"] = [item]
     return result
