@@ -8,7 +8,7 @@
 **Core main / CI:** `29b4244eeaeb2239ff959e6dd6d4128311f005fa` / Run #232 SUCCESS  
 **Authorized-execution main / CI:** `d834ed42e3f553308aef7f6adb7e8cb873593f0b` / Run #235 SUCCESS  
 **Purpose-grant main / CI:** `6ebe160309c562e9841a3c313d5ca507592f1386` / Run #238 SUCCESS  
-**Real-corpus runner PR:** #99 — merged  
+**Real-corpus runner:** PR #99 — merged  
 **Runner exact head / CI:** `a579e82853fe4d674c1013da0531edf995f48aa7` / Run #245 SUCCESS  
 **Runtime production main / CI:** `5e682f1933a7167fc142689306352fe53b4b1833` / Run #246 (`33641537118`) SUCCESS  
 **Repository documentation checkpoint:** `a86bcd4a4a88fb17e2defa36b10b5f4eb824de0d` / Run #248 SUCCESS  
@@ -32,11 +32,13 @@ Historical `evidence/stage1c/corpus/catalog.v2.json` remains immutable. Beethove
 
 Beethoven/Barley restrictions remain development-only, `managed_standard`, `stage1_offline`, `external_export=false`. Chopin remains evaluation-only and must not tune thresholds, page policy, hardening constants, renderer/resource limits or calibration.
 
-## Real-corpus execution — COMPLETE
+## Exact-byte materialization checkpoint
 
 The exact three source PDFs were materialized outside ordinary Git and SHA-256/byte-size identities were re-verified immediately before processing. An isolated exact `pypdfium2==5.13.0` runtime was acquired and independently SHA-verified without changing the system `5.8.0` installation or weakening the production version gate.
 
-The production Stage 3 runner from runtime main `5e682f1933a7167fc142689306352fe53b4b1833`, bound to post-merge Run #246, then completed the exact Beethoven + Barley + held-out Chopin batch on 2026-09-02.
+## Real-corpus execution — COMPLETE
+
+The production Stage 3 runner from runtime main `5e682f1933a7167fc142689306352fe53b4b1833`, bound to post-merge Run #246, completed the exact Beethoven + Barley + held-out Chopin batch on 2026-09-02.
 
 Public-safe execution evidence:
 
@@ -57,6 +59,8 @@ Public-safe execution evidence:
 - held-out threshold tuning used: false.
 
 Detailed page manifests, quality evidence, metrics/findings and rendered derivative bytes remain custody-only and are not committed to ordinary Git.
+
+**Acceptance checkpoint:** real execution not yet accepted as production-effective evidence until this evidence-freeze PR passes exact-head CI, merges, and receives successful post-merge main CI.
 
 ## Limitations review
 
