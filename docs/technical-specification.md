@@ -1,10 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Status:** Current architecture; Stage 2 ACTIVE  
-**Version:** 0.6.0-doc  
+**Status:** Current architecture; Stage 2 COMPLETE / PASS acceptance slice  
+**Version:** 0.6.1-doc  
 **Date:** 2026-09-02  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Accepted Stage 2 entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`
+**Stage 2 evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`
 
 ## 1. Scope
 
@@ -12,27 +12,23 @@ ST Score Restore Engine is a safety-first visual restoration and validation serv
 
 This repository is not an OMR engine. It produces visual analysis and `restoration_variant` evidence. Downstream OMR occurs only after a selected visual source crosses ScoreMosaic Safe Intake.
 
-The current runtime uses deterministic OpenCV processing. DocRes, ST Image AI, multi-engine comparison, selector logic, learned restoration models and production music-application integrations remain later-stage work.
-
 ## 2. Architectural invariants
 
 1. Source bytes are immutable.
 2. A derivative never silently replaces the source.
 3. Music-score/TAB preservation has veto priority over cosmetic improvement.
 4. Safety validation precedes comparator eligibility.
-5. Rejected candidates cannot win.
-6. The immutable original remains selectable.
-7. Exact SHA-256 is the artifact identity boundary.
-8. Rights, privacy, purpose, retention, provenance, custody and admission remain independent fail-closed gates.
-9. Teacher approval does not imply evaluation admission, calibration permission or training permission.
-10. Real corpus artifact bytes remain outside ordinary Git.
-11. Historical C15/C16 evidence is immutable.
-12. Open PR state is not production truth.
-13. CI evidence is exact-head scoped; head movement invalidates it.
-14. Stage 1 is COMPLETE / PASS.
-15. Stage 2 is ACTIVE and uses uncalibrated engineering thresholds only.
-16. Held-out data may not tune Stage 2 thresholds.
-17. Stage 3 cannot start before explicit Stage 2 exit PASS.
+5. Rejected candidates cannot win and the immutable original remains selectable.
+6. Exact SHA-256 is the artifact identity boundary.
+7. Rights, privacy, purpose, retention, provenance and custody remain independent fail-closed gates.
+8. Evaluation admission does not imply calibration, training or publication permission.
+9. Real corpus artifact bytes remain outside ordinary Git.
+10. Historical C15/C16 evidence is immutable.
+11. CI evidence is exact-head scoped; head movement invalidates it.
+12. Stage 1 is COMPLETE / PASS.
+13. Stage 2 is COMPLETE / PASS by a separate evidence-bound acceptance decision; its thresholds remain uncalibrated engineering defaults.
+14. Held-out data may not tune Stage 2 thresholds or hardening constants.
+15. Stage 3 is ENTRY ELIGIBLE / NOT STARTED and must use a new focused branch after the acceptance commit is production-effective.
 
 ## 3. Processing architecture
 
@@ -63,31 +59,18 @@ ADR 0015 remains binding for validation/comparator/original-fallback ordering.
 ## 4. Runtime baseline
 
 - Python: `>=3.11,<3.13`;
-- CI compatibility: Python 3.11 and 3.12;
+- CI: Python 3.11 and 3.12;
 - API: `0.5.0`;
 - OpenCV: `opencv-python-headless==4.13.0.92`;
 - NumPy: `2.3.5`;
-- default job state: in-memory;
-- optional local durable state: SQLite metadata + content-addressed blobs;
-- built-in HTTP adapter: local/non-production boundary only.
-
-Production identity, encrypted cloud storage, external durable production queues and public network exposure remain outside the current stage.
+- source identity: exact SHA-256;
+- ordinary Git real corpus artifact bytes: zero.
 
 ## 5. Stage 1 accepted data boundary
 
-Stage 1 final acceptance is recorded in `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`. PR #82 merged into main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`; post-merge Repository validation Run #203 (`33588190548`) passed on Python 3.11 and 3.12.
+Stage 1 final acceptance remains at `evidence/stage1c/corpus/stage1-exit-acceptance.v1.json`. Accepted Stage 2 entry main: `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
 
-Historical C15/C16 remain immutable. Historical C16 still describes its original two-item snapshot as `insufficient`.
-
-Expanded-v2 accepted invariants:
-
-- 5 real items / 0 synthetic items;
-- development = 3 items / 3 source families;
-- held out = 2 items / 2 source families;
-- no cross-split source-family leakage;
-- no duplicate exact artifact SHA-256;
-- Chopin v2 selected exactly once, v1 excluded from the new aggregate;
-- ordinary Git real artifact bytes = 0.
+Expanded-v2 remains 5 real / 0 synthetic, development 3 items / 3 source families and held-out 2 items / 2 source families, with no source-family leakage or duplicate exact artifact digest.
 
 Canonical v2 SHA-256 values:
 
@@ -95,91 +78,80 @@ Canonical v2 SHA-256 values:
 - snapshot: `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`;
 - coverage report: `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-C17 exact artifacts remain bound as:
-
-- C17A: `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`;
-- C17B: `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`;
-- C17C: `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`;
-- C17D: `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`.
-
-Stage 1 PASS does not establish representativeness, absence of bias, restoration effectiveness, OMR improvement, musical correctness, calibration permission or training permission.
+Historical C15 snapshot remains `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; historical C16 report remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
 ## 6. Stage 2 Complete Quality Analysis
 
-Stage 2 is ACTIVE under Issue #83 and PR #84.
+Stage 2 production analyzer version is `0.1.1`; approved-custody execution contract version is `0.1.0`.
 
 ### 6.1 Analyzer contract
 
-`src/st_score_restore/quality_analysis.py` provides deterministic quality analysis for accepted PNG/JPEG bytes. The analyzer:
+`src/st_score_restore/quality_analysis.py` provides deterministic quality analysis for accepted PNG/JPEG bytes and vector-preservation handling for digital PDFs. It:
 
-- reuses immutable input inspection for media acceptance and source identity;
-- enforces bounded decode size before and after OpenCV decode;
-- applies EXIF/display orientation consistently without modifying the source;
-- binds each report to source SHA-256;
-- binds the configuration to a deterministic configuration digest;
-- preserves raw metrics separately from qualitative finding states;
-- records that thresholds are engineering defaults and uncalibrated;
-- records that held-out threshold tuning is false.
+- reuses immutable input inspection;
+- enforces bounded decode size;
+- applies display orientation without changing source bytes;
+- binds reports to source SHA-256 and deterministic configuration digest;
+- preserves raw metrics separately from finding states;
+- uses `uncalibrated_engineering_defaults`;
+- records held-out threshold tuning as false;
+- fails closed when evidence is unsupported.
 
-Digital PDFs return a vector-preservation-oriented result rather than pixel analysis. Scanned/hybrid PDF pixel analysis fails closed pending the Stage 3 renderer boundary.
+Measured/evidence dimensions include orientation, skew, page/perspective geometry, crop risk, blur, glare, shadow, uneven illumination, noise, JPEG compression/quantization evidence, low-resolution/DPI evidence and geometric staff/TAB visibility indicators.
 
-### 6.2 Quality dimensions
+A quality finding is not an OMR result and does not infer note, rhythm, string/fret or musical correctness.
 
-Stage 2 measures or records evidence for:
+### 6.2 Approved-custody execution
 
-- orientation/display orientation;
-- skew angle and confidence;
-- page-boundary and perspective geometry confidence;
-- crop/page-margin risk;
-- blur/sharpness;
-- glare/highlight clipping;
-- shadow/local darkness;
-- uneven illumination/background variation;
-- noise;
-- JPEG compression/quantization evidence where applicable;
-- low-resolution and DPI evidence;
-- geometric staff/TAB visibility indicators.
+`src/st_score_restore/stage2_custody_execution.py` is the only approved Stage 2 real-corpus execution boundary. Before analysis it validates canonical catalog membership, artifact state, dataset review, revocation/deletion state, retention, exact split/purpose permission, storage/environment restrictions, exact admitted SHA-256 and exact byte size.
 
-A quality finding is not an OMR result. Staff/TAB indicators are image-geometry evidence only and do not infer note, rhythm, string/fret or musical correctness.
+Development maps only to `quality_evaluation`; held-out maps only to `held_out_evaluation`. C17D retains `managed_restricted` storage and `external_export=false`.
 
-### 6.3 Fail-closed interpretation
+Public execution receipts contain no detailed quality metrics/findings. Detailed reports remain custody-only unless independently authorized.
 
-Unsupported or weak evidence yields review-oriented or `not_assessed` output rather than certainty. Stage 2 may not:
+### 6.3 Real accepted-corpus execution evidence
 
-- generate or complete notation symbols;
-- correct OMR or MusicXML;
-- infer musical correctness;
-- use held-out items for threshold selection;
-- claim calibrated decision thresholds;
-- claim restoration or OMR improvement merely because image metrics are available.
+Frozen public evidence is `evidence/stage2/corpus/execution-evidence.v1.json`, canonical digest:
 
-### 6.4 Stage 2 tests and validation
+`78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`
 
-Synthetic regression tests cover deterministic report identity and the quality metric/finding contract without placing real corpus bytes in Git. `tools/validate_stage2_quality_analysis.py` is wired into repository CI.
+Five accepted items matched exact SHA-256 and byte size before execution:
 
-PR #84 must pass exact-head Python 3.11/3.12 repository validation, review/thread/base/head reconciliation and post-merge main validation before its core is considered production-main truth.
+- Beethoven scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
+- C17A combined staff+TAB PNG — `analyzed`;
+- C17B digital guitar-TAB PDF — `not_applicable_vector_pdf`, vector preserved;
+- C17C held-out Chopin scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
+- C17D held-out deidentified phone-photo JPEG — `analyzed`, `managed_restricted`, export blocked.
 
-## 7. Authorized-corpus execution boundary
+Run #220 (`33606224352`) passed Python 3.11/3.12 on PR #87 exact head `7d6c812dd09a1ce42ae91d224f9d08992884b77a`. PR #87 merged to main `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; post-merge Run #221 (`33607016064`) passed Python 3.11/3.12.
 
-Stage 2 exit requires execution evidence on the accepted evaluation corpus through approved custody. Real artifact bytes must not be copied into ordinary Git to achieve this.
+### 6.4 Stage 2 final acceptance
 
-Execution evidence must be metadata/report-only and bind at least:
+`evidence/stage2/corpus/stage2-exit-acceptance.v1.json` records a separate `PASS` decision bound to the exact execution evidence, PR head, merge main and post-merge CI.
 
-- dataset item ID;
-- exact source SHA-256;
-- analyzer/configuration version/digest;
-- quality report digest or canonical evidence identity;
-- execution disposition;
-- split and purpose constraints;
-- custody/profile provenance sufficient to show the bytes were accessed through the admitted path.
+Accepted limitations are explicit:
 
-Held-out items remain evaluation-only. Stage 2 may observe held-out metric behavior but may not change thresholds based on held-out results.
+- scanned/hybrid PDF pixel analysis is intentionally deferred to the Stage 3 renderer;
+- digital PDFs remain vector-preserved;
+- thresholds remain uncalibrated until Stage 4;
+- detailed real-corpus evidence remains custody-only;
+- C17D detailed export remains blocked;
+- no representativeness, absence-of-bias, restoration-effectiveness, OMR-improvement or musical-correctness claim is established;
+- training, calibration and publication remain unauthorized.
 
-## 8. Stage 2 exit and Stage 3 boundary
+## 7. Stage 3 boundary
 
-Stage 2 exit is separate from PR #84 code merge. Exit requires deterministic and reviewable authorized-corpus execution evidence, architecture alignment, exact-head/post-merge CI, clean review gates, limitations and a separate evidence-bound PASS decision.
+**State:** ENTRY ELIGIBLE / NOT STARTED.
 
-Until that acceptance is PASS, **Stage 3 remains BLOCKED**.
+Stage 3 may start only after the Stage 2 acceptance slice is merged and its post-merge main CI is green. It must be a separate branch/PR. The Stage 2 acceptance PR must not contain Stage 3 renderer implementation.
+
+Stage 3 owns multi-page PDF rendering/pipeline work while preserving exact source identity, page order, vector-content policy and original fallback. Unsupported pages fail safely; vector pages are not silently rasterized.
+
+## 8. Stage 4 boundary
+
+**State:** NOT STARTED.
+
+Stage 4 owns real-data threshold calibration. Stage 2 engineering defaults must not be described as calibrated.
 
 ## 9. Binding development sequence
 
@@ -204,16 +176,18 @@ Stage 12 Music-application integrations
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
 python tools/validate_architecture_consistency.py
-python tools/validate_fixture_catalog.py
 python tools/build_stage1_snapshot.py --check
 python tools/evaluate_stage1_coverage_bias.py --check --require-insufficient
 python tools/build_stage1_expanded_snapshot.py --check
 python tools/validate_stage1_exit_acceptance.py
 python tools/validate_stage2_quality_analysis.py
+python tools/validate_stage2_custody_execution.py
+python tools/validate_stage2_corpus_execution_evidence.py
+python tools/validate_stage2_exit_acceptance.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
 
-## 11. Prohibited scope in the current stage
+## 11. Prohibited scope in the acceptance slice
 
-Do not rewrite historical C15/C16 evidence, add real corpus bytes to ordinary Git, infer training/calibration rights, tune thresholds on held-out items, start Stage 3 PDF renderer work, activate DocRes/ST Image AI, or claim musical/OMR/restoration correctness from Stage 2 image metrics.
+Do not rewrite historical evidence, add real corpus bytes to ordinary Git, infer training/calibration/publication rights, tune thresholds on held-out items, or add Stage 3 renderer implementation to the Stage 2 acceptance PR.

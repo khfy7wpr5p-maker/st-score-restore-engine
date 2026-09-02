@@ -168,6 +168,9 @@ jobs:
       - name: Validate Stage 2 corpus execution evidence
         run: python tools/validate_stage2_corpus_execution_evidence.py
 
+      - name: Validate Stage 2 final exit acceptance
+        run: python tools/validate_stage2_exit_acceptance.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
