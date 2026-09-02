@@ -7,7 +7,7 @@
 **Latest post-merge CI:** Run #293 (`33693904957`) — Python 3.11 / 3.12 SUCCESS  
 **Real calibration execution:** AUTHORIZED for exact Beethoven + Barley development scope / NOT YET EXECUTED  
 **Private-metric runner contract:** v0.1.0 / production-effective / exact 42-row fail-closed input boundary  
-**Immediate execution dependency:** the real private 42-observation metric batch is not available in ordinary Git or known historical Actions artifacts  
+**Immediate execution dependency:** private observation metrics (`metricName` + `rawValue`) for the real 42-observation Beethoven + Barley batch are not available in ordinary Git or known historical Actions artifacts  
 **Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS
 
 ## Production Stage 4 chain
@@ -105,7 +105,7 @@ No numerical threshold or metric acceptance target was invented by PR #119.
 
 ## Immediate execution dependency
 
-The next real step requires the actual private 42-observation metric batch (`metricName` + `rawValue`) for Beethoven + Barley. It must be produced or supplied through approved custody outside ordinary Git and satisfy the production runner contract exactly. Historical Stage 3 Run #246 (`33641537118`) and Run #251 (`33645607053`) expose no GitHub Actions artifacts containing these values, so the values cannot be reconstructed from current public Git/Actions evidence and must not be fabricated.
+The next real step requires the actual private observation metrics (`metricName` + `rawValue`) for all 42 accepted Beethoven + Barley observations. They must be produced or supplied through approved custody outside ordinary Git and satisfy the production runner contract exactly. Historical Stage 3 Run #246 (`33641537118`) and Run #251 (`33645607053`) expose no GitHub Actions artifacts containing these values, so the values cannot be reconstructed from current public Git/Actions evidence and must not be fabricated.
 
 ## Next substantive action
 
