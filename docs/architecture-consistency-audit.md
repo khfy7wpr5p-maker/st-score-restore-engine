@@ -3,6 +3,7 @@
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
 **Stage 1:** COMPLETE / PASS / production-effective  
 **Stage 2:** COMPLETE / PASS / production-effective  
+**Stage 2 execution-evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`  
 **Stage 3:** COMPLETE / PASS / production-effective  
 **Stage 3 acceptance main:** `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`  
 **Stage 3 acceptance post-merge CI:** Run #253 (`33646323461`) — Python 3.11 / 3.12 SUCCESS  
@@ -19,7 +20,7 @@ Merged `main` plus accepted deterministic evidence is production truth. Historic
 | Stage 1 final exit | PASS / EFFECTIVE |
 | Historical C15/C16 | PRESERVED |
 | Stage 2 final exit | PASS / EFFECTIVE |
-| Stage 2 execution evidence | IMMUTABLE / `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d` |
+| Stage 2 execution evidence | IMMUTABLE / main `ffea7f5aa618187f3cabcfb49801804e3f6658bf` / digest `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d` |
 | Stage 3 PDFium core | EFFECTIVE / Run #232 |
 | Stage 3 authorized execution | EFFECTIVE / Run #235 |
 | Beethoven/Barley purpose overlay | EFFECTIVE / Run #238 |
