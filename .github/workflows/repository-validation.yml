@@ -190,6 +190,9 @@ jobs:
       - name: Validate Stage 4 entry/start framework
         run: python tools/validate_stage4_entry_start.py
 
+      - name: Validate Stage 4 safety-calibration purpose grants
+        run: python tools/validate_stage4_purpose_grants.py
+
       - name: Validate Stage 4 reference-label evidence contract
         run: python tools/validate_stage4_reference_labels.py
 
