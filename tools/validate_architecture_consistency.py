@@ -17,6 +17,12 @@ EXPECTED_V2_REPORT = "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc9
 STAGE2_ENTRY_MAIN = "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6"
 STAGE2_EVIDENCE_MAIN = "ffea7f5aa618187f3cabcfb49801804e3f6658bf"
 STAGE2_EXECUTION_EVIDENCE = "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d"
+STAGE3_ENTRY_MAIN = "87198a5a917ab6b3efc277762016a5f5b0dd3aab"
+STAGE3_ENTRY_CI_RUN_ID = 33609061197
+STAGE3_ENTRY_CI_RUN_NUMBER = 228
+STAGE3_ISSUE = 90
+STAGE3_BRANCH = "stage3-multipage-pdf-core"
+STAGE3_RENDERER_BINDING = "pypdfium2==5.13.0"
 REAL_ARTIFACT_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
 
@@ -57,20 +63,26 @@ def main() -> int:
         "coverage_register": _read("docs/stage-1-coverage-and-bias-register.md"),
         "stage2_current": _read("docs/stage-2-current-status.md"),
         "stage2_custody": _read("docs/stage-2-approved-custody-execution-contract.md"),
+        "stage3_current": _read("docs/stage-3-current-status.md"),
+        "stage3_adr": _read("docs/adr/0017-stage3-pdfium-multipage-pipeline.md"),
         "audit": _read("docs/architecture-consistency-audit.md"),
     }
 
-    for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
+    for name in ("README", "roadmap", "technical", "stage2_current", "stage3_current", "audit"):
         lowered = docs[name].lower()
-        require("stage 2" in lowered and ("complete" in lowered or "pass" in lowered), f"{name} does not record Stage 2 COMPLETE/PASS acceptance state")
-        require("stage 3" in lowered and "eligible" in lowered and "not started" in lowered, f"{name} does not record Stage 3 ENTRY ELIGIBLE / NOT STARTED")
+        require("stage 2" in lowered and ("complete" in lowered or "pass" in lowered), f"{name} does not preserve Stage 2 COMPLETE/PASS state")
+        require("stage 3" in lowered and "active" in lowered, f"{name} does not record Stage 3 ACTIVE")
+        require("stage 4" in lowered and ("not started" in lowered or "blocked" in lowered), f"{name} does not preserve Stage 4 NOT STARTED/BLOCKED boundary")
+        require(STAGE3_ENTRY_MAIN in docs[name], f"{name} does not bind Stage 3 entry main")
+
+    for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
         require(STAGE2_EVIDENCE_MAIN in docs[name], f"{name} does not bind Stage 2 evidence main")
         require(STAGE2_EXECUTION_EVIDENCE in docs[name], f"{name} does not bind frozen Stage 2 execution evidence")
 
     custody_lower = docs["stage2_custody"].lower()
     require("active implementation contract" in custody_lower, "Stage 2 custody contract lost active implementation status")
     require("stage 2 exit" in custody_lower and "accepted separately" in custody_lower, "Stage 2 custody contract does not preserve separate acceptance semantics")
-    require("stage 3" in custody_lower and "not started" in custody_lower, "Stage 2 custody contract does not preserve Stage 3 not-started state")
+    require("stage 3" in custody_lower and "not started in this slice" in custody_lower, "historical Stage 2 custody slice was rewritten after Stage 3 start")
 
     for name in ("stage1_current", "stage1_exit", "dataset_card", "coverage_register"):
         lowered = docs[name].lower()
@@ -112,34 +124,67 @@ def main() -> int:
     execution_digest = execution_payload.pop("evidenceDigest", {}).get("value")
     require(execution_digest == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence digest drifted")
     require(canonical_sha256(execution_payload) == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence content drifted")
-    require(execution.get("assertions", {}).get("stage2ExitPass") is False, "historical execution evidence was retroactively changed")
-    require(execution.get("assertions", {}).get("stage3EntryAuthorized") is False, "historical execution evidence retroactively authorizes Stage 3")
+    require(execution.get("assertions", {}).get("stage2ExitPass") is False, "historical Stage 2 execution evidence was retroactively changed")
+    require(execution.get("assertions", {}).get("stage3EntryAuthorized") is False, "historical Stage 2 execution evidence retroactively authorizes Stage 3")
     require(execution.get("assertions", {}).get("heldOutThresholdTuningUsed") is False, "Stage 2 execution evidence lost held-out non-tuning")
 
     require(stage2_acceptance.get("decision") == "PASS", "Stage 2 final exit acceptance is not PASS")
     require(stage2_acceptance.get("evidenceMainSha") == STAGE2_EVIDENCE_MAIN, "Stage 2 acceptance main binding drifted")
     require(stage2_acceptance.get("stage2ExitPass") is True, "Stage 2 acceptance does not explicitly pass exit")
-    require(stage2_acceptance.get("stage3EntryEligible") is True, "Stage 3 is not marked entry eligible")
-    require(stage2_acceptance.get("stage3Started") is False, "Stage 3 started inside Stage 2 acceptance slice")
+    require(stage2_acceptance.get("stage3EntryEligible") is True, "Stage 2 acceptance lost Stage 3 eligibility")
+    require(stage2_acceptance.get("stage3Started") is False, "historical Stage 2 acceptance was retroactively rewritten after Stage 3 start")
     require(stage2_acceptance.get("blockerCodes") == [], "Stage 2 acceptance contains blockers")
     require(stage2_acceptance.get("evidenceDigests", {}).get("corpusExecutionEvidenceCanonicalSha256") == STAGE2_EXECUTION_EVIDENCE, "Stage 2 acceptance lost execution-evidence binding")
-
     for name, value in stage2_acceptance.get("claims", {}).items():
         require(value is False, f"Stage 2 acceptance contains unsupported positive claim: {name}")
 
-    require(handoff.get("main_sha") == STAGE2_EVIDENCE_MAIN, "live handoff does not bind latest evidence main")
-    require(handoff.get("stage2_exit_state") == "pass_candidate_pending_acceptance_pr_merge", "live handoff Stage 2 exit state drifted")
-    require(handoff.get("stage3_started") is False, "live handoff claims Stage 3 started")
-    require("eligible" in str(handoff.get("stage3_entry_state", "")), "live handoff does not record Stage 3 eligibility")
+    require(handoff.get("main_sha") == STAGE3_ENTRY_MAIN, "live handoff does not bind Stage 3 entry main")
+    require(handoff.get("stage2_exit_state") == "pass_effective", "live handoff does not record Stage 2 PASS effective")
+    require(handoff.get("stage3_entry_state") == "satisfied", "live handoff does not record Stage 3 entry satisfied")
+    require(handoff.get("stage3_started") is True, "live handoff does not record Stage 3 started")
+    require(handoff.get("stage3_exit_state") == "not_yet_evaluated", "live handoff prematurely records Stage 3 exit")
+    require(handoff.get("stage4_entry_state") == "blocked_pending_stage3_exit", "live handoff does not block Stage 4")
+    require(handoff.get("active_branch") == STAGE3_BRANCH, "live handoff active Stage 3 branch drifted")
+    stage3 = handoff.get("stage3", {})
+    require(stage3.get("tracking_issue") == STAGE3_ISSUE, "live handoff Stage 3 issue binding drifted")
+    require(stage3.get("entry_main_sha") == STAGE3_ENTRY_MAIN, "live handoff Stage 3 entry SHA drifted")
+    require(stage3.get("entry_ci_run_id") == STAGE3_ENTRY_CI_RUN_ID, "live handoff Stage 3 entry CI id drifted")
+    require(stage3.get("entry_ci_run_number") == STAGE3_ENTRY_CI_RUN_NUMBER, "live handoff Stage 3 entry CI run number drifted")
+    require(stage3.get("renderer") == "pdfium", "live handoff Stage 3 renderer drifted")
+    require(stage3.get("renderer_binding") == "pypdfium2", "live handoff Stage 3 renderer binding drifted")
+    require(stage3.get("renderer_binding_version") == "5.13.0", "live handoff Stage 3 renderer version drifted")
+    require(stage3.get("vector_pages_rasterized") is False, "live handoff allows vector-page rasterization")
+    require(stage3.get("hybrid_pages_rasterized") is False, "live handoff allows hybrid-page rasterization")
+    require(stage3.get("held_out_tuning_used") is False, "live handoff claims Stage 3 held-out tuning")
 
     require(STAGE2_ENTRY_MAIN in docs["README"], "README lost accepted Stage 2 entry main")
 
+    runtime_dependencies = set(pyproject["project"].get("dependencies", []))
+    require(STAGE3_RENDERER_BINDING in runtime_dependencies, "pyproject lost exact Stage 3 renderer dependency")
+    require(STAGE3_RENDERER_BINDING in _read("requirements.lock"), "runtime lock lost exact Stage 3 renderer dependency")
+
+    pdf_pipeline = _read("src/st_score_restore/pdf_pipeline.py")
+    stage3_validator = _read("tools/validate_stage3_pdf_pipeline.py")
     workflow = _read(".github/workflows/repository-validation.yml")
+    require("process_pdf_bytes" in pdf_pipeline, "Stage 3 PDF pipeline entry point missing")
+    require("pypdfium2" in pdf_pipeline, "Stage 3 PDF pipeline is not bound to pypdfium2")
+    require("preserved_vector_page" in pdf_pipeline, "Stage 3 vector-preservation state missing")
+    require("render_raster_only" in pdf_pipeline, "Stage 3 raster-only render policy missing")
+    require("vectorPagesRasterized" in pdf_pipeline, "Stage 3 manifest does not explicitly bind vector rasterization state")
+    require("originalFallbackAvailable" in pdf_pipeline, "Stage 3 manifest lost original fallback")
+    require("heldOutTuningUsed" in pdf_pipeline, "Stage 3 manifest lost held-out non-tuning assertion")
+    require("from st_score_restore.pdf_pipeline" in stage3_validator, "Stage 3 validator does not bind PDF pipeline module")
+    require("validate_stage3_pdf_pipeline.py" in workflow, "Stage 3 validator is not wired into CI")
+    require("pypdfium2" in workflow and "5.13.0" in workflow, "CI does not verify Stage 3 renderer dependency version")
+    require("pypdfium2==5.13.0" in docs["stage3_adr"], "ADR 0017 lost exact renderer binding")
+    require("not silently rasterized" in docs["stage3_adr"].lower(), "ADR 0017 lost no-silent-vector-rasterization rule")
+
     for validator in (
         "validate_stage2_quality_analysis.py",
         "validate_stage2_custody_execution.py",
         "validate_stage2_corpus_execution_evidence.py",
         "validate_stage2_exit_acceptance.py",
+        "validate_stage3_pdf_pipeline.py",
     ):
         require(validator in workflow, f"CI is not wired to {validator}")
 
@@ -172,10 +217,11 @@ def main() -> int:
     print("Architecture consistency validation: PASS")
     print(f"- package/OpenAPI version: {pyproject['project']['version']}")
     print("- Stage 1 final exit: PASS / immutable evidence preserved")
-    print("- Stage 2 final exit: PASS acceptance recorded")
-    print("- Stage 2 thresholds: uncalibrated / held-out non-tuning")
-    print("- Stage 3: entry eligible / not started")
-    print("- Stage 2 quality/custody/execution/exit validators: wired")
+    print("- Stage 2 final exit: PASS / production-effective")
+    print(f"- Stage 3 entry main: {STAGE3_ENTRY_MAIN}")
+    print("- Stage 3: ACTIVE / PDFium page-level pipeline")
+    print("- Stage 3 vector/hybrid silent rasterization: prohibited")
+    print("- Stage 4: NOT STARTED / blocked pending Stage 3 exit PASS")
     print("- evidence/stage1c + evidence/stage2: metadata-only")
     return 0
 

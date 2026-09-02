@@ -11,6 +11,7 @@ Approved runtime graph:
 
 - `numpy==2.3.5`
 - `opencv-python-headless==4.13.0.92`
+- `pypdfium2==5.13.0`
 
 Approved offline validation/test graph:
 
@@ -23,3 +24,8 @@ Approved offline validation/test graph:
 
 The validation graph is not part of restoration runtime behavior and cannot
 read document artifacts or external custody storage.
+
+Runtime distributors must preserve the license/notice files shipped with the
+exact installed native wheels. In particular, the pypdfium2 wheel bundles
+PDFium and third-party component notices that remain authoritative for binary
+redistribution.

@@ -27,6 +27,7 @@ REQUIRED_FILES = (
     ".python-version", ".gitignore", ".editorconfig",
     "src/st_score_restore/__init__.py", "src/st_score_restore/fixture_manifest.py",
     "src/st_score_restore/input_inspection.py", "src/st_score_restore/safe_restoration.py",
+    "src/st_score_restore/pdf_pipeline.py",
     "src/st_score_restore/restoration_types.py", "src/st_score_restore/restoration_geometry.py",
     "src/st_score_restore/restoration_photometric.py", "src/st_score_restore/restoration_encoding.py",
     "src/st_score_restore/music_safety_types.py", "src/st_score_restore/music_safety_validator.py",
@@ -55,7 +56,7 @@ REQUIRED_FILES = (
     "tests/test_worker_fencing_guard.py", "tests/test_http_security.py",
     "tests/test_http_server_security.py", "tests/test_http_api_security_compat.py",
     "tests/test_review_evidence.py", "tests/test_review_evidence_workflow.py",
-    "tests/test_custody_contract.py",
+    "tests/test_custody_contract.py", "tests/test_pdf_pipeline.py",
     "fixtures/README.md", "fixtures/catalog.v1.json",
     "schemas/fixture-manifest.schema.json", "schemas/artifact-manifest.schema.json",
     "schemas/input-analysis.schema.json", "schemas/restoration-config.schema.json",
@@ -67,13 +68,16 @@ REQUIRED_FILES = (
     "models/README.md", "api/README.md", "api/openapi.v1.json",
     "examples/README.md", "LICENSES/README.md",
     "LICENSES/opencv-python-headless-4.13.0.92.md", "LICENSES/numpy-2.3.5.md",
+    "LICENSES/pypdfium2-5.13.0.md",
     "docs/technical-specification.md", "docs/roadmap.md", "docs/development-environment.md",
     "docs/dependency-and-license-policy.md", "docs/dependency-reviews/opencv-python-headless-4.13.0.92.md",
+    "docs/dependency-reviews/pypdfium2-5.13.0.md",
     "docs/fixture-governance.md", "docs/input-inspection-contract.md",
     "docs/safe-restoration-baseline.md", "docs/music-safety-validator.md",
     "docs/job-api-and-teacher-review.md", "docs/durable-local-persistence.md",
     "docs/multi-worker-concurrency-and-recovery.md",
     "docs/http-transport-and-multipart-security.md", "docs/review-evidence-contract.md",
+    "docs/stage-3-current-status.md",
     "docs/adr/0001-independent-safety-first-engine.md",
     "docs/adr/0002-python-runtime-and-repository-layout.md",
     "docs/adr/0003-fixture-consent-and-usage-governance.md",
@@ -85,7 +89,9 @@ REQUIRED_FILES = (
     "docs/adr/0009-attempt-bound-worker-fencing-and-recovery.md",
     "docs/adr/0010-strict-local-http-and-multipart-boundary.md",
     "docs/adr/0011-immutable-review-evidence-and-stale-screen-binding.md",
+    "docs/adr/0017-stage3-pdfium-multipage-pipeline.md",
     "tools/validate_fixture_catalog.py", "tools/validate_dependency_lock.py",
+    "tools/validate_stage3_pdf_pipeline.py",
     "tools/inspect_input.py", "tools/restore_image.py", "tools/validate_music_safety.py",
     "tools/run_api.py", ".github/workflows/repository-validation.yml",
 )
@@ -129,7 +135,11 @@ def validate_pyproject() -> None:
         fail("project.version must match the active job API version")
     if project.get("requires-python") != ">=3.11,<3.13":
         fail("unexpected project.requires-python")
-    expected = ["numpy==2.3.5", "opencv-python-headless==4.13.0.92"]
+    expected = [
+        "numpy==2.3.5",
+        "opencv-python-headless==4.13.0.92",
+        "pypdfium2==5.13.0",
+    ]
     if project.get("dependencies") != expected:
         fail("unexpected approved runtime dependency graph")
     policy = data.get("tool", {}).get("st_score_restore", {})

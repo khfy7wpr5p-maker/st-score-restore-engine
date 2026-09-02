@@ -1,6 +1,6 @@
 # Dependency and license policy
 
-**Status:** Runtime baseline plus Stage 1A offline validation stack
+**Status:** Runtime baseline plus Stage 1A offline validation stack and Stage 3 PDF renderer
 
 ## 1. Default rule
 
@@ -23,11 +23,11 @@ the complete restoration runtime graph. `requirements.validation.lock` records
 the separate offline validation/test graph for Python 3.11–3.12 and the exact
 approved wheel SHA-256 values used by the Ubuntu x86_64 CI matrix.
 
-CI must validate both locks, install exact binary wheels with dependency
-resolution disabled, require approved hashes for the validation graph, verify
-installed versions, run `pip check` and reject implicit source builds. Any
-dependency, version, platform or hash change requires review with the manifest
-change.
+CI validates both locks, installs exact binary wheels with dependency
+resolution disabled, verifies installed versions, runs `pip check` and rejects
+implicit source builds. The validation graph additionally requires approved
+wheel hashes. Any dependency, version, platform or hash change requires review
+with the manifest change.
 
 ## 4. Models and large artifacts
 
@@ -43,6 +43,7 @@ Runtime:
 
 - `opencv-python-headless==4.13.0.92`
 - `numpy==2.3.5`
+- `pypdfium2==5.13.0` — Stage 3 PDFium renderer binding under ADR 0017
 
 Stage 1A offline validation/test only:
 
@@ -53,18 +54,28 @@ Stage 1A offline validation/test only:
 - `rpds-py==2026.5.1`
 - `typing-extensions==4.15.0`
 
-PDF renderers, DocRes, ONNX Runtime and future ML frameworks remain candidates
-until separate dependency reviews approve exact packages and versions.
+DocRes, ONNX Runtime and future ML frameworks remain candidates until separate
+dependency reviews approve exact packages and versions.
 
 ## 6. Native-binary and license handling
 
-OpenCV, NumPy and rpds-py wheels include native or bundled components.
-Distributors must preserve notices shipped inside installed wheels. Review and
-license records live under `docs/dependency-reviews/` and `LICENSES/`.
+OpenCV, NumPy, pypdfium2/PDFium and rpds-py wheels include native or bundled
+components. Distributors must preserve notices shipped inside installed wheels.
+Review and license records live under `docs/dependency-reviews/` and `LICENSES/`.
+
+For `pypdfium2==5.13.0`, the upstream project identifies its own code under
+Apache-2.0 / BSD-3-Clause terms and PDFium under a BSD-style license. PDFium
+bundles additional third-party components; the notices shipped with the exact
+installed wheel are authoritative for redistribution and must be retained.
 
 ## 7. Removal
 
-OpenCV remains behind `st_score_restore.safe_restoration`. The JSON Schema stack
-is isolated to repository validation and tests; removing its optional group,
-lock, review and parity imports does not change restoration runtime behavior.
-There is no unreviewed fallback for schema parity.
+OpenCV remains behind `st_score_restore.safe_restoration`. The Stage 3 PDFium
+binding remains behind `st_score_restore.pdf_pipeline`; removing that module,
+its validator/tests, dependency pin and ADR restores the Stage 2 fail-closed PDF
+renderer boundary without changing immutable input inspection. There is no
+unreviewed alternate renderer fallback.
+
+The JSON Schema stack is isolated to repository validation and tests; removing
+its optional group, lock, review and parity imports does not change restoration
+runtime behavior. There is no unreviewed fallback for schema parity.

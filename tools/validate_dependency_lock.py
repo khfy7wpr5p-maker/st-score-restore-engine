@@ -14,6 +14,7 @@ HASH_RE = re.compile(r"^--hash=sha256:([0-9a-f]{64})$")
 EXPECTED_RUNTIME = {
     "numpy": "2.3.5",
     "opencv-python-headless": "4.13.0.92",
+    "pypdfium2": "5.13.0",
 }
 EXPECTED_VALIDATION = {
     "attrs": "26.1.0",

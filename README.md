@@ -11,6 +11,8 @@ Immutable source registration + inspection
               ↓
 Deterministic quality analysis
               ↓
+Stage 3 page-level PDF policy / raster-only rendering when applicable
+              ↓
 OpenCV restoration candidate
               ↓
 Music-score / TAB safety validation
@@ -22,18 +24,18 @@ Selected visual source variant
 ScoreMosaic Safe Intake → OMR → MusicXML
 ```
 
-This repository is not an OMR engine. Source bytes remain immutable, exact SHA-256 is the artifact identity boundary, and rejected candidates cannot replace the original fallback.
+This repository is not an OMR engine. Source bytes remain immutable, exact SHA-256 is the artifact identity boundary, and rejected/unsupported derivatives cannot replace the original fallback.
 
 ## Current production and stage state
 
 Accepted Stage 2 entry main is `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`.
 
 - **Stage 1 — real and explicitly authorized evaluation corpus:** COMPLETE / PASS.
-- **Stage 2 — Complete Quality Analysis:** COMPLETE / PASS acceptance recorded in this slice. The accepted evidence main is `ffea7f5aa618187f3cabcfb49801804e3f6658bf`; post-merge Repository validation Run #221 (`33607016064`) succeeded on Python 3.11 and 3.12.
-- **Stage 3 — multi-page PDF pipeline:** ENTRY ELIGIBLE / NOT STARTED. Stage 3 work must begin only in a new focused branch after the Stage 2 acceptance commit is merged and its own post-merge main CI is green.
-- **Stage 4 — real-data safety calibration:** NOT STARTED. Stage 2 thresholds remain `uncalibrated_engineering_defaults`.
+- **Stage 2 — Complete Quality Analysis:** COMPLETE / PASS / production-effective. Frozen execution-evidence main is `ffea7f5aa618187f3cabcfb49801804e3f6658bf`. Final acceptance PR #89 merged to main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`; post-merge Repository validation Run #228 (`33609061197`) succeeded on Python 3.11 and 3.12.
+- **Stage 3 — multi-page PDF pipeline:** ACTIVE under Issue #90 on focused branch `stage3-multipage-pdf-core`.
+- **Stage 4 — real-data safety calibration:** NOT STARTED / BLOCKED pending explicit Stage 3 exit PASS. Stage 2/3 engineering thresholds remain uncalibrated.
 
-Stage 2 final acceptance is machine-readable at `evidence/stage2/corpus/stage2-exit-acceptance.v1.json`. The acceptance does not authorize training, calibration or publication and does not establish musical correctness, OMR improvement, restoration effectiveness, representativeness or absence of bias.
+Stage 2 final acceptance is machine-readable at `evidence/stage2/corpus/stage2-exit-acceptance.v1.json`. Historical execution evidence is not rewritten retroactively.
 
 ## Stage 1 accepted evidence
 
@@ -65,7 +67,22 @@ Controlled outcomes:
 - real corpus artifact bytes in ordinary Git: zero;
 - C17D detailed held-out report: `managed_restricted`, `external_export=false`.
 
-The two scanned/hybrid PDF deferrals are accepted Stage 2 limitations. They deliberately preserve the Stage 3 renderer boundary rather than claiming pixel analysis that Stage 2 does not own.
+The two Stage 2 PDF deferrals remain immutable evidence. Stage 3 resolves the renderer boundary prospectively rather than rewriting those outcomes.
+
+## Stage 3 multi-page PDF core
+
+ADR 0017 selects `pypdfium2==5.13.0` / PDFium for the first Stage 3 renderer implementation.
+
+`src/st_score_restore/pdf_pipeline.py` applies page-level policy before rendering:
+
+- `raster_only` pages may be rendered to PNG derivatives;
+- `vector_only` pages are preserved without rasterization;
+- `hybrid` pages are preserved and require review in the first core slice;
+- unknown/empty pages use original fallback and require review.
+
+Every raster derivative is bound to the immutable source SHA-256 and page index and is then analyzed by the deterministic Stage 2 quality analyzer. The source PDF remains selectable and unchanged.
+
+Initial Stage 3 bounds are engineering defaults only: 200 DPI, maximum 64 pages, 40M pixels per rendered page, 160M aggregate rendered pixels, 8,000-pixel render dimension and object traversal depth 15. Held-out data did not tune these values.
 
 ## Binding development order
 
@@ -91,6 +108,7 @@ Stage 12 Music-application integrations
 - CI: Python 3.11 and 3.12
 - OpenCV: `opencv-python-headless==4.13.0.92`
 - NumPy: `2.3.5`
+- PDF renderer binding: `pypdfium2==5.13.0`
 - API: `/api/v1`, version `0.5.0`
 - source identity: exact SHA-256
 - ordinary Git real corpus bytes: zero
@@ -107,9 +125,14 @@ python tools/validate_stage2_quality_analysis.py
 python tools/validate_stage2_custody_execution.py
 python tools/validate_stage2_corpus_execution_evidence.py
 python tools/validate_stage2_exit_acceptance.py
+python tools/validate_stage3_pdf_pipeline.py
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
+
+## Safety/non-claims
+
+Stage 3 does not perform OMR, infer musical correctness, establish restoration effectiveness, tune held-out thresholds, authorize calibration/training/publication, or move real corpus artifacts into ordinary Git.
 
 ## References
 
@@ -117,7 +140,9 @@ python -m compileall -q src tools tests
 - `docs/roadmap.md`
 - `docs/architecture-consistency-audit.md`
 - `docs/stage-2-current-status.md`
+- `docs/stage-3-current-status.md`
 - `docs/stage-2-approved-custody-execution-contract.md`
 - `docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json`
 - ADR 0015 — restoration pipeline validation/comparator/OMR handoff
 - ADR 0016 — Stage 1C risk-tiered artifact custody
+- ADR 0017 — Stage 3 PDFium multi-page PDF pipeline
