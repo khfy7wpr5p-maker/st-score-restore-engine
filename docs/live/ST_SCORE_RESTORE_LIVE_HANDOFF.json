@@ -1,22 +1,22 @@
 {
-  "schema_version": "1.18.0",
+  "schema_version": "1.19.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-02T23:45:00+03:00",
+  "last_updated_at": "2026-09-03T00:38:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "4a5c3db2d767dac235fe12a6bd0e18ba500e7362",
   "main_sha_scope": "Historical Stage 4 framework-start production anchor retained for architecture compatibility",
   "latest_main_ci_run_id": 33659753403,
   "latest_main_ci_run_number": 259,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
-  "repository_main_sha": "4f663d0c11339b98fd89639fd8f3d5afc8047fb3",
-  "repository_main_sha_scope": "Latest production-effective Stage 4 real development reference-label bundle acceptance checkpoint before current-truth documentation PR",
-  "latest_repository_ci_run_id": 33680628749,
-  "latest_repository_ci_run_number": 282,
+  "repository_main_sha": "76f5643dde72c8cc4b02b517133331e9dea00146",
+  "repository_main_sha_scope": "Latest production-effective Stage 4 exact-scope real development calibration execution authorization checkpoint before current-truth documentation PR",
+  "latest_repository_ci_run_id": 33686039783,
+  "latest_repository_ci_run_number": 287,
   "latest_repository_ci_status": "success_python_3_11_and_3_12",
-  "active_branch": "stage4-reference-acceptance-current-truth",
+  "active_branch": "stage4-execution-auth-current-truth",
   "active_pr": null,
-  "active_pr_state": "reference_bundle_acceptance_current_truth_checkpoint_in_progress",
+  "active_pr_state": "execution_authorization_current_truth_checkpoint_in_progress",
   "stage1_exit_state": "pass_effective",
   "stage2_exit_state": "pass_effective",
   "stage3_exit_state": "pass_effective",
@@ -36,7 +36,8 @@
     "stage4_human_label_completion_canonical_sha256": "3434e74e7d993db2384711f9c6c31f31d148c65bc5896bd120f82b5dcab2e1fd",
     "stage4_reference_bundle_canonical_sha256": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14",
     "stage4_accepted_reference_receipt_canonical_sha256": "f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33",
-    "stage4_reference_bundle_acceptance_canonical_sha256": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c"
+    "stage4_reference_bundle_acceptance_canonical_sha256": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c",
+    "stage4_real_development_execution_authorization_canonical_sha256": "81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68"
   },
   "stage3": {
     "tracking_issue": 90,
@@ -117,9 +118,19 @@
     "accepted_reference_receipt_canonical_sha256": "f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33",
     "reference_bundle_acceptance_canonical_sha256": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c",
     "reference_bundle_acceptance_production_effective": true,
+    "execution_authorization_merge_pr": 117,
+    "execution_authorization_exact_head_sha": "b42ad45656299651897be33b7ea98d940217095c",
+    "execution_authorization_exact_head_ci_run_id": 33685839142,
+    "execution_authorization_exact_head_ci_run_number": 286,
+    "execution_authorization_main_sha": "76f5643dde72c8cc4b02b517133331e9dea00146",
+    "execution_authorization_postmerge_ci_run_id": 33686039783,
+    "execution_authorization_postmerge_ci_run_number": 287,
+    "execution_authorization_canonical_sha256": "81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68",
+    "execution_authorization_production_effective": true,
     "held_out_item_id": "dataset.item.imslp82860-chopin-op69.v2",
     "held_out_required_purpose": "held_out_evaluation",
     "held_out_candidate_derivation_authorized": false,
+    "held_out_evaluation_authorized_by_development_execution_decision": false,
     "readiness_decision": "NOT_READY",
     "readiness_blocker_count": 3,
     "readiness_blocker_codes": [
@@ -128,9 +139,10 @@
       "no_stage4_metric_acceptance_target_policy_is_accepted"
     ],
     "stage4_state": "active_framework_governance_only",
+    "execution_phase": "real_development_calibration_authorized_not_executed",
     "stage4_started": true,
-    "real_data_calibration_execution_authorized": false,
-    "calibration_authorized": false,
+    "real_data_calibration_execution_authorized": true,
+    "calibration_authorized": true,
     "real_data_calibration_executed": false,
     "reference_label_bundle_accepted": true,
     "thresholds_calibrated": false,
@@ -147,22 +159,25 @@
       "no_real_calibration_reference_label_bundle_is_accepted"
     ],
     "current_execution_blocker_codes": [
-      "real_data_calibration_execution_not_authorized"
+      "private_observation_metrics_not_available"
     ],
+    "private_observation_metrics_required": true,
+    "private_observation_metrics_available": false,
+    "raw_observation_metrics_allowed_in_ordinary_git": false,
     "stage4_exit_state": "not_yet_pass",
     "stage4_exit_pass": false,
     "stage5_entry_eligible": false,
     "stage5_entry_authorized": false
   },
   "hard_rules": [
-    "Historical Stage 1, Stage 2 and Stage 3 evidence remains immutable.",
-    "Stage 4 purpose grants are immutable overlays and do not rewrite historical catalog permissions.",
-    "Purpose permission does not by itself authorize real calibration execution.",
-    "Accepted human reference-label evidence does not by itself authorize real calibration execution.",
-    "Held-out evidence remains evaluation-only and never tunes thresholds or resource limits.",
+    "Historical Stage 1, Stage 2, Stage 3 and earlier Stage 4 evidence remains immutable.",
+    "Stage 4 purpose grants and execution authorization are immutable overlays and do not rewrite historical catalog or acceptance claims.",
+    "Execution authorization is exact-scope for Beethoven + Barley development safety_calibration only and does not itself prove execution.",
+    "Private observation metrics are required for actual development calibration and raw metric values are forbidden in ordinary Git.",
+    "Held-out evidence remains evaluation-only and never tunes thresholds or resource limits; the development execution decision does not authorize held-out evaluation.",
     "Stage 4 readiness cannot self-authorize Stage 4 PASS or Stage 5 entry.",
     "Production thresholds and resource limits remain unchanged until separate accepted evidence and final governance acceptance."
   ],
-  "next_safe_action": "Prepare a separate, exact-scope real development calibration execution authorization for Beethoven + Barley bound to the accepted reference-label bundle. Do not execute real calibration, change production thresholds/resources, or touch Chopin candidate derivation without that separate authorization.",
-  "head_scope_note": "Stage 4 real development reference-label bundle acceptance is production-effective at main 4f663d0c11339b98fd89639fd8f3d5afc8047fb3 / Run 282. Readiness remains NOT_READY with three current prerequisite blockers; real calibration execution remains fail-closed and separately unauthorized. blocker_codes is retained only as a historical compatibility snapshot; readiness_blocker_codes is the current readiness truth."
+  "next_safe_action": "Build/finalize a fail-closed private observation-metric input and development calibration runner contract for the exact Beethoven + Barley authorization. Execute only when the private 42-observation metric input is available; emit public-safe aggregate/digest evidence only. Do not fabricate metric values, touch Chopin tuning, or change production thresholds/resources.",
+  "head_scope_note": "Stage 4 exact Beethoven + Barley real development calibration execution authorization is production-effective at main 76f5643dde72c8cc4b02b517133331e9dea00146 / Run 287. The run itself has not occurred because required private observation metrics are not available in ordinary Git or known Stage 3 Actions artifacts. Readiness remains NOT_READY with three prerequisite blockers. Historical blocker_codes remains a compatibility snapshot; readiness_blocker_codes is current readiness truth."
 }
