@@ -3,6 +3,7 @@
 **Status:** ACTIVE / DEVELOPMENT-CORPUS HARDENING  
 **As of:** 2026-09-02  
 **Tracking:** Issue #83  
+**Stage 1 accepted entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
 **Production main:** `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`  
 **PR #84:** MERGED  
 **Post-merge main CI:** Run #207 (`33599776059`) — Python 3.11 / 3.12 SUCCESS  
@@ -11,7 +12,7 @@
 
 ## Entry and production baseline
 
-Stage 1 final exit is PASS and effective. PR #84 merged the deterministic OpenCV Stage 2 quality-analysis core and architecture reconciliation into main. Repository validation Run #207 succeeded on the resulting exact main SHA on Python 3.11 and 3.12, including the Stage 2 contract validator, full tests and compile.
+Stage 1 final exit is PASS and effective. PR #82 established the Stage 2 entry decision against accepted main `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`. PR #84 subsequently merged the deterministic OpenCV Stage 2 quality-analysis core and architecture reconciliation into production main `28aa17c28eb826b4fd860917f5f7b2f72a01bdad`. Repository validation Run #207 succeeded on that resulting exact main SHA on Python 3.11 and 3.12, including the Stage 2 contract validator, full tests and compile.
 
 Historical Stage 1 C15/C16 evidence remains immutable. Real corpus score/PDF/image bytes remain outside ordinary Git.
 
