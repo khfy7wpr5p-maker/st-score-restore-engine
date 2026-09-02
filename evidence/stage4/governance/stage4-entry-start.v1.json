@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "decisionId": "stage4.entry-start.v1",
+  "decision": "APPROVE_FRAMEWORK_START",
+  "decidedOn": "2026-09-02",
+  "trackingIssue": 104,
+  "authority": "issue-104-autonomous-objective-gates",
+  "stage3Binding": {
+    "finalAcceptanceMainSha": "c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0",
+    "finalAcceptanceCanonicalSha256": "e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90",
+    "productionTruthMainSha": "2aac96faffcf46e71c41cfb2a37b36597e95e664",
+    "productionTruthPostMergeCiRunId": 33655490406,
+    "productionTruthPostMergeCiRunNumber": 257,
+    "python311": "success",
+    "python312": "success"
+  },
+  "scope": {
+    "frameworkImplementationAuthorized": true,
+    "syntheticContractTestingAuthorized": true,
+    "realDataCalibrationExecutionAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "dataUsePolicy": {
+    "realDevelopmentRequiredPurpose": "safety_calibration",
+    "realHeldOutRequiredPurpose": "held_out_evaluation",
+    "currentSafetyCalibrationPermissionState": "none_granted",
+    "generalProjectApprovalIsDatasetPurposeGrant": false,
+    "heldOutMaySelectOrTuneThresholds": false,
+    "heldOutMaySelectOrTuneResourceLimits": false,
+    "realCorpusBytesInOrdinaryGit": false,
+    "syntheticContractTestsMayExerciseFramework": true
+  },
+  "calibrationObjectives": [
+    "quality_finding_threshold_safety",
+    "resource_limit_safety",
+    "false_negative_measurement",
+    "false_positive_measurement",
+    "coverage_not_assessed_measurement",
+    "deterministic_replay",
+    "source_family_anti_leakage"
+  ],
+  "metrics": [
+    "per_finding_false_negative_count_rate",
+    "per_finding_false_positive_count_rate",
+    "exact_match_count_rate",
+    "coverage_rate",
+    "not_assessed_rate",
+    "threshold_candidate_digest_stability",
+    "source_family_leakage_count"
+  ],
+  "antiLeakageRules": {
+    "candidateDerivationSplit": "development_only",
+    "realDevelopmentPurpose": "safety_calibration",
+    "heldOutPurpose": "held_out_evaluation",
+    "heldOutTuningForbidden": true,
+    "crossSplitSourceFamilyOverlapForbidden": true,
+    "thresholdProposalFromHeldOutForbidden": true,
+    "resourceLimitProposalFromHeldOutForbidden": true
+  },
+  "acceptanceGatesForFutureRealCalibration": [
+    "exact_artifact_identity",
+    "explicit_safety_calibration_purpose_for_development",
+    "held_out_evaluation_only_for_held_out",
+    "source_family_split_isolation",
+    "reference_label_provenance",
+    "deterministic_candidate_freeze",
+    "development_only_threshold_derivation",
+    "held_out_non_tuning_evaluation",
+    "public_safe_evidence_freeze",
+    "separate_final_acceptance",
+    "exact_head_and_post_merge_ci"
+  ],
+  "currentBlockers": [
+    "no_real_artifact_has_granted_safety_calibration_permission",
+    "no_real_calibration_reference_label_bundle_is_accepted"
+  ],
+  "claims": {
+    "stage4EntryEligible": true,
+    "frameworkStartAuthorized": true,
+    "stage4Started": false,
+    "calibrationAuthorized": false,
+    "realDataCalibrationExecuted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "stage4ExitPass": false,
+    "stage5EntryEligible": false
+  },
+  "decisionDigest": {
+    "algorithm": "sha256",
+    "value": "013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8"
+  }
+}
