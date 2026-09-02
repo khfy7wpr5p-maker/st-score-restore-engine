@@ -6,43 +6,59 @@ import re
 import sys
 import tomllib
 
-from st_score_restore.dataset_manifest import canonical_sha256
+from st_score_restore.dataset_contract_common import canonical_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_C15_SNAPSHOT = "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476"
-EXPECTED_C16_REPORT = "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e"
-EXPECTED_V2_CATALOG = "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3"
-EXPECTED_V2_SNAPSHOT = "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7"
-EXPECTED_V2_REPORT = "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834"
-STAGE2_ENTRY_MAIN = "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6"
+
+C15 = "b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476"
+C16 = "0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e"
+CATALOG_V2 = "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3"
+SNAPSHOT_V2 = "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7"
+REPORT_V2 = "45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834"
+STAGE2_ENTRY = "936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6"
 STAGE2_EVIDENCE_MAIN = "ffea7f5aa618187f3cabcfb49801804e3f6658bf"
-STAGE2_EXECUTION_EVIDENCE = "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d"
-STAGE3_ENTRY_MAIN = "87198a5a917ab6b3efc277762016a5f5b0dd3aab"
-STAGE3_ENTRY_CI_RUN_ID = 33609061197
-STAGE3_ENTRY_CI_RUN_NUMBER = 228
-STAGE3_CORE_MAIN = "29b4244eeaeb2239ff959e6dd6d4128311f005fa"
-STAGE3_CORE_POSTMERGE_CI_RUN_ID = 33615937390
-STAGE3_CORE_POSTMERGE_CI_RUN_NUMBER = 232
-STAGE3_ISSUE = 90
-STAGE3_BRANCH = "stage3-authorized-pdf-execution"
-STAGE3_RENDERER_BINDING = "pypdfium2==5.13.0"
-REAL_ARTIFACT_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
+STAGE2_EXECUTION = "78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d"
+STAGE3_ENTRY = "87198a5a917ab6b3efc277762016a5f5b0dd3aab"
+STAGE3_ENTRY_RUN = (228, 33609061197)
+STAGE3_CORE = "29b4244eeaeb2239ff959e6dd6d4128311f005fa"
+STAGE3_CORE_RUN = (232, 33615937390)
+STAGE3_AUTHORIZED = "d834ed42e3f553308aef7f6adb7e8cb873593f0b"
+STAGE3_AUTHORIZED_RUN = (235, 33618108204)
+STAGE3_PURPOSE_MAIN = "6ebe160309c562e9841a3c313d5ca507592f1386"
+STAGE3_PURPOSE_RUN = (238, 33620323970)
+PURPOSE_SHA = "3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8"
+STAGE3_BRANCH = "stage3-real-corpus-runner"
+STAGE3_PR = 98
+RENDERER = "pypdfium2==5.13.0"
+
+BEETHOVEN = ("dataset.item.imslp799143-beethoven-op48-no3.v1", "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c")
+BARLEY = ("dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1", "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e")
+CHOPIN_ID = "dataset.item.imslp82860-chopin-op69.v2"
+BINARY_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
 
-def _read(path: str) -> str:
+def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
 
 
-def _json(path: str) -> dict:
-    return json.loads(_read(path))
+def load(path: str) -> dict:
+    return json.loads(read(path))
 
 
-def _binding_stages(text: str) -> list[str]:
-    blocks = re.findall(r"```text\n(.*?)```", text, flags=re.DOTALL)
-    for block in blocks:
+def stages(text: str) -> list[str]:
+    for block in re.findall(r"```text\n(.*?)```", text, flags=re.DOTALL):
         if "Stage 12 Music-application integrations" in block:
             return [line.strip() for line in block.splitlines() if line.strip().startswith("Stage ")]
     return []
+
+
+def restrictions(permission: dict) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for item in permission.get("restrictions", []):
+        if not isinstance(item, dict) or not isinstance(item.get("type"), str):
+            continue
+        result[item["type"]] = item.get("values") if "values" in item else item.get("allowed")
+    return result
 
 
 def main() -> int:
@@ -52,155 +68,155 @@ def main() -> int:
         if not condition:
             failures.append(message)
 
-    pyproject = tomllib.loads(_read("pyproject.toml"))
-    openapi = _json("api/openapi.v1.json")
+    pyproject = tomllib.loads(read("pyproject.toml"))
+    openapi = load("api/openapi.v1.json")
     require(pyproject["project"]["version"] == openapi["info"]["version"], "package/OpenAPI version mismatch")
+    require(RENDERER in set(pyproject["project"].get("dependencies", [])), "exact Stage 3 renderer dependency missing")
+    require(RENDERER in read("requirements.lock"), "exact Stage 3 renderer lock missing")
 
     docs = {
-        "README": _read("README.md"),
-        "roadmap": _read("docs/roadmap.md"),
-        "technical": _read("docs/technical-specification.md"),
-        "stage1_current": _read("docs/stage-1c-current-status.md"),
-        "stage1_exit": _read("docs/stage-1-exit-evidence.md"),
-        "dataset_card": _read("docs/stage-1-dataset-card.md"),
-        "coverage_register": _read("docs/stage-1-coverage-and-bias-register.md"),
-        "stage2_current": _read("docs/stage-2-current-status.md"),
-        "stage2_custody": _read("docs/stage-2-approved-custody-execution-contract.md"),
-        "stage3_current": _read("docs/stage-3-current-status.md"),
-        "stage3_adr": _read("docs/adr/0017-stage3-pdfium-multipage-pipeline.md"),
-        "audit": _read("docs/architecture-consistency-audit.md"),
+        "README": read("README.md"),
+        "roadmap": read("docs/roadmap.md"),
+        "technical": read("docs/technical-specification.md"),
+        "stage1_current": read("docs/stage-1c-current-status.md"),
+        "stage1_exit": read("docs/stage-1-exit-evidence.md"),
+        "coverage": read("docs/stage-1-coverage-and-bias-register.md"),
+        "stage2_current": read("docs/stage-2-current-status.md"),
+        "stage2_custody": read("docs/stage-2-approved-custody-execution-contract.md"),
+        "stage3_current": read("docs/stage-3-current-status.md"),
+        "stage3_grants": read("docs/stage-3-purpose-grants.md"),
+        "stage3_adr": read("docs/adr/0017-stage3-pdfium-multipage-pipeline.md"),
+        "audit": read("docs/architecture-consistency-audit.md"),
     }
 
-    for name in ("README", "roadmap", "technical", "stage2_current", "stage3_current", "audit"):
-        lowered = docs[name].lower()
-        require("stage 2" in lowered and ("complete" in lowered or "pass" in lowered), f"{name} does not preserve Stage 2 COMPLETE/PASS state")
-        require("stage 3" in lowered and "active" in lowered, f"{name} does not record Stage 3 ACTIVE")
-        require("stage 4" in lowered and ("not started" in lowered or "blocked" in lowered), f"{name} does not preserve Stage 4 NOT STARTED/BLOCKED boundary")
-        require(STAGE3_ENTRY_MAIN in docs[name], f"{name} does not bind Stage 3 entry main")
+    current_docs = ("README", "roadmap", "technical", "stage2_current", "stage3_current", "audit")
+    for name in current_docs:
+        lower = docs[name].lower()
+        require("stage 2" in lower and ("complete" in lower or "pass" in lower), f"{name} lost Stage 2 PASS/COMPLETE")
+        require("stage 3" in lower and "active" in lower, f"{name} lost Stage 3 ACTIVE")
+        require("stage 4" in lower and "blocked" in lower, f"{name} lost Stage 4 blocked boundary")
+        require(STAGE3_ENTRY in docs[name], f"{name} lost Stage 3 entry binding")
 
     for name in ("README", "roadmap", "technical", "stage3_current", "audit"):
-        require(STAGE3_CORE_MAIN in docs[name], f"{name} does not bind production-effective Stage 3 core main")
+        require(STAGE3_CORE in docs[name], f"{name} lost Stage 3 core main")
+        require(STAGE3_PURPOSE_MAIN in docs[name], f"{name} lost current production main")
+        require(PURPOSE_SHA in docs[name], f"{name} lost purpose-grant digest")
 
     for name in ("README", "roadmap", "technical", "stage2_current", "audit"):
-        require(STAGE2_EVIDENCE_MAIN in docs[name], f"{name} does not bind Stage 2 evidence main")
-        require(STAGE2_EXECUTION_EVIDENCE in docs[name], f"{name} does not bind frozen Stage 2 execution evidence")
+        require(STAGE2_EVIDENCE_MAIN in docs[name], f"{name} lost Stage 2 evidence main")
+        require(STAGE2_EXECUTION in docs[name], f"{name} lost Stage 2 execution digest")
+
+    for name in ("stage1_current", "stage1_exit", "coverage"):
+        lower = docs[name].lower()
+        require("stage 2" in lower and ("complete" in lower or "pass" in lower), f"{name} still presents Stage 2 as active")
+        require("stage 3" in lower and "active" in lower, f"{name} does not reflect Stage 3 ACTIVE")
+        require("stage 4" in lower and "blocked" in lower, f"{name} does not reflect Stage 4 blocked")
+
+    require(STAGE3_BRANCH in docs["stage2_current"], "Stage 2 handoff lost active Stage 3 branch")
+    require("PR #98" in docs["stage3_current"] and "Run #242" in docs["stage3_current"], "Stage 3 current-status lost PR #98 / pre-refresh CI")
+    require("production-effective" in docs["stage3_grants"].lower(), "purpose-grant doc still presents pre-merge state")
+    require("PR #96" in docs["stage3_grants"] and "Run #238" in docs["stage3_grants"], "purpose-grant doc lost merge verification")
 
     custody_lower = docs["stage2_custody"].lower()
-    require("active implementation contract" in custody_lower, "Stage 2 custody contract lost active implementation status")
-    require("stage 2 exit" in custody_lower and "accepted separately" in custody_lower, "Stage 2 custody contract does not preserve separate acceptance semantics")
-    require("stage 3" in custody_lower and "not started in this slice" in custody_lower, "historical Stage 2 custody slice was rewritten after Stage 3 start")
+    require("active implementation contract" in custody_lower, "historical Stage 2 custody contract status drifted")
+    require("stage 2 exit" in custody_lower and "accepted separately" in custody_lower, "historical Stage 2 separate-acceptance semantics drifted")
+    require("stage 3" in custody_lower and "not started in this slice" in custody_lower, "historical Stage 2 custody slice was retroactively rewritten")
 
-    for name in ("stage1_current", "stage1_exit", "dataset_card", "coverage_register"):
-        lowered = docs[name].lower()
-        require("pass" in lowered or "complete" in lowered, f"{name} does not preserve accepted Stage 1 state")
-        require("stage 2" in lowered, f"{name} lost Stage 2 transition/use boundary")
+    road = stages(docs["roadmap"])
+    technical = stages(docs["technical"])
+    require(bool(road) and bool(technical), "binding stage sequence missing")
+    if road and technical:
+        require([line for line in road if not line.startswith("Stage 0 ")] == technical, "roadmap/technical stage sequences diverge")
 
-    road_stages = _binding_stages(docs["roadmap"])
-    technical_stages = _binding_stages(docs["technical"])
-    require(bool(road_stages), "roadmap binding stage sequence not found")
-    require(bool(technical_stages), "technical-spec binding stage sequence not found")
-    if road_stages and technical_stages:
-        road_without_stage0 = [line for line in road_stages if not line.startswith("Stage 0 ")]
-        require(road_without_stage0 == technical_stages, "roadmap and technical-spec stage sequences diverge")
+    c16 = load("evidence/stage1c/corpus/coverage-bias-report.v1.json")
+    require(c16.get("snapshotSha256") == C15, "historical C16 snapshot binding drifted")
+    require(c16.get("sufficiency", {}).get("state") == "insufficient", "historical C16 sufficiency was rewritten")
+    require(c16.get("sufficiency", {}).get("stage1ExitSupported") is False, "historical C16 unexpectedly supports Stage 1 exit")
 
-    c16 = _json("evidence/stage1c/corpus/coverage-bias-report.v1.json")
-    require(c16["snapshotSha256"] == EXPECTED_C15_SNAPSHOT, "historical C16 no longer points at immutable C15 snapshot")
-    require(c16["sufficiency"]["state"] == "insufficient", "historical C16 sufficiency was rewritten")
-    require(c16["sufficiency"]["stage1ExitSupported"] is False, "historical C16 unexpectedly supports Stage 1 exit")
+    catalog = load("evidence/stage1c/corpus/catalog.v2.json")
+    snapshot = load("evidence/stage1c/corpus/snapshot.expanded.v2.json")
+    report = load("evidence/stage1c/corpus/coverage-bias-report.v2.json")
+    require(canonical_sha256(catalog) == CATALOG_V2, "expanded-v2 catalog digest drifted")
+    require(canonical_sha256(snapshot) == SNAPSHOT_V2 and snapshot.get("catalogSha256") == CATALOG_V2, "expanded-v2 snapshot drifted")
+    require(canonical_sha256(report) == REPORT_V2 and report.get("snapshotSha256") == SNAPSHOT_V2 and report.get("catalogSha256") == CATALOG_V2, "expanded-v2 report drifted")
 
-    catalog_v2 = _json("evidence/stage1c/corpus/catalog.v2.json")
-    snapshot_v2 = _json("evidence/stage1c/corpus/snapshot.expanded.v2.json")
-    report_v2 = _json("evidence/stage1c/corpus/coverage-bias-report.v2.json")
-    stage1_acceptance = _json("evidence/stage1c/corpus/stage1-exit-acceptance.v1.json")
-    execution = _json("evidence/stage2/corpus/execution-evidence.v1.json")
-    stage2_acceptance = _json("evidence/stage2/corpus/stage2-exit-acceptance.v1.json")
-    handoff = _json("docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json")
+    stage1 = load("evidence/stage1c/corpus/stage1-exit-acceptance.v1.json")
+    require(stage1.get("decision") == "PASS" and stage1.get("stage2EntryEligible") is True, "Stage 1 acceptance drifted")
 
-    require(canonical_sha256(catalog_v2) == EXPECTED_V2_CATALOG, "expanded-v2 catalog canonical digest drifted")
-    require(snapshot_v2["catalogSha256"] == EXPECTED_V2_CATALOG, "expanded-v2 snapshot catalog digest drifted")
-    require(report_v2["snapshotSha256"] == EXPECTED_V2_SNAPSHOT, "expanded-v2 report snapshot digest drifted")
-    require(report_v2["catalogSha256"] == EXPECTED_V2_CATALOG, "expanded-v2 report catalog digest drifted")
-    require(canonical_sha256(snapshot_v2) == EXPECTED_V2_SNAPSHOT, "expanded-v2 snapshot canonical digest drifted")
-    require(canonical_sha256(report_v2) == EXPECTED_V2_REPORT, "expanded-v2 report canonical digest drifted")
+    execution = load("evidence/stage2/corpus/execution-evidence.v1.json")
+    payload = dict(execution)
+    digest = payload.pop("evidenceDigest", {}).get("value")
+    require(digest == STAGE2_EXECUTION and canonical_sha256(payload) == STAGE2_EXECUTION, "Stage 2 execution evidence drifted")
+    assertions = execution.get("assertions", {})
+    require(assertions.get("stage2ExitPass") is False, "historical Stage 2 execution evidence was rewritten")
+    require(assertions.get("stage3EntryAuthorized") is False, "historical Stage 2 execution evidence retroactively authorizes Stage 3")
+    require(assertions.get("heldOutThresholdTuningUsed") is False, "Stage 2 held-out non-tuning assertion drifted")
 
-    require(stage1_acceptance.get("decision") == "PASS", "Stage 1 exit acceptance is not PASS")
-    require(stage1_acceptance.get("stage2EntryEligible") is True, "Stage 1 acceptance no longer authorizes Stage 2 entry")
+    stage2 = load("evidence/stage2/corpus/stage2-exit-acceptance.v1.json")
+    require(stage2.get("decision") == "PASS" and stage2.get("stage2ExitPass") is True and stage2.get("stage3EntryEligible") is True, "Stage 2 acceptance drifted")
+    require(stage2.get("evidenceMainSha") == STAGE2_EVIDENCE_MAIN, "Stage 2 acceptance evidence-main binding drifted")
+    require(stage2.get("stage3Started") is False, "historical Stage 2 acceptance was retroactively rewritten")
+    require(stage2.get("blockerCodes") == [], "Stage 2 acceptance gained blockers")
+    for claim, value in stage2.get("claims", {}).items():
+        require(value is False, f"unsupported Stage 2 positive claim: {claim}")
 
-    execution_payload = dict(execution)
-    execution_digest = execution_payload.pop("evidenceDigest", {}).get("value")
-    require(execution_digest == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence digest drifted")
-    require(canonical_sha256(execution_payload) == STAGE2_EXECUTION_EVIDENCE, "Stage 2 execution evidence content drifted")
-    require(execution.get("assertions", {}).get("stage2ExitPass") is False, "historical Stage 2 execution evidence was retroactively changed")
-    require(execution.get("assertions", {}).get("stage3EntryAuthorized") is False, "historical Stage 2 execution evidence retroactively authorizes Stage 3")
-    require(execution.get("assertions", {}).get("heldOutThresholdTuningUsed") is False, "Stage 2 execution evidence lost held-out non-tuning")
+    grants = load("evidence/stage3/governance/purpose-grants.v1.json")
+    require(canonical_sha256(grants) == PURPOSE_SHA, "Stage 3 purpose-grant canonical digest drifted")
+    require(grants.get("grantSetId") == "stage3.purpose-grants.beethoven-barley.v1", "Stage 3 grant set id drifted")
+    require(grants.get("authorizationSourceCode") == "explicit_user_authorization", "Stage 3 grant authorization source drifted")
+    grant_map = {item.get("datasetItemId"): item for item in grants.get("grants", []) if isinstance(item, dict)}
+    require(set(grant_map) == {BEETHOVEN[0], BARLEY[0]}, "Stage 3 grant item allowlist drifted")
+    for item_id, sha in (BEETHOVEN, BARLEY):
+        grant = grant_map.get(item_id, {})
+        permission = grant.get("permission", {}) if isinstance(grant, dict) else {}
+        r = restrictions(permission if isinstance(permission, dict) else {})
+        require(grant.get("artifactSha256") == sha and grant.get("purpose") == "pdf_pipeline_evaluation", f"grant tuple drifted for {item_id}")
+        require(permission.get("status") == "granted", f"grant is not active for {item_id}")
+        require(r.get("split_allowlist") == ["development"], f"split restriction drifted for {item_id}")
+        require(r.get("storage_class_allowlist") == ["managed_standard"], f"storage restriction drifted for {item_id}")
+        require(r.get("environment_allowlist") == ["stage1_offline"], f"environment restriction drifted for {item_id}")
+        require(r.get("external_export") is False, f"export restriction drifted for {item_id}")
+    for key, value in grants.get("assertions", {}).items():
+        require(value is False, f"Stage 3 grant assertion became true: {key}")
 
-    require(stage2_acceptance.get("decision") == "PASS", "Stage 2 final exit acceptance is not PASS")
-    require(stage2_acceptance.get("evidenceMainSha") == STAGE2_EVIDENCE_MAIN, "Stage 2 acceptance main binding drifted")
-    require(stage2_acceptance.get("stage2ExitPass") is True, "Stage 2 acceptance does not explicitly pass exit")
-    require(stage2_acceptance.get("stage3EntryEligible") is True, "Stage 2 acceptance lost Stage 3 eligibility")
-    require(stage2_acceptance.get("stage3Started") is False, "historical Stage 2 acceptance was retroactively rewritten after Stage 3 start")
-    require(stage2_acceptance.get("blockerCodes") == [], "Stage 2 acceptance contains blockers")
-    require(stage2_acceptance.get("evidenceDigests", {}).get("corpusExecutionEvidenceCanonicalSha256") == STAGE2_EXECUTION_EVIDENCE, "Stage 2 acceptance lost execution-evidence binding")
-    for name, value in stage2_acceptance.get("claims", {}).items():
-        require(value is False, f"Stage 2 acceptance contains unsupported positive claim: {name}")
-
-    require(handoff.get("main_sha") == STAGE3_CORE_MAIN, "live handoff does not bind production-effective Stage 3 core main")
-    require(handoff.get("latest_main_ci_run_id") == STAGE3_CORE_POSTMERGE_CI_RUN_ID, "live handoff Stage 3 core post-merge CI id drifted")
-    require(handoff.get("latest_main_ci_run_number") == STAGE3_CORE_POSTMERGE_CI_RUN_NUMBER, "live handoff Stage 3 core post-merge CI run number drifted")
-    require(handoff.get("stage2_exit_state") == "pass_effective", "live handoff does not record Stage 2 PASS effective")
-    require(handoff.get("stage3_entry_state") == "satisfied", "live handoff does not record Stage 3 entry satisfied")
-    require(handoff.get("stage3_started") is True, "live handoff does not record Stage 3 started")
-    require(handoff.get("stage3_exit_state") == "not_yet_evaluated", "live handoff prematurely records Stage 3 exit")
+    handoff = load("docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json")
+    require(handoff.get("main_sha") == STAGE3_PURPOSE_MAIN, "live handoff current main drifted")
+    require((handoff.get("latest_main_ci_run_number"), handoff.get("latest_main_ci_run_id")) == STAGE3_PURPOSE_RUN, "live handoff latest main CI drifted")
+    require(handoff.get("active_branch") == STAGE3_BRANCH and handoff.get("active_pr") == STAGE3_PR, "live handoff active PR/branch drifted")
+    require(handoff.get("stage2_exit_state") == "pass_effective", "live handoff lost Stage 2 PASS")
+    require(handoff.get("stage3_entry_state") == "satisfied" and handoff.get("stage3_started") is True, "live handoff lost Stage 3 entry/start")
+    require(handoff.get("stage3_exit_state") == "not_yet_pass", "live handoff prematurely passes Stage 3")
     require(handoff.get("stage4_entry_state") == "blocked_pending_stage3_exit", "live handoff does not block Stage 4")
-    require(handoff.get("active_branch") == STAGE3_BRANCH, "live handoff active Stage 3 branch drifted")
-    stage3 = handoff.get("stage3", {})
-    require(stage3.get("tracking_issue") == STAGE3_ISSUE, "live handoff Stage 3 issue binding drifted")
-    require(stage3.get("entry_main_sha") == STAGE3_ENTRY_MAIN, "live handoff Stage 3 entry SHA drifted")
-    require(stage3.get("entry_ci_run_id") == STAGE3_ENTRY_CI_RUN_ID, "live handoff Stage 3 entry CI id drifted")
-    require(stage3.get("entry_ci_run_number") == STAGE3_ENTRY_CI_RUN_NUMBER, "live handoff Stage 3 entry CI run number drifted")
-    require(stage3.get("core_merge_main_sha") == STAGE3_CORE_MAIN, "live handoff Stage 3 core merge main drifted")
-    require(stage3.get("core_postmerge_ci_run_id") == STAGE3_CORE_POSTMERGE_CI_RUN_ID, "live handoff Stage 3 core post-merge CI id drifted")
-    require(stage3.get("renderer") == "pdfium", "live handoff Stage 3 renderer drifted")
-    require(stage3.get("renderer_binding") == "pypdfium2", "live handoff Stage 3 renderer binding drifted")
-    require(stage3.get("renderer_binding_version") == "5.13.0", "live handoff Stage 3 renderer version drifted")
-    require(stage3.get("vector_pages_rasterized") is False, "live handoff allows vector-page rasterization")
-    require(stage3.get("hybrid_pages_rasterized") is False, "live handoff allows hybrid-page rasterization")
-    require(stage3.get("held_out_tuning_used") is False, "live handoff claims Stage 3 held-out tuning")
-    require(stage3.get("real_corpus_execution_complete") is False, "live handoff prematurely claims real Stage 3 corpus execution complete")
-    require(stage3.get("development_pdf_pipeline_permission_state") == "not_requested", "live handoff does not preserve current development permission blocker")
 
-    require(STAGE2_ENTRY_MAIN in docs["README"], "README lost accepted Stage 2 entry main")
+    s3 = handoff.get("stage3", {})
+    require((s3.get("entry_ci_run_number"), s3.get("entry_ci_run_id")) == STAGE3_ENTRY_RUN and s3.get("entry_main_sha") == STAGE3_ENTRY, "live handoff Stage 3 entry evidence drifted")
+    require((s3.get("core_postmerge_ci_run_number"), s3.get("core_postmerge_ci_run_id")) == STAGE3_CORE_RUN and s3.get("core_merge_main_sha") == STAGE3_CORE, "live handoff Stage 3 core evidence drifted")
+    require((s3.get("authorized_execution_postmerge_ci_run_number"), s3.get("authorized_execution_postmerge_ci_run_id")) == STAGE3_AUTHORIZED_RUN and s3.get("authorized_execution_main_sha") == STAGE3_AUTHORIZED, "live handoff authorized-execution evidence drifted")
+    require((s3.get("purpose_grant_postmerge_ci_run_number"), s3.get("purpose_grant_postmerge_ci_run_id")) == STAGE3_PURPOSE_RUN and s3.get("purpose_grant_main_sha") == STAGE3_PURPOSE_MAIN, "live handoff purpose-grant evidence drifted")
+    require(s3.get("purpose_grant_canonical_sha256") == PURPOSE_SHA and s3.get("purpose_grant_production_effective") is True, "live handoff purpose-grant state drifted")
+    require(s3.get("renderer") == "pdfium" and s3.get("renderer_binding_version") == "5.13.0", "live handoff renderer drifted")
+    require(s3.get("vector_pages_rasterized") is False and s3.get("hybrid_pages_rasterized") is False, "live handoff allows silent rasterization")
+    require(s3.get("held_out_tuning_used") is False, "live handoff claims held-out tuning")
+    require(s3.get("beethoven_permission_state") == "granted_via_stage3_overlay" and s3.get("barley_permission_state") == "granted_via_stage3_overlay", "live handoff development grant state drifted")
+    require(s3.get("held_out_chopin_permission_state") == "granted_existing_held_out", "live handoff Chopin permission drifted")
+    require(s3.get("real_corpus_execution_complete") is False, "live handoff prematurely claims real corpus completion")
 
-    runtime_dependencies = set(pyproject["project"].get("dependencies", []))
-    require(STAGE3_RENDERER_BINDING in runtime_dependencies, "pyproject lost exact Stage 3 renderer dependency")
-    require(STAGE3_RENDERER_BINDING in _read("requirements.lock"), "runtime lock lost exact Stage 3 renderer dependency")
+    pdf = read("src/st_score_restore/pdf_pipeline.py")
+    custody = read("src/st_score_restore/stage3_custody_execution.py")
+    purpose = read("src/st_score_restore/stage3_purpose_grants.py")
+    runner = read("src/st_score_restore/stage3_real_corpus_execution.py")
+    workflow = read(".github/workflows/repository-validation.yml")
 
-    pdf_pipeline = _read("src/st_score_restore/pdf_pipeline.py")
-    stage3_custody = _read("src/st_score_restore/stage3_custody_execution.py")
-    stage3_validator = _read("tools/validate_stage3_pdf_pipeline.py")
-    stage3_custody_validator = _read("tools/validate_stage3_custody_execution.py")
-    workflow = _read(".github/workflows/repository-validation.yml")
-    require("process_pdf_bytes" in pdf_pipeline, "Stage 3 PDF pipeline entry point missing")
-    require("pypdfium2" in pdf_pipeline, "Stage 3 PDF pipeline is not bound to pypdfium2")
-    require("preserved_vector_page" in pdf_pipeline, "Stage 3 vector-preservation state missing")
-    require("render_raster_only" in pdf_pipeline, "Stage 3 raster-only render policy missing")
-    require("vectorPagesRasterized" in pdf_pipeline, "Stage 3 manifest does not explicitly bind vector rasterization state")
-    require("originalFallbackAvailable" in pdf_pipeline, "Stage 3 manifest lost original fallback")
-    require("heldOutTuningUsed" in pdf_pipeline, "Stage 3 manifest lost held-out non-tuning assertion")
-    require("run_authorized_pdf_pipeline_execution" in stage3_custody, "Stage 3 custody execution entry point missing")
-    require('"development": "pdf_pipeline_evaluation"' in stage3_custody, "Stage 3 development purpose boundary drifted")
-    require('"held_out": "held_out_evaluation"' in stage3_custody, "Stage 3 held-out purpose boundary drifted")
-    require("exact_sha256_mismatch" in stage3_custody, "Stage 3 custody execution lost exact-byte digest gate")
-    require("detailedManifestPublic" in stage3_custody, "Stage 3 custody receipt lost detailed-manifest redaction state")
-    require("heldOutThresholdTuningUsed" in stage3_custody, "Stage 3 custody receipt lost held-out non-tuning assertion")
-    require("from st_score_restore.pdf_pipeline" in stage3_validator, "Stage 3 validator does not bind PDF pipeline module")
-    require("from st_score_restore.stage3_custody_execution" in stage3_custody_validator, "Stage 3 custody validator does not bind execution module")
-    require("validate_stage3_pdf_pipeline.py" in workflow, "Stage 3 PDF validator is not wired into CI")
-    require("validate_stage3_custody_execution.py" in workflow, "Stage 3 custody validator is not wired into CI")
-    require("pypdfium2" in workflow and "5.13.0" in workflow, "CI does not verify Stage 3 renderer dependency version")
-    require("pypdfium2==5.13.0" in docs["stage3_adr"], "ADR 0017 lost exact renderer binding")
-    require("accepted" in docs["stage3_adr"].lower(), "ADR 0017 does not record production-effective acceptance")
-    require("not silently rasterized" in docs["stage3_adr"].lower(), "ADR 0017 lost no-silent-vector-rasterization rule")
+    for token in ("process_pdf_bytes", "pypdfium2", "preserved_vector_page", "render_raster_only", "vectorPagesRasterized", "originalFallbackAvailable", "heldOutTuningUsed"):
+        require(token in pdf, f"Stage 3 PDF pipeline lost {token}")
+    require('"development": "pdf_pipeline_evaluation"' in custody and '"held_out": "held_out_evaluation"' in custody, "Stage 3 split-purpose mapping drifted")
+    for token in ("exact_sha256_mismatch", "detailedManifestPublic", "heldOutThresholdTuningUsed"):
+        require(token in custody, f"Stage 3 custody executor lost {token}")
+    require("run_purpose_granted_pdf_pipeline_execution" in purpose and PURPOSE_SHA in purpose, "Stage 3 purpose-grant runtime drifted")
+    require("execute_stage3_real_corpus_batch" in runner, "Stage 3 real-corpus runner entry point missing")
+    require("REQUIRED_RENDERER_BINDING_VERSION" in runner and "5.13.0" in runner, "Stage 3 runner renderer gate drifted")
+    require(all(token in runner for token in (BEETHOVEN[0], BARLEY[0], CHOPIN_ID)), "Stage 3 runner exact item allowlist drifted")
+    require('"stage3ExitPass": False' in runner and '"stage4EntryAuthorized": False' in runner and '"heldOutThresholdTuningUsed": False' in runner, "Stage 3 runner exit/non-tuning assertions drifted")
 
     for validator in (
         "validate_stage2_quality_analysis.py",
@@ -209,28 +225,22 @@ def main() -> int:
         "validate_stage2_exit_acceptance.py",
         "validate_stage3_pdf_pipeline.py",
         "validate_stage3_custody_execution.py",
+        "validate_stage3_real_corpus_runner.py",
     ):
         require(validator in workflow, f"CI is not wired to {validator}")
+    require("pypdfium2" in workflow and "5.13.0" in workflow, "CI renderer-version check drifted")
+    require("pypdfium2==5.13.0" in docs["stage3_adr"] and "accepted" in docs["stage3_adr"].lower(), "ADR 0017 renderer/acceptance binding drifted")
+    require("not silently rasterized" in docs["stage3_adr"].lower(), "ADR 0017 lost no-silent-rasterization rule")
 
-    for root_name in ("stage1c", "stage2"):
-        evidence_root = ROOT / "evidence" / root_name
-        binary_paths = [
-            str(path.relative_to(ROOT))
-            for path in evidence_root.rglob("*")
-            if path.is_file() and path.suffix.lower() in REAL_ARTIFACT_SUFFIXES
-        ]
-        require(not binary_paths, f"real-artifact-like bytes found under evidence/{root_name}: {binary_paths}")
+    for root_name in ("stage1c", "stage2", "stage3"):
+        root = ROOT / "evidence" / root_name
+        if root.exists():
+            binaries = [str(path.relative_to(ROOT)) for path in root.rglob("*") if path.is_file() and path.suffix.lower() in BINARY_SUFFIXES]
+            require(not binaries, f"real-artifact-like bytes found under evidence/{root_name}: {binaries}")
 
-    combined_docs = "\n".join(docs.values())
-    for digest in (
-        EXPECTED_C15_SNAPSHOT,
-        EXPECTED_C16_REPORT,
-        EXPECTED_V2_CATALOG,
-        EXPECTED_V2_SNAPSHOT,
-        EXPECTED_V2_REPORT,
-        STAGE2_EXECUTION_EVIDENCE,
-    ):
-        require(digest in combined_docs, f"architecture/status docs lost evidence binding {digest}")
+    combined = "\n".join(docs.values())
+    for digest in (C15, C16, CATALOG_V2, SNAPSHOT_V2, REPORT_V2, STAGE2_EXECUTION, PURPOSE_SHA):
+        require(digest in combined, f"architecture/status docs lost evidence binding {digest}")
 
     if failures:
         print("Architecture consistency validation: FAIL", file=sys.stderr)
@@ -239,16 +249,16 @@ def main() -> int:
         return 1
 
     print("Architecture consistency validation: PASS")
-    print(f"- package/OpenAPI version: {pyproject['project']['version']}")
-    print("- Stage 1 final exit: PASS / immutable evidence preserved")
+    print("- Stage 1 final exit: PASS / historical evidence preserved")
     print("- Stage 2 final exit: PASS / production-effective")
-    print(f"- Stage 3 entry main: {STAGE3_ENTRY_MAIN}")
-    print(f"- Stage 3 core main: {STAGE3_CORE_MAIN} / post-merge Run #232 PASS")
-    print("- Stage 3: ACTIVE / authorized PDF execution boundary in progress")
-    print("- development real PDF pipeline permission: not_requested / fail closed")
+    print(f"- Stage 3 production main: {STAGE3_PURPOSE_MAIN} / Run #238 PASS")
+    print(f"- Stage 3 purpose grant: production-effective / {PURPOSE_SHA}")
+    print("- Stage 3: ACTIVE / real-corpus runner in PR #98")
+    print("- Beethoven/Barley: granted via exact Stage 3 overlay")
+    print("- Chopin: held-out evaluation only / non-tuning")
     print("- Stage 3 real corpus execution: not complete")
-    print("- Stage 4: NOT STARTED / blocked pending Stage 3 exit PASS")
-    print("- evidence/stage1c + evidence/stage2: metadata-only")
+    print("- Stage 4: blocked pending Stage 3 final exit PASS")
+    print("- ordinary Git evidence roots: public-safe metadata only")
     return 0
 
 
