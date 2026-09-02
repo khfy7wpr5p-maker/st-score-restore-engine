@@ -190,6 +190,9 @@ jobs:
       - name: Validate Stage 4 entry/start framework
         run: python tools/validate_stage4_entry_start.py
 
+      - name: Validate Stage 4 reference-label evidence contract
+        run: python tools/validate_stage4_reference_labels.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
