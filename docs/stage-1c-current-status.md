@@ -7,8 +7,8 @@
 **Accepted main / Stage 2 entry main:** `936f2f9e52cb1009628e8ccf1e7e2af035ec8ef6`  
 **Post-merge CI:** Run #203 (`33588190548`) — Python 3.11 / 3.12 PASS  
 **Stage 2:** COMPLETE / PASS / production-effective  
-**Stage 3:** ACTIVE under Issue #90  
-**Stage 4:** NOT STARTED / BLOCKED pending Stage 3 final exit PASS
+**Stage 3:** COMPLETE / PASS / production-effective; final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0` / Run #253  
+**Stage 4:** ENTRY ELIGIBLE / NOT STARTED
 
 ## Accepted Stage 1 evidence
 
@@ -49,4 +49,4 @@ The separate sensitive phone-photo path remains fail-closed pending real `high_a
 
 ## Current transition context
 
-Stage 1 is closed and historical. Stage 2 later completed PASS and is production-effective. Stage 3 is now ACTIVE; its purpose-grant overlay and PDF pipeline do not modify any Stage 1 historical evidence. Stage 4 remains blocked until explicit Stage 3 final exit PASS.
+Stage 1 is closed and historical. Stage 2 later completed PASS and is production-effective. Stage 3 later completed PASS and is production-effective at final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`, Run #253. None of that modifies this Stage 1 historical evidence. Stage 4 is entry eligible but has not started; no calibration, training or publication permission is inferred from Stage 3 PASS.

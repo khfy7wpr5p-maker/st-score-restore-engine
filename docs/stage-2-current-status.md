@@ -7,8 +7,8 @@
 **Stage 2 execution-evidence main:** `ffea7f5aa618187f3cabcfb49801804e3f6658bf`  
 **Final acceptance / Stage 3 entry main:** `87198a5a917ab6b3efc277762016a5f5b0dd3aab`  
 **Acceptance post-merge CI:** Run #228 (`33609061197`) — Python 3.11 / 3.12 SUCCESS  
-**Stage 3:** ACTIVE under Issue #90; production baseline `6ebe160309c562e9841a3c313d5ca507592f1386`; non-draft PR #99 in progress  
-**Stage 4:** NOT STARTED / BLOCKED pending Stage 3 final exit PASS
+**Stage 3:** COMPLETE / PASS / production-effective; final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0` / Run #253  
+**Stage 4:** ENTRY ELIGIBLE / NOT STARTED
 
 ## Production chain
 
@@ -24,7 +24,7 @@ Frozen public execution evidence: `evidence/stage2/corpus/execution-evidence.v1.
 4. C17C held-out Chopin scanned PDF — `deferred_stage3_renderer` / `pdf_renderer_not_available`;
 5. C17D held-out deidentified phone-photo JPEG — `analyzed` under `managed_restricted` custody.
 
-These historical Stage 2 results are immutable even though Stage 3 now has PDFium.
+These historical Stage 2 results are immutable even though Stage 3 later executed the PDF items under a separate renderer/purpose contract.
 
 ## Custody and held-out boundary
 
@@ -36,6 +36,6 @@ The frozen Stage 2 execution evidence retains historical `stage2ExitPass=false` 
 
 ## Current Stage 3 handoff context
 
-Stage 3 PDFium core, approved-custody execution boundary and Beethoven/Barley purpose-grant overlay are production-effective through main `6ebe160309c562e9841a3c313d5ca507592f1386` / Run #238. The current runner branch is `stage3-real-corpus-runner` under **non-draft replacement PR #99**. Draft PR #98 was closed unmerged after a connector-only Draft→Ready GraphQL failure; its final head had passed Run #243, but PR #99 still requires fresh exact-head validation after current reconciliation.
+Stage 3 later completed its PDFium core, approved-custody execution, purpose-grant overlay, exact real-corpus execution, public-safe evidence freeze, limitations review and separate final acceptance. Final Stage 3 acceptance is production-effective at main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`, post-merge Run #253. This does not alter historical Stage 2 outcomes or claims.
 
-Stage 4 remains blocked until explicit Stage 3 final exit PASS.
+Stage 4 is now entry eligible but has not started. Stage 3 PASS is not itself calibration, training or publication authorization.
