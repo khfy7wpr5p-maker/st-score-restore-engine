@@ -97,12 +97,24 @@ def main() -> int:
     require(stage4.get("stage5_entry_eligible") is False, "Stage 5 unexpectedly eligible", failures)
     require(handoff.get("stage5_entry_state") == "blocked_pending_stage4_exit", "Stage 5 current block drifted", failures)
 
-    # Live handoff remains the previous production checkpoint during this PR. It is
-    # intentionally not rewritten until acceptance merges and gets post-merge CI.
+    # PR #115 is now production-effective. Current truth must therefore show the
+    # accepted reference bundle as resolved while retaining a distinct fail-closed
+    # execution-authorization boundary.
     current_existing_blockers = set(stage4.get("readiness_blocker_codes", []))
     require(
-        BLOCK_NO_REFERENCE_BUNDLE in current_existing_blockers,
-        "pre-acceptance production handoff lost the frozen reference-bundle blocker before acceptance production-effectiveness",
+        current_existing_blockers == EXPECTED_CANDIDATE_BLOCKERS,
+        "post-acceptance live handoff readiness blockers do not match the three remaining prerequisites",
+        failures,
+    )
+    require(
+        BLOCK_NO_REFERENCE_BUNDLE not in current_existing_blockers,
+        "production-effective reference acceptance still appears as a current readiness blocker",
+        failures,
+    )
+    require(stage4.get("reference_label_bundle_accepted") is True, "live handoff lost production-effective reference-bundle acceptance", failures)
+    require(
+        stage4.get("current_execution_blocker_codes") == ["real_data_calibration_execution_not_authorized"],
+        "real calibration execution boundary is not explicitly fail-closed after reference acceptance",
         failures,
     )
     require("BLOCKED / NOT AUTHORIZED" in status, "Stage 4 status lost real-calibration execution block", failures)
