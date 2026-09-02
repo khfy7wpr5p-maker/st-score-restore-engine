@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "grantSetId": "stage3-purpose-grants-pdf-pipeline-2026-09-02-v1",
+  "catalogId": "dataset.catalog.stage1c-expanded-corpus.v2",
+  "catalogCanonicalSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+  "purpose": "pdf_pipeline_evaluation",
+  "authorizationBasis": "explicit_user_authorization",
+  "authorizedOn": "2026-09-02",
+  "grants": [
+    {
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "artifactSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+      "byteSize": 1182561,
+      "split": "development",
+      "permission": {
+        "status": "granted",
+        "authorizationReference": "evidence:opq_cf727d25b07ea631a2569be0d1962cfa",
+        "authorizedBy": "actor.purpose:opq_f9d100c5971941130cb3017ce6bd6fa4",
+        "authorizedOn": "2026-09-02",
+        "expiresOn": null,
+        "restrictions": [
+          {
+            "type": "split_allowlist",
+            "values": ["development"]
+          },
+          {
+            "type": "storage_class_allowlist",
+            "values": ["managed_standard"]
+          },
+          {
+            "type": "environment_allowlist",
+            "values": ["stage1_offline"]
+          },
+          {
+            "type": "external_export",
+            "allowed": false
+          }
+        ],
+        "revokedOn": null,
+        "revocationReference": null
+      }
+    },
+    {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "artifactSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+      "byteSize": 84689,
+      "split": "development",
+      "permission": {
+        "status": "granted",
+        "authorizationReference": "evidence:opq_482bd9a04112f570e173a274ca0cc702",
+        "authorizedBy": "actor.purpose:opq_f9d100c5971941130cb3017ce6bd6fa4",
+        "authorizedOn": "2026-09-02",
+        "expiresOn": null,
+        "restrictions": [
+          {
+            "type": "split_allowlist",
+            "values": ["development"]
+          },
+          {
+            "type": "storage_class_allowlist",
+            "values": ["managed_standard"]
+          },
+          {
+            "type": "environment_allowlist",
+            "values": ["stage1_offline"]
+          },
+          {
+            "type": "external_export",
+            "allowed": false
+          }
+        ],
+        "revokedOn": null,
+        "revocationReference": null
+      }
+    }
+  ],
+  "assertions": {
+    "historicalCatalogsModified": false,
+    "trainingAuthorized": false,
+    "calibrationAuthorized": false,
+    "publicationAuthorized": false,
+    "demonstrationAuthorized": false,
+    "externalExportAuthorized": false
+  },
+  "grantSetDigest": {
+    "algorithm": "sha256",
+    "value": "a5207a203ce59b1d7ddf80fd77941b5f6dde33215cf8437580979b43829ddc6d"
+  }
+}
