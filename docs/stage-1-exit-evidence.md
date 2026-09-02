@@ -7,8 +7,8 @@
 **Post-merge repository validation:** Run #203 (`33588190548`) — Python 3.11 / 3.12 PASS  
 **Artifact bytes stored in ordinary Git:** 0  
 **Stage 2 current state:** COMPLETE / PASS / production-effective  
-**Stage 3 current state:** ACTIVE under Issue #90  
-**Stage 4 current state:** BLOCKED pending Stage 3 final exit PASS
+**Stage 3 current state:** COMPLETE / PASS / production-effective; final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0` / Run #253  
+**Stage 4 current state:** ENTRY ELIGIBLE / NOT STARTED
 
 ## Decision
 
@@ -65,4 +65,4 @@ The separate sensitive phone-photo path remains blocked pending real `high_assur
 
 ## Current stage context
 
-Stage 1 remains COMPLETE / PASS. Stage 2 later completed PASS and is production-effective at final acceptance main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`. Stage 3 is now ACTIVE under Issue #90; its PDFium, custody and purpose-grant work is prospective and must not rewrite this evidence. Stage 4 remains blocked until a separate Stage 3 final exit PASS.
+Stage 1 remains COMPLETE / PASS. Stage 2 later completed PASS and is production-effective at final acceptance main `87198a5a917ab6b3efc277762016a5f5b0dd3aab`. Stage 3 later completed PASS and is production-effective at final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`, Run #253. Stage 3 work did not rewrite this evidence. Stage 4 is entry eligible but not started; calibration/training/publication remain separate decisions.
