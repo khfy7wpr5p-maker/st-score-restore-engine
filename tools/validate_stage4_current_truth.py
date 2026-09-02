@@ -4,31 +4,39 @@ import json
 from pathlib import Path
 import sys
 
+from st_score_restore.dataset_contract_common import canonical_sha256
+from st_score_restore.stage4_purpose_grants import (
+    APPROVED_GRANT_CANONICAL_SHA256,
+    APPROVED_ITEMS,
+    HELD_OUT_ITEM,
+    validate_stage4_purpose_grants,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 
 FRAMEWORK_MAIN = "4a5c3db2d767dac235fe12a6bd0e18ba500e7362"
-FRAMEWORK_RUN_ID = 33659753403
 FRAMEWORK_RUN_NUMBER = 259
 REFERENCE_MAIN = "b184f5e5b780213671597ffa9f4380aa4a1adb47"
-REFERENCE_RUN_ID = 33668750227
 REFERENCE_RUN_NUMBER = 263
 PUBLIC_EVIDENCE_MAIN = "4c936353ede322f41d009d503bcb4ca7fa64b2b9"
-PUBLIC_EVIDENCE_RUN_ID = 33669674783
 PUBLIC_EVIDENCE_RUN_NUMBER = 265
 READINESS_MAIN = "d4dff6b8c672cec1b2afa864f89bb7a03f29cd75"
-READINESS_RUN_ID = 33670331093
 READINESS_RUN_NUMBER = 267
+PURPOSE_MAIN = "c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd"
+PURPOSE_RUN_ID = 33672903071
+PURPOSE_RUN_NUMBER = 272
+PURPOSE_EXACT_HEAD = "dce3da9184d5995fa57534e1bd978ea4dfd614a5"
+PURPOSE_EXACT_RUN_ID = 33672712230
+PURPOSE_EXACT_RUN_NUMBER = 271
 ENTRY_DIGEST = "013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8"
+CATALOG_DIGEST = "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3"
 
 READINESS_BLOCKERS = [
-    "no_real_artifact_has_granted_safety_calibration_permission",
     "no_real_calibration_reference_label_bundle_is_accepted",
     "no_real_development_calibration_evidence_is_accepted",
     "no_real_held_out_evaluation_evidence_is_accepted",
     "no_stage4_metric_acceptance_target_policy_is_accepted",
 ]
-
-LEGACY_REAL_CALIBRATION_BLOCKERS = READINESS_BLOCKERS[:2]
 
 DOC_PATHS = (
     "README.md",
@@ -37,7 +45,6 @@ DOC_PATHS = (
     "docs/architecture-consistency-audit.md",
     "docs/stage-4-current-status.md",
 )
-
 BINARY_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".webp"}
 
 
@@ -56,24 +63,24 @@ def main() -> int:
         if not condition:
             failures.append(message)
 
-    required_paths = (
+    required = (
         *DOC_PATHS,
         "docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json",
         "evidence/stage1c/corpus/catalog.v2.json",
-        "evidence/stage3/governance/purpose-grants.v1.json",
         "evidence/stage4/governance/stage4-entry-start.v1.json",
-        "src/st_score_restore/stage4_calibration.py",
+        "evidence/stage4/governance/purpose-grants.v1.json",
+        "src/st_score_restore/stage4_purpose_grants.py",
         "src/st_score_restore/stage4_reference_labels.py",
         "src/st_score_restore/stage4_calibration_evidence.py",
         "src/st_score_restore/stage4_exit_readiness.py",
+        "tools/validate_stage4_purpose_grants.py",
         "tools/validate_stage4_reference_labels.py",
         "tools/validate_stage4_calibration_evidence.py",
         "tools/validate_stage4_exit_readiness.py",
         ".github/workflows/repository-validation.yml",
     )
-    for path in required_paths:
-        require((ROOT / path).exists(), f"required current-truth input missing: {path}")
-
+    for path in required:
+        require((ROOT / path).exists(), f"required Stage 4 current-truth input missing: {path}")
     if failures:
         for failure in failures:
             print(f"- {failure}", file=sys.stderr)
@@ -82,72 +89,93 @@ def main() -> int:
     docs = {path: read(path) for path in DOC_PATHS}
     for path, text in docs.items():
         lower = text.lower()
-        require("stage 4" in lower, f"{path} lost Stage 4 state")
-        require("not_ready" in lower or "not ready" in lower, f"{path} lost Stage 4 NOT_READY state")
+        require("stage 4" in lower and "active" in lower, f"{path} lost Stage 4 ACTIVE state")
+        require("framework" in lower and "governance" in lower, f"{path} lost framework/governance scope")
+        require("not_ready" in lower or "not ready" in lower, f"{path} lost NOT_READY state")
         require("stage 5" in lower and "blocked" in lower, f"{path} lost Stage 5 block")
-        require(READINESS_MAIN in text, f"{path} lost latest readiness main")
-        require(str(READINESS_RUN_NUMBER) in text, f"{path} lost readiness Run #{READINESS_RUN_NUMBER}")
-        require(ENTRY_DIGEST in text, f"{path} lost immutable Stage 4 entry/start digest")
+        require(PURPOSE_MAIN in text, f"{path} lost purpose-grant production main")
+        require(str(PURPOSE_RUN_NUMBER) in text, f"{path} lost purpose-grant post-merge Run #{PURPOSE_RUN_NUMBER}")
+        require(ENTRY_DIGEST in text, f"{path} lost Stage 4 entry digest")
+        require(APPROVED_GRANT_CANONICAL_SHA256 in text, f"{path} lost Stage 4 purpose-grant digest")
+        require("BLOCKED / NOT AUTHORIZED" in text or "not authorized" in lower, f"{path} lost execution non-authorization")
         for blocker in READINESS_BLOCKERS:
             require(blocker in text, f"{path} lost readiness blocker {blocker}")
+        require(
+            "no_real_artifact_has_granted_safety_calibration_permission" not in text
+            or "removed blocker" in lower
+            or "resolved" in lower,
+            f"{path} still presents the resolved safety-calibration-purpose blocker as current",
+        )
 
-    stage4_status = docs["docs/stage-4-current-status.md"]
+    status = docs["docs/stage-4-current-status.md"]
     for main_sha, run_number in (
         (FRAMEWORK_MAIN, FRAMEWORK_RUN_NUMBER),
         (REFERENCE_MAIN, REFERENCE_RUN_NUMBER),
         (PUBLIC_EVIDENCE_MAIN, PUBLIC_EVIDENCE_RUN_NUMBER),
         (READINESS_MAIN, READINESS_RUN_NUMBER),
+        (PURPOSE_MAIN, PURPOSE_RUN_NUMBER),
     ):
-        require(main_sha in stage4_status, f"Stage 4 status lost production chain main {main_sha}")
-        require(str(run_number) in stage4_status, f"Stage 4 status lost production chain Run #{run_number}")
+        require(main_sha in status, f"Stage 4 status lost production chain main {main_sha}")
+        require(str(run_number) in status, f"Stage 4 status lost production chain Run #{run_number}")
+
+    catalog = load("evidence/stage1c/corpus/catalog.v2.json")
+    require(canonical_sha256(catalog) == CATALOG_DIGEST, "historical Stage 1 catalog digest drifted")
+    historical_safety = [
+        item.get("datasetItemId")
+        for item in catalog.get("items", [])
+        if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
+    ]
+    require(not historical_safety, f"historical catalog was rewritten with safety_calibration grants: {historical_safety}")
+
+    purpose = validate_stage4_purpose_grants(load("evidence/stage4/governance/purpose-grants.v1.json"))
+    require(canonical_sha256(purpose) == APPROVED_GRANT_CANONICAL_SHA256, "purpose-grant canonical digest drifted")
+    require(len(purpose.get("grants", [])) == 2, "purpose-grant artifact count drifted")
+    require({g.get("datasetItemId") for g in purpose.get("grants", [])} == set(APPROVED_ITEMS), "purpose-grant item set drifted")
+    require(purpose.get("heldOutBinding", {}).get("datasetItemId") == HELD_OUT_ITEM, "Chopin held-out binding drifted")
+    require(purpose.get("heldOutBinding", {}).get("candidateDerivationAuthorized") is False, "Chopin derivation became authorized")
+    assertions = purpose.get("assertions", {})
+    require(assertions.get("safetyCalibrationPurposeAuthorized") is True, "purpose grant authorization missing")
+    require(assertions.get("realDataCalibrationExecutionAuthorized") is False, "purpose grant authorized real execution")
+    require(assertions.get("referenceLabelBundleAccepted") is False, "purpose grant accepted reference labels")
+    require(assertions.get("heldOutTuningAuthorized") is False, "purpose grant authorized held-out tuning")
 
     handoff = load("docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json")
-    require(handoff.get("schema_version") == "1.17.0", "live handoff schema version drifted")
-    require(handoff.get("main_sha") == FRAMEWORK_MAIN, "historical framework anchor changed unexpectedly")
-    require(handoff.get("main_sha_scope", "").startswith("Historical Stage 4 framework-start"), "framework anchor scope is ambiguous")
-    require(handoff.get("latest_main_ci_run_id") == FRAMEWORK_RUN_ID, "historical framework CI anchor drifted")
-    require(handoff.get("latest_main_ci_run_number") == FRAMEWORK_RUN_NUMBER, "historical framework CI run drifted")
-    require(handoff.get("repository_main_sha") == READINESS_MAIN, "latest repository main is not readiness main")
-    require(handoff.get("latest_repository_ci_run_id") == READINESS_RUN_ID, "latest repository CI ID drifted")
-    require(handoff.get("latest_repository_ci_run_number") == READINESS_RUN_NUMBER, "latest repository CI number drifted")
+    require(handoff.get("schema_version") == "1.18.0", "live handoff schema drifted")
+    require(handoff.get("main_sha") == FRAMEWORK_MAIN, "historical framework anchor drifted")
+    require(handoff.get("latest_main_ci_run_number") == FRAMEWORK_RUN_NUMBER, "historical framework CI anchor drifted")
+    require(handoff.get("repository_main_sha") == PURPOSE_MAIN, "live handoff latest repository main drifted")
+    require(handoff.get("latest_repository_ci_run_id") == PURPOSE_RUN_ID, "live handoff purpose post-merge run ID drifted")
+    require(handoff.get("latest_repository_ci_run_number") == PURPOSE_RUN_NUMBER, "live handoff purpose post-merge run number drifted")
     require(handoff.get("latest_repository_ci_status") == "success_python_3_11_and_3_12", "latest repository CI is not green")
     require(handoff.get("stage3_exit_state") == "pass_effective", "Stage 3 PASS drifted")
-    require(handoff.get("stage4_entry_state") == "active_framework_governance_only", "Stage 4 framework/governance state drifted")
-    require(handoff.get("stage4_started") is True, "Stage 4 no longer marked started")
+    require(handoff.get("stage4_entry_state") == "active_framework_governance_only", "Stage 4 entry/current state drifted")
+    require(handoff.get("stage4_started") is True, "Stage 4 no longer started")
     require(handoff.get("stage5_entry_state") == "blocked_pending_stage4_exit", "Stage 5 block drifted")
 
-    stage4 = handoff.get("stage4", {})
-    require(stage4.get("tracking_issue") == 104, "Stage 4 tracking issue drifted")
-    require(stage4.get("framework_main_sha") == FRAMEWORK_MAIN, "framework main binding drifted")
-    require(stage4.get("framework_postmerge_ci_run_id") == FRAMEWORK_RUN_ID, "framework run ID drifted")
-    require(stage4.get("framework_postmerge_ci_run_number") == FRAMEWORK_RUN_NUMBER, "framework run number drifted")
-    require(stage4.get("framework_production_effective") is True, "framework no longer production-effective")
-    require(stage4.get("reference_label_contract_version") == "0.1.0", "reference-label contract version drifted")
-    require(stage4.get("reference_label_contract_merge_pr") == 107, "reference-label PR binding drifted")
-    require(stage4.get("reference_label_contract_main_sha") == REFERENCE_MAIN, "reference-label main binding drifted")
-    require(stage4.get("reference_label_contract_postmerge_ci_run_id") == REFERENCE_RUN_ID, "reference-label run ID drifted")
-    require(stage4.get("reference_label_contract_postmerge_ci_run_number") == REFERENCE_RUN_NUMBER, "reference-label run number drifted")
-    require(stage4.get("reference_label_contract_production_effective") is True, "reference-label contract not production-effective")
-    require(stage4.get("public_calibration_evidence_contract_version") == "0.1.0", "public-evidence contract version drifted")
-    require(stage4.get("public_calibration_evidence_merge_pr") == 108, "public-evidence PR binding drifted")
-    require(stage4.get("public_calibration_evidence_main_sha") == PUBLIC_EVIDENCE_MAIN, "public-evidence main binding drifted")
-    require(stage4.get("public_calibration_evidence_postmerge_ci_run_id") == PUBLIC_EVIDENCE_RUN_ID, "public-evidence run ID drifted")
-    require(stage4.get("public_calibration_evidence_postmerge_ci_run_number") == PUBLIC_EVIDENCE_RUN_NUMBER, "public-evidence run number drifted")
-    require(stage4.get("public_calibration_evidence_production_effective") is True, "public-evidence contract not production-effective")
-    require(stage4.get("exit_readiness_contract_version") == "0.1.0", "exit-readiness version drifted")
-    require(stage4.get("exit_readiness_merge_pr") == 109, "exit-readiness PR binding drifted")
-    require(stage4.get("exit_readiness_main_sha") == READINESS_MAIN, "exit-readiness main binding drifted")
-    require(stage4.get("exit_readiness_postmerge_ci_run_id") == READINESS_RUN_ID, "exit-readiness run ID drifted")
-    require(stage4.get("exit_readiness_postmerge_ci_run_number") == READINESS_RUN_NUMBER, "exit-readiness run number drifted")
-    require(stage4.get("exit_readiness_production_effective") is True, "exit-readiness contract not production-effective")
-    require(stage4.get("readiness_decision") == "NOT_READY", "readiness decision is not NOT_READY")
-    require(stage4.get("readiness_blocker_codes") == READINESS_BLOCKERS, "readiness blocker set drifted")
-    require(stage4.get("blocker_codes") == LEGACY_REAL_CALIBRATION_BLOCKERS, "legacy real-calibration blocker set drifted")
+    s4 = handoff.get("stage4", {})
+    require(s4.get("tracking_issue") == 104, "Stage 4 issue binding drifted")
+    require(s4.get("framework_main_sha") == FRAMEWORK_MAIN, "framework main drifted")
+    require(s4.get("purpose_grant_merge_pr") == 111, "purpose-grant PR binding drifted")
+    require(s4.get("purpose_grant_exact_head_sha") == PURPOSE_EXACT_HEAD, "purpose-grant exact head drifted")
+    require(s4.get("purpose_grant_exact_head_ci_run_id") == PURPOSE_EXACT_RUN_ID, "purpose-grant exact-head run ID drifted")
+    require(s4.get("purpose_grant_exact_head_ci_run_number") == PURPOSE_EXACT_RUN_NUMBER, "purpose-grant exact-head run number drifted")
+    require(s4.get("purpose_grant_main_sha") == PURPOSE_MAIN, "purpose-grant main drifted")
+    require(s4.get("purpose_grant_postmerge_ci_run_id") == PURPOSE_RUN_ID, "purpose-grant post-merge run ID drifted")
+    require(s4.get("purpose_grant_postmerge_ci_run_number") == PURPOSE_RUN_NUMBER, "purpose-grant post-merge run number drifted")
+    require(s4.get("purpose_grant_canonical_sha256") == APPROVED_GRANT_CANONICAL_SHA256, "live handoff purpose digest drifted")
+    require(s4.get("purpose_grant_production_effective") is True, "purpose grants not production-effective")
+    require(s4.get("safety_calibration_purpose_granted_artifact_count") == 2, "live handoff purpose-granted count drifted")
+    require(s4.get("readiness_decision") == "NOT_READY", "readiness decision drifted")
+    require(s4.get("readiness_blocker_count") == 4, "readiness blocker count drifted")
+    require(s4.get("readiness_blocker_codes") == READINESS_BLOCKERS, "readiness blocker set drifted")
+    require(s4.get("current_execution_blocker_codes") == [READINESS_BLOCKERS[0]], "execution blocker set drifted")
+    require(s4.get("blocker_codes_scope") == "historical_pre_purpose_grant_compatibility_snapshot", "legacy blocker snapshot scope missing")
 
     for key in (
         "real_data_calibration_execution_authorized",
         "calibration_authorized",
         "real_data_calibration_executed",
+        "reference_label_bundle_accepted",
         "thresholds_calibrated",
         "resource_limits_calibrated",
         "production_threshold_changes_authorized",
@@ -159,59 +187,15 @@ def main() -> int:
         "stage5_entry_eligible",
         "stage5_entry_authorized",
     ):
-        require(stage4.get(key) is False, f"unsafe Stage 4 flag became true: {key}")
-    require(stage4.get("stage4_exit_state") == "not_yet_pass", "Stage 4 exited prematurely")
-    require(stage4.get("calibration_state") == "uncalibrated_engineering_defaults", "calibration state drifted")
-
-    catalog = load("evidence/stage1c/corpus/catalog.v2.json")
-    granted_safety = [
-        item.get("datasetItemId")
-        for item in catalog.get("items", [])
-        if ((item.get("permissions") or {}).get("safety_calibration") or {}).get("status") == "granted"
-    ]
-    require(not granted_safety, f"catalog has safety_calibration grants but current truth says none: {granted_safety}")
-
-    stage3_grants = load("evidence/stage3/governance/purpose-grants.v1.json")
-    require(stage3_grants.get("assertions", {}).get("calibrationAuthorized") is False, "Stage 3 grants unexpectedly authorize calibration")
-    require(all(item.get("purpose") == "pdf_pipeline_evaluation" for item in stage3_grants.get("grants", [])), "Stage 3 grant purposes drifted")
-
-    stage4_entry = load("evidence/stage4/governance/stage4-entry-start.v1.json")
-    require(stage4_entry.get("decisionDigest", {}).get("value") == ENTRY_DIGEST, "Stage 4 entry/start digest drifted")
-    require(stage4_entry.get("decision") == "APPROVE_FRAMEWORK_START", "Stage 4 entry/start decision drifted")
-    require(stage4_entry.get("claims", {}).get("stage4Started") is False, "historical pre-start decision was rewritten")
-
-    reference_code = read("src/st_score_restore/stage4_reference_labels.py")
-    for token in (
-        "safety_calibration",
-        "held_out_evaluation",
-        "human",
-        "modelPredictionsUsedAsReferenceLabels",
-        "held_out_reference_derivation_forbidden",
-    ):
-        require(token in reference_code, f"reference-label contract lost safety token {token}")
-
-    public_evidence_code = read("src/st_score_restore/stage4_calibration_evidence.py")
-    for token in (
-        "synthetic_test",
-        "realDataCalibrationExecuted",
-        "stage4ExitPass",
-        "stage5EntryAuthorized",
-    ):
-        require(token in public_evidence_code, f"public evidence contract lost safety token {token}")
-
-    readiness_code = read("src/st_score_restore/stage4_exit_readiness.py")
-    for token in (
-        "NOT_READY",
-        "READY_FOR_FINAL_ACCEPTANCE_REVIEW",
-        "stage4ExitPass",
-        "stage5EntryAuthorized",
-    ):
-        require(token in readiness_code, f"exit-readiness contract lost safety token {token}")
+        require(s4.get(key) is False, f"unsafe Stage 4 flag became true: {key}")
+    require(s4.get("stage4_exit_state") == "not_yet_pass", "Stage 4 exited prematurely")
+    require(s4.get("calibration_state") == "uncalibrated_engineering_defaults", "calibration state drifted")
 
     workflow = read(".github/workflows/repository-validation.yml")
     for validator in (
         "validate_architecture_consistency.py",
         "validate_stage4_entry_start.py",
+        "validate_stage4_purpose_grants.py",
         "validate_stage4_reference_labels.py",
         "validate_stage4_calibration_evidence.py",
         "validate_stage4_exit_readiness.py",
@@ -236,12 +220,11 @@ def main() -> int:
         return 1
 
     print("Stage 4 current-truth validation: PASS")
-    print(f"- Framework anchor: {FRAMEWORK_MAIN} / Run #{FRAMEWORK_RUN_NUMBER}")
-    print(f"- Reference-label contract: {REFERENCE_MAIN} / Run #{REFERENCE_RUN_NUMBER}")
-    print(f"- Public evidence contract: {PUBLIC_EVIDENCE_MAIN} / Run #{PUBLIC_EVIDENCE_RUN_NUMBER}")
-    print(f"- Exit-readiness contract: {READINESS_MAIN} / Run #{READINESS_RUN_NUMBER}")
-    print("- Readiness: NOT_READY / 5 prerequisite blockers")
-    print("- Stage 4 exit PASS: false / Stage 5 entry authorized: false")
+    print(f"- safety-calibration purpose grants: 2 exact development artifacts / {APPROVED_GRANT_CANONICAL_SHA256}")
+    print(f"- production grant checkpoint: {PURPOSE_MAIN} / Run #{PURPOSE_RUN_NUMBER}")
+    print("- readiness: NOT_READY / 4 remaining blockers")
+    print("- real calibration execution: blocked pending accepted human reference-label bundle")
+    print("- held-out tuning: false / Stage 4 PASS: false / Stage 5 entry: false")
     return 0
 
 
