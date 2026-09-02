@@ -34,8 +34,8 @@ Historical Stage 3 execution evidence retains `stage3ExitPass=false`; separate f
 
 ## Stage 4 transition
 
-Stage 4 entry/start governance became production-effective later through PR #105 at main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`, Run #259 (`33659753403`). This permits framework/governance work only.
+Stage 4 entry/start governance became production-effective later through PR #105 at main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`, Run #259 (`33659753403`). Stage 4 entry/start decision canonical SHA-256 is `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.
 
-It does not grant `safety_calibration`, does not authorize real-data calibration, and does not change Stage 2 quality thresholds or Stage 3 resource/page limits. Held-out evidence remains evaluation-only.
+This permits framework/governance work only. It does not grant `safety_calibration`, does not authorize real-data calibration, and does not change Stage 2 quality thresholds or Stage 3 resource/page limits. Held-out evidence remains evaluation-only.
 
 The separate sensitive `Fly Me to the Moon` phone-photo path remains independently blocked pending real high-assurance-vault verification.
