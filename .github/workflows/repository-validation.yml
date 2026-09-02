@@ -162,6 +162,9 @@ jobs:
       - name: Validate Stage 2 quality analysis contract
         run: python tools/validate_stage2_quality_analysis.py
 
+      - name: Validate Stage 2 approved-custody execution contract
+        run: python tools/validate_stage2_custody_execution.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
