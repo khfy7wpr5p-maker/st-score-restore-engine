@@ -1,0 +1,51 @@
+name: Stage 3 runtime bootstrap
+
+on:
+  push:
+    branches:
+      - stage3-runtime-bootstrap-5-13
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Package exact source snapshot
+        run: |
+          mkdir -p bootstrap
+          tar --exclude=.git --exclude=bootstrap -czf bootstrap/st-score-restore-source.tar.gz .
+
+      - name: Download and verify exact PDFium binding
+        run: |
+          python -m pip download --only-binary=:all: --no-deps --dest bootstrap pypdfium2==5.13.0
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          expected = "81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8"
+          wheels = list(Path("bootstrap").glob("pypdfium2-5.13.0-*.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(f"expected one exact pypdfium2 wheel, found {len(wheels)}")
+          digest = hashlib.sha256(wheels[0].read_bytes()).hexdigest()
+          if digest != expected:
+              raise SystemExit(f"pypdfium2 wheel digest mismatch: {digest}")
+          print(f"verified {wheels[0].name} {digest}")
+          PY
+
+      - name: Upload transient bootstrap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage3-runtime-bootstrap-5-13
+          path: bootstrap/*
+          retention-days: 1
+          if-no-files-found: error
