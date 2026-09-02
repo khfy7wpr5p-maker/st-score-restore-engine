@@ -8,7 +8,7 @@
 **Post-merge CI:** Run #203 (`33588190548`) — Python 3.11 / 3.12 PASS  
 **Stage 2:** COMPLETE / PASS / production-effective  
 **Stage 3:** COMPLETE / PASS / production-effective; final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0` / Run #253  
-**Stage 4:** ENTRY ELIGIBLE / NOT STARTED
+**Stage 4:** ACTIVE — FRAMEWORK / GOVERNANCE ONLY; real-data calibration NOT AUTHORIZED
 
 ## Accepted Stage 1 evidence
 
@@ -49,4 +49,4 @@ The separate sensitive phone-photo path remains fail-closed pending real `high_a
 
 ## Current transition context
 
-Stage 1 is closed and historical. Stage 2 later completed PASS and is production-effective. Stage 3 later completed PASS and is production-effective at final acceptance main `c09a10aaa1499c77d1e9df535ac1f1c8cf675ea0`, Run #253. None of that modifies this Stage 1 historical evidence. Stage 4 is entry eligible but has not started; no calibration, training or publication permission is inferred from Stage 3 PASS.
+Stage 1 is closed and historical. Stage 2 and Stage 3 later completed PASS without modifying this evidence. Stage 4 framework/governance started through PR #105 at main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`, Run #259. This does not retroactively grant Stage 1 `safety_calibration` permission: the accepted catalog still has zero granted `safety_calibration` permissions, so real-data calibration remains fail-closed.
