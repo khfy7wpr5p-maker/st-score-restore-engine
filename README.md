@@ -28,57 +28,82 @@ ScoreMosaic OMR
 MusicXML
 ```
 
-The target path is architecture-locked by [ADR 0015](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md). A restoration derivative must be safety-validated before comparator eligibility; a rejected derivative cannot win; and the immutable original always remains selectable. The future ST Restore Selector may choose optional engines or profiles, but it may not bypass or reorder the mandatory validation → comparator → original-aware selection sequence.
-
-The current runtime remains OpenCV-only. It implements validator-before-comparator ordering for its bounded current workflow and records the immutable original as a selectable baseline. It does **not** activate DocRes, ST Image AI, the Roadmap Stage 9 multi-engine comparator, the Stage 10 selector, ScoreMosaic runtime dispatch, model training, or any later roadmap stage.
+ADR 0015 locks the mandatory ordering: a restoration derivative must pass safety validation before comparator eligibility, a rejected derivative cannot win, and the immutable original remains selectable. The current runtime is OpenCV-only. DocRes, ST Image AI, the multi-engine comparator, selector, OMR dispatch, model training and later roadmap stages are not active.
 
 ## Repository boundary
 
-This repository remains an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway, and ScoreMosaic/Scremosaik integrate only through versioned contracts; their repositories are not merged into this engine.
+This repository is an independent service. SesliTab Guitar Reader, MusicXML-to-Guitar TAB Engine, Cloud OMR Gateway and ScoreMosaic integrate only through versioned contracts.
 
-ST Score Restore produces visual `restoration_variant` artifacts. It is not an OMR engine and its variants must not be confused with ScoreMosaic OMR candidates. A selected visual source variant must cross ScoreMosaic's own Safe Intake boundary before OMR processing.
+ST Score Restore produces visual `restoration_variant` artifacts. It is not an OMR engine. A selected visual source variant must cross ScoreMosaic Safe Intake before OMR processing.
 
-## Current status
+## Current production status
 
-Architecture, governance, fixture permissions, immutable input inspection, deterministic OpenCV candidate generation, conservative music-score/TAB validation, a non-production `/api/v1` job/teacher-review workflow, optional durable local storage, attempt-bound worker fencing with in-flight recovery, a strict local HTTP/multipart boundary, and immutable reviewer evidence bundles are implemented.
+Fresh production main at the start of PR #81 continuation is:
 
-The current Stage 1 state is:
+`53ae13d3a1b9bda08c79125674e1b7fca78ee8af`
+
+Stage state:
 
 - **Stage 1A — metadata governance:** complete;
 - **Stage 1B — high-assurance custody/operations boundary:** complete and formally closed;
-- **Stage 1C — authorized artifact onboarding and corpus realization:** active under Issue #47;
-- **Stage 2 — complete quality analysis:** blocked until the complete Stage 1 exit gate passes.
+- **Stage 1C — authorized artifact onboarding and corpus realization:** active;
+- **Stage 1 final exit:** not yet accepted;
+- **Stage 2 — complete quality analysis:** blocked until explicit Stage 1 final PASS.
 
-ADR 0016 risk-tiered custody is implemented, not merely proposed. Catalog schema `1.3.0` and the deterministic profile/eligibility machinery are merged. The binding custody mapping is:
+ADR 0016 risk-tiered custody is implemented. Catalog schema `1.3.0` and deterministic profile/eligibility/admission machinery are merged. Binding custody mapping remains:
 
 - `open_corpus` → `managed_standard`;
-- `restricted_corpus` → `managed_restricted` when exact artifact terms permit it;
+- `restricted_corpus` → `managed_restricted` when exact artifact restrictions permit it;
 - `sensitive_custody` → `high_assurance_vault`;
 - unresolved/rejected governance → `blocked`.
 
-The G4 Stage 1 purpose allowlist remains limited to `quality_evaluation` and `held_out_evaluation`. Exact-artifact rights, privacy, purpose, retention, dataset review, provenance, digest/size binding, custody verification, and admission remain independent fail-closed gates.
+The Stage 1 purpose allowlist remains limited to `quality_evaluation` and `held_out_evaluation`. Rights, privacy, purpose, retention, dataset review, provenance, digest/size binding, custody verification and admission are independent fail-closed gates.
 
-C5-C17A plus C17C are merged. C12 and C14 realized two independently authorized real public-domain scanned-score items outside ordinary Git. C15 froze that two-item corpus as an immutable digest-addressed historical snapshot. C16 measured the exact C15 snapshot and concluded **`insufficient`**: 2 real items / 12 pages do not provide enough notation-layout, capture-condition, degradation, or split diversity for Stage 1 exit.
+## Historical C15/C16 baseline
 
-C17A / PR #68 is merged at exact reviewed head `3424cc22d686b1d08ec0ff1c6be1d372b1ff4146`; merge commit `010db20a4feb71dd36c9c5378d4d486836c5abc0`. It admits one rights-clean Public Domain PNG as **`combined_staff_tab` only** for `quality_evaluation` under `open_corpus` / `managed_standard`. It is deliberately **not** also counted as standalone `guitar_tab`, so historical and future coverage is not artificially inflated. Repository validation Run #147 passed on Python 3.11 and 3.12.
+C15 froze the original two-item corpus as immutable digest-addressed evidence. C16 measured exactly that historical snapshot and concluded `insufficient` for Stage 1 exit: 2 real items / 12 pages with seven recorded coverage gaps.
 
-C17C / PR #72 is merged at exact reviewed head `fe5a280f3574a8a24a477fd10185f4fe6cab6063`; merge commit `e211893324d47e2084f873c14f5737968cb55cc2`. It re-uses the already-authorized held-out IMSLP82860 artifact and records a metadata-v2 representation with exact-byte degradation classification **`noise` only**. The exact artifact SHA-256 remains `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`. Historical v1 metadata, C15 and C16 remain immutable; a future aggregate snapshot must select v2 instead of v1 and must not double-count both metadata versions.
+Historical files are not rewritten when later C17 evidence improves coverage. In particular:
 
-The historical C15/C16 snapshot remains immutable and unchanged by C17A or C17C. C17 additions require a new versioned snapshot before they can alter the deterministic coverage decision.
+- `catalog.v1.json` remains historical;
+- `snapshot.freeze.v1.json` remains historical;
+- `coverage-bias-report.v1.json` remains historical;
+- historical C16 report SHA-256 remains `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`.
 
-The remaining C17 continuation targets are C17B standalone guitar TAB and C17D an independently admissible genuine phone-photo path. Their preferred public-source exact bytes are not yet present in the authorized Stage 1 custody workspace. No digest, admission, snapshot membership, or coverage closure is claimed until exact-byte evidence exists. This exact-byte acquisition/transfer limitation is a workflow blocker, not a user-upload obligation.
+## Merged C17 expansion on main
 
-A real user-provided phone photo remains blocked unless its `sensitive_custody` path has a genuinely verified `high_assurance_vault`. C10 proves structural compatibility only; it does not prove a real vault or authorize sensitive artifact onboarding.
+Current main contains the independently admitted inputs needed for expanded-v2 aggregation:
 
-The 2026-08-30 architecture consistency audit also identified two operational/governance constraints: the active GitHub ruleset enforces PR plus Python 3.11/3.12 status checks but not approving-review count or review-thread resolution, so manual governance remains stronger; and recent Runs #156/#157 were cancelled before any jobs executed, so they are neither test failures nor valid fresh CI evidence.
+- **C17A / PR #68 — combined staff+TAB:** exact PNG SHA-256 `36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb`; taxonomy remains `combined_staff_tab` only.
+- **C17B — standalone guitar TAB:** exact Barley PDF SHA-256 `6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e`; 84689 bytes / 2 pages; `open_corpus -> managed_standard`; `quality_evaluation` only.
+- **C17C / PR #72 — degradation metadata v2:** exact Chopin artifact SHA-256 `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`; degradation `noise` only; held out. Any new aggregate must select v2 instead of v1 and must never double-count the same exact artifact.
+- **C17D — deidentified phone photo:** exact derivative SHA-256 `abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5`; 647003 bytes; `restricted_corpus -> managed_restricted`; `held_out_evaluation` only.
 
-See [Stage 1C current status](docs/stage-1c-current-status.md), [Stage 1 exit evidence](docs/stage-1-exit-evidence.md), and [Architecture consistency audit](docs/architecture-consistency-audit.md) for the current gate evidence.
+Real score/PDF/image corpus artifact bytes remain outside ordinary Git. Repository evidence is metadata-only.
 
-Production deployment, encrypted cloud object storage, an external queue, production identity, arbitrary multi-page PDF processing, a complete browser review UI, automatic teacher approval, DocRes, ST Image AI, OMR, and MusicXML integration remain disabled or deferred.
+## PR #81 — expanded-v2 acceptance
+
+PR #81 (`stage1c-expanded-snapshot-v2`) is the in-progress acceptance slice. Its deterministic aggregate selects exactly five real items and zero synthetic items:
+
+1. Beethoven baseline v1;
+2. C17A combined staff+TAB v1;
+3. C17B standalone guitar TAB v1;
+4. C17C Chopin metadata v2;
+5. C17D phone-photo v1.
+
+The committed v2 evidence is:
+
+- `evidence/stage1c/corpus/catalog.v2.json`;
+- `evidence/stage1c/corpus/snapshot.expanded.v2.json`;
+- `evidence/stage1c/corpus/coverage-bias-report.v2.json`.
+
+Deterministic candidate structure is 3 development items / 3 development source families and 2 held-out items / 2 held-out source families, with no source-family leakage and no duplicate artifact SHA-256. The six explicit coverage targets — staff, guitar TAB, combined staff+TAB, scanned PDF, phone photo and non-`none` degradation — are covered.
+
+This does **not** itself mean Stage 1 PASS. The v2 report deliberately remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`. Representativeness, absence of bias, restoration effectiveness, OMR improvement and musical correctness are not established by coverage closure.
+
+PR #81 must pass committed-evidence `--check`, focused regression tests, fresh exact-head Python 3.11/3.12 CI, review/thread/head reconciliation, merge, and post-merge main CI before a separate Stage 1 exit decision can occur.
 
 ## Binding development order
-
-The project uses a data-first, measurement-first sequence. Later stages may not be pulled forward merely because implementation appears possible.
 
 ```text
 Stage 0  Roadmap update
@@ -108,7 +133,7 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-Every implementation slice must publish objective evidence before transition. Draft, Ready-for-review, and merge remain separate objective technical gates with fresh exact-head verification. Under the autonomous authorization recorded in Issue #47, separate per-transition user confirmation is not required while that authorization remains in force. The detailed entry and exit gates are defined in [the development roadmap](docs/roadmap.md).
+Every transition is evidence-gated. Draft, Ready-for-review and merge are separate objective gates. Head movement invalidates earlier exact-head CI evidence.
 
 ## Development baseline
 
@@ -118,60 +143,23 @@ Every implementation slice must publish objective evidence before transition. Dr
 - OpenCV backend: `opencv-python-headless==4.13.0.92`
 - NumPy runtime: `numpy==2.3.5`
 - Job API: `/api/v1`, version `0.5.0`
-- Review contract: reviewer-only immutable evidence bundles and stale-screen binding
-- HTTP baseline: strict standard-library server with bounded headers/body/timeouts; not approved for untrusted networks
-- HTTP connection model: one request per connection; pipelining, chunked requests, upgrades, and `Expect` are rejected
-- Storage baseline: in-memory by default; opt-in local SQLite metadata and content-addressed blobs
-- Local worker safety: attempt-bound lease tokens, transaction fencing, and expired in-flight recovery
-- Real Stage 1 artifact bytes: stored outside ordinary Git; repository metadata uses exact digests plus opaque evidence/custody references
-- Source identity: deterministic SHA-256 artifact manifest
+- Storage baseline: in-memory by default; optional local SQLite metadata + content-addressed blobs
+- HTTP boundary: local/non-production, bounded and fail-closed
+- Source identity: SHA-256 artifact manifest
 - Candidate identity: separate SHA-256 digest and audit manifest
-- Safety report: staff and TAB geometry, line continuity, local symbol and component risk
-- Review evidence: source-space overlays, deterministic grayscale before/after crops, transform provenance
-- Audit: append-only hash-linked events, verified when durable state is loaded
-- Digital PDFs: preserved as vector; never implicitly rasterized
-- Teacher approval: separate from candidate generation, dataset inclusion, and training consent
+- Teacher approval: separate from dataset inclusion, calibration and training consent
 
-Validate the repository contracts with:
+Validate repository contracts with:
 
 ```bash
 python tools/validate_dependency_lock.py
 python tools/validate_repository.py
 python tools/validate_architecture_consistency.py
 python tools/validate_fixture_catalog.py
+python tools/build_stage1_expanded_snapshot.py --check
 python -m unittest discover -s tests -p "test_*.py" -v
 python -m compileall -q src tools tests
 ```
-
-Inspect, restore, and validate a source:
-
-```bash
-python tools/inspect_input.py path/to/score.pdf
-python tools/restore_image.py source.png candidate.png --audit candidate.audit.json
-python tools/validate_music_safety.py source.png candidate.png \
-  --report candidate.safety.json \
-  --candidate-manifest candidate.audit.json
-```
-
-Run the local non-production API with the default in-memory store:
-
-```bash
-export ST_SCORE_CLIENT_API_KEY='replace-with-at-least-16-characters'
-export ST_SCORE_REVIEWER_API_KEY='replace-with-a-different-16-character-key'
-python tools/run_api.py --host 127.0.0.1 --port 8080
-```
-
-Opt into restart-persistent local storage:
-
-```bash
-python tools/run_api.py \
-  --host 127.0.0.1 \
-  --port 8080 \
-  --data-dir runtime-data/st-score-restore \
-  --worker-lease-seconds 300
-```
-
-The selected data directory contains source and derived document bytes and is not encrypted by the application. Use a dedicated private directory. Do not commit it and do not expose the built-in API adapter to an untrusted network.
 
 ## Repository references
 
@@ -182,21 +170,6 @@ The selected data directory contains source and derived document bytes and is no
 - [Stage 1 dataset card](docs/stage-1-dataset-card.md)
 - [Stage 1 coverage and bias register](docs/stage-1-coverage-and-bias-register.md)
 - [Stage 1 exit evidence](docs/stage-1-exit-evidence.md)
+- [Canonical live handoff](docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json)
 - [ADR 0015 — Restoration pipeline validation, comparator, and OMR handoff](docs/adr/0015-restoration-pipeline-validation-comparator-handoff.md)
 - [ADR 0016 — Stage 1C risk-tiered artifact custody](docs/adr/0016-stage-1c-risk-tiered-artifact-custody.md)
-- [Stage 1C artifact custody profile policy](docs/stage-1c-storage-profile-policy.md)
-- [Stage 1C artifact admission contract](docs/stage-1c-artifact-admission-contract.md)
-- [Stage 1C high-assurance compatibility contract](docs/stage-1c-high-assurance-compatibility-contract.md)
-- [Stage 1B closure evidence](docs/stage-1b-closure-evidence.md)
-- [Stage 1B custody and operations contract](docs/stage-1b-custody-operations-contract.md)
-- [Job API and teacher-review baseline](docs/job-api-and-teacher-review.md)
-- [Immutable review evidence contract](docs/review-evidence-contract.md)
-- [Durable local persistence baseline](docs/durable-local-persistence.md)
-- [Local multi-worker concurrency and recovery](docs/multi-worker-concurrency-and-recovery.md)
-- [Built-in HTTP and multipart security boundary](docs/http-transport-and-multipart-security.md)
-- [OpenAPI contract](api/openapi.v1.json)
-- [Dependency and license policy](docs/dependency-and-license-policy.md)
-- [Fixture, permission, and usage governance](docs/fixture-governance.md)
-- [Immutable input inspection contract](docs/input-inspection-contract.md)
-- [OpenCV safe-restoration baseline](docs/safe-restoration-baseline.md)
-- [Music-score and guitar-TAB safety validator](docs/music-safety-validator.md)

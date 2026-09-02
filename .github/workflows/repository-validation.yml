@@ -153,6 +153,9 @@ jobs:
       - name: Require Stage 1C C16 frozen coverage decision
         run: python tools/evaluate_stage1_coverage_bias.py --check --require-insufficient
 
+      - name: Require committed Stage 1C expanded-v2 evidence
+        run: python tools/build_stage1_expanded_snapshot.py --check
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v

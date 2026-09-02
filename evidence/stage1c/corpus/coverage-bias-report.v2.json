@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "reportId": "dataset.coverage-bias.stage1c-expanded.v2",
+  "snapshotId": "dataset.snapshot.stage1c-expanded.v2",
+  "snapshotSha256": "c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7",
+  "catalogSha256": "4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3",
+  "evaluatedOn": "2026-09-01",
+  "measurementBasis": "validated_catalog_snapshot_metadata",
+  "counts": {
+    "itemCount": 5,
+    "realItemCount": 5,
+    "syntheticItemCount": 0,
+    "splitItemCounts": {
+      "development": 3,
+      "held_out": 2
+    },
+    "sourceFamilyCounts": {
+      "development": 3,
+      "held_out": 2,
+      "total": 5
+    },
+    "pageCounts": {
+      "development": 7,
+      "held_out": 9,
+      "total": 16
+    },
+    "notationItemCounts": {
+      "combined_staff_tab": 1,
+      "guitar_tab": 1,
+      "staff": 3
+    },
+    "inputKindItemCounts": {
+      "digital_pdf": 1,
+      "hybrid_pdf": 0,
+      "jpeg": 0,
+      "jpg": 0,
+      "phone_photo": 1,
+      "png": 1,
+      "scanned_pdf": 2
+    },
+    "degradationItemCounts": {
+      "blur": 0,
+      "compression": 0,
+      "glare": 0,
+      "low_resolution": 0,
+      "noise": 1,
+      "none": 4,
+      "page_curl": 0,
+      "perspective": 0,
+      "shadow": 0,
+      "skew": 0,
+      "uneven_lighting": 0
+    },
+    "sourceKindItemCounts": {
+      "licensed": 1,
+      "project_authored": 0,
+      "public_domain": 4,
+      "synthetic": 0,
+      "user_provided": 0
+    }
+  },
+  "coverageTargets": [
+    {
+      "code": "notation.staff",
+      "observedItemCount": 3,
+      "state": "covered"
+    },
+    {
+      "code": "notation.guitar_tab",
+      "observedItemCount": 1,
+      "state": "covered"
+    },
+    {
+      "code": "notation.combined_staff_tab",
+      "observedItemCount": 1,
+      "state": "covered"
+    },
+    {
+      "code": "capture.scanned_pdf",
+      "observedItemCount": 2,
+      "state": "covered"
+    },
+    {
+      "code": "capture.phone_photo",
+      "observedItemCount": 1,
+      "state": "covered"
+    },
+    {
+      "code": "degradation.non_none",
+      "observedItemCount": 1,
+      "state": "covered"
+    }
+  ],
+  "gapCodes": [],
+  "biasFindings": [
+    {
+      "code": "capture_condition_concentration",
+      "state": "controlled",
+      "evidenceCode": "multiple-capture-kinds"
+    },
+    {
+      "code": "degradation_coverage_gap",
+      "state": "controlled",
+      "evidenceCode": "non-none-degradation-present"
+    },
+    {
+      "code": "held_out_coverage_limit",
+      "state": "controlled",
+      "evidenceCode": "two-held-out-source-families"
+    },
+    {
+      "code": "notation_layout_concentration",
+      "state": "controlled",
+      "evidenceCode": "staff-tab-and-combined-layouts-present"
+    },
+    {
+      "code": "source_family_leakage_risk",
+      "state": "controlled",
+      "evidenceCode": "distinct-source-families-and-digests-across-splits"
+    },
+    {
+      "code": "source_selection_concentration",
+      "state": "observed",
+      "evidenceCode": "public-domain-majority-with-one-licensed-item"
+    }
+  ],
+  "sufficiency": {
+    "state": "review_required",
+    "reasonCodes": [],
+    "requiresCorpusExpansion": false,
+    "stage1ExitSupported": false,
+    "stage2EntrySupported": false
+  },
+  "assertions": {
+    "heldOutFrozen": true,
+    "trainingUseActivated": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "restorationEffectivenessEstablished": false,
+    "omrImprovementEstablished": false
+  }
+}

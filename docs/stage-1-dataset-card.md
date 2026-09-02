@@ -1,119 +1,101 @@
 # Stage 1 Dataset Card
 
-**Status:** Realized and frozen; coverage insufficient for Stage 1 exit  
-**Stage:** Stage 1C / C16 coverage-bias reconciliation  
+**Status:** Historical C15/C16 baseline preserved; expanded-v2 evidence under PR #81 acceptance  
+**As of:** 2026-09-02  
+**Stage:** Stage 1C  
 **Parent issue:** #47  
-**Realized dataset items:** 2  
-**Realized pages:** 12  
-**Frozen splits:** development + held_out  
 **Artifact bytes stored in ordinary Git:** 0  
 **Model training authorized:** No  
-**Stage 2 authorized:** No
+**Stage 2 entry:** BLOCKED
 
-## 1. Purpose
+## 1. Scope and evidence versions
 
-This card describes the currently realized Stage 1 evaluation corpus after C12-C15 onboarding and digest-addressed snapshot freeze. It is bound to `dataset.snapshot.stage1c-freeze.v1`, canonical snapshot SHA-256 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`.
+This card distinguishes two evidence generations that must not be conflated.
 
-The current G4 allowlist remains limited to `quality_evaluation` and `held_out_evaluation` in `stage1_offline`.
+### Historical C15/C16 baseline — immutable
 
-## 2. Realized corpus
+`dataset.snapshot.stage1c-freeze.v1` remains the historical frozen snapshot, with canonical snapshot SHA-256 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`. It contains 2 real items / 12 pages and C16 concluded `insufficient`. Neither the historical catalog, frozen snapshot nor C16 report is rewritten by C17.
 
-The frozen snapshot contains exactly two independently admitted real items:
+### Expanded-v2 evidence — PR #81, not yet production evidence
 
-- development: 1 public-domain scanned PDF, 4 pages;
-- held out: 1 independent public-domain scanned PDF, 8 pages.
+PR #81 deterministically builds and now commits a new five-item aggregate from already admitted item-level evidence. Until the committed v2 files pass fresh exact-head CI, review/thread/head gates, merge and post-merge validation, this evidence remains in-progress rather than `main` production truth.
 
-Both items are staff-notation only, both use distinct source families and distinct artifact digests, both are classified `open_corpus`, and both are stored under `managed_standard` custody outside ordinary Git.
+## 2. Expanded-v2 membership
 
-No real artifact byte, provider/account identifier, local path, credential, or secret-bearing storage detail is stored in repository metadata.
+The required membership is exactly:
 
-## 3. Snapshot and split boundary
+- `dataset.item.imslp799143-beethoven-op48-no3.v1` — development;
+- `dataset.item.wikimedia-guitar-technical-exercise-no1.v1` — development;
+- `dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1` — development;
+- `dataset.item.imslp82860-chopin-op69.v2` — held out;
+- `dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1` — held out.
 
-The frozen snapshot has:
+`dataset.item.imslp82860-chopin-op69.v1` is excluded. Metadata v2 represents the same exact Chopin artifact and replaces v1 for this aggregate; both versions must never be counted as independent real items.
 
-- `heldOutFrozen=true`;
-- `trainingUseActivated=false`;
-- zero revoked item IDs;
-- one development source family;
-- one held-out source family;
-- no source-family or artifact-digest leakage across splits.
+## 3. Corpus structure
 
-The development item grants only `quality_evaluation`; the held-out item grants only `held_out_evaluation`. Held-out data is not authorized for development, tuning, calibration, or training.
+The deterministic expanded-v2 evidence reports:
 
-## 4. Source, rights and privacy boundary
-
-Both realized items have approved exact-artifact public-domain rights evidence, privacy classification `none`, approved dataset review, immutable artifact digest/size metadata, and opaque custody references.
-
-Possession of a file still does not imply rights or purpose authorization. Any future corpus expansion must pass the same item-level admission chain.
-
-## 5. Coverage measurement
-
-C16 derives aggregate coverage only from the validated catalog and frozen snapshot metadata. It does not inspect pixels and does not run restoration or OMR evaluation.
-
-Observed counts:
-
-| Dimension | Observed |
+| Dimension | Observation |
 |---|---:|
-| Real items | 2 |
-| Development items | 1 |
-| Held-out items | 1 |
-| Total pages | 12 |
-| Staff notation items | 2 |
-| Guitar TAB items | 0 |
-| Combined staff/TAB items | 0 |
+| Real items | 5 |
+| Synthetic items | 0 |
+| Development items | 3 |
+| Development source families | 3 |
+| Held-out items | 2 |
+| Held-out source families | 2 |
+| Total source families | 5 |
+| Total pages | 16 |
+| Staff notation items | 3 |
+| Guitar TAB items | 1 |
+| Combined staff/TAB items | 1 |
 | Scanned-PDF items | 2 |
-| Phone-photo items | 0 |
-| Items with non-`none` degradation metadata | 0 |
+| Phone-photo items | 1 |
+| Items with non-`none` degradation metadata | 1 |
 
-## 6. Coverage decision
+Development and held-out source-family sets are disjoint. Exact artifact SHA-256 values are unique across selected items.
 
-Current coverage sufficiency is **INSUFFICIENT**.
+## 4. Rights, privacy, custody and purpose boundary
 
-Confirmed gap codes:
+Every selected item is backed by its own admitted artifact metadata and evidence. The aggregate does not relax item-level gates.
 
-- `coverage.missing-combined-staff-tab`;
-- `coverage.missing-degraded-source`;
-- `coverage.missing-guitar-tab`;
-- `coverage.missing-phone-photo`;
-- `coverage.single-item-development`;
-- `coverage.single-item-held-out`;
-- `coverage.two-item-corpus`.
+- open-corpus items remain under `managed_standard`;
+- the C17D deidentified phone-photo derivative remains `restricted_corpus -> managed_restricted`;
+- development permissions remain `quality_evaluation` only where granted;
+- held-out permissions remain `held_out_evaluation` only where granted;
+- no aggregate membership creates model-training, calibration, publication or demonstration permission.
 
-The corpus therefore does not establish representativeness and does not support Stage 1 final exit or Stage 2 entry.
+Public availability, possession of bytes, provider identity or teacher approval never substitutes for exact-artifact rights/privacy/custody/purpose admission.
 
-## 7. Bias and limitation findings
+## 5. Coverage interpretation
 
-The current metadata demonstrates concentration in several dimensions:
+The expanded-v2 evidence closes the explicit historical target gaps for:
 
-- all realized items are staff-only;
-- all realized items are scanned PDFs;
-- all realized items declare only `none` degradation;
-- all realized items use a public-domain source basis;
-- the held-out split contains only one source family.
+- staff notation;
+- standalone guitar TAB;
+- combined staff+TAB;
+- scanned PDF;
+- phone photo;
+- non-`none` degradation;
+- one-item development/held-out thinness;
+- two-item-corpus size.
 
-Source-family leakage risk is controlled by the frozen split bindings, but absence of bias is **not** established. Balanced counts are not inferred, and no fairness, restoration-effectiveness, OMR-improvement, or musical-correctness claim is made.
+That result is a metadata coverage observation only. It does not establish that the corpus is representative, unbiased, musically correct, restoration-effective, or OMR-improving.
 
-## 8. Authorized and prohibited uses
+The coverage report remains `review_required` with `stage1ExitSupported=false` and `stage2EntrySupported=false`. Therefore Stage 2 entry remains **BLOCKED**.
 
-Authorized for the realized items only as item-specific permissions allow:
+## 6. Authorized and prohibited uses
 
-- development item: quality evaluation;
-- held-out item: held-out evaluation.
-
-Not authorized by this card:
+Authorized use remains item-specific and purpose-bound. This card does not authorize:
 
 - model training;
-- quality calibration;
-- safety calibration;
-- publication;
-- demonstration;
+- quality or safety calibration;
+- publication or demonstration;
 - synthetic derivation;
-- Stage 2 OpenCV quality-analysis execution.
+- Stage 2 execution.
 
-## 9. Required next step
+## 7. Acceptance boundary
 
-The current frozen snapshot must not be mutated to hide the observed gaps. Stage 1 requires additional independently authorized corpus items covering missing notation/layout, capture-condition, and degradation dimensions. Any expanded corpus requires a new versioned snapshot after item-level governance and split-isolation checks.
+The deterministic v2 catalog/snapshot/report are committed and CI is wired to committed-evidence `--check`. PR #81 must still pass fresh exact-head Python 3.11/3.12 CI, focused regressions, review/thread/head gates, merge, and post-merge `main` CI.
 
-## 10. Safety statement
-
-This card documents observed metadata only. It grants no new permission, stores no artifact bytes in Git, activates no training, performs no restoration, and does not authorize Stage 2.
+Only after those steps may Stage 1 final exit be evaluated separately. Stage 2 remains BLOCKED until explicit Stage 1 final PASS.
