@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage4_final_exit_acceptance_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "4ff1118fe79602b351ad9ab8735937b9e911555d",
+    "merge_pr": 148,
+    "merge_pr_title": "Stage 4: final exit governance acceptance",
+    "pr_exact_head_sha": "1518eac6c852f7fdb5478c9a6b15bc3cd2faa365",
+    "exact_head_repository_validation_run_id": 33776247270,
+    "exact_head_repository_validation_run_number": 394,
+    "exact_head_stage4_governance_run_id": 33776247258,
+    "exact_head_stage4_governance_run_number": 5,
+    "postmerge_repository_validation_run_id": 33776404315,
+    "postmerge_repository_validation_run_number": 395,
+    "postmerge_stage4_governance_run_id": 33776404434,
+    "postmerge_stage4_governance_run_number": 6,
+    "ci_status": "success_python_3_11_and_3_12_for_both_workflows"
+  },
+  "stage4_final_acceptance": {
+    "acceptance_id": "stage4.final-exit-acceptance.v1",
+    "decision": "PASS",
+    "acceptance_digest": "41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c",
+    "readiness_digest": "8b31b0dc92d931fa9e7b56a7912ecd1127e74ad0672d03d50526160936a32d0b",
+    "development_evidence_acceptance_digest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "metric_policy_acceptance_digest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801",
+    "held_out_evidence_acceptance_digest": "ff0bdcb8820ba774cebc46265eb36ee0278b591a316ca619d2540d06d3a45164"
+  },
+  "stage4": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "readiness_blocker_count_at_acceptance": 0,
+    "readiness_blocker_codes_at_acceptance": [],
+    "zero_candidate_safe_abstention_accepted": true,
+    "candidate_thresholds_accepted": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "production_configuration_state": "uncalibrated_engineering_defaults"
+  },
+  "held_out": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "evaluation_evidence_accepted": true,
+    "assessed_candidate_count": 0,
+    "held_out_threshold_tuning_used": false,
+    "held_out_feedback_into_candidate_derivation": false,
+    "zero_assessed_rate_metrics": "not_applicable"
+  },
+  "stage5": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "started": false,
+    "next_safe_boundary": "separate_explicit_stage5_entry_governance_authorization"
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "representativeness_established": false,
+    "absence_of_bias_established": false,
+    "omr_correctness_established": false,
+    "restoration_effectiveness_established": false
+  },
+  "compatibility_note": "This later overlay records the production-effective Stage 4 final-exit PASS from PR #148. Earlier Stage 4 readiness, held-out acceptance, metric-policy, development-evidence, and historical governance checkpoints remain immutable. Stage 4 PASS makes Stage 5 entry eligible only; it does not authorize or start Stage 5, alter thresholds or resource limits, reuse held-out data for tuning, authorize training/publication, or establish representativeness, absence of bias, OMR correctness, restoration effectiveness, or model quality."
+}
