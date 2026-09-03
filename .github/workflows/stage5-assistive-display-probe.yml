@@ -16,7 +16,7 @@ jobs:
       - name: Install assistive technology probe runtime
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends orca xdotool xvfb dbus-x11 at-spi2-core
+          sudo apt-get install -y --no-install-recommends orca xdotool xvfb dbus-x11 at-spi2-core openbox
 
       - name: Probe Orca with real Chrome accessibility
         shell: bash
@@ -41,12 +41,16 @@ jobs:
           HTML
           Xvfb :99 -screen 0 1280x900x24 >/tmp/xvfb.log 2>&1 &
           XVFB_PID=$!
-          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
-          sleep 1
+          export DISPLAY=:99
+          openbox >/tmp/openbox.log 2>&1 &
+          OPENBOX_PID=$!
+          trap 'kill $OPENBOX_PID $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
           dbus-run-session -- bash -lc '
             set -euo pipefail
             export DISPLAY=:99
             export NO_AT_BRIDGE=0
+            gsettings set org.gnome.desktop.interface toolkit-accessibility true || true
             CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
             "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-chrome file:///tmp/stage5-orca-probe.html >/tmp/chrome.log 2>&1 &
             CHROME_PID=$!
@@ -56,6 +60,7 @@ jobs:
             sleep 4
             WINDOW_ID="$(xdotool search --name "Stage 5 Orca Probe" | head -n1)"
             xdotool windowactivate --sync "$WINDOW_ID"
+            sleep 1
             xdotool key Tab
             sleep 2
             xdotool key Tab
@@ -66,5 +71,5 @@ jobs:
             wait "$CHROME_PID" 2>/dev/null || true
           '
           echo '--- Orca matches ---'
-          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT' /tmp/orca.log | tail -n 120
+          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT' /tmp/orca.log | tail -n 160
           grep -Eaiq 'Probe field|Probe button' /tmp/orca.log
