@@ -6,6 +6,7 @@
 **Latest production main:** `4f0346345eb770628928ba1751b4a1d9d5fb51f1`  
 **Latest post-merge CI:** Run #304 (`33725160737`) — Python 3.11 / 3.12 SUCCESS  
 **Real calibration execution:** EXECUTED for exact Beethoven + Barley development scope; candidate thresholds derived: 0  
+**Historical compatibility state:** AUTHORIZED / NOT YET EXECUTED was the immutable pre-execution checkpoint; it is not the current execution state  
 **Private-metric runner production baseline:** v0.2.0 from PR #122 → main `1c0b27d9284129577a85bc4d536ac118446a4e8c` → Run #302 SUCCESS  
 **private observation metrics:** exact 42 identities accounted for as 24 measured + 18 fail-closed `not_applicable`; raw measured values remain custody-only  
 **Candidate derivation methodology:** `strict_empirical_midpoint_boundary_v1`; all six measurable findings abstained; compression had no measured development observations  
