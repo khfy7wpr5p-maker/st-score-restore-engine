@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "expanded_development_execution_evidence_acceptance_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "a6493f6501d133a1b646046062489fe0a65d2991",
+    "merge_pr": 138,
+    "merge_pr_title": "Stage 4: accept expanded development execution evidence",
+    "postmerge_ci_run_id": 33763391302,
+    "postmerge_ci_run_number": 370,
+    "postmerge_ci_status": "success_python_3_11_and_3_12"
+  },
+  "accepted_execution_evidence": {
+    "acceptance_decision": "ACCEPT_EXPANDED_REAL_DEVELOPMENT_EXECUTION_EVIDENCE",
+    "acceptance_digest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "execution_evidence_digest": "552a85a68dd789bd00dc4cb7ce6db38078a77c45297a7e5f716d008eae908b0c",
+    "private_metric_batch_digest": "010789271c9046188964c23ee497651eb1adbf2ff5b952b2cda5b78ddc155b52",
+    "execution_evidence_accepted": true,
+    "reference_record_count": 49,
+    "private_metric_record_count": 49,
+    "measured_record_count": 30,
+    "not_applicable_record_count": 19,
+    "measured_source_family_count": 2,
+    "candidate_derived_count": 0,
+    "abstained_finding_count": 6,
+    "not_applicable_finding_count": 1
+  },
+  "calibration_state": {
+    "real_development_calibration_executed": true,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "candidate_thresholds_accepted": false,
+    "production_configuration_state": "uncalibrated_engineering_defaults"
+  },
+  "held_out": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "evaluation_authorized": false,
+    "evaluation_used": false,
+    "tuning_used": false
+  },
+  "metric_policy": {
+    "acceptance_target_policy_accepted": false
+  },
+  "readiness": {
+    "decision": "NOT_READY",
+    "accepted_real_development_evidence_count": 1,
+    "remaining_blocker_count": 2,
+    "remaining_blocker_codes": [
+      "no_real_held_out_evaluation_evidence_is_accepted",
+      "no_stage4_metric_acceptance_target_policy_is_accepted"
+    ]
+  },
+  "assertions": {
+    "development_evidence_blocker_resolved": true,
+    "held_out_evaluation_authorized": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  },
+  "next_safe_boundary": "separate_stage4_metric_acceptance_target_policy_definition_and_acceptance_before_any_final_exit_review",
+  "compatibility_note": "Earlier runner, authorization, and execution overlays remain immutable historical checkpoints. This later overlay records only the production-effective acceptance of the real expanded development execution evidence. Acceptance validates the observed abstention outcome; it does not invent or accept threshold candidates, authorize held-out evaluation, calibrate resources, grant Stage 4 PASS, or open Stage 5."
+}
