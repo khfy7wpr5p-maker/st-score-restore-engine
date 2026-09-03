@@ -1,10 +1,11 @@
 # ST Score Restore Engine — Technical Specification
 
-**Status:** Current architecture; Stage 4 ACTIVE / NOT_READY after Wikimedia human-label completion  
+**Status:** Current architecture; Stage 4 ACTIVE / NOT_READY after Wikimedia reference-bundle acceptance  
 **Date:** 2026-09-03  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
 **Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / Run #324 (`33728459668`) SUCCESS  
-**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS  
+**Reference-bundle acceptance checkpoint:** main `3353b281a4022f107929fae296368390da45a4fb` / PR #130 / Run #348 (`33748180036`) SUCCESS
 
 ## 1. Scope and invariants
 
@@ -65,7 +66,7 @@ Historical immutable anchors:
 - entry/start digest `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`;
 - Beethoven+Barley purpose main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272; digest `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`;
 - accepted Beethoven+Barley bundle main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282; bundle digest `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`; acceptance digest `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`;
-- historical exact execution authorization main `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287; digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
+- historical exact Beethoven+Barley execution authorization main `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287; digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
 
 The authorization evidence is historically **AUTHORIZED / NOT YET EXECUTED** and retains `executed=false`. Later execution evidence is a separate immutable artifact; earlier authorization is never rewritten.
 
@@ -84,7 +85,7 @@ The real development execution later completed and abstained:
 
 Public-safe execution evidence digest: `0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a`. Private metric-batch digest: `5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079`; raw values remain custody-only.
 
-### 5.2 Wikimedia development expansion and human completion
+### 5.2 Wikimedia development expansion, human completion, and reference acceptance
 
 PR #125 is the immutable expansion baseline at main `9d2326931707f65c7eb5f5b22680e8fa85665a60`, Run #324 (`33728459668`) SUCCESS. It added a separate development purpose-grant overlay and fail-closed review package for:
 
@@ -98,22 +99,28 @@ PR #125 is the immutable expansion baseline at main `9d2326931707f65c7eb5f5b2268
 PR #128 later froze genuine external human review completion at main `2ce6151e7ce37198c5b264ddd577df71f49da8bf`, Run #340 (`33745945427`) SUCCESS:
 
 - **7/7 findings are `clear`**;
-- completion state is `human_labels_complete_pending_separate_acceptance`;
+- immutable completion snapshot state is `human_labels_complete_pending_separate_acceptance`;
 - work-package digest `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`;
-- completion bundle digest `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`;
-- reference bundle accepted: false;
-- candidate derivation eligible: false;
+- completion bundle digest `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`.
+
+PR #130 then recorded the separate governance acceptance at main `3353b281a4022f107929fae296368390da45a4fb`, Run #348 (`33748180036`) SUCCESS:
+
+- decision `ACCEPT_REAL_REFERENCE_BUNDLE`;
+- acceptance digest `79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3`;
+- accepted-reference receipt digest `036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801`;
+- reference bundle accepted: true;
+- candidate derivation eligible: true;
 - execution authorized: false;
 - execution performed: false;
 - production thresholds/resources unchanged;
 - Stage 4 exit false;
 - Stage 5 entry false.
 
-The work package taxonomy remains `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`; vocabulary is `clear`, `possible`, `probable`, `not_assessed`. The immutable work package remains null-filled, while completed human records live separately in `human-label-completion.v1.json`. Automated metrics/model predictions cannot be reference truth.
+The work package taxonomy remains `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`; vocabulary is `clear`, `possible`, `probable`, `not_assessed`. The immutable work package remains null-filled, while completed human records live separately in `human-label-completion.v1.json` and the later acceptance decision lives in `reference-bundle-acceptance.v1.json`. Automated metrics/model predictions cannot be reference truth.
 
 ### 5.3 Development versus held-out boundary
 
-Development evidence may derive candidates only after purpose, human reference, separate acceptance, exact execution authorization, and private metric gates all pass. Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` only. It cannot derive/select/tune thresholds and is excluded from the Wikimedia review package.
+Development evidence may derive candidates only after purpose and human-reference acceptance gates pass. Actual calibration execution still requires a separate exact execution authorization plus custody-only metric gates. Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` only. It cannot derive/select/tune thresholds and is excluded from the Wikimedia development review and acceptance scope.
 
 Unavailable metrics are represented as `not_applicable`; numerical placeholders such as synthetic zero are forbidden. Public evidence may expose only digests/counts/aggregates, never custody-only raw metric values.
 
@@ -123,7 +130,7 @@ Unavailable metrics are represented as `not_applicable`; numerical placeholders 
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-The Wikimedia human completion does not resolve blocker 1. Reference acceptance, execution authorization, private execution, expanded candidate derivation/abstention, and development evidence governance acceptance are separate gates.
+Wikimedia reference acceptance does not resolve blocker 1. Exact execution authorization, private execution, expanded candidate derivation/abstention, and development evidence governance acceptance remain separate gates.
 
 ## 7. Binding development sequence
 
@@ -144,4 +151,4 @@ Stage 12 Music-application integrations
 
 ## 8. Transition rule
 
-The next external/governance boundary is separate acceptance of the completed Wikimedia human-reference evidence. Code, validation, deterministic acceptance preparation, and documentation may proceed before that decision; reference acceptance, calibration authorization, private metrics, threshold candidates, held-out evaluation, Stage 4 PASS, Stage 5 entry, training, publication, external export, and production threshold/resource changes must not be fabricated or self-authorized.
+The next external/governance boundary is a **separate exact Wikimedia expanded-development calibration execution authorization**. Code, validation, deterministic execution preparation, and documentation may proceed before that decision; calibration execution, private metric results, threshold candidates, held-out evaluation, Stage 4 PASS, Stage 5 entry, training, publication, external export, and production threshold/resource changes must not be fabricated or self-authorized.
