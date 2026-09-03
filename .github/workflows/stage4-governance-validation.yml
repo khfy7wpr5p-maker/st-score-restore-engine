@@ -1,0 +1,56 @@
+name: Stage 4 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage4-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate Stage 4 held-out evaluation evidence acceptance
+        run: python tools/validate_stage4_held_out_evaluation_evidence_acceptance.py
+
+      - name: Validate Stage 4 post-held-out-acceptance current truth
+        run: python tools/validate_stage4_post_held_out_evidence_acceptance_current_truth.py
+
+      - name: Validate Stage 4 final exit governance acceptance
+        run: python tools/validate_stage4_final_exit_acceptance.py
+
+      - name: Run Stage 4 governance unit tests
+        run: |
+          python -m unittest \
+            tests.test_stage4_held_out_evaluation_evidence_acceptance \
+            tests.test_stage4_post_held_out_evidence_acceptance_current_truth \
+            tests.test_stage4_final_exit_acceptance -v
+
+      - name: Compile Stage 4 governance sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage4_held_out_evaluation_evidence_acceptance.py \
+            src/st_score_restore/stage4_final_exit_acceptance.py \
+            tools/validate_stage4_held_out_evaluation_evidence_acceptance.py \
+            tools/validate_stage4_post_held_out_evidence_acceptance_current_truth.py \
+            tools/validate_stage4_final_exit_acceptance.py
