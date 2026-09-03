@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0.0",
+  "state": "human_labels_complete_pending_separate_acceptance",
+  "workPackageDigest": {
+    "algorithm": "sha256",
+    "value": "9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c"
+  },
+  "purposeGrantDigest": {
+    "algorithm": "sha256",
+    "value": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07"
+  },
+  "bundle": {
+    "schemaVersion": "1.0.0",
+    "contractVersion": "0.1.0",
+    "bundleId": "stage4.reference-labels.wikimedia-guitar-technical-exercise.development.v1",
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "records": [
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.blur.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.blur.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "blur",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.compression.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.compression.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "compression",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.glare.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.glare.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "glare",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.noise.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.noise.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "noise",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.shadow.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.shadow.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "shadow",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.skew.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.skew.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "skew",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      },
+      {
+        "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.uneven_lighting.v1",
+        "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.uneven_lighting.v1",
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "findingType": "uneven_lighting",
+        "referenceLabel": "clear",
+        "split": "development",
+        "dataClass": "real",
+        "purpose": "safety_calibration",
+        "purposePermissionGranted": true,
+        "provenanceReference": "evidence:opq_2d668bef441ec20352790605f0662d97",
+        "reviewerReference": "reviewer:opq_ae88a181b59342dff1011ce59d05fdea",
+        "reviewMethod": "human_expert_review",
+        "reviewedOn": "2026-09-03"
+      }
+    ]
+  },
+  "bundleDigest": {
+    "algorithm": "sha256",
+    "value": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+  },
+  "labelCounts": {
+    "clear": 7,
+    "not_assessed": 0,
+    "possible": 0,
+    "probable": 0
+  },
+  "assertions": {
+    "humanLabelsPresent": true,
+    "labelsAutomaticallyGenerated": false,
+    "modelPredictionsUsedAsReferenceLabels": false,
+    "referenceBundleAccepted": false,
+    "candidateDerivationEligible": false,
+    "expansionCalibrationExecutionAuthorized": false,
+    "expansionCalibrationExecuted": false,
+    "heldOutIncludedInDevelopmentReview": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
