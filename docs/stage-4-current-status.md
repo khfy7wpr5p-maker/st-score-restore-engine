@@ -47,7 +47,7 @@ PR #125 added a separate development-only raster family after the previous execu
 - purpose grant: production-effective;
 - human review required: `human_expert_review`;
 - human labels present in separate completion evidence: true;
-- human label count: 7;
+- human label completion: **7/7 `clear`**;
 - labels: `skew=clear`, `blur=clear`, `glare=clear`, `shadow=clear`, `uneven_lighting=clear`, `noise=clear`, `compression=clear`;
 - completion state: `human_labels_complete_pending_separate_acceptance`;
 - completion work-package digest: `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`;
