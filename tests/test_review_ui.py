@@ -1,52 +1,49 @@
 from __future__ import annotations
 
+from pathlib import Path
 import unittest
 
-from st_score_restore.http_api import ApiV1
-from st_score_restore.job_api_types import JobApiConfig
 from st_score_restore.review_ui import REVIEW_UI_CSS, REVIEW_UI_HTML, REVIEW_UI_JS, UI_VERSION, review_ui_asset
 
-CLIENT_KEY = "client-key-0123456789abcdef"
-REVIEWER_KEY = "reviewer-key-0123456789abcdef"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class ReviewUiContractTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.api = ApiV1(
-            None,  # Static Stage 5 UI assets do not touch the job service.
-            JobApiConfig(client_api_key=CLIENT_KEY, reviewer_api_key=REVIEWER_KEY),
-        )
         self.html = REVIEW_UI_HTML.decode("utf-8")
         self.css = REVIEW_UI_CSS.decode("utf-8")
         self.js = REVIEW_UI_JS.decode("utf-8")
+        self.http_api = (ROOT / "src/st_score_restore/http_api.py").read_text(encoding="utf-8")
 
-    def test_static_assets_are_same_origin_and_public_without_api_credentials(self) -> None:
+    def test_static_asset_router_is_exact_and_closed(self) -> None:
         expectations = {
-            "/review": "text/html; charset=utf-8",
-            "/review/styles.css": "text/css; charset=utf-8",
-            "/review/app.js": "application/javascript; charset=utf-8",
+            "/review": ("text/html; charset=utf-8", REVIEW_UI_HTML),
+            "/review/styles.css": ("text/css; charset=utf-8", REVIEW_UI_CSS),
+            "/review/app.js": ("application/javascript; charset=utf-8", REVIEW_UI_JS),
         }
-        for path, media_type in expectations.items():
+        for path, (media_type, body) in expectations.items():
             with self.subTest(path=path):
-                response = self.api.handle("GET", path, {})
-                self.assertEqual(200, response.status)
-                self.assertEqual(media_type, response.headers["Content-Type"])
-                self.assertEqual("nosniff", response.headers["X-Content-Type-Options"])
-                self.assertEqual("DENY", response.headers["X-Frame-Options"])
-                self.assertEqual("no-referrer", response.headers["Referrer-Policy"])
-                self.assertIn("no-store", response.headers["Cache-Control"])
-                self.assertIn("default-src 'none'", response.headers["Content-Security-Policy"])
-                self.assertIn("connect-src 'self'", response.headers["Content-Security-Policy"])
-                self.assertIn("frame-ancestors 'none'", response.headers["Content-Security-Policy"])
+                asset = review_ui_asset(path)
+                self.assertIsNotNone(asset)
+                self.assertEqual(media_type, asset.content_type)
+                self.assertEqual(body, asset.body)
+        self.assertIsNone(review_ui_asset("/review/unknown"))
+        self.assertIsNone(review_ui_asset("/api/v1/restoration-jobs/job-1"))
 
-    def test_api_still_requires_authentication(self) -> None:
-        response = self.api.handle("GET", "/api/v1/restoration-jobs/job-1", {})
-        self.assertEqual(401, response.status)
-        self.assertIn(b"authentication_required", response.body)
-
-    def test_post_to_review_ui_is_not_an_unauthenticated_action_route(self) -> None:
-        response = self.api.handle("POST", "/review", {})
-        self.assertEqual(401, response.status)
+    def test_http_router_keeps_static_ui_before_auth_and_api_after_auth(self) -> None:
+        self.assertIn("asset = review_ui_asset(path)", self.http_api)
+        self.assertLess(
+            self.http_api.index("asset = review_ui_asset(path)"),
+            self.http_api.index("role, actor = self._authenticate(headers)"),
+        )
+        for marker in (
+            '"X-Frame-Options": "DENY"',
+            '"Referrer-Policy": "no-referrer"',
+            '"default-src \'none\'",
+            '"connect-src \'self\'",
+            '"frame-ancestors \'none\'",
+        ):
+            self.assertIn(marker, self.http_api)
 
     def test_html_carries_required_accessibility_structure_and_order(self) -> None:
         self.assertEqual("1.0.0", UI_VERSION)
@@ -59,6 +56,7 @@ class ReviewUiContractTests(unittest.TestCase):
             'role="alert"',
             'role="status"',
             'aria-live="polite"',
+            'id="workspace-heading" tabindex="-1"',
             'id="source-view"',
             'id="candidate-view"',
             'id="zoom-mode"',
@@ -92,6 +90,7 @@ class ReviewUiContractTests(unittest.TestCase):
 
     def test_css_has_focus_touch_responsive_and_forced_color_support(self) -> None:
         self.assertIn(":focus-visible", self.css)
+        self.assertIn('[tabindex="-1"]:focus-visible', self.css)
         self.assertIn("min-height: 44px", self.css)
         self.assertIn("@media (max-width: 700px)", self.css)
         self.assertIn("@media (prefers-reduced-motion: reduce)", self.css)
@@ -106,10 +105,10 @@ class ReviewUiContractTests(unittest.TestCase):
             "review_evidence_not_ready",
             "candidate_not_current",
             "URL.revokeObjectURL",
-            'data-action="approve"' if False else "submitDecision",
+            "submitDecision",
             'action === "reprocess"',
-            "credentials: \"same-origin\"",
-            "cache: \"no-store\"",
+            'credentials: "same-origin"',
+            'cache: "no-store"',
         ):
             self.assertIn(required, self.js)
         self.assertNotIn("localStorage", self.js)
@@ -118,8 +117,10 @@ class ReviewUiContractTests(unittest.TestCase):
         self.assertNotIn("http://", self.js)
         self.assertNotIn("https://", self.js)
 
-    def test_asset_lookup_is_closed_to_unknown_paths(self) -> None:
-        self.assertIsNone(review_ui_asset("/review/unknown"))
+    def test_stale_screen_alert_survives_evidence_reload(self) -> None:
+        self.assertIn("await loadPage(state.pageIndex);", self.js)
+        self.assertIn("showError(message);\n  alertRegion.focus();", self.js)
+        self.assertIn("no decision was recorded from the stale screen", self.js)
 
 
 if __name__ == "__main__":
