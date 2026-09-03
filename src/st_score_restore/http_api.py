@@ -18,6 +18,7 @@ from .http_security import (
 )
 from .job_api_types import API_SCHEMA_VERSION, API_VERSION, JobApiConfig, JobApiError, UploadedPage
 from .job_service import RestorationJobService
+from .review_ui import review_ui_asset
 
 
 @dataclass(frozen=True)
@@ -69,6 +70,11 @@ class ApiV1:
                     },
                     request_id=request_id,
                 )
+            if normalized_method == "GET":
+                asset = review_ui_asset(path)
+                if asset is not None:
+                    media_type, data = asset
+                    return _static_response(media_type, data, request_id=request_id)
             role, actor = self._authenticate(headers)
             if path == "/api/v1/restoration-jobs" and normalized_method == "POST":
                 self._require_role(role, {"client", "reviewer"})
@@ -363,6 +369,27 @@ def _header(headers: Mapping[str, str], name: str) -> str | None:
         if key.lower() == lowered:
             return value.strip()
     return None
+
+
+def _static_response(media_type: str, body: bytes, *, request_id: str) -> ApiResponse:
+    return ApiResponse(
+        200,
+        {
+            "Content-Type": media_type,
+            "Content-Length": str(len(body)),
+            "Cache-Control": "no-store, max-age=0",
+            "Pragma": "no-cache",
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "Referrer-Policy": "no-referrer",
+            "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Resource-Policy": "same-origin",
+            "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+            "X-Request-Id": request_id,
+        },
+        body,
+    )
 
 
 def _json_response(status: int, value: Any, *, request_id: str) -> ApiResponse:
