@@ -10,24 +10,40 @@
     "merge_pr_title": "Stage 4: add Wikimedia-expanded private metric runner",
     "postmerge_ci_run_id": 33751772802,
     "postmerge_ci_run_number": 358,
-    "postmerge_ci_status": "success_python_3_11_and_3_12"
+    "postmerge_ci_status": "success_python_3_11_and_3_12",
+    "role": "historical_runner_introduction_checkpoint"
   },
   "runner": {
-    "contract_version": "0.3.0",
+    "contract_version": "0.3.1",
     "private_metric_schema_version": "1.2.0",
     "expanded_runner_support_present": true,
     "reference_record_count": 49,
-    "measured_record_count": 31,
-    "not_applicable_record_count": 18,
+    "measured_record_count": 30,
+    "not_applicable_record_count": 19,
     "measured_source_family_count": 2,
     "measured_source_families": [
       "source.family.imslp799143-beethoven-op48-no3.v1",
       "source.family.wikimedia-guitar-technical-exercise-no1.v1"
     ],
     "vector_preserved_source_family": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
-    "wikimedia_source_png_all_seven_metrics_measurable": true,
+    "wikimedia_source_png_measurable_metric_count": 6,
+    "wikimedia_source_png_compression_not_applicable": true,
     "beethoven_pdf_derived_png_compression_not_applicable": true,
     "barley_vector_metrics_not_applicable": true
+  },
+  "applicability_correction": {
+    "supersedes_runner_contract_version": "0.3.0",
+    "reason_code": "png_compression_metric_not_supported_by_quality_analyzer",
+    "analyzer_contract": "quality_analysis._compression_metrics is applicable only when input kind is jpeg",
+    "previous_measured_record_count": 31,
+    "previous_not_applicable_record_count": 18,
+    "corrected_measured_record_count": 30,
+    "corrected_not_applicable_record_count": 19,
+    "wikimedia_compression_status": "not_applicable",
+    "wikimedia_compression_reason": "metric_not_applicable_to_png_derivative",
+    "human_reference_truth_changed": false,
+    "authorization_scope_changed": false,
+    "held_out_scope_changed": false
   },
   "authorization": {
     "authorization_digest": "47027774b8f8258bcbe9ff633d58f9eb3e85edb4e83abf549facd778d6ecdad9",
@@ -64,5 +80,5 @@
       "no_stage4_metric_acceptance_target_policy_is_accepted"
     ]
   },
-  "compatibility_note": "Earlier acceptance and authorization overlays remain immutable historical checkpoints. This later overlay records that PR #134 made the expanded 49-record runner production-effective without claiming private metric acquisition or calibration execution."
+  "compatibility_note": "PR #134 remains the immutable historical checkpoint that introduced the expanded runner. Contract v0.3.1 corrects only metric applicability: the production quality analyzer is JPEG-only for compression, so Wikimedia source PNG compression must abstain instead of carrying an invented numeric value. No human labels, accepted reference-bundle identities, execution authorization, thresholds, resources, held-out boundaries, Stage 4 status, or Stage 5 status are changed by this correction."
 }
