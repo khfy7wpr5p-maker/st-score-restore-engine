@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "wikimedia_expanded_private_metric_runner_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "a594503fc4eee1c7d7172eec3cc35c4de38610d3",
+    "merge_pr": 134,
+    "merge_pr_title": "Stage 4: add Wikimedia-expanded private metric runner",
+    "postmerge_ci_run_id": 33751772802,
+    "postmerge_ci_run_number": 358,
+    "postmerge_ci_status": "success_python_3_11_and_3_12"
+  },
+  "runner": {
+    "contract_version": "0.3.0",
+    "private_metric_schema_version": "1.2.0",
+    "expanded_runner_support_present": true,
+    "reference_record_count": 49,
+    "measured_record_count": 31,
+    "not_applicable_record_count": 18,
+    "measured_source_family_count": 2,
+    "measured_source_families": [
+      "source.family.imslp799143-beethoven-op48-no3.v1",
+      "source.family.wikimedia-guitar-technical-exercise-no1.v1"
+    ],
+    "vector_preserved_source_family": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+    "wikimedia_source_png_all_seven_metrics_measurable": true,
+    "beethoven_pdf_derived_png_compression_not_applicable": true,
+    "barley_vector_metrics_not_applicable": true
+  },
+  "authorization": {
+    "authorization_digest": "47027774b8f8258bcbe9ff633d58f9eb3e85edb4e83abf549facd778d6ecdad9",
+    "expanded_development_calibration_execution_authorized": true
+  },
+  "execution": {
+    "real_private_metric_batch_present": false,
+    "real_development_calibration_executed": false,
+    "real_development_calibration_evidence_accepted": false,
+    "raw_private_metrics_allowed_in_ordinary_git": false,
+    "next_dependency": "custody_only_real_private_metric_acquisition_and_expanded_development_calibration_execution"
+  },
+  "held_out": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "included": false,
+    "evaluation_authorized": false,
+    "tuning_authorized": false
+  },
+  "assertions": {
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  },
+  "stage4": {
+    "state": "ACTIVE_NOT_READY",
+    "readiness_blocker_codes": [
+      "no_real_development_calibration_evidence_is_accepted",
+      "no_real_held_out_evaluation_evidence_is_accepted",
+      "no_stage4_metric_acceptance_target_policy_is_accepted"
+    ]
+  },
+  "compatibility_note": "Earlier acceptance and authorization overlays remain immutable historical checkpoints. This later overlay records that PR #134 made the expanded 49-record runner production-effective without claiming private metric acquisition or calibration execution."
+}
