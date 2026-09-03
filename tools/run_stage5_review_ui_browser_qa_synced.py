@@ -9,6 +9,7 @@ import run_stage5_review_ui_browser_qa as qa
 
 
 _ORIGINAL_EVALUATE = qa._evaluate
+_ORIGINAL_TEMPORARY_DIRECTORY = qa.tempfile.TemporaryDirectory
 _FIRST_APPROVE_CLICK = True
 
 
@@ -28,16 +29,26 @@ def _evaluate_after_ready(ws: qa.DevToolsWebSocket, expression: str):
     return _ORIGINAL_EVALUATE(ws, expression)
 
 
+def _temporary_directory_with_cleanup_race_tolerance(*args, **kwargs):
+    """Tolerate Chrome's post-exit profile-file race without weakening QA assertions."""
+
+    kwargs.setdefault("ignore_cleanup_errors", True)
+    return _ORIGINAL_TEMPORARY_DIRECTORY(*args, **kwargs)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     qa._evaluate = _evaluate_after_ready
+    qa.tempfile.TemporaryDirectory = _temporary_directory_with_cleanup_race_tolerance
     result = qa.run_browser_qa()
     result["harnessSynchronization"] = {
         "firstApproveWaitedUntilEnabled": True,
+        "chromeProfileCleanupRaceToleratedAfterProcessExit": True,
         "uiBehaviorChanged": False,
+        "qaAssertionsChanged": False,
     }
     encoded = json.dumps(result, sort_keys=True, indent=2) + "\n"
     if args.output:
