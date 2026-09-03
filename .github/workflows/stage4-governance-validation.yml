@@ -39,12 +39,16 @@ jobs:
       - name: Validate Stage 4 final exit governance acceptance
         run: python tools/validate_stage4_final_exit_acceptance.py
 
+      - name: Validate Stage 4 post-final-exit current truth
+        run: python tools/validate_stage4_post_final_exit_current_truth.py
+
       - name: Run Stage 4 governance unit tests
         run: |
           python -m unittest \
             tests.test_stage4_held_out_evaluation_evidence_acceptance \
             tests.test_stage4_post_held_out_evidence_acceptance_current_truth \
-            tests.test_stage4_final_exit_acceptance -v
+            tests.test_stage4_final_exit_acceptance \
+            tests.test_stage4_post_final_exit_current_truth -v
 
       - name: Compile Stage 4 governance sources
         run: |
@@ -53,4 +57,5 @@ jobs:
             src/st_score_restore/stage4_final_exit_acceptance.py \
             tools/validate_stage4_held_out_evaluation_evidence_acceptance.py \
             tools/validate_stage4_post_held_out_evidence_acceptance_current_truth.py \
-            tools/validate_stage4_final_exit_acceptance.py
+            tools/validate_stage4_final_exit_acceptance.py \
+            tools/validate_stage4_post_final_exit_current_truth.py
