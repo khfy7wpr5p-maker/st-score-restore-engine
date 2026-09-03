@@ -36,6 +36,7 @@ EXPECTED_CANDIDATE_BLOCKERS = {
     BLOCK_NO_METRIC_TARGET_POLICY,
 }
 EXPECTED_GOVERNANCE_FILES = [
+    "expanded-development-calibration-execution-authorization.v1.json",
     "purpose-grants.v1.json",
     "real-development-calibration-execution-authorization.v1.json",
     "stage4-entry-start.v1.json",
@@ -246,6 +247,7 @@ def main() -> int:
         "python tools/validate_stage4_reference_label_acceptance.py",
         "python tools/validate_stage4_execution_authorization.py",
         "python tools/validate_stage4_exit_readiness.py",
+        "python tools/validate_stage4_wikimedia_expanded_execution_authorization.py",
     ):
         require(validator in workflow, f"Repository validation does not run required Stage 4 validator: {validator}", failures)
 
