@@ -20,7 +20,9 @@ Current state:
 - expansion calibration executed: false;
 - held-out Chopin included: false;
 - production threshold/resource changes authorized: false;
+- Stage 4: **ACTIVE / NOT_READY**;
 - Stage 4 exit pass: false;
+- Stage 5: **BLOCKED**;
 - Stage 5 entry authorized: false.
 
 The parent Beethoven+Barley purpose grant remains immutable. This overlay exists because the previous real development execution abstained with zero threshold candidates due insufficient measured source-family and reference-class support.
@@ -47,3 +49,11 @@ Binding acceptance evidence is `reference-bundle-acceptance.v1.json`:
 - candidate derivation eligible: true.
 
 This acceptance does **not** authorize calibration execution, change thresholds/resources, include Chopin in development work, grant Stage 4 PASS, or authorize Stage 5. The next substantive gate is separate exact Wikimedia expanded-development calibration execution authorization.
+
+## Current Stage 4 readiness blockers
+
+Reference acceptance does not close the remaining global Stage 4 blockers:
+
+1. `no_real_development_calibration_evidence_is_accepted`
+2. `no_real_held_out_evaluation_evidence_is_accepted`
+3. `no_stage4_metric_acceptance_target_policy_is_accepted`
