@@ -88,6 +88,8 @@ For every measurable finding, the measured evidence came from only one source fa
 
 Historical Stage 1 catalog, earlier Stage 4 purpose/reference decisions, execution authorization and pre-execution current-truth checkpoints remain immutable.
 
+Historical pre-execution compatibility anchor: the production authorization/current-truth checkpoint recorded the development scope as authorized / not yet executed with `realDataCalibrationExecuted=false`. That statement is historical only; the current execution truth below is `realDataCalibrationExecuted=true` after PR #123 / Run #304.
+
 ## Current non-claims
 
 - `realDataCalibrationExecutionAuthorized=true`;
