@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage4.final-exit-acceptance.v1",
+  "decision": "PASS",
+  "acceptedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-08",
+  "acceptanceSourceCode": "explicit_user_authorization",
+  "readinessDigest": {
+    "algorithm": "sha256",
+    "value": "8b31b0dc92d931fa9e7b56a7912ecd1127e74ad0672d03d50526160936a32d0b"
+  },
+  "developmentEvidenceAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396"
+  },
+  "metricPolicyAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801"
+  },
+  "heldOutEvidenceAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "ff0bdcb8820ba774cebc46265eb36ee0278b591a316ca619d2540d06d3a45164"
+  },
+  "acceptedReadinessState": {
+    "decision": "READY_FOR_FINAL_ACCEPTANCE_REVIEW",
+    "readinessPrerequisitesSatisfied": true,
+    "blockerCount": 0,
+    "blockerCodes": [],
+    "heldOutTuningUsed": false,
+    "sourceFamilyLeakageCount": 0,
+    "historicalEvidenceImmutable": true,
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false
+  },
+  "acceptedLimitations": [
+    "Stage 4 completed through zero-candidate safe abstention; no numerical candidate threshold was accepted.",
+    "Thresholds and resource limits remain uncalibrated_engineering_defaults; Stage 4 PASS does not authorize production threshold or resource-limit changes.",
+    "The held-out evaluation assessed zero candidates, so not-assessed, exact-match, false-negative, and false-positive rates remain not_applicable; held-out data was not used for tuning or feedback into candidate derivation.",
+    "Real and derivative artifact bytes remain outside ordinary Git; detailed private metrics remain custody-only.",
+    "Stage 4 PASS establishes that the accepted safety-calibration governance gates were satisfied; it does not establish corpus representativeness, absence of bias, OMR correctness, restoration effectiveness, or model quality."
+  ],
+  "acceptedPurpose": "stage5-entry-eligibility-only",
+  "stage4ExitPass": true,
+  "stage5EntryEligible": true,
+  "stage5EntryAuthorized": false,
+  "stage5Started": false,
+  "claims": {
+    "candidateThresholdsAccepted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "omrCorrectnessEstablished": false,
+    "restorationEffectivenessEstablished": false
+  }
+}
