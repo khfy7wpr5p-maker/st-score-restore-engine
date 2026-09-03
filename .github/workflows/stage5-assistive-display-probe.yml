@@ -1,0 +1,70 @@
+name: Stage 5 assistive display probe
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  assistive-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install assistive technology probe runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends orca xdotool xvfb dbus-x11 at-spi2-core
+
+      - name: Probe Orca with real Chrome accessibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          echo "Chrome: $($CHROME --version)"
+          echo "Orca: $(orca --version)"
+          cat > /tmp/stage5-orca-probe.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head><meta charset="utf-8"><title>Stage 5 Orca Probe</title></head>
+          <body>
+            <main>
+              <h1>Stage 5 Orca Probe</h1>
+              <label for="probe-field">Probe field</label>
+              <input id="probe-field">
+              <button id="probe-button">Probe button</button>
+            </main>
+          </body>
+          </html>
+          HTML
+          Xvfb :99 -screen 0 1280x900x24 >/tmp/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          dbus-run-session -- bash -lc '
+            set -euo pipefail
+            export DISPLAY=:99
+            export NO_AT_BRIDGE=0
+            CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+            "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-chrome file:///tmp/stage5-orca-probe.html >/tmp/chrome.log 2>&1 &
+            CHROME_PID=$!
+            sleep 3
+            orca --replace --debug --debug-file=/tmp/orca.log >/tmp/orca.stdout 2>/tmp/orca.stderr &
+            ORCA_PID=$!
+            sleep 4
+            WINDOW_ID="$(xdotool search --name "Stage 5 Orca Probe" | head -n1)"
+            xdotool windowactivate --sync "$WINDOW_ID"
+            xdotool key Tab
+            sleep 2
+            xdotool key Tab
+            sleep 2
+            kill "$ORCA_PID" 2>/dev/null || true
+            kill "$CHROME_PID" 2>/dev/null || true
+            wait "$ORCA_PID" 2>/dev/null || true
+            wait "$CHROME_PID" 2>/dev/null || true
+          '
+          echo '--- Orca matches ---'
+          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT' /tmp/orca.log | tail -n 120
+          grep -Eaiq 'Probe field|Probe button' /tmp/orca.log
