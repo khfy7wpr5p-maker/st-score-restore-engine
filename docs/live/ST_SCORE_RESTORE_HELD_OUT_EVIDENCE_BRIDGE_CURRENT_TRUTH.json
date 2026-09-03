@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "document_type": "stage4_held_out_evidence_bridge_current_truth",
+  "project": "ST Score Restore Engine",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "e9cd13095e1c7ab1f2b88bd363071a10accc6332",
+    "merge_pr": 144,
+    "exact_head_sha": "d25390d50c30c713ddd8313808a286e3a6e03e4f",
+    "exact_head_run": {"run_number": 382, "run_id": 33772737625, "python_311": "success", "python_312": "success"},
+    "postmerge_run": {"run_number": 383, "run_id": 33772872343, "python_311": "success", "python_312": "success"}
+  },
+  "corrected_repository_truth": {
+    "prior_statement_that_chopin_held_out_was_not_authorized_or_executed_was_incorrect": true,
+    "historical_held_out_evaluation_permission_granted": true,
+    "historical_real_held_out_execution_completed": true,
+    "historical_stage3_exit_accepted": true,
+    "second_held_out_artifact_execution_required": false
+  },
+  "held_out_scope": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "source_family_id": "source.family.imslp82860-chopin-op69.v1",
+    "artifact_sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "byte_size": 1114479,
+    "page_count": 8,
+    "rendered_page_count": 8,
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "page_order_preserved": true,
+    "exact_digest_matched": true,
+    "exact_byte_size_matched": true,
+    "held_out_threshold_tuning_used": false
+  },
+  "bindings": {
+    "stage3_execution_evidence_digest": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "stage3_held_out_receipt_digest": "6c61bfcc1197779aa6fc7de68d536a39b2fba62c230cafdee50d5616005e1ce9",
+    "stage3_exit_acceptance_digest": "e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90",
+    "expanded_development_execution_acceptance_digest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "metric_policy_acceptance_digest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801",
+    "held_out_review_authorization_digest": "934bb1cac10a6c421923aeb72741cc63097983b7c50d4326d1b9f12dc5d7eb38",
+    "held_out_evidence_candidate_digest": "45dc380effe34d7f35ec9af2f05f802eaca9194fa8a889d1aaefae87c5221219"
+  },
+  "stage4_held_out_evidence": {
+    "mode": "zero_candidate_safe_abstention",
+    "candidate_derived_count": 0,
+    "candidate_applied_count": 0,
+    "assessed_candidate_count": 0,
+    "coverage_rate": 0.0,
+    "exact_match_rate": "not_applicable",
+    "false_negative_rate": "not_applicable",
+    "false_positive_rate": "not_applicable",
+    "source_family_leakage_count": 0,
+    "evaluation_fed_back_into_candidate": false,
+    "evidence_bridge_ready": true,
+    "evidence_accepted": false
+  },
+  "stage4_readiness": {
+    "state": "ACTIVE_NOT_READY",
+    "blocker_count": 1,
+    "blocker_codes": ["no_real_held_out_evaluation_evidence_is_accepted"],
+    "next_safe_boundary": "separate_explicit_stage4_held_out_evaluation_evidence_acceptance"
+  },
+  "assertions": {
+    "historical_evidence_rewritten": false,
+    "new_held_out_execution_performed": false,
+    "held_out_tuning_used": false,
+    "evaluation_fed_back_into_candidate": false,
+    "candidate_thresholds_accepted": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "production_threshold_change_authorized": false,
+    "production_resource_limit_change_authorized": false,
+    "held_out_evaluation_evidence_accepted": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  }
+}
