@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage5_entry_governance_authorization_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "49d2c054da4e159b33cf97238b7deb078110a879",
+    "merge_pr": 150,
+    "merge_pr_title": "Stage 5: authorize entry governance gate",
+    "pr_exact_head_sha": "0836e8fffa4c8074a8c733c282319b082dd6794d",
+    "exact_head_repository_validation_run_id": 33797070010,
+    "exact_head_repository_validation_run_number": 398,
+    "exact_head_stage4_governance_run_id": 33797070236,
+    "exact_head_stage4_governance_run_number": 9,
+    "exact_head_stage5_governance_run_id": 33797070307,
+    "exact_head_stage5_governance_run_number": 1,
+    "postmerge_repository_validation_run_id": 33797217664,
+    "postmerge_repository_validation_run_number": 399,
+    "postmerge_stage4_governance_run_id": 33797217598,
+    "postmerge_stage4_governance_run_number": 10,
+    "postmerge_stage5_governance_run_id": 33797217701,
+    "postmerge_stage5_governance_run_number": 2,
+    "ci_status": "success_python_3_11_and_3_12_for_all_three_workflows"
+  },
+  "stage4": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c"
+  },
+  "stage5_entry_authorization": {
+    "authorization_id": "stage5.entry-governance-authorization.v1",
+    "decision": "AUTHORIZE_STAGE5_ENTRY",
+    "authorization_digest": "8d1ba1859dac429548d95a6a232e8d59cca1ff3df192ec8cc409c2e6183d1f9c",
+    "purpose": "accessible_teacher_review_interface"
+  },
+  "stage5": {
+    "state": "ENTRY_AUTHORIZED_NOT_STARTED",
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": false,
+    "teacher_review_interface_implementation_authorized": false,
+    "teacher_review_interface_execution_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_stage5_framework_start_authorization"
+  },
+  "stage6": {
+    "entry_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage4_final_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "preview_release_authorized": false,
+    "representativeness_established": false,
+    "absence_of_bias_established": false,
+    "omr_correctness_established": false,
+    "restoration_effectiveness_established": false
+  },
+  "compatibility_note": "This later overlay records production-effective Stage 5 entry authorization from PR #150. The historical Stage 4 final-exit checkpoint remains immutable with Stage 5 entry authorization=false. Stage 5 entry is now authorized but Stage 5 is not started; teacher-review interface implementation/execution, deployment, Stage 6, threshold/resource changes, held-out retuning, training, publication, and preview release remain separately unauthorized."
+}
