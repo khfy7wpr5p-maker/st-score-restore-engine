@@ -13,6 +13,7 @@
 The exact Beethoven + Barley real development calibration has **executed and abstained**.
 
 - machine-readable current execution anchor: `realDataCalibrationExecuted=true`;
+- machine-readable current acceptance anchor: `executionEvidenceAccepted=false`;
 - private observation identities: 42;
 - measured: 24;
 - `not_applicable`: 18;
@@ -26,7 +27,7 @@ The exact Beethoven + Barley real development calibration has **executed and abs
 
 The production candidate methodology abstained because measured source-family support and reference-class support were insufficient. Compression had no applicable measured observations. No threshold was fabricated.
 
-## Historical pre-execution compatibility record
+## Historical compatibility state — pre-execution record
 
 This section preserves immutable earlier Stage 4 checkpoints required by validators; it does **not** override the current execution truth above.
 
