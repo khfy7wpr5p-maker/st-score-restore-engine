@@ -1,14 +1,15 @@
 # Stage 4 Current Status — Safety Calibration
 
-**State:** ACTIVE — REAL DEVELOPMENT CALIBRATION EXECUTION AUTHORIZED / NOT YET EXECUTED  
+**State:** ACTIVE — REAL DEVELOPMENT CALIBRATION EXECUTED / ABSTAINED / EVIDENCE NOT YET ACCEPTED  
 **Readiness:** NOT_READY / 3 remaining prerequisite blockers  
 **Tracking:** Issue #104  
-**Latest production main:** `53fd096e31a111f35af0194cbd57640041e6319f`  
-**Latest post-merge CI:** Run #298 (`33695083473`) — Python 3.11 / 3.12 SUCCESS  
-**Real calibration execution:** AUTHORIZED for exact Beethoven + Barley development scope / NOT YET EXECUTED  
-**Private-metric runner production baseline:** v0.1.0 from PR #119; applicability correction v0.2.0 is under validation on the current branch  
-**Private observation metrics:** exact 42 identities remain required, with 24 measured values and 18 fail-closed `not_applicable` records; raw measured values remain custody-only. The private observation metrics execution dependency therefore remains active.  
-**Candidate derivation methodology:** `strict_empirical_midpoint_boundary_v1` from PR #121 / production-effective; abstain-first  
+**Latest production main:** `4f0346345eb770628928ba1751b4a1d9d5fb51f1`  
+**Latest post-merge CI:** Run #304 (`33725160737`) — Python 3.11 / 3.12 SUCCESS  
+**Real calibration execution:** EXECUTED for exact Beethoven + Barley development scope; candidate thresholds derived: 0  
+**Private-metric runner production baseline:** v0.2.0 from PR #122 → main `1c0b27d9284129577a85bc4d536ac118446a4e8c` → Run #302 SUCCESS  
+**Private observation metrics:** exact 42 identities accounted for as 24 measured + 18 fail-closed `not_applicable`; raw measured values remain custody-only  
+**Candidate derivation methodology:** `strict_empirical_midpoint_boundary_v1`; all six measurable findings abstained; compression had no measured development observations  
+**Execution evidence:** PR #123 → main `4f0346345eb770628928ba1751b4a1d9d5fb51f1` → Run #304 SUCCESS; public-safe evidence frozen, governance acceptance still false  
 **Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS
 
 ## Production Stage 4 chain
@@ -27,36 +28,46 @@
 - Private observation-metric development runner contract v0.1.0: PR #119 exact head `74a05a4976bdeb5e81f88b8082289098d9eb5df4` → Run #292 (`33693675153`) SUCCESS → main `dd392f7be9522319d5d77074641b512dfdfdd930` → Run #293 (`33693904957`) SUCCESS.
 - Private runner current-truth checkpoint: PR #120 → main `10c03a2f14bfd9980fc6833f5adb2c04497f74a4` → Run #296 (`33694483053`) SUCCESS.
 - Abstain-first candidate derivation methodology: PR #121 exact head `06e9bfb424defd53a9c2a0e1077a861f7a9d478e` → Run #297 (`33694972501`) SUCCESS → main `53fd096e31a111f35af0194cbd57640041e6319f` → Run #298 (`33695083473`) SUCCESS.
+- Metric applicability correction / runner v0.2.0: PR #122 → main `1c0b27d9284129577a85bc4d536ac118446a4e8c` → Run #302 (`33722949483`) SUCCESS.
+- Real development execution evidence: PR #123 exact head `3f396c4cd693cb0d0b1cc0d90d9775cd8596c0c4` → Run #303 (`33725033413`) SUCCESS → main `4f0346345eb770628928ba1751b4a1d9d5fb51f1` → Run #304 (`33725160737`) SUCCESS.
 
 Stage 4 entry/start decision canonical SHA-256 remains `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.
 
 Stage 4 safety-calibration purpose-grant overlay canonical SHA-256 remains `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`.
 
-Reference evidence digests:
+Reference and execution evidence digests:
 - work package `93e1a61bbdd698dbabf1ba88164453056acf3f2ea37fa159305a0f244b2253ba`;
 - human completion `3434e74e7d993db2384711f9c6c31f31d148c65bc5896bd120f82b5dcab2e1fd`;
 - bundle `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`;
 - accepted receipt `f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33`;
 - acceptance `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`;
-- execution authorization `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
+- execution authorization `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`;
+- private metric batch `5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079`;
+- real development execution evidence `0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a`.
 
-## Metric applicability correction discovered during real execution preparation
+## Real development execution result
 
-Fresh execution preparation exposed a real contract mismatch that must be corrected before any private batch can be accepted:
+The authorized development run has now been executed inside the private boundary.
 
-- Stage 3 production evidence classifies Beethoven as four `raster_only` pages rendered as PNG derivatives.
-- Stage 3 production evidence classifies Barley as two `vector_only` pages preserved without rasterization.
-- Stage 2 `compression.score` is JPEG-only and returns non-applicable for PNG inputs.
+Exact applicability remained **24 measured + 18 not-applicable**:
 
-Therefore the truthful current 42-observation applicability is **24 measured + 18 not-applicable**, not 42 numeric `rawValue` values:
-
-- Beethoven: skew, blur, glare, shadow, uneven lighting and noise are measured on four canonical Stage 3 PNG derivatives = 24 measured rows.
+- Beethoven: skew, blur, glare, shadow, uneven lighting and noise were measured on four canonical Stage 3 PNG derivatives = 24 measured rows.
 - Beethoven compression: four `not_applicable` rows because the canonical derivative is PNG and the Stage 2 compression metric is JPEG-only.
 - Barley: fourteen `not_applicable` rows because the source pages are vector-only and Stage 3 correctly preserved them without rasterization.
 
-The v0.2.0 runner correction requires every accepted observation identity to remain present, but `not_applicable` rows must use `rawValue=null` with an exact reason. Numeric zero, placeholder or inferred values are forbidden as substitutes for unavailable measurements.
+The private batch is bound by SHA-256 only in public evidence; raw metric values and row identities remain outside ordinary Git.
 
-Only measured rows may be materialized into development calibration observations. With the current exact corpus, all measured rows come from the Beethoven source family, so the production candidate methodology's two-source-family requirement will force abstention. This is the intended fail-closed outcome; no threshold will be invented.
+Candidate derivation produced no threshold candidate:
+
+- `skew`: abstained;
+- `blur`: abstained;
+- `glare`: abstained;
+- `shadow`: abstained;
+- `uneven_lighting`: abstained;
+- `noise`: abstained;
+- `compression`: no measured development observations / not applicable.
+
+For every measurable finding, the measured evidence came from only one source family and the required `clear` / `possible` / `probable` class support was incomplete. The production methodology therefore abstained rather than inventing thresholds.
 
 ## Canonical metric semantics
 
@@ -75,20 +86,21 @@ Only measured rows may be materialized into development calibration observations
 - Their 42 human-reviewed labels remain accepted: 36 `clear`, 5 `possible`, 1 `probable`, 0 `not_assessed`.
 - Chopin `dataset.item.imslp82860-chopin-op69.v2`, SHA `b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3`: remains held-out `held_out_evaluation`; development candidate derivation/tuning remains forbidden.
 
-Historical Stage 1 catalog, earlier Stage 4 purpose/reference decisions and execution authorization remain immutable.
+Historical Stage 1 catalog, earlier Stage 4 purpose/reference decisions, execution authorization and pre-execution current-truth checkpoints remain immutable.
 
-## What did not change
+## Current non-claims
 
 - `realDataCalibrationExecutionAuthorized=true`;
 - `calibrationAuthorized=true` for the exact development execution scope only;
-- `realDataCalibrationExecuted=false`;
+- `realDataCalibrationExecuted=true`;
+- `executionEvidenceAccepted=false`;
 - `thresholdsCalibrated=false`;
 - `resourceLimitsCalibrated=false`;
 - no numerical metric acceptance target policy has been accepted;
 - production threshold/resource changes unauthorized;
 - training/publication unauthorized;
 - held-out tuning unauthorized;
-- held-out evaluation not authorized by the development execution decision;
+- held-out evaluation has not been executed;
 - `stage4ExitPass=false`;
 - `stage5EntryEligible=false`.
 
@@ -104,16 +116,18 @@ Remaining blocker codes:
 
 Resolved blockers remain `no_real_artifact_has_granted_safety_calibration_permission` and `no_real_calibration_reference_label_bundle_is_accepted`.
 
+The new execution receipt does not itself resolve blocker 1 because its governance acceptance remains separate and the result contains no frozen threshold candidate. Even after accepting the receipt as an accurate record, additional development evidence is required before held-out candidate evaluation can be meaningful.
+
 Even after all remaining prerequisites are resolved, readiness can only advance to `READY_FOR_FINAL_ACCEPTANCE_REVIEW`. Separate evidence-bound final governance acceptance, exact-head CI, merge and post-merge CI remain mandatory before Stage 4 PASS.
 
 ## Production behavior remains unchanged
 
 Stage 2 quality thresholds and Stage 3 PDF/resource limits remain `uncalibrated_engineering_defaults`: 200 DPI; 64 pages; 40M pixels/page; 160M aggregate pixels; 8,000-pixel maximum dimension; page-object depth 15.
 
-No numerical threshold or metric acceptance target was invented by PR #119, PR #121, or this applicability correction.
+No numerical threshold or metric acceptance target was invented by the real development execution.
 
-## Immediate execution dependency
+## Immediate next dependency
 
-After the applicability correction is production-effective, the exact 24 measurable Beethoven values can be validated inside approved custody while the remaining 18 observation identities are preserved as `not_applicable`. Raw private values remain outside ordinary Git. A public-safe receipt may contain only digests and aggregate applicability counts.
+The safe next substantive step is corpus expansion on the **development** side: add at least one separately authorized, human-labelled raster source family with genuinely comparable measured metrics and sufficient `clear` / `possible` / `probable` class support. The current exact corpus cannot satisfy the production candidate methodology because all 24 measured rows belong to one source family.
 
-Because the measurable evidence currently comes from only one source family, candidate derivation will abstain. Progress beyond an abstained real development calibration result will require an additional authorized, human-labelled **raster** development source family (or another separately approved design that provides genuinely comparable measurements). Chopin remains untouched until a separate held-out evaluation authorization/evidence boundary is reached.
+Chopin remains untouched. Held-out evaluation must not start until a frozen development candidate exists and a separate held-out evaluation boundary is satisfied.
