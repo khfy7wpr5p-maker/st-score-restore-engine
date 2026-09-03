@@ -1,0 +1,14 @@
+stage4.wikimedia.expansion.contract.v1
+purpose=safety_calibration
+split=development
+item=dataset.item.wikimedia-guitar-technical-exercise-no1.v1
+source_family=source.family.wikimedia-guitar-technical-exercise-no1.v1
+input=png
+page_count=1
+human_review=required
+reference_bundle_accepted=false
+execution_authorized=false
+execution_executed=false
+held_out_included=false
+stage4_exit_pass=false
+stage5_entry_authorized=false
