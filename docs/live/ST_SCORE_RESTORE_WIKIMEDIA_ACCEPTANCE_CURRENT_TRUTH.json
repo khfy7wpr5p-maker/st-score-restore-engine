@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "wikimedia_reference_bundle_acceptance_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "3353b281a4022f107929fae296368390da45a4fb",
+    "merge_pr": 130,
+    "merge_pr_title": "Stage 4: accept Wikimedia human reference bundle",
+    "postmerge_ci_run_id": 33748180036,
+    "postmerge_ci_run_number": 348,
+    "postmerge_ci_status": "success_python_3_11_and_3_12"
+  },
+  "completion_checkpoint": {
+    "main_sha": "2ce6151e7ce37198c5b264ddd577df71f49da8bf",
+    "merge_pr": 128,
+    "postmerge_ci_run_id": 33745945427,
+    "postmerge_ci_run_number": 340,
+    "immutable_completion_state": "human_labels_complete_pending_separate_acceptance",
+    "human_label_record_count": 7,
+    "human_label_counts": {
+      "clear": 7,
+      "possible": 0,
+      "probable": 0,
+      "not_assessed": 0
+    },
+    "work_package_digest": "9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c",
+    "bundle_digest": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+  },
+  "acceptance": {
+    "acceptance_id": "stage4.reference-label-acceptance.wikimedia-guitar-technical-exercise.v1",
+    "decision": "ACCEPT_REAL_REFERENCE_BUNDLE",
+    "decision_authority_reference": "authority:project-governance-owner-20260903-02",
+    "acceptance_source_code": "explicit_user_authorization",
+    "accepted_on": "2026-09-03",
+    "acceptance_digest": "79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3",
+    "accepted_reference_receipt_digest": "036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801",
+    "reference_bundle_accepted": true,
+    "candidate_derivation_eligible": true
+  },
+  "scope": {
+    "dataset_item_id": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+    "source_family_id": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+    "split": "development",
+    "data_class": "real",
+    "purpose": "safety_calibration",
+    "record_count": 7,
+    "held_out_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "held_out_included": false,
+    "held_out_tuning_authorized": false
+  },
+  "assertions": {
+    "human_labels_present": true,
+    "labels_automatically_generated": false,
+    "model_predictions_used_as_reference_labels": false,
+    "reference_bundle_accepted": true,
+    "candidate_derivation_eligible": true,
+    "calibration_execution_authorized": false,
+    "calibration_executed": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_evaluation_authorized": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  },
+  "stage4": {
+    "state": "ACTIVE_NOT_READY",
+    "readiness_blocker_codes": [
+      "no_real_development_calibration_evidence_is_accepted",
+      "no_real_held_out_evaluation_evidence_is_accepted",
+      "no_stage4_metric_acceptance_target_policy_is_accepted"
+    ],
+    "next_dependency": "separate_exact_wikimedia_expanded_development_calibration_execution_authorization"
+  },
+  "compatibility_note": "docs/live/ST_SCORE_RESTORE_LIVE_HANDOFF.json and the PR #128 human-reference fields remain immutable completion-checkpoint anchors; this overlay carries the later PR #130 acceptance truth without retroactively mutating those historical snapshots."
+}
