@@ -21,16 +21,16 @@ jobs:
       - name: Package exact public source snapshot
         run: |
           set -euo pipefail
-          tar --exclude=.git -czf st-score-restore-engine-551a91b8-public-source.tar.gz .
-          sha256sum st-score-restore-engine-551a91b8-public-source.tar.gz > st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
+          tar --exclude=.git -czf /tmp/st-score-restore-engine-551a91b8-public-source.tar.gz .
+          sha256sum /tmp/st-score-restore-engine-551a91b8-public-source.tar.gz > /tmp/st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
 
       - name: Upload exact public source snapshot
         uses: actions/upload-artifact@v4
         with:
           name: st-score-restore-engine-551a91b8-public-source
           path: |
-            st-score-restore-engine-551a91b8-public-source.tar.gz
-            st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
+            /tmp/st-score-restore-engine-551a91b8-public-source.tar.gz
+            /tmp/st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
           if-no-files-found: error
           retention-days: 1
           compression-level: 0
