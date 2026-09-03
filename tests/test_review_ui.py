@@ -39,9 +39,9 @@ class ReviewUiContractTests(unittest.TestCase):
         for marker in (
             '"X-Frame-Options": "DENY"',
             '"Referrer-Policy": "no-referrer"',
-            "\"default-src 'none'\"",
-            "\"connect-src 'self'\"",
-            "\"frame-ancestors 'none'\"",
+            "default-src 'none';",
+            "connect-src 'self';",
+            "frame-ancestors 'none'",
         ):
             self.assertIn(marker, self.http_api)
 
