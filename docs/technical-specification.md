@@ -97,7 +97,7 @@ PR #125 is the immutable expansion baseline at main `9d2326931707f65c7eb5f5b2268
 
 PR #128 later froze genuine external human review completion at main `2ce6151e7ce37198c5b264ddd577df71f49da8bf`, Run #340 (`33745945427`) SUCCESS:
 
-- all seven findings are `clear`;
+- **7/7 findings are `clear`**;
 - completion state is `human_labels_complete_pending_separate_acceptance`;
 - work-package digest `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`;
 - completion bundle digest `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`;
