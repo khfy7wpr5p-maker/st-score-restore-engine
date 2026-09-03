@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage5.framework-start-authorization.v1",
+  "decision": "AUTHORIZE_STAGE5_FRAMEWORK_START_AND_LOCAL_IMPLEMENTATION_EXECUTION",
+  "authorizedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-10",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "stage5EntryAuthorizationDigest": {
+    "algorithm": "sha256",
+    "value": "8d1ba1859dac429548d95a6a232e8d59cca1ff3df192ec8cc409c2e6183d1f9c"
+  },
+  "stage5EntryProductionCheckpoint": {
+    "mainSha": "0423f523eafa97073a34f35946dfd4c29f1e8766",
+    "entryAuthorized": true,
+    "repositoryValidationRunNumber": 401,
+    "stage4GovernanceRunNumber": 12,
+    "stage5GovernanceRunNumber": 4,
+    "python311": "success",
+    "python312": "success"
+  },
+  "stage5Purpose": "accessible_teacher_review_interface",
+  "scope": {
+    "stage5EntryEligible": true,
+    "stage5EntryAuthorized": true,
+    "stage5FrameworkAuthorized": true,
+    "stage5Started": true,
+    "teacherReviewInterfaceImplementationAuthorized": true,
+    "teacherReviewInterfaceExecutionAuthorized": true,
+    "localAccessibilityVerificationAuthorized": true,
+    "localDisplayQaAuthorized": true,
+    "productionDeploymentAuthorized": false,
+    "identityNetworkInfrastructureAuthorized": false,
+    "previewReleaseAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "safetyBoundaries": {
+    "historicalEvidenceImmutable": true,
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "rawPrivateMetricsInOrdinaryGit": false,
+    "stage4FinalPassMustRemainTrue": true,
+    "productionDeploymentRequiresSeparateAuthorization": true,
+    "stage6EntryAuthorized": false
+  },
+  "nextSafeBoundary": "stage5_browser_ui_implementation_and_local_qa"
+}
