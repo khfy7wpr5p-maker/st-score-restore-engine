@@ -3,8 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
-
-import pytest
+import unittest
 
 from st_score_restore.stage4_held_out_evaluation_evidence import (
     AUTHORIZATION_CANONICAL_SHA256,
@@ -39,71 +38,72 @@ def inputs() -> tuple[dict, dict, dict, dict, dict, dict]:
     )
 
 
-def test_review_authorization_is_exact_and_does_not_accept_evidence() -> None:
-    value = validate_held_out_evaluation_review_authorization(load(AUTH))
-    assert value["decision"] == "AUTHORIZE_STAGE4_HELD_OUT_EVALUATION_EVIDENCE_REVIEW"
-    assert value["scope"]["reuseExistingRealExecutionEvidence"] is True
-    assert value["scope"]["newArtifactExecutionRequired"] is False
-    assert value["assertions"]["stage4HeldOutEvidenceAccepted"] is False
-    assert len(AUTHORIZATION_CANONICAL_SHA256) == 64
+class Stage4HeldOutEvaluationEvidenceTests(unittest.TestCase):
+    def test_review_authorization_is_exact_and_does_not_accept_evidence(self) -> None:
+        value = validate_held_out_evaluation_review_authorization(load(AUTH))
+        self.assertEqual(value["decision"], "AUTHORIZE_STAGE4_HELD_OUT_EVALUATION_EVIDENCE_REVIEW")
+        self.assertIs(value["scope"]["reuseExistingRealExecutionEvidence"], True)
+        self.assertIs(value["scope"]["newArtifactExecutionRequired"], False)
+        self.assertIs(value["assertions"]["stage4HeldOutEvidenceAccepted"], False)
+        self.assertEqual(len(AUTHORIZATION_CANONICAL_SHA256), 64)
 
-
-def test_candidate_reuses_real_stage3_chopin_execution_and_stops_at_acceptance_review() -> None:
-    candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
-    value = validate_held_out_evaluation_evidence_candidate(
-        candidate,
-        auth,
-        stage3,
-        stage3_acceptance,
-        development_acceptance,
-        metric_policy_acceptance,
-    )
-    assert value["state"] == "ready_pending_separate_acceptance"
-    assert value["realExecutionReceipt"]["pageCount"] == 8
-    assert value["realExecutionReceipt"]["renderedPageCount"] == 8
-    assert value["evaluationSummary"]["candidateDerivedCount"] == 0
-    assert value["evaluationSummary"]["coverageRate"] == 0.0
-    assert value["evaluationSummary"]["exactMatchRate"] == "not_applicable"
-    assert value["evaluationSummary"]["sourceFamilyLeakageCount"] == 0
-    assert value["evaluationSummary"]["heldOutThresholdTuningUsed"] is False
-    assert value["evaluationSummary"]["evaluationFedBackIntoCandidate"] is False
-    assert value["assertions"]["heldOutEvaluationEvidenceAccepted"] is False
-    assert len(EVIDENCE_CANONICAL_SHA256) == 64
-
-
-def test_summary_keeps_only_held_out_evidence_acceptance_blocker() -> None:
-    summary = summarize_held_out_evaluation_evidence_candidate(load(CANDIDATE))
-    assert summary["heldOutEvaluationEvidenceAccepted"] is False
-    assert summary["remainingReadinessBlockers"] == ["no_real_held_out_evaluation_evidence_is_accepted"]
-    assert summary["stage4ExitPass"] is False
-    assert summary["stage5EntryAuthorized"] is False
-
-
-def test_candidate_rejects_fake_assessed_metrics_in_zero_candidate_mode() -> None:
-    candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
-    tampered = deepcopy(candidate)
-    tampered["evaluationSummary"]["exactMatchRate"] = 1.0
-    with pytest.raises(Stage4HeldOutEvaluationEvidenceError):
-        validate_held_out_evaluation_evidence_candidate(
-            tampered,
+    def test_candidate_reuses_real_stage3_chopin_execution_and_stops_at_acceptance_review(self) -> None:
+        candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
+        value = validate_held_out_evaluation_evidence_candidate(
+            candidate,
             auth,
             stage3,
             stage3_acceptance,
             development_acceptance,
             metric_policy_acceptance,
         )
+        self.assertEqual(value["state"], "ready_pending_separate_acceptance")
+        self.assertEqual(value["realExecutionReceipt"]["pageCount"], 8)
+        self.assertEqual(value["realExecutionReceipt"]["renderedPageCount"], 8)
+        self.assertEqual(value["evaluationSummary"]["candidateDerivedCount"], 0)
+        self.assertEqual(value["evaluationSummary"]["coverageRate"], 0.0)
+        self.assertEqual(value["evaluationSummary"]["exactMatchRate"], "not_applicable")
+        self.assertEqual(value["evaluationSummary"]["sourceFamilyLeakageCount"], 0)
+        self.assertIs(value["evaluationSummary"]["heldOutThresholdTuningUsed"], False)
+        self.assertIs(value["evaluationSummary"]["evaluationFedBackIntoCandidate"], False)
+        self.assertIs(value["assertions"]["heldOutEvaluationEvidenceAccepted"], False)
+        self.assertEqual(len(EVIDENCE_CANONICAL_SHA256), 64)
+
+    def test_summary_keeps_only_held_out_evidence_acceptance_blocker(self) -> None:
+        summary = summarize_held_out_evaluation_evidence_candidate(load(CANDIDATE))
+        self.assertIs(summary["heldOutEvaluationEvidenceAccepted"], False)
+        self.assertEqual(summary["remainingReadinessBlockers"], ["no_real_held_out_evaluation_evidence_is_accepted"])
+        self.assertIs(summary["stage4ExitPass"], False)
+        self.assertIs(summary["stage5EntryAuthorized"], False)
+
+    def test_candidate_rejects_fake_assessed_metrics_in_zero_candidate_mode(self) -> None:
+        candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
+        tampered = deepcopy(candidate)
+        tampered["evaluationSummary"]["exactMatchRate"] = 1.0
+        with self.assertRaises(Stage4HeldOutEvaluationEvidenceError):
+            validate_held_out_evaluation_evidence_candidate(
+                tampered,
+                auth,
+                stage3,
+                stage3_acceptance,
+                development_acceptance,
+                metric_policy_acceptance,
+            )
+
+    def test_candidate_rejects_held_out_tuning(self) -> None:
+        candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
+        tampered = deepcopy(candidate)
+        tampered["evaluationSummary"]["heldOutThresholdTuningUsed"] = True
+        with self.assertRaises(Stage4HeldOutEvaluationEvidenceError):
+            validate_held_out_evaluation_evidence_candidate(
+                tampered,
+                auth,
+                stage3,
+                stage3_acceptance,
+                development_acceptance,
+                metric_policy_acceptance,
+            )
 
 
-def test_candidate_rejects_held_out_tuning() -> None:
-    candidate, auth, stage3, stage3_acceptance, development_acceptance, metric_policy_acceptance = inputs()
-    tampered = deepcopy(candidate)
-    tampered["evaluationSummary"]["heldOutThresholdTuningUsed"] = True
-    with pytest.raises(Stage4HeldOutEvaluationEvidenceError):
-        validate_held_out_evaluation_evidence_candidate(
-            tampered,
-            auth,
-            stage3,
-            stage3_acceptance,
-            development_acceptance,
-            metric_policy_acceptance,
-        )
+if __name__ == "__main__":
+    unittest.main()
