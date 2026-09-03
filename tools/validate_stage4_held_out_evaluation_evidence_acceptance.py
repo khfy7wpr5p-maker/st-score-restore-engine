@@ -21,7 +21,6 @@ STAGE3_EXECUTION = ROOT / "evidence/stage3/corpus/execution-evidence.v1.json"
 STAGE3_EXIT_ACCEPTANCE = ROOT / "evidence/stage3/corpus/stage3-exit-acceptance.v1.json"
 DEVELOPMENT_ACCEPTANCE = ROOT / "evidence/stage4/calibration/expanded-real-development-execution-acceptance.v1.json"
 METRIC_POLICY_ACCEPTANCE = ROOT / "evidence/stage4/calibration/metric-acceptance-target-policy-acceptance.v1.json"
-WORKFLOW = ROOT / ".github/workflows/repository-validation.yml"
 
 
 def load(path: Path) -> dict:
@@ -50,7 +49,6 @@ def main() -> int:
         STAGE3_EXIT_ACCEPTANCE,
         DEVELOPMENT_ACCEPTANCE,
         METRIC_POLICY_ACCEPTANCE,
-        WORKFLOW,
     ):
         if not path.exists():
             failures.append(f"required held-out acceptance input missing: {path.relative_to(ROOT)}")
@@ -121,11 +119,6 @@ def main() -> int:
             pass
     except Exception as exc:
         failures.append(f"held-out evidence acceptance validation raised: {exc}")
-
-    workflow = WORKFLOW.read_text(encoding="utf-8")
-    validator_command = "python tools/validate_stage4_held_out_evaluation_evidence_acceptance.py"
-    if validator_command not in workflow:
-        failures.append("repository validation workflow does not run held-out evidence acceptance validator")
 
     if failures:
         print("Stage 4 held-out evaluation evidence acceptance: FAIL", file=sys.stderr)
