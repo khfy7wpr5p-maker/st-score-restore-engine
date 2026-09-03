@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "grantSetId": "stage4.purpose-grants.wikimedia-guitar-technical-exercise-safety-calibration.v1",
+  "authorizedOn": "2026-09-03",
+  "authorizationReference": "evidence:opq_88ac791c01282c27fffd53f0a5e5797c",
+  "authorizedBy": "actor.purpose:opq_8143370f2ba5caa97c31e72da0d65755",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "parentGrantSet": {
+    "grantSetId": "stage4.purpose-grants.beethoven-barley-safety-calibration.v1",
+    "canonicalSha256": "4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc",
+    "modified": false
+  },
+  "grant": {
+    "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+    "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+    "artifactSha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+    "artifactByteSize": 34636,
+    "inputKind": "png",
+    "pageCount": 1,
+    "purpose": "safety_calibration",
+    "permission": {
+      "status": "granted",
+      "authorizationReference": "evidence:opq_88ac791c01282c27fffd53f0a5e5797c",
+      "authorizedBy": "actor.purpose:opq_8143370f2ba5caa97c31e72da0d65755",
+      "authorizedOn": "2026-09-03",
+      "expiresOn": null,
+      "restrictions": [
+        {"type": "split_allowlist", "values": ["development"]},
+        {"type": "storage_class_allowlist", "values": ["managed_standard"]},
+        {"type": "environment_allowlist", "values": ["stage1_offline"]},
+        {"type": "external_export", "allowed": false}
+      ],
+      "revokedOn": null,
+      "revocationReference": null
+    }
+  },
+  "heldOutBinding": {
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "candidateDerivationAuthorized": false,
+    "evaluationExecuted": false,
+    "tuningAuthorized": false
+  },
+  "assertions": {
+    "historicalCatalogModified": false,
+    "parentPurposeGrantModified": false,
+    "safetyCalibrationPurposeAuthorized": true,
+    "humanReferenceLabelsPresent": false,
+    "referenceLabelBundleAccepted": false,
+    "realDataCalibrationExecutionAuthorized": false,
+    "realDataCalibrationExecuted": false,
+    "trainingAuthorized": false,
+    "publicationAuthorized": false,
+    "demonstrationAuthorized": false,
+    "externalExportAuthorized": false,
+    "heldOutAuthorizationChanged": false,
+    "heldOutTuningAuthorized": false,
+    "heldOutEvaluationExecuted": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  },
+  "triggerBinding": {
+    "realDevelopmentExecutionEvidenceSha256": "0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a",
+    "state": "executed_abstained",
+    "candidateDerivedCount": 0,
+    "reasonCodes": [
+      "insufficient_measured_source_family_support",
+      "insufficient_reference_class_support"
+    ]
+  }
+}

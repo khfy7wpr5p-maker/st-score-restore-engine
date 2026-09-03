@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "stage4.reference-label-review.wikimedia-guitar-technical-exercise.v1",
+  "state": "awaiting_human_labels",
+  "contractVersion": "0.1.0",
+  "purposeGrantDigest": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07",
+  "reviewScope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "reviewMethodRequired": "human_expert_review",
+    "acceptedRealReferenceBundle": false,
+    "realDataCalibrationExecutionAuthorized": false,
+    "modelPredictionsAllowedAsReference": false
+  },
+  "labelVocabulary": [
+    "clear",
+    "not_assessed",
+    "possible",
+    "probable"
+  ],
+  "findingTypes": [
+    "blur",
+    "compression",
+    "glare",
+    "noise",
+    "shadow",
+    "skew",
+    "uneven_lighting"
+  ],
+  "item": {
+    "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+    "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+    "artifactSha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+    "artifactByteSize": 34636,
+    "inputKind": "png",
+    "pageCount": 1,
+    "pages": [
+      {
+        "pageNumber": 1,
+        "reviews": [
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.blur.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.blur.v1",
+            "findingType": "blur",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.compression.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.compression.v1",
+            "findingType": "compression",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.glare.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.glare.v1",
+            "findingType": "glare",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.noise.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.noise.v1",
+            "findingType": "noise",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.shadow.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.shadow.v1",
+            "findingType": "shadow",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.skew.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.skew.v1",
+            "findingType": "skew",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          },
+          {
+            "labelId": "stage4.label.wikimedia-guitar-tech-ex1.p1.uneven_lighting.v1",
+            "observationId": "stage4.obs.wikimedia-guitar-tech-ex1.p1.uneven_lighting.v1",
+            "findingType": "uneven_lighting",
+            "referenceLabel": null,
+            "reviewerReference": null,
+            "provenanceReference": null,
+            "reviewedOn": null
+          }
+        ]
+      }
+    ]
+  },
+  "heldOutExclusions": [
+    {
+      "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+      "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+      "split": "held_out",
+      "purpose": "held_out_evaluation",
+      "includedInDevelopmentReview": false,
+      "candidateDerivationAuthorized": false
+    }
+  ],
+  "assertions": {
+    "humanLabelsPresent": false,
+    "referenceBundleAccepted": false,
+    "labelsAutomaticallyGenerated": false,
+    "modelPredictionsUsedAsReferenceLabels": false,
+    "heldOutIncludedInDevelopmentReview": false,
+    "expansionCalibrationExecutionAuthorized": false,
+    "expansionCalibrationExecuted": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
