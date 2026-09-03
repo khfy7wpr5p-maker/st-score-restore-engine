@@ -1,11 +1,15 @@
 """Fail-closed Stage 4 private-metric development calibration runner contract.
 
-The runner validates private Beethoven + Barley observation metrics against the
-production-effective execution authorization and accepted 42-record human
-reference bundle. Raw metric rows stay outside ordinary Git. This module does
-not select numerical thresholds, touch held-out data, authorize production
-changes, train a model, publish private evidence, grant Stage 4 PASS, or open
-Stage 5.
+The runner validates private Beethoven + Barley observation measurements against
+the production-effective execution authorization and accepted 42-record human
+reference bundle. Raw metric rows stay outside ordinary Git. Measurement
+applicability follows the production Stage 3 page policy: vector-only pages and
+JPEG-only metrics on PNG derivatives are represented explicitly as
+``not_applicable`` rather than by invented zero/placeholder values.
+
+This module does not select numerical thresholds, touch held-out data, authorize
+production changes, train a model, publish private evidence, grant Stage 4 PASS,
+or open Stage 5.
 """
 
 from __future__ import annotations
@@ -25,9 +29,14 @@ from .stage4_reference_label_completion import (
     validate_reference_label_completion,
 )
 
-RUNNER_CONTRACT_VERSION = "0.1.0"
-PRIVATE_METRIC_SCHEMA_VERSION = "1.0.0"
+RUNNER_CONTRACT_VERSION = "0.2.0"
+PRIVATE_METRIC_SCHEMA_VERSION = "1.1.0"
 EXPECTED_RECORD_COUNT = 42
+EXPECTED_MEASURED_RECORD_COUNT = 24
+EXPECTED_NOT_APPLICABLE_RECORD_COUNT = 18
+
+BEETHOVEN_ID = "dataset.item.imslp799143-beethoven-op48-no3.v1"
+BARLEY_ID = "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1"
 
 METRIC_SPECS: dict[str, dict[str, str]] = {
     "skew": {"metricName": "absoluteAngleDegrees", "direction": "higher_is_worse"},
@@ -39,6 +48,11 @@ METRIC_SPECS: dict[str, dict[str, str]] = {
     "compression": {"metricName": "score", "direction": "higher_is_worse"},
 }
 BOUNDED_UNIT_FINDINGS = frozenset({"glare", "shadow", "uneven_lighting", "noise", "compression"})
+MEASUREMENT_STATUSES = frozenset({"measured", "not_applicable"})
+NOT_APPLICABLE_REASONS = frozenset({
+    "source_vector_only_preserved",
+    "metric_not_applicable_to_png_derivative",
+})
 
 
 class Stage4DevelopmentCalibrationRunnerError(ValueError):
@@ -66,6 +80,21 @@ def _finite_number(value: Any) -> float:
     return number
 
 
+def _expected_measurement(item_id: str, finding: str) -> tuple[str, str | None]:
+    """Return exact applicability implied by the production Stage 3 page policy."""
+
+    if item_id == BARLEY_ID:
+        return "not_applicable", "source_vector_only_preserved"
+    if item_id == BEETHOVEN_ID and finding == "compression":
+        return "not_applicable", "metric_not_applicable_to_png_derivative"
+    if item_id == BEETHOVEN_ID:
+        return "measured", None
+    raise Stage4DevelopmentCalibrationRunnerError(
+        "authorization_mismatch",
+        "dataset item is outside the exact Stage 4 development applicability contract",
+    )
+
+
 def validate_private_metric_batch(
     raw: Mapping[str, Any],
     authorization_raw: Mapping[str, Any],
@@ -73,7 +102,7 @@ def validate_private_metric_batch(
     acceptance_raw: Mapping[str, Any],
     completion_raw: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Validate a private 42-row development metric batch without publishing rows."""
+    """Validate a private 42-row development measurement batch without publishing rows."""
 
     _require(isinstance(raw, Mapping), "invalid_private_metric_batch", "private metric batch must be an object")
     value = deepcopy(dict(raw))
@@ -116,11 +145,13 @@ def validate_private_metric_batch(
         for item in authorization["scope"]["datasetItems"]
     }
     seen: set[str] = set()
+    measured_count = 0
+    not_applicable_count = 0
 
     required_fields = {
         "observationId", "datasetItemId", "artifactSha256", "sourceFamilyId",
-        "findingType", "metricName", "direction", "rawValue", "split",
-        "dataClass", "purpose", "provenanceReference"
+        "findingType", "metricName", "direction", "measurementStatus", "rawValue",
+        "notApplicableReason", "split", "dataClass", "purpose", "provenanceReference"
     }
     forbidden_truth_fields = {"referenceLabel", "predictedLabel", "modelLabel", "reviewerReference"}
 
@@ -149,10 +180,24 @@ def validate_private_metric_batch(
         spec = METRIC_SPECS[finding]
         _require(record["metricName"] == spec["metricName"], "metric_name_mismatch", "metricName does not match the canonical finding metric")
         _require(record["direction"] == spec["direction"], "metric_direction_mismatch", "metric direction does not match the canonical finding metric")
-        number = _finite_number(record["rawValue"])
-        _require(number >= 0.0, "invalid_metric_value", "Stage 4 private calibration metrics must be non-negative")
-        if finding in BOUNDED_UNIT_FINDINGS:
-            _require(number <= 1.0, "invalid_metric_value", "normalized Stage 4 metric must be within [0,1]")
+
+        status = record["measurementStatus"]
+        _require(status in MEASUREMENT_STATUSES, "invalid_measurement_status", "measurementStatus is not recognized")
+        expected_status, expected_reason = _expected_measurement(item_id, finding)
+        _require(status == expected_status, "measurement_applicability_mismatch", "measurementStatus contradicts the production Stage 3 page policy")
+        if status == "measured":
+            _require(record["notApplicableReason"] is None, "invalid_measurement_status", "measured rows cannot carry a notApplicableReason")
+            number = _finite_number(record["rawValue"])
+            _require(number >= 0.0, "invalid_metric_value", "Stage 4 private calibration metrics must be non-negative")
+            if finding in BOUNDED_UNIT_FINDINGS:
+                _require(number <= 1.0, "invalid_metric_value", "normalized Stage 4 metric must be within [0,1]")
+            measured_count += 1
+        else:
+            _require(record["rawValue"] is None, "invented_not_applicable_value", "not_applicable rows must not carry a numeric rawValue")
+            reason = record["notApplicableReason"]
+            _require(reason in NOT_APPLICABLE_REASONS, "invalid_not_applicable_reason", "notApplicableReason is not recognized")
+            _require(reason == expected_reason, "measurement_applicability_mismatch", "notApplicableReason contradicts the production Stage 3 page policy")
+            not_applicable_count += 1
 
         _require(record["split"] == "development", "held_out_in_development_batch", "private development batch cannot contain held-out rows")
         _require(record["dataClass"] == "real", "invalid_private_metric_record", "private development metrics must be real-data class")
@@ -161,6 +206,8 @@ def validate_private_metric_batch(
         _require(isinstance(provenance, str) and provenance.startswith("custody:"), "private_provenance_missing", "private metric provenance must use an opaque custody: reference")
 
     _require(seen == set(expected_by_observation), "observation_set_mismatch", "private metric observation set does not exactly match the accepted 42-label bundle")
+    _require(measured_count == EXPECTED_MEASURED_RECORD_COUNT, "measurement_count_mismatch", "private batch must contain exactly 24 measured rows")
+    _require(not_applicable_count == EXPECTED_NOT_APPLICABLE_RECORD_COUNT, "measurement_count_mismatch", "private batch must contain exactly 18 not-applicable rows")
     return value
 
 
@@ -171,13 +218,15 @@ def materialize_development_observations(
     acceptance_raw: Mapping[str, Any],
     completion_raw: Mapping[str, Any],
 ) -> tuple[CalibrationObservation, ...]:
-    """Join private metrics to accepted human labels inside the private execution boundary."""
+    """Join measured private metrics to accepted human labels inside the private boundary."""
 
     batch = validate_private_metric_batch(raw, authorization_raw, purpose_raw, acceptance_raw, completion_raw)
     completion = validate_reference_label_completion(completion_raw)
     labels = {record["observationId"]: record for record in completion["bundle"]["records"]}
     result: list[CalibrationObservation] = []
     for record in sorted(batch["records"], key=lambda item: item["observationId"]):
+        if record["measurementStatus"] != "measured":
+            continue
         reference = labels[record["observationId"]]
         result.append(
             CalibrationObservation(
@@ -195,7 +244,7 @@ def materialize_development_observations(
                 provenance_reference=record["provenanceReference"],
             )
         )
-    _require(len(result) == EXPECTED_RECORD_COUNT, "record_count_mismatch", "materialized observation count drifted")
+    _require(len(result) == EXPECTED_MEASURED_RECORD_COUNT, "measurement_count_mismatch", "materialized measured observation count drifted")
     return tuple(result)
 
 
@@ -209,17 +258,34 @@ def build_public_preparation_receipt(
     """Emit a public-safe digest/count receipt; never emits raw values or row identities."""
 
     batch = validate_private_metric_batch(raw, authorization_raw, purpose_raw, acceptance_raw, completion_raw)
-    counts = {finding: 0 for finding in sorted(METRIC_SPECS)}
+    counts = {
+        finding: {"total": 0, "measured": 0, "notApplicable": 0}
+        for finding in sorted(METRIC_SPECS)
+    }
+    measured_families: set[str] = set()
+    measured_count = 0
+    not_applicable_count = 0
     for record in batch["records"]:
-        counts[record["findingType"]] += 1
+        finding = record["findingType"]
+        counts[finding]["total"] += 1
+        if record["measurementStatus"] == "measured":
+            counts[finding]["measured"] += 1
+            measured_count += 1
+            measured_families.add(record["sourceFamilyId"])
+        else:
+            counts[finding]["notApplicable"] += 1
+            not_applicable_count += 1
     return {
         "schemaVersion": PRIVATE_METRIC_SCHEMA_VERSION,
         "contractVersion": RUNNER_CONTRACT_VERSION,
-        "status": "development_calibration_input_prepared",
+        "status": "development_calibration_input_prepared_with_abstentions",
         "privateMetricBatchDigest": {"algorithm": "sha256", "value": canonical_sha256(batch)},
         "authorizationDigest": {"algorithm": "sha256", "value": AUTHORIZATION_CANONICAL_SHA256},
         "referenceBundleDigest": {"algorithm": "sha256", "value": BUNDLE_CANONICAL_SHA256},
         "recordCount": EXPECTED_RECORD_COUNT,
+        "measuredRecordCount": measured_count,
+        "notApplicableRecordCount": not_applicable_count,
+        "measuredSourceFamilyCount": len(measured_families),
         "findingCounts": counts,
         "assertions": {
             "privateMetricRowsPublic": False,
@@ -228,7 +294,10 @@ def build_public_preparation_receipt(
             "sourceFamilyIdentityPublic": False,
             "artifactBytesPublic": False,
             "derivativeBytesPublic": False,
-            "candidateDerivationInputReady": True,
+            "candidateDerivationInputReady": measured_count > 0,
+            "fullMetricCoverage": not_applicable_count == 0,
+            "notApplicableMeasurementsPresent": not_applicable_count > 0,
+            "crossFamilyMeasuredSupportSatisfied": len(measured_families) >= 2,
             "realDataCalibrationExecuted": False,
             "thresholdsCalibrated": False,
             "resourceLimitsCalibrated": False,
@@ -245,8 +314,10 @@ def build_public_preparation_receipt(
 
 
 __all__ = [
-    "BOUNDED_UNIT_FINDINGS", "EXPECTED_RECORD_COUNT", "METRIC_SPECS",
-    "PRIVATE_METRIC_SCHEMA_VERSION", "RUNNER_CONTRACT_VERSION",
-    "Stage4DevelopmentCalibrationRunnerError", "build_public_preparation_receipt",
-    "materialize_development_observations", "validate_private_metric_batch",
+    "BARLEY_ID", "BEETHOVEN_ID", "BOUNDED_UNIT_FINDINGS", "EXPECTED_MEASURED_RECORD_COUNT",
+    "EXPECTED_NOT_APPLICABLE_RECORD_COUNT", "EXPECTED_RECORD_COUNT", "MEASUREMENT_STATUSES",
+    "METRIC_SPECS", "NOT_APPLICABLE_REASONS", "PRIVATE_METRIC_SCHEMA_VERSION",
+    "RUNNER_CONTRACT_VERSION", "Stage4DevelopmentCalibrationRunnerError",
+    "build_public_preparation_receipt", "materialize_development_observations",
+    "validate_private_metric_batch",
 ]
