@@ -1,4 +1,4 @@
-name: Acquire verified pypdfium2 5.13.0 wheel
+name: Acquire verified Stage 4 public runtime inputs
 
 on:
   push:
@@ -35,32 +35,71 @@ jobs:
           retention-days: 1
           compression-level: 0
 
-      - name: Download exact public wheel
+      - name: Set up CI-matching Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Record and package Python 3.12 runtime
         run: |
           set -euo pipefail
-          mkdir -p wheel
-          python -m pip download \
-            --no-deps \
-            --only-binary=:all: \
-            --platform manylinux2014_x86_64 \
-            --implementation py \
-            --python-version 311 \
-            --abi none \
-            --dest wheel \
-            pypdfium2==5.13.0
-          test "$(find wheel -maxdepth 1 -type f | wc -l)" -eq 1
-          test -f wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          python --version | tee /tmp/python-3.12-runtime-version.txt
+          python - <<'PY' | tee /tmp/python-3.12-runtime-identity.txt
+          import os, sys
+          print('executable=' + sys.executable)
+          print('prefix=' + sys.prefix)
+          print('pythonLocation=' + os.environ['pythonLocation'])
+          PY
+          tar -czf /tmp/python-3.12-ci-runtime.tar.gz -C "$pythonLocation" .
+          sha256sum /tmp/python-3.12-ci-runtime.tar.gz > /tmp/python-3.12-ci-runtime.tar.gz.sha256
 
-      - name: Verify exact wheel SHA-256
-        run: |
-          set -euo pipefail
-          echo "81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8  wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl" | sha256sum --check --strict
-
-      - name: Upload verified public wheel only
+      - name: Upload Python 3.12 runtime
         uses: actions/upload-artifact@v4
         with:
-          name: pypdfium2-5.13.0-linux-x86_64-verified
-          path: wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          name: python-3.12-ci-runtime
+          path: |
+            /tmp/python-3.12-ci-runtime.tar.gz
+            /tmp/python-3.12-ci-runtime.tar.gz.sha256
+            /tmp/python-3.12-runtime-version.txt
+            /tmp/python-3.12-runtime-identity.txt
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+      - name: Download exact public runtime wheels
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/runtime-wheels
+          python -m pip download \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock \
+            -d /tmp/runtime-wheels
+          test "$(find /tmp/runtime-wheels -maxdepth 1 -type f -name '*.whl' | wc -l)" -eq 3
+          sha256sum /tmp/runtime-wheels/*.whl | sort > /tmp/runtime-wheels/SHA256SUMS
+          python - <<'PY'
+          from pathlib import Path
+          names = sorted(p.name for p in Path('/tmp/runtime-wheels').glob('*.whl'))
+          assert any(n.startswith('numpy-2.3.5-') for n in names), names
+          assert any(n.startswith('opencv_python_headless-4.13.0.92-') for n in names), names
+          assert any(n.startswith('pypdfium2-5.13.0-') for n in names), names
+          print('\n'.join(names))
+          PY
+
+      - name: Verify exact pypdfium2 SHA-256
+        run: |
+          set -euo pipefail
+          wheel=$(find /tmp/runtime-wheels -maxdepth 1 -type f -name 'pypdfium2-5.13.0-*.whl' -print -quit)
+          test -n "$wheel"
+          actual=$(sha256sum "$wheel" | awk '{print $1}')
+          test "$actual" = "81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8"
+
+      - name: Upload exact public runtime wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage4-python312-runtime-wheels
+          path: /tmp/runtime-wheels/
           if-no-files-found: error
           retention-days: 1
           compression-level: 0
