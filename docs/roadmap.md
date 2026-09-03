@@ -1,10 +1,11 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Binding sequence; Stage 4 ACTIVE / NOT_READY after production-effective Wikimedia human-label completion  
+**Document status:** Binding sequence; Stage 4 ACTIVE / NOT_READY after production-effective Wikimedia reference-bundle acceptance  
 **Date:** 2026-09-03  
 **Tracking:** Issue #104  
 **Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / PR #125 / Run #324 (`33728459668`) SUCCESS  
-**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS  
+**Reference-bundle acceptance checkpoint:** main `3353b281a4022f107929fae296368390da45a4fb` / PR #130 / Run #348 (`33748180036`) SUCCESS
 
 ## Authority and invariants
 
@@ -46,7 +47,7 @@ Stage 3: COMPLETE / PASS / production-effective. Immutable digests: purpose `335
 - framework main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259;
 - entry/start digest `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`;
 - Beethoven+Barley purpose grant main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272; digest `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`;
-- accepted reference bundle main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282; bundle digest `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`; acceptance digest `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`;
+- accepted Beethoven+Barley reference bundle main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282; bundle digest `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`; acceptance digest `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`;
 - exact Beethoven+Barley execution authorization main `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287; digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
 
 The historical checkpoint **AUTHORIZED / NOT YET EXECUTED** remains immutable and therefore still carries `executed=false`; it is not current execution truth.
@@ -55,7 +56,7 @@ The historical checkpoint **AUTHORIZED / NOT YET EXECUTED** remains immutable an
 
 Beethoven + Barley execution later ran and abstained. Public-safe evidence records 42 identities = 24 measured + 18 `not_applicable`, 1 measured source family, and 0 threshold candidates. Thresholds/resource limits remain uncalibrated engineering defaults and the execution evidence is not governance-accepted.
 
-PR #125 added a separate Wikimedia raster development family, and PR #128 completed its genuine human review:
+PR #125 added a separate Wikimedia raster development family, PR #128 completed its genuine human review, and PR #130 separately accepted the exact completed reference bundle:
 
 - `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
 - `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
@@ -64,16 +65,19 @@ PR #125 added a separate Wikimedia raster development family, and PR #128 comple
 - purpose `safety_calibration` granted by a separate immutable overlay;
 - purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`;
 - separate human-label completion: production-effective via PR #128 / main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / Run #340;
-- 7/7 labels: `clear` (`skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`);
-- completion state `human_labels_complete_pending_separate_acceptance`;
+- **7/7 labels: `clear`** (`skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`);
+- immutable completion snapshot state `human_labels_complete_pending_separate_acceptance`;
 - original work package remains null-filled/pristine by design;
-- reference bundle not accepted;
-- candidate derivation not eligible;
+- separate reference-bundle acceptance: production-effective via PR #130 / main `3353b281a4022f107929fae296368390da45a4fb` / Run #348;
+- acceptance decision `ACCEPT_REAL_REFERENCE_BUNDLE`;
+- acceptance digest `79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3`;
+- reference bundle accepted: true;
+- candidate derivation eligible: true;
 - calibration execution not authorized and not executed;
 - production threshold/resource changes not authorized;
 - Chopin held-out boundary unchanged.
 
-Automated metrics/model predictions were not substituted for the human labels. Completion and governance acceptance remain separate gates.
+Automated metrics/model predictions were not substituted for the human labels. Completion, governance acceptance, execution authorization, execution evidence, and later development evidence acceptance remain separate gates.
 
 ### Remaining readiness blockers
 
@@ -81,7 +85,7 @@ Automated metrics/model predictions were not substituted for the human labels. C
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-PR #128 does not close blocker 1. The next gated chain is: separate immutable Wikimedia reference bundle → separate governance acceptance → exact execution authorization → custody-only real metrics → expanded development calibration → separate development evidence acceptance. If support is still insufficient, the method must abstain again.
+PR #130 does not close blocker 1. The next gated chain is: **separate exact Wikimedia expanded-development calibration execution authorization** → custody-only real metrics → expanded development calibration → separate development evidence acceptance. If support is still insufficient, the method must abstain again.
 
 ## Stages 5–12
 
