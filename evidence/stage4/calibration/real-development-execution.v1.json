@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "evidenceId": "stage4.real-development-calibration-execution.v1",
+  "state": "executed_abstained",
+  "executedOn": "2026-09-03",
+  "scope": {
+    "purpose": "safety_calibration",
+    "split": "development",
+    "dataClass": "real",
+    "environment": "stage1_offline",
+    "authorizedDatasetItemCount": 2,
+    "referenceRecordCount": 42,
+    "privateMetricRecordCount": 42,
+    "measuredRecordCount": 24,
+    "notApplicableRecordCount": 18,
+    "measuredSourceFamilyCount": 1
+  },
+  "bindings": {
+    "authorizationDigest": {"algorithm": "sha256", "value": "81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68"},
+    "referenceBundleDigest": {"algorithm": "sha256", "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"},
+    "privateMetricBatchDigest": {"algorithm": "sha256", "value": "5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079"},
+    "runnerContractVersion": "0.2.0",
+    "candidateDerivationMethodologyId": "strict_empirical_midpoint_boundary_v1"
+  },
+  "findingOutcomes": [
+    {"findingType": "blur", "metricName": "laplacianVariance", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 3, "possible": 1, "probable": 0, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]},
+    {"findingType": "compression", "metricName": "score", "status": "not_applicable", "measuredObservationCount": 0, "referenceClassCounts": {"clear": 0, "possible": 0, "probable": 0, "not_assessed": 0}, "reasonCodes": ["no_measured_development_observations"]},
+    {"findingType": "glare", "metricName": "score", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 4, "possible": 0, "probable": 0, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]},
+    {"findingType": "noise", "metricName": "residualP90", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 0, "possible": 3, "probable": 1, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]},
+    {"findingType": "shadow", "metricName": "strength", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 4, "possible": 0, "probable": 0, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]},
+    {"findingType": "skew", "metricName": "absoluteAngleDegrees", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 4, "possible": 0, "probable": 0, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]},
+    {"findingType": "uneven_lighting", "metricName": "coefficientOfVariation", "status": "abstained", "measuredObservationCount": 4, "referenceClassCounts": {"clear": 4, "possible": 0, "probable": 0, "not_assessed": 0}, "reasonCodes": ["insufficient_reference_class_support", "insufficient_source_family_support"]}
+  ],
+  "summary": {
+    "candidateDerivedCount": 0,
+    "abstainedFindingCount": 6,
+    "notApplicableFindingCount": 1,
+    "thresholdsCalibrated": false
+  },
+  "assertions": {
+    "realDataCalibrationExecuted": true,
+    "developmentEvidenceOnly": true,
+    "privateMetricRowsPublic": false,
+    "rawMetricValuesPublic": false,
+    "artifactBytesPublic": false,
+    "derivativeBytesPublic": false,
+    "heldOutThresholdTuningUsed": false,
+    "heldOutEvaluationUsed": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "metricAcceptanceTargetPolicyApplied": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "executionEvidenceAccepted": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  },
+  "evidenceDigest": {"algorithm": "sha256", "value": "0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a"}
+}
