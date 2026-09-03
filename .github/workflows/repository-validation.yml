@@ -226,6 +226,9 @@ jobs:
       - name: Validate Stage 4 post-Wikimedia current truth
         run: python tools/validate_stage4_post_wikimedia_current_truth.py
 
+      - name: Validate Stage 4 Wikimedia human-label ingestion gate
+        run: python tools/validate_stage4_wikimedia_reference_gate.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
