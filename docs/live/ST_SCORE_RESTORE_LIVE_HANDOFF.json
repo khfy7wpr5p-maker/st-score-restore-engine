@@ -2,7 +2,7 @@
   "schema_version": "1.19.0",
   "project": "ST Score Restore API / ST Score Restore Engine",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
-  "last_updated_at": "2026-09-03T10:00:00+03:00",
+  "last_updated_at": "2026-09-03T13:00:00+03:00",
   "execution_mode": "autonomous_with_objective_gates",
   "main_sha": "4a5c3db2d767dac235fe12a6bd0e18ba500e7362",
   "main_sha_scope": "Historical Stage 4 framework-start production anchor retained for architecture compatibility",
@@ -10,13 +10,25 @@
   "latest_main_ci_run_number": 259,
   "latest_main_ci_status": "success_python_3_11_and_3_12",
   "repository_main_sha": "76f5643dde72c8cc4b02b517133331e9dea00146",
-  "repository_main_sha_scope": "Historical execution-authorization production checkpoint retained for compatibility; use current_execution_truth for current production truth",
+  "repository_main_sha_scope": "Historical execution-authorization production checkpoint retained for compatibility; use repository_current_truth for repository state and current_execution_truth for execution state",
   "latest_repository_ci_run_id": 33686039783,
   "latest_repository_ci_run_number": 287,
   "latest_repository_ci_status": "success_python_3_11_and_3_12",
-  "active_branch": "stage4-real-execution-current-truth",
-  "active_pr": 124,
-  "active_pr_state": "real_execution_current_truth_checkpoint_in_progress",
+  "active_branch": "stage4-align-current-truth-after-wikimedia",
+  "active_pr": null,
+  "active_pr_state": "post_wikimedia_current_truth_alignment_in_progress",
+  "repository_current_truth": {
+    "main_sha": "9d2326931707f65c7eb5f5b22680e8fa85665a60",
+    "latest_merged_pr": 125,
+    "latest_merged_pr_title": "Stage 4: add Wikimedia development calibration expansion",
+    "merge_commit_sha": "9d2326931707f65c7eb5f5b22680e8fa85665a60",
+    "postmerge_ci_run_id": 33728459668,
+    "postmerge_ci_run_number": 324,
+    "postmerge_ci_status": "success_python_3_11_and_3_12",
+    "open_pull_request_count_at_checkpoint": 0,
+    "stage4_state": "ACTIVE_NOT_READY",
+    "stage5_state": "BLOCKED_PENDING_STAGE4_FINAL_EXIT_PASS"
+  },
   "stage1_exit_state": "pass_effective",
   "stage2_exit_state": "pass_effective",
   "stage3_exit_state": "pass_effective",
@@ -39,7 +51,8 @@
     "stage4_reference_bundle_acceptance_canonical_sha256": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c",
     "stage4_real_development_execution_authorization_canonical_sha256": "81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68",
     "stage4_private_metric_batch_sha256": "5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079",
-    "stage4_real_development_execution_evidence_canonical_sha256": "0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a"
+    "stage4_real_development_execution_evidence_canonical_sha256": "0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a",
+    "stage4_wikimedia_purpose_grant_canonical_sha256": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07"
   },
   "current_execution_truth": {
     "state": "real_development_calibration_executed_abstained_evidence_not_accepted",
@@ -67,7 +80,7 @@
     "production_resource_limit_changes_authorized": false,
     "stage4_exit_pass": false,
     "stage5_entry_authorized": false,
-    "next_dependency": "expand_development_corpus_with_additional_authorized_human_labelled_raster_source_families_and_reference_class_support"
+    "next_dependency": "wikimedia_human_reference_completion_external_evidence_gate"
   },
   "stage3": {
     "tracking_issue": 90,
@@ -216,18 +229,65 @@
         "insufficient_measured_source_family_support",
         "insufficient_reference_class_support"
       ]
+    },
+    "wikimedia_expansion": {
+      "merge_pr": 125,
+      "merge_commit_sha": "9d2326931707f65c7eb5f5b22680e8fa85665a60",
+      "postmerge_ci_run_id": 33728459668,
+      "postmerge_ci_run_number": 324,
+      "postmerge_ci_status": "success_python_3_11_and_3_12",
+      "dataset_item_id": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "source_family_id": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "artifact_sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+      "input_kind": "png",
+      "page_count": 1,
+      "split": "development",
+      "purpose": "safety_calibration",
+      "purpose_grant_canonical_sha256": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07",
+      "human_review_required": true,
+      "human_review_method": "human_expert_review",
+      "finding_slot_count": 7,
+      "finding_types": [
+        "skew",
+        "blur",
+        "glare",
+        "shadow",
+        "uneven_lighting",
+        "noise",
+        "compression"
+      ],
+      "allowed_labels": [
+        "clear",
+        "possible",
+        "probable",
+        "not_assessed"
+      ],
+      "human_labels_present": false,
+      "reference_bundle_accepted": false,
+      "calibration_execution_authorized": false,
+      "calibration_executed": false,
+      "model_predictions_allowed_as_reference": false,
+      "held_out_included": false,
+      "production_threshold_changes_authorized": false,
+      "production_resource_limit_changes_authorized": false,
+      "stage4_exit_pass": false,
+      "stage5_entry_authorized": false,
+      "external_evidence_gate": "awaiting_actual_human_expert_review"
     }
   },
   "hard_rules": [
     "Historical Stage 1, Stage 2, Stage 3 and earlier Stage 4 evidence remains immutable.",
-    "Stage 4 purpose grants and execution authorization are immutable overlays and do not rewrite historical catalog or acceptance claims.",
+    "Stage 4 purpose grants, reference acceptance, execution authorization, execution evidence and corpus-expansion overlays are separate immutable records.",
     "Execution authorization is exact-scope for Beethoven + Barley development safety_calibration only; the historical authorization snapshot remains separate from later execution evidence.",
-    "Private observation metrics are required for actual development calibration; the exact batch is available only inside custody and raw metric values remain forbidden in ordinary Git.",
-    "Real development execution has occurred and abstained; this does not imply evidence acceptance or threshold calibration.",
-    "Held-out evidence remains evaluation-only and never tunes thresholds or resource limits; the development execution decision does not authorize held-out evaluation.",
+    "Private observation metrics are custody-only and raw metric values remain forbidden in ordinary Git.",
+    "Real Beethoven + Barley development execution occurred and abstained; this does not imply evidence acceptance or threshold calibration.",
+    "Wikimedia expansion currently grants development purpose only; human labels, acceptance and execution authorization remain false until separate evidence exists.",
+    "Model or automatic predictions cannot be human reference truth.",
+    "Unavailable metrics use not_applicable; fabricated numeric placeholders are forbidden.",
+    "Held-out evidence remains evaluation-only and never tunes thresholds or resource limits.",
     "Stage 4 readiness cannot self-authorize Stage 4 PASS or Stage 5 entry.",
     "Production thresholds and resource limits remain unchanged until separate accepted evidence and final governance acceptance."
   ],
-  "next_safe_action": "Expand the development corpus with at least one separately authorized, human-labelled raster source family carrying comparable measured metrics and enough clear/possible/probable reference-class support. Do not touch Chopin tuning or change production thresholds/resources.",
-  "head_scope_note": "Historical top-level authorization fields are retained for compatibility. Current execution truth is in current_execution_truth and stage4.current_execution_truth: PR #123 is production-effective at main 4f0346345eb770628928ba1751b4a1d9d5fb51f1 / Run #304; the real Beethoven + Barley run executed and abstained, produced zero threshold candidates, and its execution evidence is not yet governance-accepted. Readiness remains NOT_READY with three prerequisite blockers."
+  "next_safe_action": "Prepare and validate the Wikimedia human-reference completion and separate acceptance path, but stop at the external evidence gate until genuine human_expert_review labels, opaque reviewer reference, provenance reference and ISO review date are supplied.",
+  "head_scope_note": "Historical top-level framework and execution-authorization fields are retained for compatibility. Repository current truth is repository_current_truth: PR #125 is production-effective at main 9d2326931707f65c7eb5f5b22680e8fa85665a60 / Run #324. Beethoven + Barley execution truth remains executed/abstained with zero candidates. Wikimedia adds one separate raster development source family but has no human labels, accepted reference bundle or calibration execution authorization. Stage 4 remains NOT_READY and Stage 5 remains BLOCKED."
 }
