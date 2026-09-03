@@ -20,6 +20,7 @@ PR #125 added a second raster development source family for future Stage 4 suppo
 - dataset item `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
 - source family `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
 - one-page PNG, development-only `safety_calibration` purpose grant;
+- immutable Wikimedia purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`;
 - human labels present: **false**;
 - Wikimedia reference bundle accepted: **false**;
 - Wikimedia real calibration execution authorized: **false**;
