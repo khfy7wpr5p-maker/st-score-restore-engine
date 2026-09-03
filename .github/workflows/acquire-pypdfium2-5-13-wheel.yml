@@ -1,0 +1,43 @@
+name: Acquire verified pypdfium2 5.13.0 wheel
+
+on:
+  push:
+    branches:
+      - ops-acquire-pypdfium2-5-13-wheel
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact public wheel
+        run: |
+          set -euo pipefail
+          mkdir -p wheel
+          python -m pip download \
+            --no-deps \
+            --only-binary=:all: \
+            --platform manylinux2014_x86_64 \
+            --implementation py \
+            --python-version 311 \
+            --abi none \
+            --dest wheel \
+            pypdfium2==5.13.0
+          test "$(find wheel -maxdepth 1 -type f | wc -l)" -eq 1
+          test -f wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+
+      - name: Verify exact SHA-256
+        run: |
+          set -euo pipefail
+          echo "81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8  wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl" | sha256sum --check --strict
+
+      - name: Upload verified public wheel only
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypdfium2-5.13.0-linux-x86_64-verified
+          path: wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
