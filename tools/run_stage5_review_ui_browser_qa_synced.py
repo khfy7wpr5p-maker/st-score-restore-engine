@@ -9,6 +9,7 @@ import run_stage5_review_ui_browser_qa as qa
 
 
 _ORIGINAL_EVALUATE = qa._evaluate
+_ORIGINAL_POLL_EVAL = qa._poll_eval
 _ORIGINAL_TEMPORARY_DIRECTORY = qa.tempfile.TemporaryDirectory
 _FIRST_APPROVE_CLICK = True
 
@@ -29,6 +30,12 @@ def _evaluate_after_ready(ws: qa.DevToolsWebSocket, expression: str):
     return _ORIGINAL_EVALUATE(ws, expression)
 
 
+def _poll_eval_after_review_navigation(ws: qa.DevToolsWebSocket, expression: str, *args, **kwargs):
+    if expression == "document.readyState === 'complete'":
+        expression = "location.pathname === '/review' && document.readyState === 'complete'"
+    return _ORIGINAL_POLL_EVAL(ws, expression, *args, **kwargs)
+
+
 def _temporary_directory_with_cleanup_race_tolerance(*args, **kwargs):
     """Tolerate Chrome's post-exit profile-file race without weakening QA assertions."""
 
@@ -42,9 +49,11 @@ def main() -> int:
     args = parser.parse_args()
 
     qa._evaluate = _evaluate_after_ready
+    qa._poll_eval = _poll_eval_after_review_navigation
     qa.tempfile.TemporaryDirectory = _temporary_directory_with_cleanup_race_tolerance
     result = qa.run_browser_qa()
     result["harnessSynchronization"] = {
+        "reviewNavigationWaitedForExpectedPath": True,
         "firstApproveWaitedUntilEnabled": True,
         "chromeProfileCleanupRaceToleratedAfterProcessExit": True,
         "uiBehaviorChanged": False,
