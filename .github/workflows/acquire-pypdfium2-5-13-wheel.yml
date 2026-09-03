@@ -12,6 +12,29 @@ jobs:
   acquire:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out exact production source snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: 551a91b8610b7dd3a35e949430f1b8728d8ee098
+          persist-credentials: false
+
+      - name: Package exact public source snapshot
+        run: |
+          set -euo pipefail
+          tar --exclude=.git -czf st-score-restore-engine-551a91b8-public-source.tar.gz .
+          sha256sum st-score-restore-engine-551a91b8-public-source.tar.gz > st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
+
+      - name: Upload exact public source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: st-score-restore-engine-551a91b8-public-source
+          path: |
+            st-score-restore-engine-551a91b8-public-source.tar.gz
+            st-score-restore-engine-551a91b8-public-source.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
       - name: Download exact public wheel
         run: |
           set -euo pipefail
@@ -28,7 +51,7 @@ jobs:
           test "$(find wheel -maxdepth 1 -type f | wc -l)" -eq 1
           test -f wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
-      - name: Verify exact SHA-256
+      - name: Verify exact wheel SHA-256
         run: |
           set -euo pipefail
           echo "81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8  wheel/pypdfium2-5.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl" | sha256sum --check --strict
