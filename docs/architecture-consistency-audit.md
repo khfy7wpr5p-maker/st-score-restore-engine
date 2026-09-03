@@ -1,9 +1,8 @@
 # Architecture Consistency Audit — 2026-09-03
 
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Current main:** `9d2326931707f65c7eb5f5b22680e8fa85665a60`  
-**Latest production merge:** PR #125 — `Stage 4: add Wikimedia development calibration expansion`  
-**Latest post-merge CI:** Run #324 (`33728459668`) SUCCESS  
+**Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / PR #125 / Run #324 (`33728459668`) SUCCESS  
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS  
 **Stage 1:** COMPLETE / PASS / production-effective  
 **Stage 2:** COMPLETE / PASS / production-effective  
 **Stage 3:** COMPLETE / PASS / production-effective  
@@ -12,7 +11,7 @@
 
 ## Authority
 
-Merged `main` plus accepted deterministic evidence is production truth. Historical evidence is immutable. Purpose grants, reference-bundle acceptance, execution authorization, execution evidence, and later corpus-expansion overlays are separate artifacts; later facts never rewrite earlier evidence.
+Merged `main` plus accepted deterministic evidence is production truth. Historical evidence is immutable. Purpose grants, human completion, reference-bundle acceptance, execution authorization, execution evidence, and later corpus-expansion overlays are separate artifacts; later facts never rewrite earlier evidence.
 
 ## Current findings
 
@@ -29,8 +28,10 @@ Merged `main` plus accepted deterministic evidence is production truth. Historic
 | Threshold candidates | 0 |
 | Development execution evidence accepted | false |
 | Wikimedia development expansion | production-effective via PR #125 / main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / Run #324 |
-| Wikimedia human labels | absent |
+| Wikimedia human labels | complete via separate PR #128 evidence: 7/7 `clear` |
+| Wikimedia completion state | `human_labels_complete_pending_separate_acceptance` |
 | Wikimedia reference bundle | not accepted |
+| Wikimedia candidate derivation | not eligible |
 | Wikimedia execution authorization | false |
 | Wikimedia execution | false |
 | Chopin | held-out only / development tuning forbidden |
@@ -57,19 +58,21 @@ The old authorization record remains **AUTHORIZED / NOT YET EXECUTED** with `exe
 
 The Beethoven+Barley run subsequently executed. Public-safe execution evidence digest is `0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a`; private metric-batch digest is `5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079`. The execution abstained because support was insufficient, so thresholds/resource limits remain uncalibrated.
 
-PR #125 adds a separate Wikimedia development purpose overlay with canonical digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07` for `dataset.item.wikimedia-guitar-technical-exercise-no1.v1` / `source.family.wikimedia-guitar-technical-exercise-no1.v1`.
+PR #125 added the separate Wikimedia development purpose overlay with canonical digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07` for `dataset.item.wikimedia-guitar-technical-exercise-no1.v1` / `source.family.wikimedia-guitar-technical-exercise-no1.v1`.
 
-The expansion currently authorizes only development `safety_calibration` purpose. It does **not** claim human completion, reference acceptance, execution authorization, execution, threshold calibration, production resource calibration, Stage 4 PASS, or Stage 5 entry.
+PR #128 then added separate human completion evidence from genuine `human_expert_review`: all seven findings are `clear`; work-package digest is `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`; completion bundle digest is `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`.
+
+The completion does **not** claim reference acceptance, candidate derivation eligibility, execution authorization, execution, threshold calibration, production resource calibration, Stage 4 PASS, or Stage 5 entry.
 
 ## Human-reference boundary
 
-The Wikimedia review work package must have exactly seven finding slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed labels: `clear`, `possible`, `probable`, `not_assessed`. Until actual human expert review occurs, every `referenceLabel`, `reviewerReference`, `provenanceReference`, and `reviewedOn` field remains null.
+The Wikimedia review work package has exactly seven finding slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed labels: `clear`, `possible`, `probable`, `not_assessed`. The original work package remains null-filled and immutable by design; completed human records are a separate evidence artifact.
 
-Model predictions, automated quality findings, or private raw metrics cannot be promoted to reference truth. Completion and acceptance remain separate decisions.
+Model predictions, automated quality findings, or private raw metrics cannot be promoted to reference truth. Human completion and governance acceptance remain separate decisions.
 
 ## Held-out boundary
 
-Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` only. It is excluded from Wikimedia development review and cannot derive/select/tune candidates. Development expansion does not authorize held-out evaluation.
+Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` only. It is excluded from Wikimedia development review and cannot derive/select/tune candidates. Development expansion or completion does not authorize held-out evaluation.
 
 ## Current readiness blockers
 
@@ -77,8 +80,8 @@ Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` on
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-Resolved historical blockers remain historical only; none of the three current blockers is closed by PR #125.
+Resolved historical blockers remain historical only; none of the three current blockers is closed by PR #128.
 
 ## Consistency conclusion
 
-The architecture is consistent only when two layers are kept distinct: historical checkpoints remain immutable, while explicit current-truth fields describe later execution and the Wikimedia expansion. Raw private metrics stay outside ordinary Git; unavailable metrics use `not_applicable`, not fabricated zeroes; insufficient evidence causes abstention; production thresholds/resources remain unchanged; Stage 4 PASS and Stage 5 entry remain false.
+The architecture is consistent only when historical checkpoints, immutable work-package templates, separate human completion evidence, governance acceptance, and execution evidence remain distinct. Raw private metrics stay outside ordinary Git; unavailable metrics use `not_applicable`, not fabricated zeroes; insufficient evidence causes abstention; production thresholds/resources remain unchanged; Stage 4 PASS and Stage 5 entry remain false.

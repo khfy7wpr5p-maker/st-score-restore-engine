@@ -1,11 +1,10 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Binding sequence; Stage 4 ACTIVE / NOT_READY after production-effective Wikimedia development expansion  
+**Document status:** Binding sequence; Stage 4 ACTIVE / NOT_READY after production-effective Wikimedia human-label completion  
 **Date:** 2026-09-03  
 **Tracking:** Issue #104  
-**Current repository main:** `9d2326931707f65c7eb5f5b22680e8fa85665a60`  
-**Latest production merge:** PR #125 — `Stage 4: add Wikimedia development calibration expansion`  
-**Latest post-merge CI:** Run #324 (`33728459668`) SUCCESS
+**Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / PR #125 / Run #324 (`33728459668`) SUCCESS  
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS
 
 ## Authority and invariants
 
@@ -56,7 +55,7 @@ The historical checkpoint **AUTHORIZED / NOT YET EXECUTED** remains immutable an
 
 Beethoven + Barley execution later ran and abstained. Public-safe evidence records 42 identities = 24 measured + 18 `not_applicable`, 1 measured source family, and 0 threshold candidates. Thresholds/resource limits remain uncalibrated engineering defaults and the execution evidence is not governance-accepted.
 
-PR #125 adds a separate Wikimedia raster development family:
+PR #125 added a separate Wikimedia raster development family, and PR #128 completed its genuine human review:
 
 - `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
 - `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
@@ -64,13 +63,17 @@ PR #125 adds a separate Wikimedia raster development family:
 - split `development`;
 - purpose `safety_calibration` granted by a separate immutable overlay;
 - purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`;
-- human labels absent;
+- separate human-label completion: production-effective via PR #128 / main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / Run #340;
+- 7/7 labels: `clear` (`skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`);
+- completion state `human_labels_complete_pending_separate_acceptance`;
+- original work package remains null-filled/pristine by design;
 - reference bundle not accepted;
+- candidate derivation not eligible;
 - calibration execution not authorized and not executed;
 - production threshold/resource changes not authorized;
 - Chopin held-out boundary unchanged.
 
-The human work package contains exactly seven slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed labels are `clear`, `possible`, `probable`, `not_assessed`. All label/provenance/reviewer/date fields remain empty until actual human review. Automated metrics/model predictions cannot be substituted.
+Automated metrics/model predictions were not substituted for the human labels. Completion and governance acceptance remain separate gates.
 
 ### Remaining readiness blockers
 
@@ -78,7 +81,7 @@ The human work package contains exactly seven slots: `skew`, `blur`, `glare`, `s
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-PR #125 does not close blocker 1. The next gated chain is: real human Wikimedia labels → separate immutable reference bundle → separate governance acceptance → exact execution authorization → custody-only real metrics → expanded development calibration → separate development evidence acceptance. If support is still insufficient, the method must abstain again.
+PR #128 does not close blocker 1. The next gated chain is: separate immutable Wikimedia reference bundle → separate governance acceptance → exact execution authorization → custody-only real metrics → expanded development calibration → separate development evidence acceptance. If support is still insufficient, the method must abstain again.
 
 ## Stages 5–12
 
