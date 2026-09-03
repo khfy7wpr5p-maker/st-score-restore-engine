@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage4.held-out-evaluation-evidence-review-authorization.chopin-op69.v1",
+  "decision": "AUTHORIZE_STAGE4_HELD_OUT_EVALUATION_EVIDENCE_REVIEW",
+  "authorizedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-06",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "scope": {
+    "stage": 4,
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+    "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "reuseExistingRealExecutionEvidence": true,
+    "newArtifactExecutionRequired": false,
+    "candidateDerivationAuthorized": false,
+    "thresholdTuningAuthorized": false,
+    "evaluationFeedbackIntoCandidateAuthorized": false
+  },
+  "bindings": {
+    "stage3RealCorpusExecutionEvidenceDigest": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "stage3ExitAcceptanceDigest": "e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90",
+    "stage4ExpandedDevelopmentExecutionAcceptanceDigest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "stage4MetricPolicyAcceptanceDigest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801"
+  },
+  "assertions": {
+    "historicalHeldOutPurposeAuthorizationPreserved": true,
+    "historicalRealHeldOutExecutionPresent": true,
+    "stage4HeldOutEvidenceReviewAuthorized": true,
+    "stage4HeldOutEvidenceAccepted": false,
+    "heldOutThresholdTuningAuthorized": false,
+    "heldOutThresholdTuningUsed": false,
+    "evaluationFedBackIntoCandidate": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}

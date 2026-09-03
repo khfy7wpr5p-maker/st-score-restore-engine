@@ -37,6 +37,7 @@ EXPECTED_CANDIDATE_BLOCKERS = {
 }
 EXPECTED_GOVERNANCE_FILES = [
     "expanded-development-calibration-execution-authorization.v1.json",
+    "held-out-evaluation-evidence-review-authorization.v1.json",
     "purpose-grants.v1.json",
     "real-development-calibration-execution-authorization.v1.json",
     "stage4-entry-start.v1.json",

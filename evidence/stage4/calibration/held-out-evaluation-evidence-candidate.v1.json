@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "evidenceId": "stage4.held-out-evaluation-evidence.chopin-op69.zero-candidate.v1",
+  "state": "ready_pending_separate_acceptance",
+  "evaluatedOn": "2026-09-03",
+  "mode": "zero_candidate_safe_abstention",
+  "scope": {
+    "stage": 4,
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+    "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation"
+  },
+  "bindings": {
+    "reviewAuthorizationDigest": "934bb1cac10a6c421923aeb72741cc63097983b7c50d4326d1b9f12dc5d7eb38",
+    "stage3RealCorpusExecutionEvidenceDigest": "a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6",
+    "stage3HeldOutReceiptDigest": "6c61bfcc1197779aa6fc7de68d536a39b2fba62c230cafdee50d5616005e1ce9",
+    "stage3ExitAcceptanceDigest": "e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90",
+    "stage4ExpandedDevelopmentExecutionAcceptanceDigest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "stage4MetricPolicyAcceptanceDigest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801"
+  },
+  "realExecutionReceipt": {
+    "status": "completed",
+    "purpose": "held_out_evaluation",
+    "split": "held_out",
+    "environment": "stage1_offline",
+    "storageClass": "managed_standard",
+    "sourceSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "byteSize": 1114479,
+    "pageCount": 8,
+    "renderedPageCount": 8,
+    "pageOrderPreserved": true,
+    "exactDigestMatched": true,
+    "exactByteSizeMatched": true
+  },
+  "evaluationSummary": {
+    "candidateDerivedCount": 0,
+    "candidateAppliedCount": 0,
+    "assessedCandidateCount": 0,
+    "coverageRate": 0.0,
+    "notAssessedRate": "not_applicable",
+    "exactMatchRate": "not_applicable",
+    "falseNegativeRate": "not_applicable",
+    "falsePositiveRate": "not_applicable",
+    "sourceFamilyLeakageCount": 0,
+    "heldOutThresholdTuningUsed": false,
+    "evaluationFedBackIntoCandidate": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "decision": "ELIGIBLE_FOR_SEPARATE_HELD_OUT_EVIDENCE_ACCEPTANCE_REVIEW"
+  },
+  "limitations": [
+    "This Stage 4 evidence reuses the immutable real Stage 3 held-out execution receipt; no second artifact execution is required for zero-candidate safe-abstention review.",
+    "The accepted development result derived zero threshold candidates, so exact-match, false-negative and false-positive rates are not applicable rather than numeric zero.",
+    "This evidence does not establish musical correctness, OMR improvement, restoration effectiveness, representativeness or absence of bias.",
+    "Held-out data is evaluation-only and is not used to tune thresholds, resource limits or candidate derivation."
+  ],
+  "assertions": {
+    "realHeldOutArtifactPreviouslyExecuted": true,
+    "stage4HeldOutEvidenceBridgePerformed": true,
+    "newHeldOutArtifactExecutionPerformed": false,
+    "heldOutEvaluationEvidenceAccepted": false,
+    "heldOutThresholdTuningUsed": false,
+    "evaluationFedBackIntoCandidate": false,
+    "candidateThresholdsAccepted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
