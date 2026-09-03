@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage4.metric-acceptance-target-policy-acceptance.v1",
+  "decision": "ACCEPT_STAGE4_METRIC_ACCEPTANCE_TARGET_POLICY",
+  "acceptedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-05",
+  "acceptanceSourceCode": "explicit_user_authorization",
+  "policyCandidateDigest": {
+    "algorithm": "sha256",
+    "value": "aed1b8964d2f08dffed34bf48c9339bb88249d6175b77ebe9b923c62595e557f"
+  },
+  "policyId": "stage4.metric-acceptance-target-policy-candidate.v1",
+  "policyVersion": "0.1.0",
+  "scope": {
+    "stage": 4,
+    "purpose": "safety_calibration",
+    "appliesTo": "held_out_evaluation_acceptance_review",
+    "heldOutDatasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "currentMode": "zero_candidate_safe_abstention",
+    "numericCandidateThresholdAcceptanceAuthorized": false
+  },
+  "acceptedTargets": {
+    "sourceFamilyLeakageCount": 0,
+    "heldOutThresholdTuningUsed": false,
+    "evaluationFedBackIntoCandidate": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "zeroCandidateCoverageMayBeZero": true,
+    "rateMetricsNotApplicableWhenAssessedCountZero": true
+  },
+  "futureCandidatePolicy": {
+    "whenCandidateDerivedCountGreaterThan": 0,
+    "decision": "BLOCK_PENDING_SEPARATE_NUMERIC_TARGET_ADDENDUM",
+    "numericTargetAddendumRequired": true,
+    "automaticThresholdAcceptanceAuthorized": false
+  },
+  "assertions": {
+    "metricAcceptanceTargetPolicyAccepted": true,
+    "zeroCandidateSafeAbstentionPolicyAccepted": true,
+    "inventedNumericPerformanceTargetsAllowed": false,
+    "heldOutEvaluationAuthorized": false,
+    "heldOutEvaluationUsed": false,
+    "heldOutThresholdTuningAuthorized": false,
+    "heldOutThresholdTuningUsed": false,
+    "candidateThresholdsAccepted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
