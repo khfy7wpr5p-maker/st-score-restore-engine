@@ -235,6 +235,9 @@ jobs:
       - name: Validate Stage 4 post-Wikimedia acceptance current truth
         run: python tools/validate_stage4_post_wikimedia_acceptance_current_truth.py
 
+      - name: Validate Stage 4 Wikimedia-expanded development calibration execution authorization
+        run: python tools/validate_stage4_wikimedia_expanded_execution_authorization.py
+
       - name: Run tests
         run: |
           python -m unittest discover -s tests -p "test_*.py" -v
