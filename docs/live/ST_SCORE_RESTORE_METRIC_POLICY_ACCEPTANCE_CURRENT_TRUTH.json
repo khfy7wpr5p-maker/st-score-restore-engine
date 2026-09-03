@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage4_metric_acceptance_target_policy_acceptance_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "2b0eff6b9ef340a2b697b9965c3a88cb5b78e2ce",
+    "merge_pr": 142,
+    "merge_pr_title": "Stage 4: accept metric acceptance target policy",
+    "postmerge_ci_run_id": 33769155053,
+    "postmerge_ci_run_number": 378,
+    "postmerge_ci_status": "success_python_3_11_and_3_12"
+  },
+  "accepted_metric_policy": {
+    "acceptance_decision": "ACCEPT_STAGE4_METRIC_ACCEPTANCE_TARGET_POLICY",
+    "acceptance_digest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801",
+    "policy_candidate_digest": "aed1b8964d2f08dffed34bf48c9339bb88249d6175b77ebe9b923c62595e557f",
+    "policy_id": "stage4.metric-acceptance-target-policy-candidate.v1",
+    "policy_version": "0.1.0",
+    "metric_acceptance_target_policy_accepted": true,
+    "current_mode": "zero_candidate_safe_abstention",
+    "future_candidate_requires_numeric_target_addendum": true,
+    "numeric_candidate_threshold_acceptance_authorized": false
+  },
+  "evidence_basis": {
+    "accepted_real_development_evidence_count": 1,
+    "development_execution_acceptance_digest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "development_execution_evidence_digest": "552a85a68dd789bd00dc4cb7ce6db38078a77c45297a7e5f716d008eae908b0c",
+    "candidate_derived_count": 0,
+    "production_configuration_state": "uncalibrated_engineering_defaults"
+  },
+  "held_out": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "evaluation_authorized": false,
+    "evaluation_used": false,
+    "tuning_authorized": false,
+    "tuning_used": false
+  },
+  "readiness": {
+    "decision": "NOT_READY",
+    "accepted_real_development_evidence_count": 1,
+    "accepted_metric_target_policy": true,
+    "remaining_blocker_count": 1,
+    "remaining_blocker_codes": [
+      "no_real_held_out_evaluation_evidence_is_accepted"
+    ]
+  },
+  "assertions": {
+    "metric_policy_blocker_resolved": true,
+    "held_out_evaluation_authorized": false,
+    "held_out_evaluation_used": false,
+    "candidate_thresholds_accepted": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  },
+  "next_safe_boundary": "separate_stage4_held_out_evaluation_authorization_then_execution_and_evidence_acceptance",
+  "compatibility_note": "This later overlay records the production-effective acceptance of the exact metric-policy candidate from PR #142. Earlier candidate and development-evidence checkpoints remain immutable. Policy acceptance resolves only the metric-policy readiness prerequisite; it does not authorize or execute held-out evaluation/tuning, accept threshold candidates, calibrate thresholds/resources, grant Stage 4 PASS, or authorize Stage 5 entry."
+}
