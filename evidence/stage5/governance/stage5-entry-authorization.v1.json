@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage5.entry-governance-authorization.v1",
+  "decision": "AUTHORIZE_STAGE5_ENTRY",
+  "authorizedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-09",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "stage4FinalAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c"
+  },
+  "stage4ProductionCheckpoint": {
+    "mainSha": "1fb047a4f9314e0414063f8a75bd1526a586f2ca",
+    "finalExitPass": true,
+    "repositoryValidationRunNumber": 397,
+    "stage4GovernanceRunNumber": 8,
+    "python311": "success",
+    "python312": "success"
+  },
+  "stage5Purpose": "accessible_teacher_review_interface",
+  "scope": {
+    "stage5EntryEligible": true,
+    "stage5EntryAuthorized": true,
+    "stage5Started": false,
+    "teacherReviewInterfaceImplementationAuthorized": false,
+    "teacherReviewInterfaceExecutionAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "identityNetworkInfrastructureAuthorized": false,
+    "previewReleaseAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "safetyBoundaries": {
+    "historicalEvidenceImmutable": true,
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "rawPrivateMetricsInOrdinaryGit": false,
+    "stage4FinalPassMustRemainTrue": true,
+    "stage5StartRequiresSeparateAuthorization": true,
+    "stage6EntryAuthorized": false
+  },
+  "nextSafeBoundary": "separate_explicit_stage5_framework_start_authorization"
+}
