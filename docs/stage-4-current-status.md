@@ -5,7 +5,8 @@
 **Repository current main:** `9d2326931707f65c7eb5f5b22680e8fa85665a60`  
 **Latest production merge:** PR #125 — `Stage 4: add Wikimedia development calibration expansion`  
 **Latest post-merge CI:** Run #324 (`33728459668`) SUCCESS on Python 3.11 / 3.12  
-**Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS
+**Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS  
+**Calibration state:** `uncalibrated_engineering_defaults`
 
 ## Current execution truth
 
