@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage4.held-out-evaluation-evidence-acceptance.chopin-op69.v1",
+  "decision": "ACCEPT_STAGE4_HELD_OUT_EVALUATION_EVIDENCE",
+  "acceptedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-07",
+  "acceptanceSourceCode": "explicit_user_authorization",
+  "heldOutEvaluationEvidenceDigest": {
+    "algorithm": "sha256",
+    "value": "45dc380effe34d7f35ec9af2f05f802eaca9194fa8a889d1aaefae87c5221219"
+  },
+  "reviewAuthorizationDigest": {
+    "algorithm": "sha256",
+    "value": "934bb1cac10a6c421923aeb72741cc63097983b7c50d4326d1b9f12dc5d7eb38"
+  },
+  "stage3HeldOutReceiptDigest": {
+    "algorithm": "sha256",
+    "value": "6c61bfcc1197779aa6fc7de68d536a39b2fba62c230cafdee50d5616005e1ce9"
+  },
+  "stage4ExpandedDevelopmentExecutionAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396"
+  },
+  "stage4MetricPolicyAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801"
+  },
+  "scope": {
+    "stage": 4,
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+    "artifactSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "mode": "zero_candidate_safe_abstention",
+    "realExecutionState": "previously_completed_stage3",
+    "candidateDerivedCount": 0,
+    "candidateAppliedCount": 0,
+    "assessedCandidateCount": 0,
+    "coverageRate": 0.0,
+    "notAssessedRate": "not_applicable",
+    "exactMatchRate": "not_applicable",
+    "falseNegativeRate": "not_applicable",
+    "falsePositiveRate": "not_applicable",
+    "sourceFamilyLeakageCount": 0,
+    "heldOutThresholdTuningUsed": false,
+    "evaluationFedBackIntoCandidate": false
+  },
+  "assertions": {
+    "heldOutEvaluationEvidenceAccepted": true,
+    "realHeldOutArtifactPreviouslyExecuted": true,
+    "historicalEvidenceRewritten": false,
+    "newHeldOutArtifactExecutionPerformed": false,
+    "rateMetricsNotApplicableWhenAssessedCountZero": true,
+    "candidateThresholdsAccepted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "finalGovernanceAcceptanceStillRequired": true,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
