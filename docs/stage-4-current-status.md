@@ -4,6 +4,7 @@
 **Tracking:** Issue #104  
 **Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / PR #125 / Run #324 (`33728459668`) SUCCESS  
 **Wikimedia human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS on Python 3.11 / 3.12  
+**Wikimedia reference-bundle acceptance checkpoint:** main `3353b281a4022f107929fae296368390da45a4fb` / PR #130 / Run #348 (`33748180036`) SUCCESS on Python 3.11 / 3.12  
 **Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS  
 **Calibration state:** `uncalibrated_engineering_defaults`
 
@@ -35,9 +36,9 @@ This section preserves immutable earlier Stage 4 checkpoints required by validat
 - That immutable authorization artifact also records `realDataCalibrationExecuted=false`; it describes the pre-execution checkpoint and is not retroactively rewritten after the later real run executed.
 - At that checkpoint, **private observation metrics** were the explicit execution dependency. They later became available in approved custody for the Beethoven+Barley run; raw values remain outside ordinary Git.
 
-## Wikimedia development expansion and human completion — production-effective
+## Wikimedia development expansion, human completion, and reference acceptance — production-effective
 
-PR #125 added a separate development-only raster family after the previous execution abstained. PR #128 subsequently froze the genuine human review completion as separate evidence:
+PR #125 added a separate development-only raster family after the previous execution abstained. PR #128 subsequently froze the genuine human review completion as separate evidence. PR #130 separately accepted that exact completed reference bundle for development candidate derivation:
 
 - dataset item: `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
 - source family: `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
@@ -49,12 +50,15 @@ PR #125 added a separate development-only raster family after the previous execu
 - human labels present in separate completion evidence: true;
 - human label completion: **7/7 `clear`**;
 - labels: `skew=clear`, `blur=clear`, `glare=clear`, `shadow=clear`, `uneven_lighting=clear`, `noise=clear`, `compression=clear`;
-- completion state: `human_labels_complete_pending_separate_acceptance`;
+- immutable completion snapshot state: `human_labels_complete_pending_separate_acceptance`;
 - completion work-package digest: `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`;
 - completion bundle digest: `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`;
 - original review work package remains null-filled/pristine by design;
-- reference bundle accepted: false;
-- candidate derivation eligible: false;
+- separate acceptance decision: `ACCEPT_REAL_REFERENCE_BUNDLE`;
+- acceptance digest: `79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3`;
+- accepted reference receipt digest: `036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801`;
+- reference bundle accepted: true;
+- candidate derivation eligible: true;
 - Wikimedia calibration execution authorized: false;
 - Wikimedia calibration executed: false;
 - production threshold changes authorized: false;
@@ -62,7 +66,7 @@ PR #125 added a separate development-only raster family after the previous execu
 - Stage 4 exit pass: false;
 - Stage 5 entry authorized: false.
 
-The review package contains exactly seven slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed labels are `clear`, `possible`, `probable`, `not_assessed`. The immutable work-package fields `referenceLabel`, `reviewerReference`, `provenanceReference`, and `reviewedOn` remain null; completed records are stored separately in `human-label-completion.v1.json`. Model predictions or automated metrics cannot be used as reference truth.
+The review package contains exactly seven slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed labels are `clear`, `possible`, `probable`, `not_assessed`. The immutable work-package fields `referenceLabel`, `reviewerReference`, `provenanceReference`, and `reviewedOn` remain null; completed records are stored separately in `human-label-completion.v1.json`, and the later governance decision is stored separately in `reference-bundle-acceptance.v1.json`. Model predictions or automated metrics cannot be used as reference truth.
 
 Chopin `dataset.item.imslp82860-chopin-op69.v2` remains isolated as `held_out_evaluation`; it is excluded from Wikimedia development review and candidate derivation/tuning remains forbidden.
 
@@ -90,21 +94,25 @@ Historical checkpoints remain immutable:
 - Wikimedia development expansion: PR #125 exact head `a99eb1dcaf30aa6e9a062f9e47519fdd2c3dbe22` → main `9d2326931707f65c7eb5f5b22680e8fa85665a60` → Run #324 (`33728459668`) SUCCESS.
 - Wikimedia human-label ingestion gate: PR #127 → main `b2b3ee3f48cd22a0f36c578729603ce089daa813` → Run #338 SUCCESS.
 - Wikimedia human-label completion: PR #128 exact head `5c42b6a93f2ad2e023b642d310c2e066ab12222b` → Run #339 → main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` → Run #340 SUCCESS.
+- Wikimedia human-reference current-truth alignment: PR #129 → main `4f251385b9c19196ada1c5f670f3f4a7cec1baf4` → Run #346 SUCCESS.
+- Wikimedia reference-bundle acceptance: PR #130 exact head `bf48b499e55c3ef8e3bee862762d9a5db164afd9` → Run #347 → main `3353b281a4022f107929fae296368390da45a4fb` → Run #348 SUCCESS.
 
 ## Binding evidence digests
 
 - Stage 4 entry/start: `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`.
 - Beethoven+Barley safety-calibration purpose grant: `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`.
 - Accepted Beethoven+Barley reference bundle: `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`.
-- Reference-bundle acceptance: `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`.
+- Beethoven+Barley reference-bundle acceptance: `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`.
 - Historical execution authorization: `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
 - Private metric batch: `5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079`.
 - Real development execution evidence: `0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a`.
 - Wikimedia purpose-grant overlay: `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`.
 - Wikimedia human completion work-package digest: `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`.
 - Wikimedia human completion bundle digest: `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`.
+- Wikimedia accepted reference receipt digest: `036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801`.
+- Wikimedia reference-bundle acceptance digest: `79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3`.
 
-The historical execution-authorization evidence remains **AUTHORIZED / NOT YET EXECUTED** with `executed=false`; this is a historical snapshot and is not rewritten after later execution.
+The historical Beethoven+Barley execution-authorization evidence remains **AUTHORIZED / NOT YET EXECUTED** with `executed=false`; this is a historical snapshot and is not rewritten after later execution.
 
 ## Historical Stage 3 bindings retained
 
@@ -116,8 +124,8 @@ Stage 3 remains COMPLETE / PASS with immutable digests: purpose `3350b85407b783f
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-Wikimedia human-label completion does not resolve blocker 1. Acceptance, execution authorization, private execution, and governance acceptance remain separate.
+Wikimedia reference-bundle acceptance does not resolve blocker 1. Exact execution authorization, private execution, and later governance acceptance remain separate.
 
 ## Next safe boundary
 
-The next substantive dependency is a **separate governance acceptance decision** for the completed Wikimedia human-reference evidence. Until that separate acceptance exists, no accepted reference bundle, candidate derivation eligibility, calibration execution authorization, private metric result, threshold candidate, Stage 4 PASS, or Stage 5 entry may be claimed.
+The next substantive dependency is a **separate exact Wikimedia expanded-development calibration execution authorization**. Reference acceptance alone does not authorize execution. Until that separate authorization exists, no Wikimedia calibration execution, private metric result, threshold candidate from this expansion, Stage 4 PASS, or Stage 5 entry may be claimed.
