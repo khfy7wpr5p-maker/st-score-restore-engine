@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0.0",
+  "document_type": "stage4_held_out_evidence_acceptance_current_truth",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "25e89d1fbdc1cdd73dddaba82e34257ed3f220cb",
+    "merge_pr": 146,
+    "merge_pr_title": "Stage 4: accept Chopin held-out evaluation evidence",
+    "exact_head_sha": "971c606c5ddee4f201df677c0c4f9b01a8040182",
+    "exact_head_run": {
+      "run_number": 386,
+      "run_id": 33774353423,
+      "python_311": "success",
+      "python_312": "success"
+    },
+    "postmerge_run": {
+      "run_number": 387,
+      "run_id": 33774503172,
+      "python_311": "success",
+      "python_312": "success"
+    }
+  },
+  "accepted_held_out_evidence": {
+    "decision": "ACCEPT_STAGE4_HELD_OUT_EVALUATION_EVIDENCE",
+    "acceptance_digest": "ff0bdcb8820ba774cebc46265eb36ee0278b591a316ca619d2540d06d3a45164",
+    "evidence_candidate_digest": "45dc380effe34d7f35ec9af2f05f802eaca9194fa8a889d1aaefae87c5221219",
+    "review_authorization_digest": "934bb1cac10a6c421923aeb72741cc63097983b7c50d4326d1b9f12dc5d7eb38",
+    "stage3_held_out_receipt_digest": "6c61bfcc1197779aa6fc7de68d536a39b2fba62c230cafdee50d5616005e1ce9",
+    "expanded_development_execution_acceptance_digest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "metric_policy_acceptance_digest": "bf62d308f70ca44db617cf2968485e422627abfce70643c78b4da20d58d04801",
+    "held_out_evaluation_evidence_accepted": true,
+    "historical_candidate_rewritten": false
+  },
+  "held_out_scope": {
+    "dataset_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "source_family_id": "source.family.imslp82860-chopin-op69.v1",
+    "artifact_sha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "mode": "zero_candidate_safe_abstention",
+    "real_execution_state": "previously_completed_stage3",
+    "new_held_out_execution_performed": false,
+    "candidate_derived_count": 0,
+    "candidate_applied_count": 0,
+    "assessed_candidate_count": 0,
+    "coverage_rate": 0.0,
+    "not_assessed_rate": "not_applicable",
+    "exact_match_rate": "not_applicable",
+    "false_negative_rate": "not_applicable",
+    "false_positive_rate": "not_applicable",
+    "source_family_leakage_count": 0,
+    "held_out_threshold_tuning_used": false,
+    "evaluation_fed_back_into_candidate": false
+  },
+  "stage4_readiness": {
+    "decision": "READY_FOR_FINAL_ACCEPTANCE_REVIEW",
+    "readiness_digest": "8b31b0dc92d931fa9e7b56a7912ecd1127e74ad0672d03d50526160936a32d0b",
+    "readiness_prerequisites_satisfied": true,
+    "blocker_count": 0,
+    "blocker_codes": [],
+    "final_governance_acceptance_still_required": true,
+    "next_safe_boundary": "separate_explicit_stage4_final_exit_governance_acceptance"
+  },
+  "calibration_and_production_state": {
+    "candidate_thresholds_accepted": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "production_configuration_state": "uncalibrated_engineering_defaults",
+    "production_threshold_change_authorized": false,
+    "production_resource_limit_change_authorized": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "held_out_evaluation_evidence_accepted": true,
+    "held_out_tuning_used": false,
+    "evaluation_fed_back_into_candidate": false,
+    "readiness_prerequisites_satisfied": true,
+    "final_governance_acceptance_still_required": true,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false
+  },
+  "compatibility_note": "This overlay records the production-effective held-out evidence acceptance from PR #146. Earlier Stage 3 execution evidence, held-out bridge candidate, development evidence acceptance, metric-policy acceptance, and current-truth checkpoints remain immutable. Zero blockers means only READY_FOR_FINAL_ACCEPTANCE_REVIEW; it does not itself grant Stage 4 PASS or Stage 5 entry."
+}
