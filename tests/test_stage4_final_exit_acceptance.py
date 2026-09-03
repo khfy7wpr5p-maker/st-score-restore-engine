@@ -14,7 +14,7 @@ from st_score_restore.stage4_final_exit_acceptance import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-ACCEPTANCE = ROOT / "evidence/stage4/governance/stage4-final-exit-acceptance.v1.json"
+ACCEPTANCE = ROOT / "evidence/stage4/final-exit/stage4-final-exit-acceptance.v1.json"
 DEVELOPMENT = ROOT / "evidence/stage4/calibration/expanded-real-development-execution-acceptance.v1.json"
 METRIC_POLICY = ROOT / "evidence/stage4/calibration/metric-acceptance-target-policy-acceptance.v1.json"
 HELD_OUT = ROOT / "evidence/stage4/calibration/held-out-evaluation-evidence-acceptance.v1.json"
