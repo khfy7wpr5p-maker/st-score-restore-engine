@@ -63,6 +63,7 @@ PR #125 adds a separate Wikimedia raster development family:
 - one-page PNG;
 - split `development`;
 - purpose `safety_calibration` granted by a separate immutable overlay;
+- purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`;
 - human labels absent;
 - reference bundle not accepted;
 - calibration execution not authorized and not executed;
