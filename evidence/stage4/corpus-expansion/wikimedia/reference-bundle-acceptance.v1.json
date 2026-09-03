@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage4.reference-label-acceptance.wikimedia-guitar-technical-exercise.v1",
+  "decision": "ACCEPT_REAL_REFERENCE_BUNDLE",
+  "acceptedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-02",
+  "acceptanceSourceCode": "explicit_user_authorization",
+  "completionDigest": {
+    "algorithm": "sha256",
+    "value": "50b593bdf15812eec28a77e2897ba222686410a8f22827592392b64a03353094"
+  },
+  "workPackageDigest": {
+    "algorithm": "sha256",
+    "value": "9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c"
+  },
+  "purposeGrantDigest": {
+    "algorithm": "sha256",
+    "value": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07"
+  },
+  "bundleDigest": {
+    "algorithm": "sha256",
+    "value": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+  },
+  "acceptedReferenceReceipt": {
+    "schemaVersion": "1.0.0",
+    "contractVersion": "0.1.0",
+    "status": "reference_bundle_frozen",
+    "bundleId": "stage4.reference-labels.wikimedia-guitar-technical-exercise.development.v1",
+    "bundleDigest": {
+      "algorithm": "sha256",
+      "value": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+    },
+    "scope": {
+      "split": "development",
+      "dataClass": "real",
+      "purpose": "safety_calibration",
+      "recordCount": 7,
+      "datasetItemCount": 1,
+      "sourceFamilyCount": 1,
+      "labelCounts": {
+        "clear": 7,
+        "not_assessed": 0,
+        "possible": 0,
+        "probable": 0
+      },
+      "reviewMethods": [
+        "human_expert_review"
+      ]
+    },
+    "assertions": {
+      "labelsAutomaticallyGenerated": false,
+      "modelPredictionsUsedAsReferenceLabels": false,
+      "heldOutCandidateDerivationAuthorized": false,
+      "realReferenceBundleAccepted": true,
+      "realDataCalibrationAuthorized": false,
+      "productionThresholdChangeAuthorized": false,
+      "productionResourceLimitChangeAuthorized": false,
+      "modelTrainingAuthorized": false,
+      "publicationAuthorized": false
+    },
+    "receiptDigest": {
+      "algorithm": "sha256",
+      "value": "036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801"
+    }
+  },
+  "scope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "recordCount": 7,
+    "datasetItemCount": 1,
+    "sourceFamilyCount": 1,
+    "candidateDerivationEligible": true,
+    "heldOutIncluded": false,
+    "heldOutTuningAuthorized": false
+  },
+  "assertions": {
+    "referenceBundleAccepted": true,
+    "humanLabelsPresent": true,
+    "labelsAutomaticallyGenerated": false,
+    "modelPredictionsUsedAsReferenceLabels": false,
+    "realDataCalibrationExecutionAuthorized": false,
+    "realDataCalibrationExecuted": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
