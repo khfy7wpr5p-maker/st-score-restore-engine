@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "wikimedia_expanded_development_calibration_execution_authorization_current_truth_overlay",
+  "recorded_on": "2026-09-03",
+  "production_checkpoint": {
+    "main_sha": "21787355ba2af2d3a1db596d05c2baca51005e7d",
+    "merge_pr": 132,
+    "merge_pr_title": "Stage 4: authorize Wikimedia-expanded development calibration execution",
+    "postmerge_ci_run_id": 33750473465,
+    "postmerge_ci_run_number": 354,
+    "postmerge_ci_status": "success_python_3_11_and_3_12"
+  },
+  "authorization": {
+    "authorization_id": "stage4.real-development-calibration-execution-authorization.beethoven-barley-wikimedia.v1",
+    "decision": "AUTHORIZE_EXPANDED_REAL_DEVELOPMENT_CALIBRATION_EXECUTION",
+    "decision_authority_reference": "authority:project-governance-owner-20260903-03",
+    "authorization_source_code": "explicit_user_authorization",
+    "authorized_on": "2026-09-03",
+    "authorization_digest": "47027774b8f8258bcbe9ff633d58f9eb3e85edb4e83abf549facd778d6ecdad9",
+    "real_data_calibration_execution_authorized": true,
+    "real_data_calibration_executed": false
+  },
+  "scope": {
+    "split": "development",
+    "data_class": "real",
+    "purpose": "safety_calibration",
+    "environment": "stage1_offline",
+    "storage_class": "managed_standard",
+    "dataset_item_count": 3,
+    "source_family_count": 3,
+    "reference_record_count": 49,
+    "dataset_item_ids": [
+      "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "dataset.item.wikimedia-guitar-technical-exercise-no1.v1"
+    ],
+    "held_out_item_id": "dataset.item.imslp82860-chopin-op69.v2",
+    "held_out_included": false,
+    "held_out_evaluation_authorized": false,
+    "held_out_tuning_authorized": false,
+    "private_observation_metrics_required": true,
+    "raw_observation_metrics_allowed_in_ordinary_git": false
+  },
+  "reference_bindings": {
+    "beethoven_barley_reference_record_count": 42,
+    "beethoven_barley_bundle_digest": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14",
+    "beethoven_barley_acceptance_digest": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c",
+    "wikimedia_reference_record_count": 7,
+    "wikimedia_bundle_digest": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4",
+    "wikimedia_acceptance_digest": "79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3"
+  },
+  "assertions": {
+    "reference_bundles_accepted": true,
+    "candidate_derivation_authorized": true,
+    "development_evaluation_authorized": true,
+    "calibration_execution_authorized": true,
+    "calibration_executed": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "thresholds_calibrated": false,
+    "resource_limits_calibrated": false,
+    "held_out_evaluation_authorized": false,
+    "held_out_tuning_authorized": false,
+    "external_export_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "stage4_exit_pass": false,
+    "stage5_entry_authorized": false
+  },
+  "stage4": {
+    "state": "ACTIVE_NOT_READY",
+    "readiness_blocker_codes": [
+      "no_real_development_calibration_evidence_is_accepted",
+      "no_real_held_out_evaluation_evidence_is_accepted",
+      "no_stage4_metric_acceptance_target_policy_is_accepted"
+    ],
+    "next_dependency": "expanded_development_calibration_runner_contract_and_custody_only_private_metrics"
+  },
+  "runner_current_truth": {
+    "existing_runner_contract_version": "0.2.0",
+    "existing_runner_scope": "beethoven_barley_only",
+    "existing_runner_reference_record_count": 42,
+    "expanded_runner_support_present": false,
+    "reason": "the production runner is still bound to the historical Beethoven+Barley authorization and exact 42-record reference bundle; authorization alone does not fabricate Wikimedia private metrics or execute calibration"
+  },
+  "compatibility_note": "The PR #130 acceptance overlay and older live handoff remain immutable historical checkpoints. This overlay carries the later PR #132 authorization truth without retroactively rewriting the acceptance artifact or claiming execution."
+}
