@@ -31,7 +31,7 @@ Stage 12 Music-application integrations
 
 ## Historical production stages
 
-Stage 1: COMPLETE / PASS / production-effective.
+Stage 1: COMPLETE / PASS / production-effective. Immutable evidence anchors retained for architecture validation: C15 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; C16 `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`; catalog v2 `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`; expanded snapshot v2 `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`; coverage report v2 `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
 Stage 2: COMPLETE / PASS / production-effective.
 
