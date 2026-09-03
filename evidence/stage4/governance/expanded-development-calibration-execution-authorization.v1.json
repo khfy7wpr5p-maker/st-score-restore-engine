@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage4.real-development-calibration-execution-authorization.beethoven-barley-wikimedia.v1",
+  "decision": "AUTHORIZE_EXPANDED_REAL_DEVELOPMENT_CALIBRATION_EXECUTION",
+  "authorizedOn": "2026-09-03",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260903-03",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "purposeGrantDigests": {
+    "beethovenBarley": {
+      "algorithm": "sha256",
+      "value": "4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc"
+    },
+    "wikimedia": {
+      "algorithm": "sha256",
+      "value": "603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07"
+    }
+  },
+  "referenceBundleAcceptanceDigests": {
+    "beethovenBarley": {
+      "algorithm": "sha256",
+      "value": "88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c"
+    },
+    "wikimedia": {
+      "algorithm": "sha256",
+      "value": "79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3"
+    }
+  },
+  "acceptedReferenceReceiptDigests": {
+    "beethovenBarley": {
+      "algorithm": "sha256",
+      "value": "f5e1f171551d8d1551587c065f796cd5d4dc64df7babb3af86c4555585933c33"
+    },
+    "wikimedia": {
+      "algorithm": "sha256",
+      "value": "036bb31ca2672e443885ed06e213ef6913be7c66609ab5017b6f22ed3f33c801"
+    }
+  },
+  "referenceBundleDigests": {
+    "beethovenBarley": {
+      "algorithm": "sha256",
+      "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"
+    },
+    "wikimedia": {
+      "algorithm": "sha256",
+      "value": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+    }
+  },
+  "scope": {
+    "split": "development",
+    "dataClass": "real",
+    "purpose": "safety_calibration",
+    "environment": "stage1_offline",
+    "storageClass": "managed_standard",
+    "datasetItemCount": 3,
+    "sourceFamilyCount": 3,
+    "referenceRecordCount": 49,
+    "datasetItems": [
+      {
+        "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+        "artifactSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+        "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1"
+      },
+      {
+        "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+        "artifactSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+        "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1"
+      },
+      {
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "artifactSha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1"
+      }
+    ],
+    "candidateDerivationAuthorized": true,
+    "developmentEvaluationAuthorized": true,
+    "heldOutIncluded": false,
+    "heldOutEvaluationAuthorized": false,
+    "heldOutTuningAuthorized": false,
+    "privateObservationMetricsRequired": true,
+    "rawObservationMetricsAllowedInOrdinaryGit": false
+  },
+  "assertions": {
+    "safetyCalibrationPurposeGranted": true,
+    "referenceBundlesAccepted": true,
+    "realDataCalibrationExecutionAuthorized": true,
+    "realDataCalibrationExecuted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "heldOutThresholdTuningUsed": false,
+    "externalExportAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
