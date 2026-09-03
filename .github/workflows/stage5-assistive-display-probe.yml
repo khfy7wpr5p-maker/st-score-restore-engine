@@ -46,30 +46,42 @@ jobs:
           OPENBOX_PID=$!
           trap 'kill $OPENBOX_PID $XVFB_PID 2>/dev/null || true' EXIT
           sleep 2
+
+          set +e
           dbus-run-session -- bash -lc '
-            set -euo pipefail
             export DISPLAY=:99
             export NO_AT_BRIDGE=0
             gsettings set org.gnome.desktop.interface toolkit-accessibility true || true
+            orca --replace --debug --debug-file=/tmp/orca.log >/tmp/orca.stdout 2>/tmp/orca.stderr &
+            ORCA_PID=$!
+            sleep 3
             CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
             "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-chrome file:///tmp/stage5-orca-probe.html >/tmp/chrome.log 2>&1 &
             CHROME_PID=$!
-            sleep 3
-            orca --replace --debug --debug-file=/tmp/orca.log >/tmp/orca.stdout 2>/tmp/orca.stderr &
-            ORCA_PID=$!
-            sleep 4
+            sleep 5
             WINDOW_ID="$(xdotool search --name "Stage 5 Orca Probe" | head -n1)"
-            xdotool windowactivate --sync "$WINDOW_ID"
+            echo "window=$WINDOW_ID" >/tmp/interaction.log
+            xdotool windowfocus --sync "$WINDOW_ID" >>/tmp/interaction.log 2>&1
             sleep 1
-            xdotool key Tab
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
             sleep 2
-            xdotool key Tab
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
             sleep 2
             kill "$ORCA_PID" 2>/dev/null || true
             kill "$CHROME_PID" 2>/dev/null || true
             wait "$ORCA_PID" 2>/dev/null || true
             wait "$CHROME_PID" 2>/dev/null || true
           '
-          echo '--- Orca matches ---'
-          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT' /tmp/orca.log | tail -n 160
+          SESSION_RC=$?
+          set -e
+
+          echo "--- interaction ---"
+          cat /tmp/interaction.log 2>/dev/null || true
+          echo "--- Orca stderr ---"
+          tail -n 80 /tmp/orca.stderr 2>/dev/null || true
+          echo "--- Orca matches ---"
+          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT|FOCUS' /tmp/orca.log 2>/dev/null | tail -n 240 || true
+          echo "session_rc=$SESSION_RC"
+
+          test -s /tmp/orca.log
           grep -Eaiq 'Probe field|Probe button' /tmp/orca.log
