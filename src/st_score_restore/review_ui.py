@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final
+from typing import Final, Iterator
 
 from .review_ui_css import REVIEW_UI_CSS
 from .review_ui_html import REVIEW_UI_HTML
@@ -16,6 +16,12 @@ UI_VERSION: Final[str] = "1.0.0"
 class ReviewUiAsset:
     content_type: str
     body: bytes
+
+    def __iter__(self) -> Iterator[str | bytes]:
+        """Preserve the HTTP router's established `(media_type, body)` contract."""
+
+        yield self.content_type
+        yield self.body
 
 
 _ASSETS: Final[dict[str, ReviewUiAsset]] = {
