@@ -24,6 +24,15 @@ The exact Beethoven + Barley real development calibration has **executed and abs
 
 The production candidate methodology abstained because measured source-family support and reference-class support were insufficient. Compression had no applicable measured observations. No threshold was fabricated.
 
+## Historical pre-execution compatibility record
+
+This section preserves immutable earlier Stage 4 checkpoints required by validators; it does **not** override the current execution truth above.
+
+- Historical blocker `no_real_calibration_reference_label_bundle_is_accepted`: **Resolved** by the later separate Beethoven+Barley reference-bundle acceptance evidence.
+- The later, separate historical execution-authorization checkpoint records `realDataCalibrationExecutionAuthorized=true` for exact Beethoven+Barley development scope.
+- That immutable authorization artifact also records `realDataCalibrationExecuted=false`; it describes the pre-execution checkpoint and is not retroactively rewritten after the later real run executed.
+- At that checkpoint, **private observation metrics** were the explicit execution dependency. They later became available in approved custody for the Beethoven+Barley run; raw values remain outside ordinary Git.
+
 ## Wikimedia development expansion — production-effective
 
 PR #125 added a separate development-only raster family after the previous execution abstained:
