@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "1.0.0",
+  "evidenceId": "stage4.expanded-real-development-calibration-execution.v1",
+  "state": "executed_abstained",
+  "executedOn": "2026-09-03",
+  "scope": {
+    "purpose": "safety_calibration",
+    "split": "development",
+    "dataClass": "real",
+    "environment": "stage1_offline",
+    "authorizedDatasetItemCount": 3,
+    "referenceRecordCount": 49,
+    "privateMetricRecordCount": 49,
+    "measuredRecordCount": 30,
+    "notApplicableRecordCount": 19,
+    "measuredSourceFamilyCount": 2
+  },
+  "bindings": {
+    "authorizationDigest": {
+      "algorithm": "sha256",
+      "value": "47027774b8f8258bcbe9ff633d58f9eb3e85edb4e83abf549facd778d6ecdad9"
+    },
+    "referenceBundleDigests": {
+      "beethovenBarley": {
+        "algorithm": "sha256",
+        "value": "edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14"
+      },
+      "wikimedia": {
+        "algorithm": "sha256",
+        "value": "37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4"
+      }
+    },
+    "privateMetricBatchDigest": {
+      "algorithm": "sha256",
+      "value": "010789271c9046188964c23ee497651eb1adbf2ff5b952b2cda5b78ddc155b52"
+    },
+    "runnerContractVersion": "0.3.1",
+    "candidateDerivationMethodologyId": "strict_empirical_midpoint_boundary_v1",
+    "qualityConfigurationDigest": {
+      "algorithm": "sha256",
+      "value": "1464fd126f663c55927edf3d8123b1528662d6740623027ae8d4d13b96866ee0"
+    }
+  },
+  "executionRuntime": {
+    "pythonVersion": "3.12.14",
+    "numpyVersion": "2.3.5",
+    "opencvPythonHeadlessVersion": "4.13.0.92",
+    "pypdfium2Version": "5.13.0",
+    "qualityAnalyzerVersion": "0.1.1",
+    "pdfRenderDpi": 200
+  },
+  "findingOutcomes": [
+    {
+      "findingType": "blur",
+      "metricName": "laplacianVariance",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 4, "possible": 1, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["insufficient_reference_class_support"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "83c51d86e4ba0a040db58f3f8e9b2b5d55eec07f84c65af7345adbc87b3cd705"}
+    },
+    {
+      "findingType": "compression",
+      "metricName": "score",
+      "status": "not_applicable",
+      "measuredObservationCount": 0,
+      "referenceClassCounts": {"clear": 0, "possible": 0, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["no_measured_development_observations"],
+      "privateDerivationReportDigest": null
+    },
+    {
+      "findingType": "glare",
+      "metricName": "score",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 5, "possible": 0, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["insufficient_reference_class_support"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "298e87a66e1a4353d72574f5b29dae5b18092a52b0b71d38040d0e5d9253af31"}
+    },
+    {
+      "findingType": "noise",
+      "metricName": "residualP90",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 1, "possible": 3, "probable": 1, "not_assessed": 0},
+      "reasonCodes": ["clear_possible_metric_overlap", "possible_probable_metric_overlap"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "ac26a585a99503f093e1b1711020dd3131ca1c8badc482131e403e4f239743be"}
+    },
+    {
+      "findingType": "shadow",
+      "metricName": "strength",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 5, "possible": 0, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["insufficient_reference_class_support"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "bdb8b3cb90f168d6d18f7e856f67467ab45ddaae5132bc721d41184031a94e53"}
+    },
+    {
+      "findingType": "skew",
+      "metricName": "absoluteAngleDegrees",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 5, "possible": 0, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["insufficient_reference_class_support"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "94db50a338ff316848e9592768622474b05de6fa5f1739a9bf2f8a46984f3305"}
+    },
+    {
+      "findingType": "uneven_lighting",
+      "metricName": "coefficientOfVariation",
+      "status": "abstained",
+      "measuredObservationCount": 5,
+      "referenceClassCounts": {"clear": 5, "possible": 0, "probable": 0, "not_assessed": 0},
+      "reasonCodes": ["insufficient_reference_class_support"],
+      "privateDerivationReportDigest": {"algorithm": "sha256", "value": "fb0270362b4cc75501dcd4198b786a667dfdaa77fe9a04a8d8932cd43d85afd7"}
+    }
+  ],
+  "summary": {
+    "candidateDerivedCount": 0,
+    "abstainedFindingCount": 6,
+    "notApplicableFindingCount": 1,
+    "thresholdsCalibrated": false,
+    "crossFamilyMeasuredSupportSatisfied": true
+  },
+  "assertions": {
+    "realDataCalibrationExecuted": true,
+    "developmentEvidenceOnly": true,
+    "privateMetricRowsPublic": false,
+    "rawMetricValuesPublic": false,
+    "artifactBytesPublic": false,
+    "derivativeBytesPublic": false,
+    "candidateThresholdValuesPublic": false,
+    "heldOutThresholdTuningUsed": false,
+    "heldOutEvaluationUsed": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "metricAcceptanceTargetPolicyApplied": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "executionEvidenceAccepted": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  },
+  "evidenceDigest": {
+    "algorithm": "sha256",
+    "value": "552a85a68dd789bd00dc4cb7ce6db38078a77c45297a7e5f716d008eae908b0c"
+  }
+}
