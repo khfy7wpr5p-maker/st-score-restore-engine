@@ -1,9 +1,10 @@
 # ST Score Restore Engine — Technical Specification
 
-**Status:** Current architecture; Stage 4 ACTIVE / NOT_READY after Wikimedia development expansion  
+**Status:** Current architecture; Stage 4 ACTIVE / NOT_READY after Wikimedia human-label completion  
 **Date:** 2026-09-03  
 **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`  
-**Current repository main:** `9d2326931707f65c7eb5f5b22680e8fa85665a60` / post-merge Run #324 (`33728459668`) SUCCESS
+**Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / Run #324 (`33728459668`) SUCCESS  
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS
 
 ## 1. Scope and invariants
 
@@ -83,9 +84,9 @@ The real development execution later completed and abstained:
 
 Public-safe execution evidence digest: `0d2ce54066d493e3aa5a8b3c3ef3df407532edb5fa51aee14b8a560678731f1a`. Private metric-batch digest: `5bb2c2e081e6e72697a2c3acb8aacd7b4159dfabf3400fb9a0570ecb1a148079`; raw values remain custody-only.
 
-### 5.2 Wikimedia development expansion
+### 5.2 Wikimedia development expansion and human completion
 
-PR #125 is production-effective at main `9d2326931707f65c7eb5f5b22680e8fa85665a60`, Run #324 (`33728459668`) SUCCESS. It adds only a separate development purpose-grant overlay and fail-closed review package for:
+PR #125 is the immutable expansion baseline at main `9d2326931707f65c7eb5f5b22680e8fa85665a60`, Run #324 (`33728459668`) SUCCESS. It added a separate development purpose-grant overlay and fail-closed review package for:
 
 - item `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
 - source family `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
@@ -94,9 +95,21 @@ PR #125 is production-effective at main `9d2326931707f65c7eb5f5b22680e8fa85665a6
 - purpose `safety_calibration`;
 - purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`.
 
-Current Wikimedia assertions are fail-closed: human labels absent, reference bundle not accepted, execution not authorized, execution not performed, production thresholds/resources unchanged, Stage 4 exit false, Stage 5 entry false.
+PR #128 later froze genuine external human review completion at main `2ce6151e7ce37198c5b264ddd577df71f49da8bf`, Run #340 (`33745945427`) SUCCESS:
 
-The work package requires seven labels: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`; vocabulary is `clear`, `possible`, `probable`, `not_assessed`. `referenceLabel`, `reviewerReference`, `provenanceReference`, and `reviewedOn` must remain null until actual human review. Automated metrics/model predictions cannot be reference truth.
+- all seven findings are `clear`;
+- completion state is `human_labels_complete_pending_separate_acceptance`;
+- work-package digest `9ccec309f611f8057b8b4a20a1aba732544c1638f2b959656b9503718206337c`;
+- completion bundle digest `37af98bbeb04832fc94382f246287da0b738c2520225cdcd9f5ea2028bde71f4`;
+- reference bundle accepted: false;
+- candidate derivation eligible: false;
+- execution authorized: false;
+- execution performed: false;
+- production thresholds/resources unchanged;
+- Stage 4 exit false;
+- Stage 5 entry false.
+
+The work package taxonomy remains `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`; vocabulary is `clear`, `possible`, `probable`, `not_assessed`. The immutable work package remains null-filled, while completed human records live separately in `human-label-completion.v1.json`. Automated metrics/model predictions cannot be reference truth.
 
 ### 5.3 Development versus held-out boundary
 
@@ -110,7 +123,7 @@ Unavailable metrics are represented as `not_applicable`; numerical placeholders 
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-The Wikimedia purpose grant alone does not resolve blocker 1. Human completion, reference acceptance, execution authorization, private execution, expanded candidate derivation/abstention, and development evidence governance acceptance are separate gates.
+The Wikimedia human completion does not resolve blocker 1. Reference acceptance, execution authorization, private execution, expanded candidate derivation/abstention, and development evidence governance acceptance are separate gates.
 
 ## 7. Binding development sequence
 
@@ -131,4 +144,4 @@ Stage 12 Music-application integrations
 
 ## 8. Transition rule
 
-The next external-evidence boundary is genuine human completion of the Wikimedia seven-slot review package. Code, validation, deterministic acceptance preparation, and documentation may proceed before that input; actual labels, acceptance, calibration authorization, private metrics, threshold candidates, held-out evaluation, Stage 4 PASS, Stage 5 entry, training, publication, external export, and production threshold/resource changes must not be fabricated or self-authorized.
+The next external/governance boundary is separate acceptance of the completed Wikimedia human-reference evidence. Code, validation, deterministic acceptance preparation, and documentation may proceed before that decision; reference acceptance, calibration authorization, private metrics, threshold candidates, held-out evaluation, Stage 4 PASS, Stage 5 entry, training, publication, external export, and production threshold/resource changes must not be fabricated or self-authorized.
