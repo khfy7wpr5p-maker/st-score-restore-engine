@@ -7,6 +7,7 @@
 **Latest post-merge CI:** Run #298 (`33695083473`) — Python 3.11 / 3.12 SUCCESS  
 **Real calibration execution:** AUTHORIZED for exact Beethoven + Barley development scope / NOT YET EXECUTED  
 **Private-metric runner production baseline:** v0.1.0 from PR #119; applicability correction v0.2.0 is under validation on the current branch  
+**Private observation metrics:** exact 42 identities remain required, with 24 measured values and 18 fail-closed `not_applicable` records; raw measured values remain custody-only  
 **Candidate derivation methodology:** `strict_empirical_midpoint_boundary_v1` from PR #121 / production-effective; abstain-first  
 **Stage 5:** NOT STARTED / BLOCKED pending Stage 4 final exit PASS
 
