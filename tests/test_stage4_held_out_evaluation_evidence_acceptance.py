@@ -3,6 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+import subprocess
+import sys
 import unittest
 
 from st_score_restore.stage4_held_out_evaluation_evidence_acceptance import (
@@ -21,6 +23,7 @@ STAGE3_EXECUTION = ROOT / "evidence/stage3/corpus/execution-evidence.v1.json"
 STAGE3_EXIT_ACCEPTANCE = ROOT / "evidence/stage3/corpus/stage3-exit-acceptance.v1.json"
 DEVELOPMENT_ACCEPTANCE = ROOT / "evidence/stage4/calibration/expanded-real-development-execution-acceptance.v1.json"
 METRIC_POLICY_ACCEPTANCE = ROOT / "evidence/stage4/calibration/metric-acceptance-target-policy-acceptance.v1.json"
+VALIDATOR = ROOT / "tools/validate_stage4_held_out_evaluation_evidence_acceptance.py"
 
 
 def load(path: Path) -> dict:
@@ -97,6 +100,18 @@ class Stage4HeldOutEvaluationEvidenceAcceptanceTests(unittest.TestCase):
         self.assertEqual(scope["coverageRate"], 0.0)
         for key in ("notAssessedRate", "exactMatchRate", "falseNegativeRate", "falsePositiveRate"):
             self.assertEqual(scope[key], "not_applicable")
+
+    def test_standalone_validator_passes(self) -> None:
+        completed = subprocess.run(
+            [sys.executable, str(VALIDATOR)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        self.assertIn("READY_FOR_FINAL_ACCEPTANCE_REVIEW", completed.stdout)
+        self.assertIn("Stage 4 PASS: false", completed.stdout)
 
 
 if __name__ == "__main__":
