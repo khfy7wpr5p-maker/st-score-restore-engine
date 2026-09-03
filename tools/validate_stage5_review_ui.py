@@ -68,9 +68,9 @@ def main() -> int:
         "asset = review_ui_asset(path)",
         '"X-Frame-Options": "DENY"',
         '"Referrer-Policy": "no-referrer"',
-        '"default-src \'none\'",
-        '"connect-src \'self\'",
-        '"frame-ancestors \'none\'",
+        "default-src 'none'",
+        "connect-src 'self'",
+        "frame-ancestors 'none'",
     ):
         require(marker in http_api, f"review UI HTTP hardening marker missing: {marker}")
 
