@@ -19,7 +19,7 @@ DEVELOPMENT = ROOT / "evidence/stage4/calibration/expanded-real-development-exec
 METRIC_POLICY = ROOT / "evidence/stage4/calibration/metric-acceptance-target-policy-acceptance.v1.json"
 HELD_OUT = ROOT / "evidence/stage4/calibration/held-out-evaluation-evidence-acceptance.v1.json"
 CURRENT_TRUTH = ROOT / "docs/live/ST_SCORE_RESTORE_HELD_OUT_EVIDENCE_ACCEPTANCE_CURRENT_TRUTH.json"
-WORKFLOW = ROOT / ".github/workflows/repository-validation.yml"
+WORKFLOW = ROOT / ".github/workflows/stage4-governance-validation.yml"
 
 
 def load(path: Path) -> dict:
@@ -80,9 +80,14 @@ def main() -> int:
         failures.append(f"Stage 4 final-exit validation raised: {exc}")
 
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    command = "python tools/validate_stage4_final_exit_acceptance.py"
-    if command not in workflow:
-        failures.append("repository validation workflow does not run Stage 4 final-exit validator")
+    commands = (
+        "python tools/validate_stage4_held_out_evaluation_evidence_acceptance.py",
+        "python tools/validate_stage4_post_held_out_evidence_acceptance_current_truth.py",
+        "python tools/validate_stage4_final_exit_acceptance.py",
+    )
+    for command in commands:
+        if command not in workflow:
+            failures.append(f"Stage 4 governance workflow is missing validator command: {command}")
 
     if failures:
         print("Stage 4 final exit acceptance: FAIL", file=sys.stderr)
