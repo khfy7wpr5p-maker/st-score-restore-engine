@@ -11,7 +11,7 @@ from st_score_restore.stage4_expanded_execution_evidence_acceptance import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-ACCEPTANCE_PATH = ROOT / "evidence/stage4/governance/expanded-development-execution-evidence-acceptance.v1.json"
+ACCEPTANCE_PATH = ROOT / "evidence/stage4/calibration/expanded-real-development-execution-acceptance.v1.json"
 EXECUTION_PATH = ROOT / "evidence/stage4/calibration/expanded-real-development-execution.v1.json"
 
 
