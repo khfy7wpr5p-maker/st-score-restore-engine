@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyId": "stage4.metric-acceptance-target-policy-candidate.v1",
+  "policyVersion": "0.1.0",
+  "status": "policy_candidate_pending_separate_acceptance",
+  "createdOn": "2026-09-03",
+  "basis": {
+    "productionMainSha": "7afec26402f0c9bf6fb9f8814089b74657f9ce5f",
+    "expandedDevelopmentExecutionAcceptanceDigest": "4b891f3263c542c59d5632732c8010ef1bc6aeba17dfd71ffbde9ee6ed7be396",
+    "expandedDevelopmentExecutionEvidenceDigest": "552a85a68dd789bd00dc4cb7ce6db38078a77c45297a7e5f716d008eae908b0c",
+    "acceptedRealDevelopmentEvidenceCount": 1,
+    "candidateDerivedCount": 0,
+    "productionConfigurationState": "uncalibrated_engineering_defaults"
+  },
+  "scope": {
+    "stage": 4,
+    "purpose": "safety_calibration",
+    "appliesTo": "held_out_evaluation_acceptance_review",
+    "heldOutDatasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "currentMode": "zero_candidate_safe_abstention",
+    "numericCandidateThresholdAcceptanceAuthorized": false
+  },
+  "metricTargets": {
+    "sourceFamilyLeakageCount": {
+      "operator": "equal",
+      "target": 0,
+      "hardSafetyRequirement": true
+    },
+    "heldOutThresholdTuningUsed": {
+      "operator": "equal",
+      "target": false,
+      "hardSafetyRequirement": true
+    },
+    "evaluationFedBackIntoCandidate": {
+      "operator": "equal",
+      "target": false,
+      "hardSafetyRequirement": true
+    },
+    "productionThresholdChangeAuthorized": {
+      "operator": "equal",
+      "target": false,
+      "hardSafetyRequirement": true
+    },
+    "productionResourceLimitChangeAuthorized": {
+      "operator": "equal",
+      "target": false,
+      "hardSafetyRequirement": true
+    },
+    "coverageRate": {
+      "mode": "zero_candidate_abstention_compatible",
+      "numericMinimum": null,
+      "rule": "When candidateDerivedCount is zero, coverageRate may be zero and cannot by itself fail safe-abstention evidence."
+    },
+    "notAssessedRate": {
+      "mode": "zero_candidate_abstention_compatible",
+      "numericMaximum": null,
+      "rule": "When candidateDerivedCount is zero and assessedCount is zero, notAssessedRate may be one."
+    },
+    "exactMatchRate": {
+      "mode": "not_applicable_when_zero_assessed",
+      "numericMinimum": null
+    },
+    "falseNegativeRate": {
+      "mode": "not_applicable_when_zero_assessed",
+      "numericMaximum": null
+    },
+    "falsePositiveRate": {
+      "mode": "not_applicable_when_zero_assessed",
+      "numericMaximum": null
+    }
+  },
+  "decisionRules": {
+    "zeroCandidateSafeAbstention": {
+      "requiredCurrentCandidateDerivedCount": 0,
+      "requiresHeldOutEvaluationEvidence": true,
+      "requiresSourceFamilyLeakageCount": 0,
+      "requiresHeldOutThresholdTuningUsed": false,
+      "requiresEvaluationFedBackIntoCandidate": false,
+      "allowsZeroCoverage": true,
+      "allowsRateMetricsNotApplicableWhenAssessedCountZero": true,
+      "decisionIfSatisfied": "ELIGIBLE_FOR_SEPARATE_HELD_OUT_EVIDENCE_ACCEPTANCE_REVIEW"
+    },
+    "candidatePresent": {
+      "whenCandidateDerivedCountGreaterThan": 0,
+      "decision": "BLOCK_PENDING_SEPARATE_NUMERIC_TARGET_ADDENDUM",
+      "numericTargetAddendumRequired": true,
+      "automaticThresholdAcceptanceAuthorized": false
+    }
+  },
+  "assertions": {
+    "policyCandidateOnly": true,
+    "metricAcceptanceTargetPolicyAccepted": false,
+    "heldOutEvaluationAuthorized": false,
+    "heldOutEvaluationUsed": false,
+    "heldOutThresholdTuningAuthorized": false,
+    "candidateThresholdsAccepted": false,
+    "thresholdsCalibrated": false,
+    "resourceLimitsCalibrated": false,
+    "productionThresholdChangeAuthorized": false,
+    "productionResourceLimitChangeAuthorized": false,
+    "stage4ExitPass": false,
+    "stage5EntryAuthorized": false
+  }
+}
