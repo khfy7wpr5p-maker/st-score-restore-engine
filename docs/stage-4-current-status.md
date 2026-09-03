@@ -12,6 +12,7 @@
 
 The exact Beethoven + Barley real development calibration has **executed and abstained**.
 
+- machine-readable current execution anchor: `realDataCalibrationExecuted=true`;
 - private observation identities: 42;
 - measured: 24;
 - `not_applicable`: 18;
