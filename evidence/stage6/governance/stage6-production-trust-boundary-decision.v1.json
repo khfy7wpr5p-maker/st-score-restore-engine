@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "decisionId": "stage6.s6-02.production-trust-boundary-decision.v1",
+  "decision": "APPROVE_S6_02_PRODUCTION_TRUST_BOUNDARY_DECISION_PACKAGE",
+  "approvedOn": "2026-09-04",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260904-stage6-s6-02-01",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "stage6EntryAuthorizationDigest": {
+    "algorithm": "sha256",
+    "value": "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3"
+  },
+  "stage6EntryCurrentTruthBinding": {
+    "mainSha": "1addd8f8f403c1d038a951842b114eb487bfa044",
+    "checkpointType": "stage6_entry_governance_authorization_current_truth_overlay",
+    "stage6State": "ACTIVE_GOVERNANCE_PROVIDER_NEUTRAL_ONLY",
+    "repositoryValidationRunNumber": 442,
+    "stage4GovernanceRunNumber": 53,
+    "stage5GovernanceRunNumber": 45,
+    "stage6GovernanceRunNumber": 4,
+    "python311": "success",
+    "python312": "success"
+  },
+  "identityStrategy": {
+    "architecture": "shared_capable_identity_plane",
+    "initialRelyingParties": [
+      "st-score-restore"
+    ],
+    "futureRelyingPartyIntegrationRequiresSeparateAuthorization": true,
+    "productionCallerSuppliedActorIdAllowed": false,
+    "productionStaticApiKeysAllowed": false,
+    "tokenRequirements": [
+      "signed",
+      "issuer_validated",
+      "audience_validated",
+      "expiry_validated",
+      "not_before_validated",
+      "key_id_validated",
+      "revocation_supported"
+    ],
+    "authorizationRequirements": [
+      "deny_by_default",
+      "tenant_isolation",
+      "ownership_checks",
+      "role_conflict_checks",
+      "service_identity",
+      "privacy_safe_audit"
+    ]
+  },
+  "providerDecision": {
+    "providerSelectionStatus": "UNSELECTED",
+    "providerSpecificEvaluationAuthorized": true,
+    "providerSpecificImplementationAuthorized": false,
+    "selectionCriteria": [
+      "managed_oidc_or_equivalent_identity",
+      "workload_identity_for_services",
+      "managed_kms_or_hsm_backed_key_governance",
+      "managed_secret_storage_and_rotation",
+      "tls_ingress_waf_rate_limit_and_trusted_proxy_controls",
+      "private_networking_and_egress_controls",
+      "transactional_relational_metadata_store",
+      "encrypted_object_storage_with_lifecycle_controls",
+      "durable_queue_with_ack_retry_dead_letter_and_idempotency",
+      "append_only_audit_with_independent_anti_rollback",
+      "isolated_backup_restore_and_anti_resurrection_controls",
+      "separate_dev_staging_prod_security_boundaries",
+      "privacy_safe_observability",
+      "immutable_deploy_artifacts_and_rollback"
+    ]
+  },
+  "productionTrustBoundary": {
+    "edge": {
+      "publicEntry": "managed_tls_reverse_proxy_or_api_gateway",
+      "wafAndRateLimitsRequired": true,
+      "builtInStdlibServerPublicExposureAllowed": false,
+      "trustedProxyPolicyRequired": true
+    },
+    "identity": {
+      "approvedIdpRequiredBeforeActivation": true,
+      "signedTokenValidationRequired": true,
+      "issuerAudienceTimeAndKeyValidationRequired": true,
+      "callerSuppliedIdentityHeadersTrusted": false,
+      "staticApiKeysAcceptedAsProductionUserIdentity": false,
+      "ownershipTenantRoleConflictChecksRequired": true,
+      "serviceToServiceIdentityRequired": true
+    },
+    "secretsAndKeys": {
+      "secretManagerRequired": true,
+      "envelopeEncryptionRequired": true,
+      "leastPrivilegeIamRequired": true,
+      "separationOfDutiesRequired": true,
+      "rotationAndRevocationRequired": true,
+      "rawSecretsInGitLogsOrCommittedEnvFilesAllowed": false
+    },
+    "network": {
+      "applicationWorkersDatabaseObjectStorageAndQueuePrivateByDefault": true,
+      "quarantineOutboundNetworkAllowed": false,
+      "egressControlsRequired": true,
+      "ssrfSmugglingMultipartAndDosControlsRequired": true
+    },
+    "dataAndQueue": {
+      "relationalMetadataDatabaseRequired": true,
+      "encryptedObjectStorageRequired": true,
+      "externalDurableQueueRequired": true,
+      "idempotencyFencingAndTransactionalStateRequired": true,
+      "retentionDeletionReceiptsAndBackupAntiResurrectionRequired": true
+    },
+    "audit": {
+      "appendOnlyTamperEvidentEventsRequired": true,
+      "hashChainOrEquivalentIntegrityRequired": true,
+      "independentAntiRollbackRequired": true,
+      "artifactBytesSecretsNamesEmailsOrFreeTextPersonalDataAllowed": false
+    },
+    "deployment": {
+      "immutableArtifactOrImageRequired": true,
+      "signedProvenanceRequired": true,
+      "stagingHealthAndRollbackRequired": true,
+      "liveProductionDeploymentAuthorizedByThisDecision": false
+    },
+    "environmentSeparation": {
+      "devStagingProdSeparated": true,
+      "sharedProductionCredentialsAcrossEnvironmentsAllowed": false
+    },
+    "failureMode": {
+      "failClosedOnInvalidIdentityAuthorizationKeyStorageOrAuditEvidence": true
+    }
+  },
+  "scope": {
+    "s6_02DecisionPackageAuthorized": true,
+    "providerSpecificEvaluationAuthorized": true,
+    "providerSelectionFinalized": false,
+    "productionIdentityImplementationAuthorized": false,
+    "productionSecretsKmsIamImplementationAuthorized": false,
+    "productionNetworkImplementationAuthorized": false,
+    "productionStorageDeploymentImplementationAuthorized": false,
+    "productionOperationalDrillsAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "stage7EntryAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "thresholdOrResourceLimitChangesAuthorized": false
+  },
+  "safetyBoundaries": {
+    "historicalEvidenceImmutable": true,
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "rawPrivateMetricsInOrdinaryGit": false,
+    "stage5FinalPassMustRemainTrue": true,
+    "stage5ColorManagementValidatedMustRemainFalse": true,
+    "colorFidelityCertificationAuthorized": false,
+    "temporaryPr154MergeAuthorized": false,
+    "noProviderMayBeInventedWithoutDecisionEvidence": true,
+    "noLiveResourceCreationAuthorized": true
+  },
+  "nextSafeBoundary": "separate_explicit_s6_03_identity_authz_implementation_authorization"
+}

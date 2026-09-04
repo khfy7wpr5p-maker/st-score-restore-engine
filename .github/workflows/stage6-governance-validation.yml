@@ -36,16 +36,22 @@ jobs:
       - name: Validate Stage 6 post-entry current truth
         run: python tools/validate_stage6_post_entry_authorization_current_truth.py
 
+      - name: Validate Stage 6 S6-02 trust-boundary decision
+        run: python tools/validate_stage6_trust_boundary_decision.py
+
       - name: Run Stage 6 governance unit tests
         run: |
           python -m unittest \
             tests.test_stage6_entry_authorization \
-            tests.test_stage6_entry_current_truth -v
+            tests.test_stage6_entry_current_truth \
+            tests.test_stage6_trust_boundary_decision -v
 
       - name: Compile Stage 6 governance sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage6_entry_authorization.py \
             src/st_score_restore/stage6_entry_current_truth.py \
+            src/st_score_restore/stage6_trust_boundary_decision.py \
             tools/validate_stage6_entry_authorization.py \
-            tools/validate_stage6_post_entry_authorization_current_truth.py
+            tools/validate_stage6_post_entry_authorization_current_truth.py \
+            tools/validate_stage6_trust_boundary_decision.py
