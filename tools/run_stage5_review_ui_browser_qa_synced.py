@@ -68,6 +68,25 @@ def _temporary_directory_with_cleanup_race_tolerance(*args, **kwargs):
     return _ORIGINAL_TEMPORARY_DIRECTORY(*args, **kwargs)
 
 
+def _run_browser_qa_with_startup_retry() -> tuple[dict, bool]:
+    """Retry once only when Chrome never exposes its local DevTools endpoint.
+
+    This treats a hosted-runner Chrome boot failure as an environment startup
+    flake. Browser/DOM/accessibility assertions are never retried or weakened.
+    """
+
+    global _FIRST_APPROVE_CLICK
+    try:
+        return qa.run_browser_qa(), False
+    except RuntimeError as error:
+        message = str(error)
+        if "Timed out waiting for http://127.0.0.1:" not in message or "/json/version" not in message:
+            raise
+        _FIRST_APPROVE_CLICK = True
+        time.sleep(1.0)
+        return qa.run_browser_qa(), True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path)
@@ -76,10 +95,12 @@ def main() -> int:
     qa._evaluate = _evaluate_after_ready
     qa._poll_eval = _poll_eval_after_review_navigation
     qa.tempfile.TemporaryDirectory = _temporary_directory_with_cleanup_race_tolerance
-    result = qa.run_browser_qa()
+    result, chrome_startup_retry_used = _run_browser_qa_with_startup_retry()
     result["harnessSynchronization"] = {
         "reviewNavigationWaitedForExpectedPath": True,
         "transientMissingExecutionContextRetriedOnlyDuringReviewNavigation": True,
+        "transientChromeStartupRetriedAtMostOnce": True,
+        "chromeStartupRetryUsed": chrome_startup_retry_used,
         "firstApproveWaitedUntilEnabled": True,
         "chromeProfileCleanupRaceToleratedAfterProcessExit": True,
         "uiBehaviorChanged": False,
