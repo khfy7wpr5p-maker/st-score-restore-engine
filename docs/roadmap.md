@@ -1,12 +1,21 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Document status:** Binding sequence; Stages 1–5 COMPLETE / PASS; Stage 6 entry eligible but NOT AUTHORIZED / NOT STARTED  
-**Date:** 2026-09-04  
+**Current production status (2026-09-04):** Stages 1–5 COMPLETE / PASS; Stage 6 ENTRY ELIGIBLE / NOT AUTHORIZED / NOT STARTED.  
 **Tracking:** Issue #104
 
-## Authority and invariants
+## Current production truth
 
-Merged `main` plus production-effective evidence is current truth. Historical evidence remains immutable. Later current-truth overlays may supersede an earlier checkpoint's *current-state interpretation* without rewriting that historical file. Real corpus/derivative bytes and private raw observation metrics remain outside ordinary Git. Held-out evidence never derives, selects, or tunes development candidates. Human reference truth must come from actual human expert review. Insufficient evidence requires abstention.
+Merged `main` plus later production-effective acceptance/current-truth overlays are authoritative for current state. Historical evidence and historical roadmap checkpoints remain immutable and are retained below because older fail-closed validators intentionally prove that those earlier governance states were not erased.
+
+- Stage 4 final exit: COMPLETE / PASS. Final acceptance digest `41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c`.
+- Stage 5 accessible teacher review interface: COMPLETE / PASS / production-effective.
+- Stage 5 local UI checkpoint: PR #153 / main `ad3dc11cec311b345fac600316a44d05d444f21b`.
+- Stage 5 final-exit checkpoint: PR #155 / main `19aaa35ac212b2a1698cd23b622bfd59c1e721b4`.
+- Stage 5 QA evidence digest: `0e7ae71251db637ee9ba99cdcd5e2216fdfd3d655dc5eda23b676ea9ec5699fe`.
+- Stage 5 final acceptance digest: `467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc`.
+- Real production `/review` screen-reader execution used Orca 46.1 + Chrome 152 + AT-SPI on temporary unmerged PR #154.
+- Bounded display scope: `png_grayscale_8bit`, input color profiles `not_inspected`, `colorManagementValidated=false`; no color-fidelity certification is claimed.
+- Stage 6 is entry-eligible only. Production identity/network infrastructure, untrusted-network deployment, training, production threshold/resource changes, preview release, and Stage 6 execution remain separately unauthorized.
 
 ## Binding delivery sequence
 
@@ -26,83 +35,78 @@ Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
-## Completed stages
+## Historical roadmap snapshot retained for immutable evidence binding
 
-### Stage 1 — Real and explicitly authorized test dataset
+The remainder of this document preserves the earlier Stage 4 ACTIVE / Stage 5 BLOCKED roadmap checkpoint. Every ACTIVE, NOT_READY, BLOCKED, authorization, Run, digest, and blocker statement below is **historical**, not the current production state. It remains present so legacy Stage 4 consistency validators can prove that historical governance was not rewritten.
 
-**State:** COMPLETE / PASS / production-effective.
+**Historical document status:** Binding sequence; Stage 4 ACTIVE / NOT_READY after production-effective Wikimedia reference-bundle acceptance  
+**Historical date:** 2026-09-03  
+**Wikimedia expansion baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60` / PR #125 / Run #324 (`33728459668`) SUCCESS  
+**Human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / PR #128 / Run #340 (`33745945427`) SUCCESS  
+**Reference-bundle acceptance checkpoint:** main `3353b281a4022f107929fae296368390da45a4fb` / PR #130 / Run #348 (`33748180036`) SUCCESS
 
-Immutable architecture anchors retained: C15 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; C16 `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`; catalog v2 `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`; expanded snapshot v2 `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`; coverage report v2 `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
+### Historical authority and invariants
 
-### Stage 2 — Complete quality-analysis system
+Merged `main` plus production-effective evidence was current truth at that checkpoint. Historical evidence remains immutable. Real corpus/derivative bytes and private raw observation metrics remain outside ordinary Git. Held-out evidence never derives/selects/tunes development candidates. Human reference truth must come from actual human expert review. Insufficient evidence requires abstention.
 
-**State:** COMPLETE / PASS / production-effective.
+### Historical production stages
 
-Immutable execution-evidence digest: `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
+Stage 1: COMPLETE / PASS / production-effective. Immutable evidence anchors retained for architecture validation: C15 `b4a58ccc2e21338ef2708fef8352b4d3979547e871ad6fa19d6c256f1560a476`; C16 `0589698059c4bc3cd9e19495f8174c46d9b9d6460a59b6d6890b078a2144aa4e`; catalog v2 `4dd989a16c466027a952c6d8ea7c325e27681b95995554afd55e0b3fee2051b3`; expanded snapshot v2 `c1a315b76bc79f8649abd50e938b8a33362f1deb3e5b004d0e25519e45c23dc7`; coverage report v2 `45136e95006962570ac6d290fe6204c474958a209c595d3fd8cb525bc90f8834`.
 
-### Stage 3 — Multi-page PDF pipeline
+Stage 2: COMPLETE / PASS / production-effective. Immutable execution-evidence digest `78731c40eda1684565dcf31b379a92be3c0f0cc19acb71ccc2b873ea9cbb011d`.
 
-**State:** COMPLETE / PASS / production-effective.
+Stage 3: COMPLETE / PASS / production-effective. Immutable digests: purpose `3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8`; execution `a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6`; limitations `5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d`; acceptance `e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90`.
 
-Immutable digests: purpose `3350b85407b783fff451238932982fdc94618fad404e2f4b70401ca1db010aa8`; execution `a79723e9c5a4726757ce5d6206d69766f676149ffa131a463605d04d7f98f9f6`; limitations `5714687bf9f0e09d948a5b3a6c54c69f9fbfd93c084ab3c00b9de09b87af620d`; acceptance `e9729b40a04ac2cdd60fa01d742e787d262faaf711db8aa367dc3d7159263a90`.
+### Historical Stage 4 — Safety calibration with real data
 
-### Stage 4 — Safety calibration with real data
+**State:** ACTIVE / NOT_READY.  
+**Stage 5:** BLOCKED pending separate Stage 4 final exit PASS.
 
-**State:** COMPLETE / PASS / production-effective.
+#### Historical Stage 4 anchors
 
-Final-exit checkpoint: PR #148 / main `4ff1118fe79602b351ad9ab8735937b9e911555d`; final acceptance digest `41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c`.
+- framework main `4a5c3db2d767dac235fe12a6bd0e18ba500e7362` / Run #259;
+- entry/start digest `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`;
+- Beethoven+Barley purpose grant main `c0c306e034322ce0cd74ba9ed6ff2184d3ffe6cd` / Run #272; digest `4f122063ba28cd23c1d6343c5cb39b8a92459f336ec05ad03a53f9d4d4dd2dfc`;
+- accepted Beethoven+Barley reference bundle main `4f663d0c11339b98fd89639fd8f3d5afc8047fb3` / Run #282; bundle digest `edfd7b58fcd7dcebddc8e6fd6178d14ba3064acc02a2bfca1b5b211b50676b14`; acceptance digest `88fb2d061e3f63a935369bb2c66caf628f430d2e1e6a3e4e8c49e909ddded62c`;
+- exact Beethoven+Barley execution authorization main `76f5643dde72c8cc4b02b517133331e9dea00146` / Run #287; digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
 
-Accepted Stage 4 truth is deliberately abstention-first:
+The historical checkpoint **AUTHORIZED / NOT YET EXECUTED** remains immutable and therefore still carries `executed=false`; it is not current execution truth.
 
-- zero-candidate safe abstention was accepted;
-- candidate thresholds were **not** accepted;
-- thresholds and resource limits remain uncalibrated engineering defaults;
-- held-out Chopin evaluation evidence was accepted without using held-out data for tuning;
-- representativeness, absence of bias, OMR correctness, restoration effectiveness, and model quality were not established.
+#### Historical development calibration truth
 
-The detailed immutable/current-truth record is `docs/live/ST_SCORE_RESTORE_STAGE4_FINAL_EXIT_CURRENT_TRUTH.json`.
+Beethoven + Barley execution later ran and abstained. Public-safe evidence records 42 identities = 24 measured + 18 `not_applicable`, 1 measured source family, and 0 threshold candidates. Thresholds/resource limits remain uncalibrated engineering defaults and the execution evidence was not governance-accepted at this historical checkpoint.
 
-#### Historical Stage 4 transition checkpoint — immutable, superseded current-state interpretation
+PR #125 added a separate Wikimedia raster development family, PR #128 completed its genuine human review, and PR #130 separately accepted the exact completed reference bundle:
 
-The architecture-consistency audit also retains the earlier transition checkpoint verbatim enough to prove that historical governance was not erased when later stages completed. At that historical point **Stage 4 ACTIVE** and **Stage 5 BLOCKED** were the correct states. The Stage 4 framework production anchor was `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`; the Stage 4 entry/start digest was `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`. The later real-development execution-authorization production main was `76f5643dde72c8cc4b02b517133331e9dea00146`, Run #287, with authorization digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
+- `dataset.item.wikimedia-guitar-technical-exercise-no1.v1`;
+- `source.family.wikimedia-guitar-technical-exercise-no1.v1`;
+- one-page PNG;
+- split `development`;
+- purpose `safety_calibration` granted by a separate immutable overlay;
+- purpose-grant overlay digest `603e3dc7669e6259ab061a8241d76206e7bd2bf76b170fc6dbc8c1d0b9d6be07`;
+- separate human-label completion: production-effective via PR #128 / main `2ce6151e7ce37198c5b264ddd577df71f49da8bf` / Run #340;
+- **7/7 labels: `clear`** (`skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`);
+- immutable completion snapshot state `human_labels_complete_pending_separate_acceptance`;
+- original work package remains null-filled/pristine by design;
+- separate reference-bundle acceptance: production-effective via PR #130 / main `3353b281a4022f107929fae296368390da45a4fb` / Run #348;
+- acceptance decision `ACCEPT_REAL_REFERENCE_BUNDLE`;
+- acceptance digest `79771e291768ba4979abc1e44dd0ecebfd95892ff2e5861d77706c1cb4563eb3`;
+- reference bundle accepted: true;
+- candidate derivation eligible: true;
+- calibration execution not authorized and not executed;
+- production threshold/resource changes not authorized;
+- Chopin held-out boundary unchanged.
 
-That historical authorization meant real development calibration was **authorized but not yet executed** at that checkpoint, and the private metric dependency still applied. The historical readiness blockers were:
+Automated metrics/model predictions were not substituted for the human labels. Completion, governance acceptance, execution authorization, execution evidence, and later development evidence acceptance remain separate gates.
 
-- `no_real_development_calibration_evidence_is_accepted`
-- `no_stage4_metric_acceptance_target_policy_is_accepted`
-- `no_real_held_out_evaluation_evidence_is_accepted`
+#### Historical remaining readiness blockers
 
-Those blockers were resolved by later evidence and acceptance gates; retaining them here is historical binding, not a claim that Stage 4 is currently ACTIVE or Stage 5 is currently BLOCKED.
+1. `no_real_development_calibration_evidence_is_accepted`
+2. `no_real_held_out_evaluation_evidence_is_accepted`
+3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-### Stage 5 — Accessible teacher review interface
+These three blocker codes are retained as historical evidence. They were later resolved by subsequent Stage 4 acceptance gates and do not describe the current Stage 4 state.
 
-**State:** COMPLETE / PASS / production-effective.
+### Historical Stages 5–12 status
 
-Production local UI checkpoint: PR #153 / main `ad3dc11cec311b345fac600316a44d05d444f21b`.
-
-Final-exit checkpoint: PR #155 / main `19aaa35ac212b2a1698cd23b622bfd59c1e721b4`.
-
-Accepted evidence includes:
-
-- real Chrome accessibility, responsive, stale-screen and evidence-bound decision QA;
-- real production `/review` screen-reader execution with Orca 46.1 + Chrome 152 + AT-SPI; the probe remained temporary and unmerged as PR #154;
-- bounded grayscale display-integrity QA in real Chrome;
-- `actual_pixels` at `1.00x` verified against decoded pixel dimensions;
-- Stage 5 QA evidence digest `0e7ae71251db637ee9ba99cdcd5e2216fdfd3d655dc5eda23b676ea9ec5699fe`;
-- Stage 5 final acceptance digest `467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc`.
-
-Display scope remains deliberately bounded: evidence crops are `png_grayscale_8bit`; input color profiles are `not_inspected`; `colorManagementValidated=false`; no color-fidelity certification is claimed. Stage 5 PASS covers the accessible local teacher-review interface and its evidence-display contract. It does **not** authorize an untrusted-network deployment or establish restoration/OMR/model quality.
-
-The later current-truth overlay is `docs/live/ST_SCORE_RESTORE_STAGE5_FINAL_EXIT_CURRENT_TRUTH.json`.
-
-## Stage 6 — Identity, network and production infrastructure
-
-**State:** ENTRY ELIGIBLE / NOT AUTHORIZED / NOT STARTED.
-
-Stage 5 PASS makes Stage 6 entry eligible only. The next safe governance boundary is a **separate explicit Stage 6 entry authorization**. Until then, production identity, TLS/network exposure, secret management, production deployment, production persistence/infrastructure changes, and related Stage 6 execution remain unauthorized.
-
-## Stages 7–12
-
-**State:** NOT STARTED.
-
-They remain sequenced behind Stage 6 and require their own later gates. Stage 5 completion does not authorize preview release, DocRes adoption, multi-engine comparison, selector/model training, publication, or music-application integration work.
+At this checkpoint they were NOT STARTED, and Stage 5 was BLOCKED pending Stage 4 final PASS. That statement is historical; current Stage 5 is COMPLETE / PASS and current Stage 6 is entry-eligible but not authorized or started.
