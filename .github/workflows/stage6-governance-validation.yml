@@ -45,6 +45,9 @@ jobs:
       - name: Validate Stage 6 S6-03 identity/authz authorization
         run: python tools/validate_stage6_s6_03_authorization.py
 
+      - name: Validate Stage 6 S6-03 current truth
+        run: python tools/validate_stage6_s6_03_current_truth.py
+
       - name: Run Stage 6 governance and identity unit tests
         run: |
           python -m unittest \
@@ -53,6 +56,7 @@ jobs:
             tests.test_stage6_trust_boundary_decision \
             tests.test_stage6_s6_02_current_truth \
             tests.test_stage6_s6_03_authorization \
+            tests.test_stage6_s6_03_current_truth \
             tests.test_stage6_production_identity -v
 
       - name: Compile Stage 6 governance and identity sources
@@ -63,10 +67,12 @@ jobs:
             src/st_score_restore/stage6_trust_boundary_decision.py \
             src/st_score_restore/stage6_s6_02_current_truth.py \
             src/st_score_restore/stage6_s6_03_authorization.py \
+            src/st_score_restore/stage6_s6_03_current_truth.py \
             src/st_score_restore/production_identity.py \
             src/st_score_restore/production_http_auth.py \
             tools/validate_stage6_entry_authorization.py \
             tools/validate_stage6_post_entry_authorization_current_truth.py \
             tools/validate_stage6_trust_boundary_decision.py \
             tools/validate_stage6_s6_02_current_truth.py \
-            tools/validate_stage6_s6_03_authorization.py
+            tools/validate_stage6_s6_03_authorization.py \
+            tools/validate_stage6_s6_03_current_truth.py
