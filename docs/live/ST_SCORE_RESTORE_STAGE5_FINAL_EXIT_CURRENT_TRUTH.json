@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage5_final_exit_current_truth_overlay",
+  "recorded_on": "2026-09-04",
+  "production_checkpoint": {
+    "main_sha": "19aaa35ac212b2a1698cd23b622bfd59c1e721b4",
+    "merge_pr": 155,
+    "merge_pr_title": "Stage 5: add bounded display-integrity final-exit QA",
+    "pr_exact_head_sha": "781535f159aa99a9143de5e54b030faaf3c9d95e",
+    "exact_head_repository_validation_run_id": 33844125058,
+    "exact_head_repository_validation_run_number": 431,
+    "exact_head_stage5_governance_run_id": 33844125100,
+    "exact_head_stage5_governance_run_number": 34,
+    "postmerge_repository_validation_run_id": 33844242345,
+    "postmerge_repository_validation_run_number": 432,
+    "postmerge_stage5_governance_run_id": 33844242264,
+    "postmerge_stage5_governance_run_number": 35,
+    "postmerge_stage4_governance_run_id": 33844242271,
+    "postmerge_stage4_governance_run_number": 43,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage5_and_stage4_workflows"
+  },
+  "stage4": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "41923c6c05c7ea015841fd77da7377aad30261a569d287246eb832f856ad599c"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "qa_evidence_id": "stage5.accessibility-display-qa.v1",
+    "qa_evidence_digest": "0e7ae71251db637ee9ba99cdcd5e2216fdfd3d655dc5eda23b676ea9ec5699fe",
+    "final_acceptance_id": "stage5.final-exit-acceptance.v1",
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "accessible_teacher_review_interface_implemented": true,
+    "real_browser_qa_passed": true,
+    "screen_reader_qa_passed": true,
+    "bounded_display_integrity_qa_passed": true,
+    "stale_screen_fail_closed_verified": true,
+    "evidence_bound_review_decision_verified": true,
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "screen_reader_evidence": {
+    "temporary_probe_pr": 154,
+    "temporary_probe_merged": false,
+    "exact_head_sha": "214b31c67b4ca3af5cb3d28ef312162a22af3420",
+    "workflow_run_id": 33843450746,
+    "workflow_run_number": 5,
+    "job_id": 100930256714,
+    "result": "PASS",
+    "browser": "Google Chrome 152.0.7977.64",
+    "screen_reader": "Orca 46.1",
+    "accessibility_transport": "AT-SPI",
+    "real_speech_output_observed": true
+  },
+  "display_integrity_boundary": {
+    "crop_encoding": "png_grayscale_8bit",
+    "input_color_profiles": "not_inspected",
+    "color_management_validated": false,
+    "grayscale_browser_decode_verified": true,
+    "actual_pixels_at_one_x_verified": true,
+    "color_fidelity_claimed": false
+  },
+  "stage6": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "started": false,
+    "next_safe_boundary": "separate_explicit_stage6_entry_authorization"
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage5_entry_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "production_deployment_authorized": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "preview_release_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "representativeness_established": false,
+    "absence_of_bias_established": false,
+    "omr_correctness_established": false,
+    "restoration_effectiveness_established": false
+  },
+  "compatibility_note": "This later overlay records production-effective Stage 5 COMPLETE/PASS after PR #155 and post-merge CI. The historical Stage 5 entry-authorization overlay remains immutable and continues to describe its earlier checkpoint. Stage 6 is now entry-eligible only; Stage 6 authorization/start, production deployment, threshold/resource changes, held-out retuning, training, publication, preview release, general color-management validation, and color-fidelity certification remain separately unauthorized or unestablished."
+}

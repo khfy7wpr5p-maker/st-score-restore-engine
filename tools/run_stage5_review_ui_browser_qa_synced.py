@@ -30,10 +30,35 @@ def _evaluate_after_ready(ws: qa.DevToolsWebSocket, expression: str):
     return _ORIGINAL_EVALUATE(ws, expression)
 
 
-def _poll_eval_after_review_navigation(ws: qa.DevToolsWebSocket, expression: str, *args, **kwargs):
-    if expression == "document.readyState === 'complete'":
-        expression = "location.pathname === '/review' && document.readyState === 'complete'"
-    return _ORIGINAL_POLL_EVAL(ws, expression, *args, **kwargs)
+def _poll_eval_after_review_navigation(
+    ws: qa.DevToolsWebSocket,
+    expression: str,
+    expected=True,
+    timeout: float = 10.0,
+):
+    if expression != "document.readyState === 'complete'":
+        return _ORIGINAL_POLL_EVAL(ws, expression, expected=expected, timeout=timeout)
+
+    target_expression = "location.pathname === '/review' && document.readyState === 'complete'"
+    deadline = time.time() + timeout
+    value = None
+    last_context_error: RuntimeError | None = None
+    while time.time() < deadline:
+        try:
+            value = _ORIGINAL_EVALUATE(ws, target_expression)
+        except RuntimeError as error:
+            if "Cannot find default execution context" not in str(error):
+                raise
+            last_context_error = error
+            time.sleep(0.1)
+            continue
+        if value == expected:
+            return value
+        time.sleep(0.1)
+    detail = f"; last_context_error={last_context_error}" if last_context_error else ""
+    raise RuntimeError(
+        f"browser condition timed out after review navigation: {target_expression!r}; last={value!r}{detail}"
+    )
 
 
 def _temporary_directory_with_cleanup_race_tolerance(*args, **kwargs):
@@ -41,6 +66,25 @@ def _temporary_directory_with_cleanup_race_tolerance(*args, **kwargs):
 
     kwargs.setdefault("ignore_cleanup_errors", True)
     return _ORIGINAL_TEMPORARY_DIRECTORY(*args, **kwargs)
+
+
+def _run_browser_qa_with_startup_retry() -> tuple[dict, bool]:
+    """Retry once only when Chrome never exposes its local DevTools endpoint.
+
+    This treats a hosted-runner Chrome boot failure as an environment startup
+    flake. Browser/DOM/accessibility assertions are never retried or weakened.
+    """
+
+    global _FIRST_APPROVE_CLICK
+    try:
+        return qa.run_browser_qa(), False
+    except RuntimeError as error:
+        message = str(error)
+        if "Timed out waiting for http://127.0.0.1:" not in message or "/json/version" not in message:
+            raise
+        _FIRST_APPROVE_CLICK = True
+        time.sleep(1.0)
+        return qa.run_browser_qa(), True
 
 
 def main() -> int:
@@ -51,9 +95,12 @@ def main() -> int:
     qa._evaluate = _evaluate_after_ready
     qa._poll_eval = _poll_eval_after_review_navigation
     qa.tempfile.TemporaryDirectory = _temporary_directory_with_cleanup_race_tolerance
-    result = qa.run_browser_qa()
+    result, chrome_startup_retry_used = _run_browser_qa_with_startup_retry()
     result["harnessSynchronization"] = {
         "reviewNavigationWaitedForExpectedPath": True,
+        "transientMissingExecutionContextRetriedOnlyDuringReviewNavigation": True,
+        "transientChromeStartupRetriedAtMostOnce": True,
+        "chromeStartupRetryUsed": chrome_startup_retry_used,
         "firstApproveWaitedUntilEnabled": True,
         "chromeProfileCleanupRaceToleratedAfterProcessExit": True,
         "uiBehaviorChanged": False,
