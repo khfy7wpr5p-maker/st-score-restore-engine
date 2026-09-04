@@ -48,12 +48,16 @@ jobs:
       - name: Run Stage 5 bounded grayscale display-integrity QA
         run: python tools/run_stage5_review_ui_display_qa.py --output stage5-display-qa.json
 
+      - name: Validate Stage 5 final exit
+        run: python tools/validate_stage5_final_exit.py
+
       - name: Run Stage 5 governance and UI unit tests
         run: |
           python -m unittest \
             tests.test_stage5_entry_authorization \
             tests.test_stage5_post_entry_authorization_current_truth \
             tests.test_stage5_start_authorization \
+            tests.test_stage5_final_exit \
             tests.test_review_ui -v
 
       - name: Compile Stage 5 governance and UI sources
@@ -62,11 +66,13 @@ jobs:
             src/st_score_restore/stage5_entry_authorization.py \
             src/st_score_restore/stage5_entry_current_truth.py \
             src/st_score_restore/stage5_start_authorization.py \
+            src/st_score_restore/stage5_final_exit.py \
             src/st_score_restore/review_ui.py \
             tools/validate_stage5_entry_authorization.py \
             tools/validate_stage5_post_entry_authorization_current_truth.py \
             tools/validate_stage5_start_authorization.py \
             tools/validate_stage5_review_ui.py \
+            tools/validate_stage5_final_exit.py \
             tools/run_stage5_review_ui_browser_qa.py \
             tools/run_stage5_review_ui_browser_qa_synced.py \
             tools/run_stage5_review_ui_display_qa.py
