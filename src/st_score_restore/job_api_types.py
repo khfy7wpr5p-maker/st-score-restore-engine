@@ -43,11 +43,10 @@ class UploadedPage:
 
 @dataclass(frozen=True)
 class JobApiConfig:
-    """Deployment and transport policy for the API boundary."""
+    """Deployment and transport policy for the non-production API baseline."""
 
     client_api_key: str
     reviewer_api_key: str
-    authentication_mode: Literal["development_static", "production_external"] = "development_static"
     max_upload_bytes: int = 50_000_000
     max_pages: int = 20
     retention_seconds: int = 86_400
@@ -70,12 +69,6 @@ class JobApiConfig:
     max_concurrent_requests: int = 32
 
     def __post_init__(self) -> None:
-        if self.authentication_mode not in {"development_static", "production_external"}:
-            raise JobApiError(
-                "invalid_authentication_mode",
-                "authentication_mode must be development_static or production_external.",
-                http_status=500,
-            )
         if len(self.client_api_key) < 16 or len(self.reviewer_api_key) < 16:
             raise JobApiError("weak_api_key_configuration", "Client and reviewer API keys must contain at least 16 characters.", http_status=500)
         if self.client_api_key == self.reviewer_api_key:
