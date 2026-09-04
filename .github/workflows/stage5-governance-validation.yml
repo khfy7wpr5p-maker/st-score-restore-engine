@@ -45,6 +45,9 @@ jobs:
       - name: Run Stage 5 real browser accessibility and stale-screen QA
         run: python tools/run_stage5_review_ui_browser_qa_synced.py --output stage5-browser-qa.json
 
+      - name: Run Stage 5 bounded grayscale display-integrity QA
+        run: python tools/run_stage5_review_ui_display_qa.py --output stage5-display-qa.json
+
       - name: Run Stage 5 governance and UI unit tests
         run: |
           python -m unittest \
@@ -65,4 +68,5 @@ jobs:
             tools/validate_stage5_start_authorization.py \
             tools/validate_stage5_review_ui.py \
             tools/run_stage5_review_ui_browser_qa.py \
-            tools/run_stage5_review_ui_browser_qa_synced.py
+            tools/run_stage5_review_ui_browser_qa_synced.py \
+            tools/run_stage5_review_ui_display_qa.py
