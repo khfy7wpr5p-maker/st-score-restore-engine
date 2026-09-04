@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage6_entry_governance_authorization_current_truth_overlay",
+  "recorded_on": "2026-09-04",
+  "production_checkpoint": {
+    "main_sha": "cb3e5189d79992a06df594cdb60af5c658932719",
+    "merge_pr": 157,
+    "merge_pr_title": "Stage 6: authorize entry and governance start",
+    "pr_exact_head_sha": "467282cbf7c55c1f493212e63fac8c43b11423d8",
+    "exact_head_repository_validation_run_id": 33900390609,
+    "exact_head_repository_validation_run_number": 439,
+    "exact_head_stage4_governance_run_id": 33900390565,
+    "exact_head_stage4_governance_run_number": 50,
+    "exact_head_stage5_governance_run_id": 33900390632,
+    "exact_head_stage5_governance_run_number": 42,
+    "exact_head_stage6_governance_run_id": 33900391497,
+    "exact_head_stage6_governance_run_number": 1,
+    "postmerge_repository_validation_run_id": 33900500539,
+    "postmerge_repository_validation_run_number": 440,
+    "postmerge_stage4_governance_run_id": 33900500642,
+    "postmerge_stage4_governance_run_number": 51,
+    "postmerge_stage5_governance_run_id": 33900500551,
+    "postmerge_stage5_governance_run_number": 43,
+    "postmerge_stage6_governance_run_id": 33900500584,
+    "postmerge_stage6_governance_run_number": 2,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "stage6_entry_authorization": {
+    "authorization_id": "stage6.entry-governance-authorization.v1",
+    "decision": "AUTHORIZE_STAGE6_ENTRY_AND_GOVERNANCE_START",
+    "authorization_digest": "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3",
+    "purpose": "identity_network_and_production_infrastructure_governance"
+  },
+  "stage6": {
+    "state": "ACTIVE_GOVERNANCE_PROVIDER_NEUTRAL_ONLY",
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "provider_neutral_architecture_and_contract_work_authorized": true,
+    "provider_specific_trust_boundary_decision_package_authorized": false,
+    "production_identity_implementation_authorized": false,
+    "production_secrets_kms_iam_implementation_authorized": false,
+    "production_network_implementation_authorized": false,
+    "production_storage_deployment_implementation_authorized": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_s6_02_trust_boundary_decision_package_authorization"
+  },
+  "stage7": {
+    "entry_authorized": false,
+    "preview_release_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage5_final_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "temporary_pr154_merge_authorized": false,
+    "representativeness_established": false,
+    "absence_of_bias_established": false,
+    "omr_correctness_established": false,
+    "restoration_effectiveness_established": false
+  },
+  "compatibility_note": "This later overlay records production-effective Stage 6 entry authorization and provider-neutral governance start from PR #157. The historical Stage 5 final-exit checkpoint remains immutable with Stage 6 entry authorization=false. Stage 6 is now active only for provider-neutral governance, architecture and contract work; provider-specific trust-boundary decisions, production identity/network/storage/KMS implementation, operational resource creation, production deployment, Stage 7 preview release, threshold/resource changes, held-out retuning, training and publication remain separately unauthorized."
+}
