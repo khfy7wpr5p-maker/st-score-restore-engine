@@ -18,33 +18,33 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends orca xdotool xvfb dbus-x11 at-spi2-core openbox
 
-      - name: Probe Orca with real Chrome accessibility
+      - name: Probe Orca against production review UI assets
         shell: bash
         run: |
           set -euo pipefail
+          export PYTHONPATH="src:."
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
           echo "Chrome: $($CHROME --version)"
           echo "Orca: $(orca --version)"
-          cat > /tmp/stage5-orca-probe.html <<'HTML'
-          <!doctype html>
-          <html lang="en">
-          <head><meta charset="utf-8"><title>Stage 5 Orca Probe</title></head>
-          <body>
-            <main>
-              <h1>Stage 5 Orca Probe</h1>
-              <label for="probe-field">Probe field</label>
-              <input id="probe-field">
-              <button id="probe-button">Probe button</button>
-            </main>
-          </body>
-          </html>
-          HTML
+
+          python - <<'PY' >/tmp/stage5-review-fixture.log 2>&1 &
+          from http.server import ThreadingHTTPServer
+          from tools.run_stage5_review_ui_browser_qa import FixtureHandler
+          ThreadingHTTPServer(("127.0.0.1", 8765), FixtureHandler).serve_forever()
+          PY
+          SERVER_PID=$!
+          for _ in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8765/review >/dev/null; then break; fi
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:8765/review | grep -q 'Teacher review'
+
           Xvfb :99 -screen 0 1280x900x24 >/tmp/xvfb.log 2>&1 &
           XVFB_PID=$!
           export DISPLAY=:99
           openbox >/tmp/openbox.log 2>&1 &
           OPENBOX_PID=$!
-          trap 'kill $OPENBOX_PID $XVFB_PID 2>/dev/null || true' EXIT
+          trap 'kill $OPENBOX_PID $XVFB_PID $SERVER_PID 2>/dev/null || true' EXIT
           sleep 2
 
           set +e
@@ -56,17 +56,36 @@ jobs:
             ORCA_PID=$!
             sleep 3
             CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
-            "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-chrome file:///tmp/stage5-orca-probe.html >/tmp/chrome.log 2>&1 &
+            "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-review http://127.0.0.1:8765/review >/tmp/chrome.log 2>&1 &
             CHROME_PID=$!
-            sleep 5
-            WINDOW_ID="$(xdotool search --name "Stage 5 Orca Probe" | head -n1)"
+            sleep 6
+            WINDOW_ID="$(xdotool search --name "ST Score Restore - Teacher Review" | head -n1)"
             echo "window=$WINDOW_ID" >/tmp/interaction.log
             xdotool windowfocus --sync "$WINDOW_ID" >>/tmp/interaction.log 2>&1
             sleep 1
+
+            # Skip link -> Job ID.
             xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
-            sleep 2
+            sleep 1
             xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            sleep 1
+            xdotool type --window "$WINDOW_ID" --delay 15 "job-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            xdotool type --window "$WINDOW_ID" --delay 15 "teacher-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            xdotool type --window "$WINDOW_ID" --delay 15 "reviewer-key-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            sleep 1
+            xdotool key --window "$WINDOW_ID" Return >>/tmp/interaction.log 2>&1
+            sleep 6
+
+            # loadReview() focuses the real workspace heading. Walk the real review controls.
+            for _ in $(seq 1 10); do
+              xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+              sleep 0.8
+            done
             sleep 2
+
             kill "$ORCA_PID" 2>/dev/null || true
             kill "$CHROME_PID" 2>/dev/null || true
             wait "$ORCA_PID" 2>/dev/null || true
@@ -79,9 +98,20 @@ jobs:
           cat /tmp/interaction.log 2>/dev/null || true
           echo "--- Orca stderr ---"
           tail -n 80 /tmp/orca.stderr 2>/dev/null || true
-          echo "--- Orca matches ---"
-          grep -Eai 'Stage 5 Orca Probe|Probe field|Probe button|SPEECH OUTPUT|FOCUS' /tmp/orca.log 2>/dev/null | tail -n 240 || true
+          echo "--- Orca review matches ---"
+          grep -Eai 'Teacher review|Job ID|Reviewer ID|Reviewer API key|Load review|Review evidence|Source evidence|Candidate evidence|Evidence zoom|Review notes|Approve candidate|Reject candidate|Reprocess page|Loaded 1 review page|SPEECH OUTPUT|FOCUS' /tmp/orca.log 2>/dev/null | tail -n 420 || true
           echo "session_rc=$SESSION_RC"
 
+          test "$SESSION_RC" -eq 0
           test -s /tmp/orca.log
-          grep -Eaiq 'Probe field|Probe button' /tmp/orca.log
+          grep -Eaiq "SPEECH OUTPUT: 'Job ID entry|Job ID.*entry" /tmp/orca.log
+          grep -Eaiq "SPEECH OUTPUT: 'Reviewer ID entry|Reviewer ID.*entry" /tmp/orca.log
+          grep -Eaiq "SPEECH OUTPUT: 'Reviewer API key password text|Reviewer API key.*password" /tmp/orca.log
+          grep -Eaiq "SPEECH OUTPUT: 'Load review push button|Load review.*button" /tmp/orca.log
+          grep -Eaiq "Review evidence" /tmp/orca.log
+          grep -Eaiq "Source evidence image" /tmp/orca.log
+          grep -Eaiq "Candidate evidence image" /tmp/orca.log
+          grep -Eaiq "Review notes" /tmp/orca.log
+          grep -Eaiq "Approve candidate" /tmp/orca.log
+          grep -Eaiq "Reject candidate" /tmp/orca.log
+          grep -Eaiq "Reprocess page" /tmp/orca.log
