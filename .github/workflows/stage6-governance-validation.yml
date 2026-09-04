@@ -1,0 +1,43 @@
+name: Stage 6 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage6-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate Stage 6 entry governance authorization
+        run: python tools/validate_stage6_entry_authorization.py
+
+      - name: Run Stage 6 governance unit tests
+        run: python -m unittest tests.test_stage6_entry_authorization -v
+
+      - name: Compile Stage 6 governance sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage6_entry_authorization.py \
+            tools/validate_stage6_entry_authorization.py

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage6.entry-governance-authorization.v1",
+  "decision": "AUTHORIZE_STAGE6_ENTRY_AND_GOVERNANCE_START",
+  "authorizedOn": "2026-09-04",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260904-stage6-entry-01",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "stage5FinalAcceptanceDigest": {
+    "algorithm": "sha256",
+    "value": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc"
+  },
+  "stage5ProductionCheckpoint": {
+    "currentMainSha": "0f006f678c63302a2e433e6401fd168c1a0ffa4c",
+    "stage5FinalExitMainSha": "19aaa35ac212b2a1698cd23b622bfd59c1e721b4",
+    "stage5FinalExitPass": true,
+    "repositoryValidationRunNumber": 438,
+    "stage4GovernanceRunNumber": 49,
+    "stage5GovernanceRunNumber": 41,
+    "python311": "success",
+    "python312": "success"
+  },
+  "stage6Purpose": "identity_network_and_production_infrastructure_governance",
+  "scope": {
+    "stage6EntryEligible": true,
+    "stage6EntryAuthorized": true,
+    "stage6GovernanceFrameworkAuthorized": true,
+    "stage6Started": true,
+    "providerNeutralArchitectureAndContractWorkAuthorized": true,
+    "providerSpecificTrustBoundaryDecisionPackageAuthorized": false,
+    "productionIdentityImplementationAuthorized": false,
+    "productionSecretsKmsIamImplementationAuthorized": false,
+    "productionNetworkImplementationAuthorized": false,
+    "productionStorageDeploymentImplementationAuthorized": false,
+    "productionOperationalDrillsAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "previewReleaseAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false
+  },
+  "safetyBoundaries": {
+    "historicalEvidenceImmutable": true,
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "rawPrivateMetricsInOrdinaryGit": false,
+    "stage5FinalPassMustRemainTrue": true,
+    "stage5ColorManagementValidatedMustRemainFalse": true,
+    "colorFidelityCertificationAuthorized": false,
+    "temporaryPr154MergeAuthorized": false,
+    "providerSpecificStage6WorkRequiresSeparateAuthorization": true,
+    "stage7EntryAuthorized": false
+  },
+  "nextSafeBoundary": "separate_explicit_s6_02_trust_boundary_decision_package_authorization"
+}
