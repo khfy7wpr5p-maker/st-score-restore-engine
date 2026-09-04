@@ -60,7 +60,7 @@ the wrapper uses process-local random capability values solely to call the
 existing local `ApiV1`. These capabilities are not production user identity,
 are not persisted, and are never accepted from callers.
 
-## Tenant and ownership authorization
+## Tenant, ownership and idempotency authorization
 
 Production job access requires a separate `JobAuthorizationStore` contract.
 The production storage implementation is intentionally deferred to the later
@@ -77,8 +77,20 @@ fail-closed:
 - any other production role is denied.
 
 Job creation binds the returned job ID to the authenticated tenant and owner and
-then re-reads the binding before returning success. Idempotent replays cannot
-rebind a job to a different owner or tenant.
+then re-reads the binding before returning success.
+
+Before the request reaches the local job service, an externally supplied
+`Idempotency-Key` is validated using the existing 8-128 non-whitespace contract
+and transformed into a deterministic internal key scoped to the authenticated
+opaque tenant and subject. Therefore the same external idempotency key used by
+two different principals cannot resolve to the same local job or race to claim
+its ownership binding. The same principal continues to receive normal
+idempotent replay semantics.
+
+A failed authorization-store bind may leave a local job with no production
+security binding; that job remains inaccessible because missing bindings fail
+closed. Atomic durable co-commit of job state and authorization state is a later
+production-storage concern and must not be claimed complete by S6-03.
 
 ## Local compatibility
 
