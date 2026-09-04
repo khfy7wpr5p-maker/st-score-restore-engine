@@ -53,12 +53,18 @@ class FakeAuthorizationStore:
 class FakeService:
     def __init__(self):
         self.created_actor = None
-        self.created_count = 0
+        self.created_actor_by_job: dict[str, str] = {}
+        self.idempotency: dict[str, str] = {}
 
     def create_job(self, pages, *, idempotency_key, actor, restoration_config):
+        existing = self.idempotency.get(idempotency_key)
+        if existing is not None:
+            return {"jobId": existing, "state": "UPLOADED"}, True
+        job_id = f"job_{len(self.idempotency) + 1}"
+        self.idempotency[idempotency_key] = job_id
         self.created_actor = actor
-        self.created_count += 1
-        return {"jobId": "job_1", "state": "UPLOADED"}, self.created_count > 1
+        self.created_actor_by_job[job_id] = actor
+        return {"jobId": job_id, "state": "UPLOADED"}, False
 
     def get_job(self, job_id: str):
         return {"jobId": job_id, "state": "UPLOADED"}
@@ -113,7 +119,7 @@ class ProductionApiAuthorizationTests(unittest.TestCase):
             self.store,
         )
 
-    def create_job(self, token="client-a"):
+    def create_job(self, token="client-a", idempotency_key="prod-0001"):
         return self.api.handle(
             "POST",
             "/api/v1/restoration-jobs",
@@ -121,7 +127,7 @@ class ProductionApiAuthorizationTests(unittest.TestCase):
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "image/png",
                 "X-Filename": "page.png",
-                "Idempotency-Key": "prod-0001",
+                "Idempotency-Key": idempotency_key,
             },
             b"synthetic-image-bytes",
         )
@@ -194,11 +200,33 @@ class ProductionApiAuthorizationTests(unittest.TestCase):
         self.assertEqual(503, unavailable.status)
         self.assertEqual("authorization_store_unavailable", json.loads(unavailable.body)["error"]["code"])
 
-    def test_idempotent_replay_cannot_rebind_job_to_another_owner(self):
-        self.assertEqual(202, self.create_job("client-a").status)
-        replay = self.create_job("client-b")
-        self.assertEqual(403, replay.status)
-        self.assertEqual("authorization_binding_conflict", json.loads(replay.body)["error"]["code"])
+    def test_same_external_idempotency_key_is_scoped_to_authenticated_principal(self):
+        first = self.create_job("client-a")
+        second = self.create_job("client-b")
+        self.assertEqual(202, first.status)
+        self.assertEqual(202, second.status)
+        self.assertEqual("job_1", json.loads(first.body)["jobId"])
+        self.assertEqual("job_2", json.loads(second.body)["jobId"])
+        self.assertNotEqual(self.store.contexts["job_1"], self.store.contexts["job_2"])
+        self.assertEqual(2, len(self.service.idempotency))
+
+    def test_same_principal_idempotent_replay_keeps_same_job_and_binding(self):
+        first = self.create_job("client-a")
+        replay = self.create_job("client-a")
+        self.assertEqual(202, first.status)
+        self.assertEqual(200, replay.status)
+        self.assertEqual("job_1", json.loads(replay.body)["jobId"])
+        self.assertEqual(1, len(self.service.idempotency))
+        self.assertEqual(
+            self.store.contexts["job_1"].owner_key,
+            self.service.created_actor_by_job["job_1"],
+        )
+
+    def test_external_idempotency_validation_is_preserved_before_scoping(self):
+        invalid = self.create_job("client-a", idempotency_key="short")
+        self.assertEqual(400, invalid.status)
+        self.assertEqual("invalid_idempotency_key", json.loads(invalid.body)["error"]["code"])
+        self.assertEqual({}, self.service.idempotency)
 
     def test_health_remains_non_identity_liveness_probe(self):
         response = self.api.handle("GET", "/health", {})
