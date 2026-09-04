@@ -9,6 +9,7 @@ and only opaque derived principal identifiers are passed into the local router.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import hashlib
 import json
 import re
 import secrets
@@ -208,15 +209,51 @@ class ProductionApiV1:
         headers: Mapping[str, str],
         identity: AuthenticatedIdentity,
     ) -> dict[str, str]:
+        external_idempotency_key = self._header(headers, "idempotency-key")
         sanitized = {
             str(key): str(value)
             for key, value in headers.items()
-            if str(key).lower() not in {"authorization", "x-api-key", "x-actor-id"}
+            if str(key).lower() not in {
+                "authorization",
+                "x-api-key",
+                "x-actor-id",
+                "idempotency-key",
+            }
         }
         capability = self._reviewer_capability if identity.role == "reviewer" else self._client_capability
         sanitized["Authorization"] = f"Bearer {capability}"
         sanitized["X-Actor-Id"] = identity.actor_id
+        if external_idempotency_key is not None:
+            self._validate_external_idempotency_key(external_idempotency_key)
+            sanitized["Idempotency-Key"] = self._scoped_idempotency_key(
+                identity,
+                external_idempotency_key,
+            )
         return sanitized
+
+    @staticmethod
+    def _scoped_idempotency_key(
+        identity: AuthenticatedIdentity,
+        external_key: str,
+    ) -> str:
+        if identity.tenant_key is None or identity.subject_key is None:
+            raise JobApiError(
+                "invalid_production_principal",
+                "Production idempotency requires tenant and owner identity.",
+                http_status=500,
+            )
+        material = (
+            f"{identity.tenant_key}\x00{identity.subject_key}\x00{external_key}"
+        ).encode("utf-8")
+        return f"prod-{hashlib.sha256(material).hexdigest()}"
+
+    @staticmethod
+    def _validate_external_idempotency_key(value: str) -> None:
+        if not 8 <= len(value) <= 128 or any(character.isspace() for character in value):
+            raise JobApiError(
+                "invalid_idempotency_key",
+                "Idempotency-Key must contain 8 to 128 non-whitespace characters.",
+            )
 
     @staticmethod
     def _job_id_from_path(path: str) -> str | None:
