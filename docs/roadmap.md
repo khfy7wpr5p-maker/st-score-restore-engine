@@ -62,6 +62,18 @@ Accepted Stage 4 truth is deliberately abstention-first:
 
 The detailed immutable/current-truth record is `docs/live/ST_SCORE_RESTORE_STAGE4_FINAL_EXIT_CURRENT_TRUTH.json`.
 
+#### Historical Stage 4 transition checkpoint — immutable, superseded current-state interpretation
+
+The architecture-consistency audit also retains the earlier transition checkpoint verbatim enough to prove that historical governance was not erased when later stages completed. At that historical point **Stage 4 ACTIVE** and **Stage 5 BLOCKED** were the correct states. The Stage 4 framework production anchor was `4a5c3db2d767dac235fe12a6bd0e18ba500e7362`; the Stage 4 entry/start digest was `013b29f861a68c755d17d1a0106183db4b35367b4c7bd9ce6c08c90c114171e8`. The later real-development execution-authorization production main was `76f5643dde72c8cc4b02b517133331e9dea00146`, Run #287, with authorization digest `81d5bb62d494094999e106740f90dccf376296aff8bfc004f27643d6cd94ae68`.
+
+That historical authorization meant real development calibration was **authorized but not yet executed** at that checkpoint, and the private metric dependency still applied. The historical readiness blockers were:
+
+- `no_real_development_calibration_evidence_is_accepted`
+- `no_stage4_metric_acceptance_target_policy_is_accepted`
+- `no_real_held_out_evaluation_evidence_is_accepted`
+
+Those blockers were resolved by later evidence and acceptance gates; retaining them here is historical binding, not a claim that Stage 4 is currently ACTIVE or Stage 5 is currently BLOCKED.
+
 ### Stage 5 — Accessible teacher review interface
 
 **State:** COMPLETE / PASS / production-effective.
