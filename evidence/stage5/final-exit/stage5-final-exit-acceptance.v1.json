@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage5.final-exit-acceptance.v1",
+  "decision": "PASS",
+  "acceptedOn": "2026-09-04",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260904-01",
+  "acceptanceSourceCode": "explicit_user_authorization",
+  "stage5QaEvidenceDigest": {
+    "algorithm": "sha256",
+    "value": "0e7ae71251db637ee9ba99cdcd5e2216fdfd3d655dc5eda23b676ea9ec5699fe"
+  },
+  "acceptedReadinessState": {
+    "decision": "STAGE5_COMPLETE_PASS",
+    "readinessPrerequisitesSatisfied": true,
+    "blockerCount": 0,
+    "blockerCodes": [],
+    "accessibleTeacherReviewInterfaceImplemented": true,
+    "realBrowserQaPassed": true,
+    "screenReaderQaPassed": true,
+    "boundedDisplayIntegrityQaPassed": true,
+    "staleScreenFailClosedVerified": true,
+    "evidenceBoundReviewDecisionVerified": true,
+    "colorManagementValidated": false,
+    "colorFidelityClaimed": false
+  },
+  "acceptedLimitations": [
+    "Input ICC/color profiles were not inspected; colorManagementValidated remains false and no color-fidelity certification is claimed.",
+    "Browser, screen-reader, and bounded display QA use repository synthetic Stage 5 fixtures; no real score bytes were placed in ordinary Git.",
+    "Stage 5 PASS covers the accessible local teacher-review interface and bounded review-evidence display contract; it does not authorize production deployment or establish restoration/OMR/model quality.",
+    "Stage 6 identity, network, and production infrastructure remains separately unauthorized and not started."
+  ],
+  "acceptedPurpose": "stage6-entry-eligibility-only",
+  "stage5ExitPass": true,
+  "stage6EntryEligible": true,
+  "stage6EntryAuthorized": false,
+  "stage6Started": false,
+  "claims": {
+    "productionDeploymentAuthorized": false,
+    "identityNetworkInfrastructureAuthorized": false,
+    "previewReleaseAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "publicationAuthorized": false,
+    "colorManagementValidated": false,
+    "colorFidelityCertified": false,
+    "representativenessEstablished": false,
+    "absenceOfBiasEstablished": false,
+    "omrCorrectnessEstablished": false,
+    "restorationEffectivenessEstablished": false
+  }
+}
