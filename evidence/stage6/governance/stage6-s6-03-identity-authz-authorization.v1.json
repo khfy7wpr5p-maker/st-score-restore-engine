@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "authorization_id": "stage6.s6-03.identity-authz-implementation-authorization.v1",
+  "decision": "AUTHORIZE_S6_03_IDENTITY_AUTHZ_IMPLEMENTATION",
+  "authorized_on": "2026-09-04",
+  "decision_authority_reference": "authority:project-governance-owner-20260904-stage6-s6-03",
+  "authorization_source_code": "explicit_user_authorization",
+  "entry_checkpoint": {
+    "main_sha": "ed55e10d57655e237e940e14d0af56dd62222ff2",
+    "s6_02_current_truth_path": "docs/live/ST_SCORE_RESTORE_STAGE6_S6_02_CURRENT_TRUTH.json",
+    "s6_02_decision_digest": "9485e51f1398c6cff2d9be9264eb8acdf47f8c4ca0fc750062fd9e80298e3865",
+    "postmerge_repository_validation_run_id": 33902498905,
+    "postmerge_repository_validation_run_number": 446,
+    "postmerge_stage4_governance_run_id": 33902499082,
+    "postmerge_stage4_governance_run_number": 57,
+    "postmerge_stage5_governance_run_id": 33902499110,
+    "postmerge_stage5_governance_run_number": 49,
+    "postmerge_stage6_governance_run_id": 33902499173,
+    "postmerge_stage6_governance_run_number": 8,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "authorized_scope": {
+    "provider_neutral_production_identity_contract_implementation": true,
+    "signed_identity_verification_boundary": true,
+    "issuer_audience_expiry_not_before_key_identity_validation": true,
+    "revocation_fail_closed_contract": true,
+    "tenant_isolation_enforcement": true,
+    "job_ownership_enforcement": true,
+    "role_conflict_enforcement": true,
+    "privacy_safe_principal_derivation": true,
+    "development_static_authentication_compatibility": true,
+    "production_http_integration_contract": true
+  },
+  "explicitly_not_authorized": {
+    "provider_selection_finalization": false,
+    "provider_specific_identity_adapter_activation": false,
+    "live_identity_provider_resource_creation": false,
+    "production_secrets_kms_iam_implementation": false,
+    "production_network_implementation": false,
+    "production_storage_deployment_implementation": false,
+    "production_operational_drills": false,
+    "production_deployment": false,
+    "stage7": false,
+    "model_training": false,
+    "publication": false,
+    "held_out_retuning": false,
+    "threshold_changes": false,
+    "resource_limit_changes": false
+  },
+  "safety_assertions": {
+    "historical_evidence_immutable": true,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "caller_supplied_actor_identity_forbidden_in_production": true,
+    "static_api_keys_forbidden_as_production_user_identity": true,
+    "provider_remains_unselected": true,
+    "live_resource_creation_authorized": false,
+    "production_deployment_authorized": false
+  },
+  "next_safe_boundary": "separate_explicit_s6_04_secrets_kms_iam_implementation_authorization"
+}
