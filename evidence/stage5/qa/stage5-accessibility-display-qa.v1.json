@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "evidenceId": "stage5.accessibility-display-qa.v1",
+  "recordedOn": "2026-09-04",
+  "purpose": "stage5_final_exit_evidence",
+  "productionReviewUiCheckpoint": {
+    "mainSha": "ad3dc11cec311b345fac600316a44d05d444f21b",
+    "mergePr": 153,
+    "postmergeRepositoryValidation": {
+      "runId": 33807238374,
+      "runNumber": 419,
+      "python311": "success",
+      "python312": "success"
+    },
+    "postmergeStage5Governance": {
+      "runId": 33807238495,
+      "runNumber": 22,
+      "python311": "success",
+      "python312": "success"
+    }
+  },
+  "screenReaderExecution": {
+    "temporaryProbePr": 154,
+    "temporaryProbeMerged": false,
+    "exactHeadSha": "214b31c67b4ca3af5cb3d28ef312162a22af3420",
+    "workflowRunId": 33843450746,
+    "workflowRunNumber": 5,
+    "jobId": 100930256714,
+    "result": "PASS",
+    "runtime": {
+      "os": "Ubuntu 24.04",
+      "browser": "Google Chrome 152.0.7977.64",
+      "screenReader": "Orca 46.1",
+      "accessibilityTransport": "AT-SPI"
+    },
+    "productionUiRoute": "/review",
+    "assertions": {
+      "connectionControlNamesAndRolesObserved": true,
+      "reviewWorkspaceNamesAndRolesObserved": true,
+      "sourceAndCandidateEvidenceNamesObserved": true,
+      "reviewNotesObserved": true,
+      "approveRejectReprocessObserved": true,
+      "realSpeechOutputObserved": true,
+      "keyboardOnlyTraversalExecuted": true
+    }
+  },
+  "boundedDisplayQa": {
+    "pullRequest": 155,
+    "exactHeadSha": "b8dd7c9aa73d5b6e11acefd8be07575f0a7ec16e",
+    "repositoryValidation": {
+      "runId": 33843833115,
+      "runNumber": 425,
+      "python311": "success",
+      "python312": "success"
+    },
+    "stage5Governance": {
+      "runId": 33843833160,
+      "runNumber": 28,
+      "python311": "success",
+      "python312": "success"
+    },
+    "result": "PASS",
+    "contract": {
+      "cropEncoding": "png_grayscale_8bit",
+      "inputColorProfiles": "not_inspected",
+      "colorManagementValidated": false,
+      "grayscaleBrowserDecodeVerified": true,
+      "actualPixelsAtOneXVerified": true,
+      "colorFidelityNotClaimed": true
+    }
+  },
+  "safetyBoundaries": {
+    "realOrDerivativeBytesInOrdinaryGit": false,
+    "rawPrivateMetricsInOrdinaryGit": false,
+    "productionDeploymentAuthorized": false,
+    "stage6EntryAuthorized": false,
+    "productionThresholdChangesAuthorized": false,
+    "productionResourceLimitChangesAuthorized": false,
+    "modelTrainingAuthorized": false
+  },
+  "limitations": [
+    "Input ICC/color profiles were not inspected.",
+    "Color management remains unvalidated and no color-fidelity certification is claimed.",
+    "Browser, assistive-technology, and display QA use repository synthetic Stage 5 fixtures and no real score bytes.",
+    "Stage 5 final-exit evidence does not authorize production deployment, Stage 6 entry, threshold/resource changes, training, publication, or preview release."
+  ]
+}
