@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage6_s6_05_production_network_current_truth_overlay",
+  "recorded_on": "2026-09-05",
+  "production_checkpoint": {
+    "main_sha": "7e7b772663f59d9a00413a87c73b84509834cfa6",
+    "merge_pr": 165,
+    "merge_pr_title": "Stage 6: implement S6-05 production network boundary",
+    "pr_exact_head_sha": "efd3ac7fc49f1068488547bb595c7ecd196c0168",
+    "exact_head_repository_validation_run_id": 33966509577,
+    "exact_head_repository_validation_run_number": 460,
+    "exact_head_stage4_governance_run_id": 33966509553,
+    "exact_head_stage4_governance_run_number": 71,
+    "exact_head_stage5_governance_run_id": 33966509580,
+    "exact_head_stage5_governance_run_number": 63,
+    "exact_head_stage6_governance_run_id": 33966509539,
+    "exact_head_stage6_governance_run_number": 22,
+    "postmerge_repository_validation_run_id": 33966581756,
+    "postmerge_repository_validation_run_number": 461,
+    "postmerge_stage4_governance_run_id": 33966581828,
+    "postmerge_stage4_governance_run_number": 72,
+    "postmerge_stage5_governance_run_id": 33966581873,
+    "postmerge_stage5_governance_run_number": 64,
+    "postmerge_stage6_governance_run_id": 33966581791,
+    "postmerge_stage6_governance_run_number": 23,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "stage6_entry_authorization": {
+    "authorization_id": "stage6.entry-governance-authorization.v1",
+    "authorization_digest": "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3"
+  },
+  "s6_02_decision": {
+    "decision_id": "stage6.s6-02.production-trust-boundary-decision.v1",
+    "decision_digest": "9485e51f1398c6cff2d9be9264eb8acdf47f8c4ca0fc750062fd9e80298e3865"
+  },
+  "s6_03_authorization": {
+    "authorization_id": "stage6.s6-03.identity-authz-implementation-authorization.v1",
+    "authorization_digest": "f82421eca0ed90defd04609054f47d1972b5327f71a7f35d644ac84c5f57ce39"
+  },
+  "s6_04_authorization": {
+    "authorization_id": "stage6.s6-04.secrets-kms-iam-implementation-authorization.v1",
+    "authorization_digest": "a14b4f6dfd8b7a32b3fd9acf9f5a79ecdf6d90cff40e0e842d5e33837d1c0cef"
+  },
+  "s6_05_authorization": {
+    "authorization_id": "stage6.s6-05.production-network-implementation-authorization.v1",
+    "decision": "AUTHORIZE_S6_05_PRODUCTION_NETWORK_IMPLEMENTATION",
+    "authorization_digest": "6815772f8f393b2bf281c75cb4500035808ec7ee5dc083d822dcefca1db9716c"
+  },
+  "identity": {
+    "production_identity_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false
+  },
+  "secrets_kms_iam": {
+    "production_secrets_kms_iam_contract_implemented": true,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "live_secret_key_or_iam_resource_created": false
+  },
+  "network": {
+    "provider_neutral_public_edge_contract_implemented": true,
+    "managed_tls_evidence_required": true,
+    "trusted_proxy_chain_validation": true,
+    "forwarded_headers_fail_closed": true,
+    "request_smuggling_normalization_required": true,
+    "multipart_boundary_evidence_required": true,
+    "waf_rate_quota_connection_evidence_required": true,
+    "bounded_request_and_slow_client_evidence_required": true,
+    "private_topology_deny_by_default": true,
+    "quarantine_outbound_allowed": false,
+    "egress_allowlist_ssrf_guard_implemented": true,
+    "network_audit_dependency_fail_closed": true,
+    "built_in_stdlib_public_edge_allowed": false,
+    "provider_specific_network_adapter_activated": false,
+    "live_network_resources_created": false,
+    "provider_specific_request_smuggling_certified": false,
+    "independent_production_security_signoff_complete": false
+  },
+  "audit": {
+    "privacy_safe_security_audit_contract_implemented": true,
+    "audit_dependency_fail_closed": true,
+    "durable_append_only_tamper_evident_audit_store_implemented": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_evaluation_authorized": true,
+    "provider_specific_network_activation_authorized": false,
+    "live_network_resource_creation_authorized": false
+  },
+  "stage6": {
+    "state": "ACTIVE_NETWORK_SECURITY_IMPLEMENTED_PROVIDER_UNSELECTED",
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "production_identity_implementation_authorized": true,
+    "production_identity_contract_implemented": true,
+    "production_secrets_kms_iam_implementation_authorized": true,
+    "production_secrets_kms_iam_contract_implemented": true,
+    "production_network_implementation_authorized": true,
+    "production_network_security_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "provider_specific_network_adapter_activated": false,
+    "production_storage_deployment_implementation_authorized": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_s6_06_storage_deployment_implementation_authorization"
+  },
+  "stage7": {
+    "entry_authorized": false,
+    "preview_release_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage5_final_checkpoint_rewritten": false,
+    "historical_stage6_entry_checkpoint_rewritten": false,
+    "historical_s6_02_checkpoint_rewritten": false,
+    "historical_s6_03_checkpoint_rewritten": false,
+    "historical_s6_04_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "raw_secrets_or_key_material_in_ordinary_git": false,
+    "provider_selection_finalized": false,
+    "live_network_resource_creation_authorized": false,
+    "provider_specific_network_certification_claimed": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "temporary_pr154_merge_authorized": false
+  },
+  "compatibility_note": "This overlay records production-effective S6-05 provider-neutral network security implementation from PR #165 without rewriting historical Stage 5, Stage 6 entry, S6-02, S6-03 or S6-04 checkpoints. Public ingress now requires trusted proxy/workload identity, managed TLS evidence, canonical rewritten forwarding identity, request-smuggling and multipart normalization evidence, and WAF/rate/quota/connection/body/header/slow-client admission evidence. Private topology is deny-by-default, quarantine outbound is forbidden, and exact HTTPS egress aliases enforce SSRF/DNS-rebinding guards. Provider selection remains UNSELECTED. No provider-specific network adapter, DNS, certificate, WAF, gateway, VPC, firewall, private link, NAT or other live network resource is activated or created. Provider-specific request-smuggling certification, independent production security sign-off, durable tamper-evident audit storage, production storage/deployment, operational drills, production deployment, Stage 7, threshold/resource changes, held-out retuning, training and publication remain separately unauthorized or incomplete."
+}
