@@ -48,7 +48,10 @@ jobs:
       - name: Validate Stage 6 S6-03 current truth
         run: python tools/validate_stage6_s6_03_current_truth.py
 
-      - name: Run Stage 6 governance and identity unit tests
+      - name: Validate Stage 6 S6-04 secrets/KMS/IAM authorization
+        run: python tools/validate_stage6_s6_04_authorization.py
+
+      - name: Run Stage 6 governance and production security unit tests
         run: |
           python -m unittest \
             tests.test_stage6_entry_authorization \
@@ -57,9 +60,11 @@ jobs:
             tests.test_stage6_s6_02_current_truth \
             tests.test_stage6_s6_03_authorization \
             tests.test_stage6_s6_03_current_truth \
-            tests.test_stage6_production_identity -v
+            tests.test_stage6_production_identity \
+            tests.test_stage6_s6_04_authorization \
+            tests.test_stage6_production_secrets_kms_iam -v
 
-      - name: Compile Stage 6 governance and identity sources
+      - name: Compile Stage 6 governance and production security sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage6_entry_authorization.py \
@@ -68,11 +73,14 @@ jobs:
             src/st_score_restore/stage6_s6_02_current_truth.py \
             src/st_score_restore/stage6_s6_03_authorization.py \
             src/st_score_restore/stage6_s6_03_current_truth.py \
+            src/st_score_restore/stage6_s6_04_authorization.py \
             src/st_score_restore/production_identity.py \
             src/st_score_restore/production_http_auth.py \
+            src/st_score_restore/production_secrets_kms_iam.py \
             tools/validate_stage6_entry_authorization.py \
             tools/validate_stage6_post_entry_authorization_current_truth.py \
             tools/validate_stage6_trust_boundary_decision.py \
             tools/validate_stage6_s6_02_current_truth.py \
             tools/validate_stage6_s6_03_authorization.py \
-            tools/validate_stage6_s6_03_current_truth.py
+            tools/validate_stage6_s6_03_current_truth.py \
+            tools/validate_stage6_s6_04_authorization.py
