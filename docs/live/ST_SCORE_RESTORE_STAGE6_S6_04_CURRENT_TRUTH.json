@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage6_s6_04_secrets_kms_iam_current_truth_overlay",
+  "recorded_on": "2026-09-05",
+  "production_checkpoint": {
+    "main_sha": "911fb8b228be64a66ba0a70405ef2c6f77a51dce",
+    "merge_pr": 163,
+    "merge_pr_title": "Stage 6: implement S6-04 secrets KMS IAM boundary",
+    "pr_exact_head_sha": "38f4d099e09af21dad43742a4fcda5423b0c7644",
+    "exact_head_repository_validation_run_id": 33960569854,
+    "exact_head_repository_validation_run_number": 456,
+    "exact_head_stage4_governance_run_id": 33960569858,
+    "exact_head_stage4_governance_run_number": 67,
+    "exact_head_stage5_governance_run_id": 33960569886,
+    "exact_head_stage5_governance_run_number": 59,
+    "exact_head_stage6_governance_run_id": 33960569871,
+    "exact_head_stage6_governance_run_number": 18,
+    "postmerge_repository_validation_run_id": 33960629792,
+    "postmerge_repository_validation_run_number": 457,
+    "postmerge_stage4_governance_run_id": 33960629826,
+    "postmerge_stage4_governance_run_number": 68,
+    "postmerge_stage5_governance_run_id": 33960629810,
+    "postmerge_stage5_governance_run_number": 60,
+    "postmerge_stage6_governance_run_id": 33960629845,
+    "postmerge_stage6_governance_run_number": 19,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "stage6_entry_authorization": {
+    "authorization_id": "stage6.entry-governance-authorization.v1",
+    "authorization_digest": "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3"
+  },
+  "s6_02_decision": {
+    "decision_id": "stage6.s6-02.production-trust-boundary-decision.v1",
+    "decision_digest": "9485e51f1398c6cff2d9be9264eb8acdf47f8c4ca0fc750062fd9e80298e3865"
+  },
+  "s6_03_authorization": {
+    "authorization_id": "stage6.s6-03.identity-authz-implementation-authorization.v1",
+    "authorization_digest": "f82421eca0ed90defd04609054f47d1972b5327f71a7f35d644ac84c5f57ce39"
+  },
+  "s6_04_authorization": {
+    "authorization_id": "stage6.s6-04.secrets-kms-iam-implementation-authorization.v1",
+    "decision": "AUTHORIZE_S6_04_SECRETS_KMS_IAM_IMPLEMENTATION",
+    "authorization_digest": "a14b4f6dfd8b7a32b3fd9acf9f5a79ecdf6d90cff40e0e842d5e33837d1c0cef"
+  },
+  "identity": {
+    "production_identity_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false
+  },
+  "secrets": {
+    "provider_neutral_secret_boundary_implemented": true,
+    "no_cache_rotation_aware_resolution": true,
+    "redacted_secret_material_contract": true,
+    "revocation_fail_closed": true,
+    "provider_specific_secret_manager_activated": false,
+    "live_secret_resource_created": false
+  },
+  "kms": {
+    "provider_neutral_envelope_boundary_implemented": true,
+    "key_state_revocation_fail_closed": true,
+    "encryption_context_binding": true,
+    "custom_production_cipher_implemented": false,
+    "provider_specific_kms_activated": false,
+    "live_key_created": false
+  },
+  "iam": {
+    "workload_identity_contract_implemented": true,
+    "least_privilege_deny_by_default": true,
+    "exact_no_wildcard_grants": true,
+    "environment_separation_enforced": true,
+    "separation_of_duties_enforced": true,
+    "provider_specific_iam_bindings_activated": false,
+    "live_iam_roles_or_policies_created": false
+  },
+  "audit": {
+    "privacy_safe_security_audit_contract_implemented": true,
+    "audit_dependency_fail_closed": true,
+    "durable_append_only_tamper_evident_audit_store_implemented": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_evaluation_authorized": true,
+    "provider_specific_secrets_kms_iam_activation_authorized": false,
+    "live_security_resource_creation_authorized": false
+  },
+  "stage6": {
+    "state": "ACTIVE_SECRETS_KMS_IAM_IMPLEMENTED_PROVIDER_UNSELECTED",
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "production_identity_implementation_authorized": true,
+    "production_identity_contract_implemented": true,
+    "production_secrets_kms_iam_implementation_authorized": true,
+    "production_secrets_kms_iam_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "production_network_implementation_authorized": false,
+    "production_storage_deployment_implementation_authorized": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_s6_05_network_implementation_authorization"
+  },
+  "stage7": {
+    "entry_authorized": false,
+    "preview_release_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage5_final_checkpoint_rewritten": false,
+    "historical_stage6_entry_checkpoint_rewritten": false,
+    "historical_s6_02_checkpoint_rewritten": false,
+    "historical_s6_03_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "raw_secrets_in_ordinary_git": false,
+    "cryptographic_key_material_in_ordinary_git": false,
+    "provider_selection_finalized": false,
+    "live_resource_creation_authorized": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "temporary_pr154_merge_authorized": false
+  },
+  "compatibility_note": "This overlay records production-effective S6-04 provider-neutral secrets, KMS and IAM contract implementation from PR #163 without rewriting historical Stage 5, Stage 6 entry, S6-02 or S6-03 checkpoints. Workload IAM is deny-by-default with exact grants, environment separation and separation of duties; secret resolution is rotation/revocation aware and redacted; KMS envelope orchestration requires enabled key state, revocation evidence and opaque tenant context binding; required security-audit dependency failure is fail-closed. Provider selection remains UNSELECTED. No provider-specific secret manager, KMS/HSM or IAM binding is activated; no live secret, key, role or policy is created; durable append-only audit storage, production network, storage/deployment, operational drills, production deployment, Stage 7, threshold/resource changes, held-out retuning, training and publication remain separately unauthorized or unimplemented."
+}
