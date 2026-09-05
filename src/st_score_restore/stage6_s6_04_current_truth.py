@@ -22,6 +22,10 @@ GATE_MAIN_SHA = "911fb8b228be64a66ba0a70405ef2c6f77a51dce"
 GATE_MERGE_PR = 163
 GATE_PR_TITLE = "Stage 6: implement S6-04 secrets KMS IAM boundary"
 GATE_EXACT_HEAD_SHA = "38f4d099e09af21dad43742a4fcda5423b0c7644"
+STAGE5_FINAL_ACCEPTANCE_DIGEST = "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc"
+STAGE6_ENTRY_AUTHORIZATION_DIGEST = "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3"
+S6_02_DECISION_DIGEST = "9485e51f1398c6cff2d9be9264eb8acdf47f8c4ca0fc750062fd9e80298e3865"
+S6_03_AUTHORIZATION_DIGEST = "f82421eca0ed90defd04609054f47d1972b5327f71a7f35d644ac84c5f57ce39"
 
 
 class Stage6S604CurrentTruthError(ValueError):
@@ -88,10 +92,22 @@ def validate_stage6_s6_04_current_truth(
     _require(value["stage5"] == {
         "state": "COMPLETE_PASS",
         "exit_pass": True,
-        "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+        "final_acceptance_digest": STAGE5_FINAL_ACCEPTANCE_DIGEST,
         "color_management_validated": False,
         "color_fidelity_certified": False,
     }, "Stage 5 truth drifted")
+    _require(value["stage6_entry_authorization"] == {
+        "authorization_id": "stage6.entry-governance-authorization.v1",
+        "authorization_digest": STAGE6_ENTRY_AUTHORIZATION_DIGEST,
+    }, "Stage 6 entry authorization binding drifted")
+    _require(value["s6_02_decision"] == {
+        "decision_id": "stage6.s6-02.production-trust-boundary-decision.v1",
+        "decision_digest": S6_02_DECISION_DIGEST,
+    }, "S6-02 decision binding drifted")
+    _require(value["s6_03_authorization"] == {
+        "authorization_id": "stage6.s6-03.identity-authz-implementation-authorization.v1",
+        "authorization_digest": S6_03_AUTHORIZATION_DIGEST,
+    }, "S6-03 authorization binding drifted")
     _require(value["s6_04_authorization"] == {
         "authorization_id": AUTHORIZATION_ID,
         "decision": AUTHORIZATION_DECISION,
@@ -159,10 +175,7 @@ def validate_stage6_s6_04_current_truth(
 
     assertions = value["assertions"]
     _require(isinstance(assertions, Mapping), "assertions must be an object")
-    for key in (
-        "historical_evidence_immutable",
-    ):
-        _require(assertions.get(key) is True, f"assertions.{key} must remain true")
+    _require(assertions.get("historical_evidence_immutable") is True, "historical evidence must remain immutable")
     for key in (
         "historical_stage5_final_checkpoint_rewritten",
         "historical_stage6_entry_checkpoint_rewritten",
