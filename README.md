@@ -2,18 +2,30 @@
 
 Safety-first visual restoration and validation engine for music scores and guitar TAB supplied as PDF, JPG/JPEG, PNG, or phone-captured images. This repository is **not** an OMR engine. Source bytes remain immutable; exact SHA-256 defines artifact identity; real corpus/derivative bytes and private raw observation metrics stay outside ordinary Git.
 
-## Production baseline and latest human-reference checkpoints — 2026-09-03
+## Current architecture status — 2026-09-06
+
+- **Stages 1–5:** COMPLETE / PASS / production-effective.
+- **Stage 6:** ACTIVE.
+- **S6-07:** deterministic synthetic operational safety/recovery drills COMPLETE.
+- Provider selection remains `UNSELECTED`; no live production resources or production deployment have been activated.
+- Production distributed stress/load/soak validation and independent production-security sign-off remain incomplete.
+- Stage 7 Preview Release has not started.
+- Next safe Stage 6 boundary: separate S6-08 integration/security regression authorization.
+
+The sections below retain historical Stage 4 evidence anchors because governance history is immutable. Historical ACTIVE/BLOCKED statements describe their original checkpoints, not current production state.
+
+## Historical Stage 4 production baseline and human-reference checkpoints — 2026-09-03
 
 - **Wikimedia expansion production baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60`, PR #125, `Stage 4: add Wikimedia development calibration expansion`, post-merge Run #324 (`33728459668`) SUCCESS on Python 3.11/3.12.
 - **Wikimedia human-label completion checkpoint:** main `2ce6151e7ce37198c5b264ddd577df71f49da8bf`, PR #128, `Stage 4: record Wikimedia human label completion`, post-merge Run #340 (`33745945427`) SUCCESS on Python 3.11/3.12.
 - **Wikimedia reference-bundle acceptance checkpoint:** main `3353b281a4022f107929fae296368390da45a4fb`, PR #130, `Stage 4: accept Wikimedia human reference bundle`, post-merge Run #348 (`33748180036`) SUCCESS on Python 3.11/3.12.
-- **Stage 1:** COMPLETE / PASS / production-effective.
-- **Stage 2:** COMPLETE / PASS / production-effective.
-- **Stage 3:** COMPLETE / PASS / production-effective.
-- **Stage 4:** **ACTIVE / NOT_READY**.
-- **Stage 5:** **BLOCKED** pending separate Stage 4 final exit PASS.
+- **Historical Stage 1:** COMPLETE / PASS / production-effective.
+- **Historical Stage 2:** COMPLETE / PASS / production-effective.
+- **Historical Stage 3:** COMPLETE / PASS / production-effective.
+- **Historical Stage 4 state at this checkpoint:** ACTIVE / NOT_READY.
+- **Historical Stage 5 state at this checkpoint:** BLOCKED pending separate Stage 4 final exit PASS.
 
-The Beethoven + Barley real development calibration was executed and **abstained**: 42 observation identities were accounted for as 24 measured + 18 `not_applicable`; measured support came from 1 source family; candidate thresholds derived: 0. Execution evidence remains not governance-accepted. Production Stage 2 thresholds and Stage 3 resource limits remain `uncalibrated_engineering_defaults`.
+The Beethoven + Barley real development calibration was executed and **abstained**: 42 observation identities were accounted for as 24 measured + 18 `not_applicable`; measured support came from 1 source family; candidate thresholds derived: 0. Execution evidence was not governance-accepted at this historical checkpoint. Production Stage 2 thresholds and Stage 3 resource limits at this historical checkpoint remained `uncalibrated_engineering_defaults`.
 
 PR #125 added a second raster development source family for Stage 4 support, PR #128 later froze the genuine human review completion as a separate evidence artifact, and PR #130 separately accepted that exact Wikimedia reference bundle for development candidate derivation:
 
@@ -26,9 +38,9 @@ PR #125 added a second raster development source family for Stage 4 support, PR 
 - immutable work package remains pristine/null-filled by design;
 - Wikimedia reference bundle accepted by separate PR #130 evidence: **true**;
 - candidate derivation eligible: **true**;
-- Wikimedia real calibration execution authorized: **false**;
-- Wikimedia real calibration executed: **false**;
-- production threshold/resource changes authorized: **false**;
+- Wikimedia real calibration execution authorized: **false at this historical checkpoint**;
+- Wikimedia real calibration executed: **false at this historical checkpoint**;
+- production threshold/resource changes authorized: **false at this historical checkpoint**;
 - Chopin remains held-out and excluded from development review/tuning.
 
 The Wikimedia review package has exactly seven human-review finding slots: `skew`, `blur`, `glare`, `shadow`, `uneven_lighting`, `noise`, `compression`. Allowed human labels are `clear`, `possible`, `probable`, `not_assessed`. The original work package keeps `referenceLabel`, `reviewerReference`, `provenanceReference`, and `reviewedOn` null; the completed human evidence is stored separately in `human-label-completion.v1.json`, and its later governance acceptance is stored separately in `reference-bundle-acceptance.v1.json`. Automated metrics/model predictions cannot be reference truth.
@@ -50,15 +62,15 @@ Historical evidence is immutable. The following checkpoints remain binding histo
 
 The phrase **AUTHORIZED / NOT YET EXECUTED** refers only to that immutable historical pre-execution authorization checkpoint. Current truth is that the Beethoven+Barley run later executed and abstained; the historical record still correctly carries `executed=false` because authorization evidence is not retroactively mutated.
 
-## Stage 4 current blockers
+## Historical Stage 4 blockers retained
 
-Stage 4 remains `NOT_READY` with these prerequisite blockers:
+At the retained Stage 4 checkpoint the prerequisite blockers were:
 
 1. `no_real_development_calibration_evidence_is_accepted`
 2. `no_real_held_out_evaluation_evidence_is_accepted`
 3. `no_stage4_metric_acceptance_target_policy_is_accepted`
 
-Wikimedia reference-bundle acceptance does not close blocker 1. Separate exact execution authorization, custody-only real metrics, expanded development calibration, and later governance acceptance remain distinct gates.
+These blocker codes are historical and were resolved by later accepted Stage 4 work. They do not describe current Stage 6 state.
 
 ## Binding development order
 
@@ -73,11 +85,22 @@ Stage 6  Identity, network and production infrastructure
 Stage 7  Preview release
 Stage 8  DocRes optional candidate
 Stage 9  Multi-engine comparator
+Stage 9A Music-Symbol Preservation Model
 Stage 10 ST Restore Selector
 Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
 
+## Future semantic music-preservation layer
+
+ADR 0018 defines **Stage 9A — ST Music-Symbol Preservation Model (MSPM)**. The model will be a learned semantic safety/veto layer, not a restoration engine and not an OMR engine. It is intended to compare the immutable source with each restoration variant and detect risks such as missing, invented, displaced, merged or split notation/TAB symbols.
+
+The first target taxonomy includes staff/TAB lines, noteheads, stems/flags/beams, augmentation dots, rests, accidentals, clefs, key/time signatures, barlines/repeats, ties/slurs, TAB digits/string relationship and core visually distinguishable guitar articulations.
+
+Stage 9A supplements the deterministic `music_safety_validator`; it does not replace it. Low-confidence semantic evidence must abstain or route to review, and hard preservation vetoes cannot be overridden by visual quality, the comparator or Stage 10 Selector. Stage 11 remains a separate restoration model so the restorer is not the sole judge of its own output.
+
+This architecture update does not authorize Stage 9A model training, data collection, model-weight publication or production inference. Those activities remain separately gated.
+
 ## Safety boundary
 
-Raw private metrics are custody-only and forbidden in ordinary Git. Unavailable metrics must be `not_applicable`, never fabricated numeric zeroes. Model/automatic predictions cannot become human reference truth. Development and held-out evidence remain strictly separated. No Stage 4 final PASS, Stage 5 entry, production threshold/resource change, training, publication, external export, or calibration execution is authorized by PR #125, PR #128, or PR #130.
+Raw private metrics are custody-only and forbidden in ordinary Git. Unavailable metrics must be `not_applicable`, never fabricated numeric zeroes. Model/automatic predictions cannot become human reference truth. Development and held-out evidence remain strictly separated. Model evaluation, calibration and training permissions remain separate from normal processing and teacher review.
