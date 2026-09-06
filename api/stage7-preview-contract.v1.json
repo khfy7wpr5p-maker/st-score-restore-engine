@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage7.preview-contract.v1",
+  "channel": "preview",
+  "profile": "provider-neutral",
+  "activationAuthorized": false,
+  "statusSurface": {
+    "safetyStatus": [
+      "ORIGINAL",
+      "RESTORED",
+      "REVIEW_REQUIRED",
+      "UNCERTAIN",
+      "FAILED_SAFE"
+    ],
+    "requiredFields": [
+      "contractVersion",
+      "channel",
+      "profile",
+      "activationAuthorized",
+      "killSwitchEngaged",
+      "safetyStatus",
+      "pageSafetyStatus",
+      "originalFallbackAvailable",
+      "provenanceRequired",
+      "omrCorrectnessClaimed",
+      "musicalTruthClaimed",
+      "productionSecurityCertified",
+      "messageCode"
+    ]
+  },
+  "routing": {
+    "routes": ["original", "restored_candidate", "review"],
+    "hardSafetyPrecedence": true,
+    "unknownEvidenceRoute": "review",
+    "activationNotAuthorizedRoute": "original",
+    "killSwitchRoute": "original",
+    "rollbackTarget": "original"
+  },
+  "observability": {
+    "artifactBytesAllowed": false,
+    "rawPrivateMetricsAllowed": false,
+    "secretsAllowed": false,
+    "freeTextAllowed": false,
+    "jobIdentityRepresentation": "sha256_opaque_reference",
+    "latencyRepresentation": "bounded_bucket"
+  },
+  "claims": {
+    "omrCorrectnessClaimed": false,
+    "musicalTruthClaimed": false,
+    "universalRestorationEffectivenessClaimed": false,
+    "productionSecurityCertified": false,
+    "productionScaleValidated": false
+  },
+  "excludedScope": {
+    "realUserCohort": true,
+    "providerSelection": true,
+    "providerSpecificActivation": true,
+    "liveResourceCreation": true,
+    "productionDeployment": true,
+    "productionLoadSoak": true,
+    "productionPenetrationTesting": true,
+    "thresholdChanges": true,
+    "resourceLimitChanges": true,
+    "modelTraining": true,
+    "modelPublication": true,
+    "stage8Entry": true
+  }
+}
