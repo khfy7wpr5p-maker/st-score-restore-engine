@@ -1,59 +1,71 @@
-# ADR 0018: Stage 9A Music-Symbol Preservation Model
+# ADR 0018: Stage 9A Music-Symbol Preservation Capability
 
 - **Status:** Accepted as future roadmap architecture; implementation and training remain separately gated
 - **Date:** 2026-09-06
-- **Decision ID:** `adr-0018-stage9a-music-symbol-preservation-model-v1`
+- **Decision ID:** `adr-0018-stage9a-music-symbol-preservation-model-v2`
 - **Repository:** `khfy7wpr5p-maker/st-score-restore-engine`
 - **Roadmap placement:** Stage 9A, after Stage 9 Multi-engine Comparator foundation and before Stage 10 ST Restore Selector
-- **Supersession relationship:** supplements ADR 0015; it does not weaken or rewrite ADR 0015 safety invariants
+- **Supersession relationship:** supplements ADR 0015 and is interpreted together with `docs/architecture-flexibility-principles.md`
 
 ## Context
 
-The current trusted baseline uses deterministic OpenCV restoration plus source-versus-candidate music/TAB safety checks. OpenCV can measure geometry, edges, connected components, line structure and image change, but it does not understand notation classes as musical symbols. A restoration can therefore look geometrically plausible while deleting, inventing, merging, splitting or moving a musically significant mark.
+The current trusted baseline uses deterministic OpenCV restoration plus source-versus-candidate music/TAB safety checks. OpenCV can measure geometry, edges, connected components, line structure and image change, but it does not natively understand notation classes as musical symbols. A restoration can therefore look geometrically plausible while deleting, inventing, merging, splitting or moving a musically significant mark.
 
-The future multi-engine architecture will compare OpenCV, DocRes and later ST-owned restoration models. Before the Stage 10 selector can automatically prefer one engine or restoration profile, the project needs a semantic preservation signal that asks a different question from visual quality:
+The future multi-engine architecture may compare OpenCV, DocRes, project-owned restoration models and additional engines not yet selected. Before Stage 10 automatically prefers an engine or restoration profile, the system needs a semantic preservation capability that asks a different question from visual quality:
 
-> Did the restoration preserve the notated musical and TAB symbols that were present in the immutable source, without inventing new ones?
+> Did restoration preserve musically meaningful notation/TAB content well enough for the intended downstream use?
 
-This capability belongs to the safety plane, not to the restoration plane and not to the OMR plane.
+This capability belongs primarily to the safety/evidence plane. It does not force ST Score Restore to become an OMR engine.
 
 ## Decision
 
-### 1. Add Stage 9A to the binding roadmap
+### 1. Add Stage 9A without narrowing later stages
 
-A new roadmap stage is inserted without renumbering existing stages:
+The roadmap adds a Stage 9A capability without renumbering existing stages:
 
 ```text
 Stage 8   DocRes optional candidate
 Stage 9   Multi-engine comparator
-Stage 9A  Music-Symbol Preservation Model
+Stage 9A  Music-Symbol Preservation capability
 Stage 10  ST Restore Selector
 Stage 11  ST Restore image model
 Stage 12  Music-application integrations
 ```
 
-Using `9A` preserves existing Stage 10/11/12 identifiers and historical governance references.
+`9A` preserves existing Stage 10/11/12 identifiers and historical references. The roadmap position governs production activation order; it does not prohibit isolated research, benchmarking or prototype work from running earlier when production behavior is unaffected.
 
 ### 2. Architectural role
 
-The Stage 9A component is named **ST Music-Symbol Preservation Model** (`MSPM`). It is a learned semantic safety/veto model.
+Stage 9A is called the **ST Music-Symbol Preservation capability** (`MSPM` as the current working name).
 
-It is **not**:
+It may be implemented as:
+
+- one learned model,
+- several specialist models,
+- a detector/segmenter pair,
+- Siamese or change-detection networks,
+- CNN or vision-transformer families,
+- rules plus learned components,
+- an ensemble,
+- an auxiliary OMR-derived signal that is explicitly non-authoritative,
+- or another evidence-backed architecture selected later.
+
+It is not required to be one monolithic neural network.
+
+Its job is to compare the immutable source and one or more restoration variants and emit preservation evidence useful to safety, comparison and selection.
+
+It is **not by itself**:
 
 - a restoration engine,
-- an OMR engine,
+- authoritative OMR truth,
 - a MusicXML generator,
-- an automatic score-correction system,
-- a replacement for the deterministic Music/TAB Safety Validator,
-- a source of human reference truth.
+- an automatic score-correction authority,
+- a replacement for all deterministic safety checks,
+- or human reference truth.
 
-Its purpose is to compare the immutable source and a restoration variant and emit semantic preservation evidence.
+### 3. Runtime placement is a default target, not an unnecessarily rigid topology
 
-### 3. Runtime placement
-
-Stage 9 establishes the engine-neutral comparator foundation first. When Stage 9A is later implemented and accepted, its evidence is inserted into the safety path before a restoration variant may be considered automatically safe for selector-driven use.
-
-Target runtime flow:
+The preferred production flow is:
 
 ```text
 Immutable source
@@ -64,65 +76,75 @@ Immutable source
 Restoration engine(s)       deterministic source evidence
       |
       v
-Restoration variant
+Restoration variant(s)
       |
       v
-Deterministic Music/TAB Safety Validator
+Deterministic Music/TAB safety evidence
       |
       v
-ST Music-Symbol Preservation Model (Stage 9A)
-source <-> variant semantic comparison
+Stage 9A semantic preservation evidence
       |
       v
-Fused safety evidence / veto state
-      |
-      v
-Multi-engine Comparator
+Evidence fusion / comparator
       |
       v
 ST Restore Selector (Stage 10)
       |
-      +---- unsafe / uncertain -> original or teacher review
+      +---- unsafe / uncertain -> original, alternate path or review
       |
-      +---- safe + beneficial -> selected restoration variant
+      +---- safe + useful -> selected restoration variant
 ```
 
-Appearance quality, comparator ranking or selector preference can never override a hard preservation veto.
+Alternative implementations may run some evidence producers in parallel, perform multi-pass checks or use profile-specific ordering, provided these product invariants remain true:
 
-### 4. Initial symbol taxonomy
+1. a known materially unsafe derivative cannot silently become the automatic winner;
+2. the immutable original remains available;
+3. evidence provenance remains auditable;
+4. uncertainty is handled explicitly rather than hidden.
 
-The first production-target taxonomy must cover at least:
+Appearance quality, comparator ranking or selector preference cannot silently erase a justified hard safety veto. However, not every uncertainty signal must become a hard veto; routing policy may choose review, original fallback, alternate engine, conservative profile or another controlled path.
 
-- staff lines and TAB lines,
+### 4. Symbol taxonomy is extensible
+
+The initial reference taxonomy includes common high-value classes such as:
+
+- staff and TAB lines,
 - noteheads,
 - stems, flags and beams,
 - augmentation dots,
 - rests,
 - accidentals,
 - clefs,
-- key signatures and time signatures,
-- barlines and repeat symbols,
+- key and time signatures,
+- barlines and repeats,
 - ties and slurs,
-- TAB digits and string-position relationship,
-- core guitar articulations where they are visually distinguishable.
+- TAB digits and string-position relationships,
+- visually distinguishable guitar articulations.
 
-Later versions may add lyrics, fingering, chord symbols, ornaments and instructional markings only through versioned taxonomy changes.
+This is not a closed vocabulary and not a requirement that one first model cover every class equally.
 
-### 5. Evidence contract
+Versioned profiles may add, split, merge or specialize classes such as ornaments, tuplets, tremolo, grace notes, dynamics, fingering, lyrics, chord symbols, historical notation, percussion notation, pedal markings, instrument-specific signs and tablature variants.
 
-The model must not emit only a single opaque score. Its versioned evidence should support, where technically applicable:
+Different specialist models may cover different symbol families.
 
-- model ID, version and immutable checksum,
-- taxonomy version,
-- source artifact identity and candidate artifact identity,
-- detected symbol class and confidence,
-- source-to-candidate correspondence confidence,
-- location/bounding geometry or equivalent localization evidence,
-- preservation risk codes,
-- per-class and aggregate uncertainty,
-- explicit `not_assessed` / abstention when evidence is insufficient.
+### 5. Evidence contract is expressive, not fixed to one schema shape
 
-Target preservation risk codes include:
+The preservation layer should expose enough versioned evidence for downstream audit and decision-making. Depending on model type, useful fields may include:
+
+- model/component ID and version,
+- immutable checksum or equivalent artifact identity,
+- taxonomy/profile version,
+- source and candidate artifact identity,
+- detected or inferred symbol class,
+- source-to-candidate correspondence evidence,
+- localization/bounding geometry, masks, keypoints or equivalent spatial evidence,
+- preservation/change risk codes,
+- confidence or calibrated uncertainty,
+- explicit `not_assessed` / abstention where appropriate.
+
+A single opaque score should not be the only available signal, but the exact evidence schema may evolve by version and may differ across capability implementations.
+
+Example risk concepts include:
 
 - `symbol_missing_after_restoration`,
 - `symbol_invented_after_restoration`,
@@ -132,115 +154,147 @@ Target preservation risk codes include:
 - `thin_symbol_at_risk`,
 - `semantic_comparison_uncertain`.
 
-The exact schema will require separate implementation-stage approval.
+These are extensible concepts, not a permanently closed enum.
 
-### 6. Fail-closed behavior
+### 6. Safety routing should be calibrated, not universally blocking
 
-The model is an additional safety signal and cannot approve a candidate by itself.
+Stage 9A is an additional safety/evidence signal and cannot approve a candidate merely because it assigns a high score.
 
-- High-confidence evidence that a significant symbol was deleted, invented or materially displaced must be eligible to trigger a hard veto.
-- Ambiguous or low-confidence evidence must produce abstention/review, not automatic pass.
-- Model unavailability must not silently remove the deterministic safety boundary.
-- The immutable original remains a first-class safe fallback.
-- Teacher review remains available for uncertain cases.
+Recommended policy:
+
+- strong evidence of materially harmful symbol deletion, invention or displacement may trigger a hard veto;
+- ambiguous or low-confidence evidence may route to abstention, alternate-engine processing, conservative restoration, immutable original or teacher/user review;
+- model unavailability should preserve a safe deterministic/original path rather than silently pretending semantic validation succeeded;
+- hard-veto thresholds should be evidence-backed and calibrated rather than chosen as arbitrary permanent constants.
+
+A future product profile may safely permit downstream non-authoritative processing of uncertain material when the uncertainty is explicit and the original remains available. Stage 9A should avoid unnecessary blocking when a safer routed path exists.
 
 ### 7. Relationship to Stage 9 comparator
 
-Stage 9 may be implemented first using deterministic safety and quality evidence. Stage 9A then adds semantic preservation evidence to the comparator contract.
+Stage 9 may begin with deterministic safety and quality evidence. Stage 9A adds one or more semantic-preservation evidence channels.
 
-The comparator must keep visual quality, deterministic structural safety, semantic symbol preservation and downstream OMR effectiveness as distinct evidence dimensions. It must not collapse them into one uncalibrated score.
+The comparator may combine:
+
+- visual/document quality,
+- deterministic structural safety,
+- semantic symbol preservation,
+- engine provenance,
+- downstream OMR-effectiveness experiments,
+- uncertainty/calibration evidence,
+- teacher review signals where appropriate,
+- future evidence sources.
+
+These dimensions may be fused by a versioned policy, but a hard safety finding should not be silently washed out by an unrelated quality score.
 
 ### 8. Relationship to Stage 10 selector
 
-The Stage 10 selector may use Stage 9A evidence to decide which restoration engine/profile is worth invoking or which validated result should be preferred. The selector must never be allowed to override a Stage 9A hard veto or deterministic safety rejection.
+Stage 10 may use Stage 9A evidence to choose:
 
-Stage 10 activation therefore requires an explicit policy for how semantic preservation evidence participates in selection, abstention and teacher-review routing.
+- which restoration engine/profile to invoke,
+- which candidate to prefer,
+- whether to preserve the original,
+- whether to invoke a second model/engine,
+- whether to use a conservative profile,
+- whether human review is useful,
+- or whether downstream use should continue with an explicit non-authoritative warning.
+
+The selector is therefore not limited to a simple pass/fail choice.
 
 ### 9. Relationship to Stage 11 ST Restore image model
 
-Stage 11 remains the project-owned **restoration** model. Stage 9A is a separate **safety verification** model.
+Stage 11 remains the project-owned restoration capability. Stage 9A remains a preservation-evidence capability.
 
-Keeping them separate prevents a learned restorer from grading its own output without an independent preservation check. A future shared visual backbone may be researched, but production safety heads, model identities, evaluation evidence and rollback controls must remain independently testable.
+They may share backbones, embeddings, datasets, feature extractors or research components when that improves efficiency. The important production property is that restoration quality and preservation safety remain independently measurable enough to avoid circular self-approval.
+
+The architecture does not require physically separate infrastructure or completely unrelated model families.
 
 ### 10. Training boundary
 
-This ADR and roadmap amendment do **not** authorize model training.
+This ADR does **not** itself authorize model training.
 
-Before training begins, a separate authorization must define:
+Future training work should define, to the degree needed for the selected approach:
 
-- lawful and purpose-bound training data,
-- synthetic-data policy,
-- human symbol annotation protocol,
+- lawful and purpose-bound training/evaluation data,
+- synthetic-data strategy,
+- annotation or weak-supervision approach,
 - development/validation/held-out separation,
-- rare-symbol coverage targets,
 - source-family leakage controls,
 - privacy and retention rules,
-- model architecture and compute plan,
+- compute/model plan,
 - model-weight licensing/distribution policy.
 
-Production/user documents are not training data by default. Teacher review is not training consent.
+The exact annotation protocol, model family and dataset composition remain open to evidence-driven design. Production/user documents are not training data by default, and teacher review is not automatically training consent.
 
-### 11. Evaluation requirements
+### 11. Evaluation should match the capability, not one benchmark template
 
-Stage 9A cannot exit based only on generic object-detection accuracy. Evaluation must include preservation-specific metrics such as:
+Stage 9A evaluation should measure preservation usefulness rather than rely only on generic object-detection accuracy.
 
-- per-class symbol recall and precision,
-- false symbol-removal detection rate,
-- false symbol-invention detection rate,
+Depending on the implementation, suitable measures may include:
+
+- per-class precision/recall,
+- symbol-loss and symbol-invention detection quality,
 - localization/displacement sensitivity,
-- calibration/reliability of confidence,
-- rare-symbol and small/thin-mark performance,
-- TAB digit and string-assignment preservation,
+- calibration/reliability,
+- rare/small/thin-mark performance,
+- TAB digit/string preservation,
 - source-family generalization,
-- abstention quality and coverage/risk curves,
-- regression comparison against the deterministic safety baseline.
+- abstention quality,
+- coverage/risk curves,
+- regression against deterministic safety,
+- downstream OMR-effectiveness impact,
+- teacher-review burden reduction,
+- latency/cost trade-offs.
 
-Downstream OMR effectiveness may be measured separately but cannot substitute for preservation safety.
+Not every implementation must use every metric. Acceptance targets should be profile-specific and evidence-backed.
 
 ### 12. Production controls
 
-Any released MSPM must have:
+Released Stage 9A implementations should remain traceable and reversible. Depending on deployment profile, controls may include:
 
-- immutable model/version/checksum identity,
-- reproducible inference configuration,
-- offline training only,
-- no online self-training from user uploads,
-- kill switch / full disable path,
-- rollback to the previous accepted model,
-- deterministic fallback behavior when the model is unavailable,
-- privacy-safe audit events,
-- independent regression tests against symbol-loss and symbol-invention cases.
+- immutable model/component identity,
+- versioned inference configuration,
+- kill switch or disable path,
+- rollback to a previous accepted implementation,
+- deterministic/original fallback,
+- privacy-safe audit evidence,
+- regression coverage for symbol-loss/invention cases.
+
+The exact operational mechanism may vary by provider and deployment architecture.
 
 ## Consequences
 
 Positive consequences:
 
-- ST Score Restore gains semantic notation-awareness without becoming an OMR engine.
-- Stage 10 Selector receives a musically meaningful safety signal rather than relying only on visual quality.
-- DocRes and future learned restoration models can be evaluated against the same independent preservation layer.
-- The project creates a defensible product distinction around music-specific restoration safety.
+- ST Score Restore gains semantic notation-awareness without becoming an OMR-only system.
+- Stage 10 gains musically meaningful evidence rather than relying only on visual quality.
+- OpenCV, DocRes and future engines can be compared using a common preservation capability.
+- The project remains free to adopt better AI architectures and specialist models over time.
+- Different document and notation profiles can evolve independently.
 
 Costs and risks:
 
-- a new labeled dataset and training/evaluation program will be required,
-- tiny and visually ambiguous symbols are difficult and require careful calibration,
-- degraded source images may make source-side recognition uncertain,
-- false vetoes may reduce automatic coverage,
-- the model introduces GPU/runtime and model-governance complexity.
+- training/evaluation data and annotation or weak-supervision work may be required,
+- tiny/ambiguous symbols remain difficult,
+- degraded source images can make source-side interpretation uncertain,
+- false vetoes can reduce automatic coverage if thresholds are too strict,
+- multi-model approaches add runtime and governance complexity.
 
-These risks are accepted because uncertain cases fail closed to the immutable original or teacher review.
+These risks should be managed through calibrated routing, extensible profiles and reversible deployment rather than by narrowing the architecture prematurely.
 
 ## Safety and privacy impact
 
-This change strengthens the safety architecture. It does not authorize collection of new user data, model training, production inference, model-weight publication or automated musical correction. All existing source immutability, custody, purpose, held-out and teacher-review rules remain binding.
+This change strengthens preservation awareness while keeping implementation options broad. It does not authorize collection of new user data, model training, production inference, model-weight publication or automated musical correction.
+
+The minimal hard invariants are those defined by `docs/architecture-flexibility-principles.md`: source traceability, no silent overwrite, provenance, no silent training-data conversion, no automatic acceptance of known materially unsafe musical changes, auditable uncertainty handling, reversible production paths and clear separation between restoration evidence, OMR output and human musical truth.
 
 ## Alternatives considered
 
-1. **Use OpenCV geometry only.** Rejected as the long-term target because geometry does not provide symbol-class semantics.
-2. **Use an OMR engine as the preservation validator.** Rejected as the primary design because it couples restoration safety to OMR behavior and risks conflating OMR output with source truth.
-3. **Put preservation logic inside Stage 11 restoration model.** Rejected as the sole safety design because the restorer should not be the only judge of its own output.
-4. **Renumber Stages 10–12.** Rejected to preserve existing architecture references and immutable governance history.
+1. **Use OpenCV geometry only forever.** Rejected as the sole long-term strategy because geometry does not provide enough symbol semantics.
+2. **Use one OMR engine as the only preservation validator.** Rejected as the sole design because it would couple restoration safety too tightly to one OMR behavior. OMR-derived signals may still be useful as one evidence channel.
+3. **Put all preservation logic only inside Stage 11.** Rejected as the sole production-safety design because restoration and preservation should remain independently measurable. Shared backbones/components are still allowed.
+4. **Freeze a single CNN architecture now.** Rejected because future evidence may favor transformers, segmentation, ensembles, multimodal models or other methods.
+5. **Renumber Stages 10–12.** Rejected to preserve existing references and governance history.
 
 ## Reversal or migration path
 
-Stage 9A can remain disabled while the deterministic validator and original fallback continue operating. A future ADR may replace the model architecture or taxonomy without removing the invariant that learned restoration output requires independent music-symbol preservation evidence before automatic selector-driven use.
+Stage 9A may remain disabled while deterministic safety and original fallback continue operating. Future ADRs may replace the model architecture, evidence schema, taxonomy, routing policy or implementation topology without removing the minimal preservation and provenance invariants.
