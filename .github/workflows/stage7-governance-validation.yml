@@ -53,12 +53,16 @@ jobs:
       - name: Validate Stage 7 final exit
         run: python tools/validate_stage7_final_exit.py
 
+      - name: Validate Stage 7 final-exit current truth
+        run: python tools/validate_stage7_final_exit_current_truth.py
+
       - name: Run Stage 7 unit tests
         run: |
           python -m unittest \
             tests.test_stage7_entry_authorization \
             tests.test_preview_release \
-            tests.test_stage7_final_exit -v
+            tests.test_stage7_final_exit \
+            tests.test_stage7_final_exit_current_truth -v
 
       - name: Compile Stage 7 sources
         run: |
@@ -66,6 +70,8 @@ jobs:
             src/st_score_restore/stage7_entry_authorization.py \
             src/st_score_restore/preview_release.py \
             src/st_score_restore/stage7_final_exit.py \
+            src/st_score_restore/stage7_final_exit_current_truth.py \
             tools/validate_stage7_entry_authorization.py \
             tools/run_stage7_preview_release_drills.py \
-            tools/validate_stage7_final_exit.py
+            tools/validate_stage7_final_exit.py \
+            tools/validate_stage7_final_exit_current_truth.py
