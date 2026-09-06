@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-06",
+  "artifact_type": "stage9_final_exit_current_truth",
+  "production_checkpoint": {
+    "main_sha": "4eff94927e0af935e802605598dee331e228dd40",
+    "merge_pr": 182,
+    "merge_title": "Stage 9: add provider-neutral multi-engine comparator foundation",
+    "final_exit_acceptance_path": "evidence/stage9/final-exit/stage9-final-exit-acceptance.v1.json",
+    "final_exit_acceptance_git_blob_sha1": "5b749cf110b86aaa2d804e38e1288356dc6bea69",
+    "exact_head_sha": "58aee3088e8f74a5dc12f199ed3010f8de62a964",
+    "exact_head_ci": {
+      "repository_validation": {"run_id": 34056549685, "run_number": 499, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34056549650, "run_number": 110, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34056549643, "run_number": 102, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34056549664, "run_number": 61, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34056549644, "run_number": 14, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34056549700, "run_number": 8, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34056549682, "run_number": 1, "result": "SUCCESS"}
+    },
+    "postmerge_ci": {
+      "repository_validation": {"run_id": 34056621250, "run_number": 500, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34056621272, "run_number": 111, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34056621279, "run_number": 103, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34056621264, "run_number": 62, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34056621240, "run_number": 15, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34056621254, "run_number": 9, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34056621233, "run_number": 2, "result": "SUCCESS"}
+    },
+    "python_matrix": ["3.11", "3.12"]
+  },
+  "stage8": {
+    "state": "COMPLETE_PASS_DOCRES_OPTIONAL_CANDIDATE_CONTRACT",
+    "exit_pass": true
+  },
+  "stage9": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MULTI_ENGINE_COMPARATOR_FOUNDATION",
+    "exit_pass": true,
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "comparator_contract_complete": true,
+    "provider_neutral_foundation_complete": true,
+    "automatic_final_selection_authorized": false,
+    "production_comparator_activation_authorized": false,
+    "next_safe_boundary": "separate_stage9a_entry_authorization"
+  },
+  "stage9a": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "started": false,
+    "dataset_collection_authorized": false,
+    "training_authorized": false,
+    "model_publication_authorized": false,
+    "production_inference_authorized": false
+  },
+  "stage10": {
+    "entry_eligible": false,
+    "entry_authorized": false,
+    "started": false,
+    "blocked_pending": "accepted_stage9a_exit"
+  },
+  "docres": {
+    "dependency_status": "UNAPPROVED",
+    "model_artifact_status": "UNAPPROVED",
+    "live_runtime_activation_authorized": false,
+    "real_user_cohort_authorized": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_activation_authorized": false,
+    "live_resource_creation_authorized": false
+  },
+  "deployment": {
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "source_artifact_immutable": true,
+    "derived_artifacts_provenance_bound": true,
+    "safety_validation_precedes_comparator_eligibility": true,
+    "hard_deterministic_veto_non_overridable": true,
+    "hard_semantic_veto_non_overridable_when_present": true,
+    "original_always_selectable": true,
+    "review_required_cannot_be_automatic_winner": true,
+    "unknown_evidence_fails_safe": true,
+    "opaque_universal_quality_score_forbidden": true,
+    "positive_improvement_required_to_prefer_derivative": true,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "raw_secrets_or_key_material_in_ordinary_git": false,
+    "external_package_installation_authorized": false,
+    "docres_runtime_dependency_approved": false,
+    "model_artifact_download_authorized": false,
+    "model_weights_use_authorized": false,
+    "network_fetch_authorized": false,
+    "live_docres_runtime_activation_authorized": false,
+    "real_user_docres_cohort_authorized": false,
+    "automatic_final_selection_authorized": false,
+    "stage9a_entry_authorized": false,
+    "stage9a_training_authorized": false,
+    "stage10_entry_authorized": false,
+    "stage10_selector_activation_authorized": false,
+    "live_resource_creation_authorized": false,
+    "production_deployment_authorized": false,
+    "production_load_or_soak_validated": false,
+    "independent_production_security_signoff_complete": false,
+    "threshold_changes_authorized": false,
+    "resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "model_publication_authorized": false,
+    "omr_correctness_established": false,
+    "musical_truth_established": false,
+    "universal_restoration_effectiveness_established": false,
+    "production_availability_or_scalability_established": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "continuation_state": {
+    "last_completed_stage": "Stage 9",
+    "last_completed_state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MULTI_ENGINE_COMPARATOR_FOUNDATION",
+    "first_incomplete_boundary": "separate_stage9a_entry_authorization",
+    "stage9_exit_pass": true,
+    "stage9a_started": false,
+    "stage9a_training_authorized": false,
+    "stage10_started": false,
+    "stage11_training_authorized": false,
+    "stage12_started": false
+  }
+}
