@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-06",
+  "artifact_type": "stage9a_final_exit_current_truth",
+  "production_checkpoint": {
+    "main_sha": "45dfd78c6abbed1f48428fac1359bd54fb74e75a",
+    "merge_pr": 184,
+    "merge_title": "Stage 9A: add provider-neutral music-symbol preservation capability",
+    "final_exit_acceptance_path": "evidence/stage9a/final-exit/stage9a-final-exit-acceptance.v1.json",
+    "final_exit_acceptance_git_blob_sha1": "8f27d3949ac3e69e141d2e0e36d5e1441faef1d3",
+    "exact_head_sha": "5686d3627bd4f1ffc7e942588c2d70daa79c7b22",
+    "exact_head_ci": {
+      "repository_validation": {"run_id": 34058008624, "run_number": 503, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34058008629, "run_number": 114, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34058008663, "run_number": 106, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34058008610, "run_number": 65, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34058008576, "run_number": 18, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34058008617, "run_number": 12, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34058008587, "run_number": 5, "result": "SUCCESS"},
+      "stage9a_governance": {"run_id": 34058008665, "run_number": 1, "result": "SUCCESS"}
+    },
+    "postmerge_ci": {
+      "repository_validation": {"run_id": 34058100446, "run_number": 504, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34058100442, "run_number": 115, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34058100507, "run_number": 107, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34058100425, "run_number": 66, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34058100472, "run_number": 19, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34058100445, "run_number": 13, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34058100474, "run_number": 6, "result": "SUCCESS"},
+      "stage9a_governance": {"run_id": 34058100427, "run_number": 2, "result": "SUCCESS"}
+    },
+    "python_matrix": ["3.11", "3.12"]
+  },
+  "stage9": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MULTI_ENGINE_COMPARATOR_FOUNDATION",
+    "exit_pass": true
+  },
+  "stage9a": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MSPM_EVIDENCE_AND_SAFE_ROUTING_FOUNDATION",
+    "exit_pass": true,
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "mspm_evidence_contract_complete": true,
+    "extensible_music_tab_taxonomy_foundation_complete": true,
+    "source_candidate_provenance_binding_complete": true,
+    "semantic_hard_veto_routing_complete": true,
+    "uncertainty_review_original_fallback_complete": true,
+    "stage9_comparator_handoff_complete": true,
+    "synthetic_preservation_drills_pass": true,
+    "trained_semantic_model_complete": false,
+    "learned_component_training_authorized": false,
+    "production_inference_authorized": false,
+    "automatic_final_selection_authorized": false,
+    "next_safe_boundary": "separate_stage10_entry_authorization"
+  },
+  "stage10": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "started": false,
+    "selector_activation_authorized": false,
+    "blocked_pending": "separate_explicit_stage10_entry_authorization"
+  },
+  "docres": {
+    "dependency_status": "UNAPPROVED",
+    "model_artifact_status": "UNAPPROVED",
+    "live_runtime_activation_authorized": false,
+    "real_user_cohort_authorized": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_activation_authorized": false,
+    "live_resource_creation_authorized": false
+  },
+  "deployment": {
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "training": {
+    "dataset_collection_authorized": false,
+    "user_document_training_use_authorized": false,
+    "model_training_authorized": false,
+    "model_publication_authorized": false,
+    "model_artifact_download_authorized": false,
+    "network_fetch_authorized": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "source_artifact_immutable": true,
+    "derived_artifacts_provenance_bound": true,
+    "deterministic_safety_remains_independent": true,
+    "hard_deterministic_veto_non_overridable": true,
+    "hard_semantic_veto_non_overridable": true,
+    "original_always_selectable": true,
+    "uncertain_or_unavailable_semantic_evidence_fails_safe": true,
+    "semantic_evidence_cannot_approve_candidate_by_itself": true,
+    "no_opaque_universal_preservation_score": true,
+    "mspm_evidence_is_not_omr_truth": true,
+    "mspm_evidence_is_not_human_musical_truth": true,
+    "trained_mspm_model_established": false,
+    "automatic_final_selection_authorized": false,
+    "stage10_entry_authorized": false,
+    "stage10_selector_activation_authorized": false,
+    "live_resource_creation_authorized": false,
+    "production_deployment_authorized": false,
+    "production_load_or_soak_validated": false,
+    "independent_production_security_signoff_complete": false,
+    "threshold_changes_authorized": false,
+    "resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "omr_correctness_established": false,
+    "musical_truth_established": false,
+    "universal_restoration_effectiveness_established": false,
+    "production_availability_or_scalability_established": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "continuation_state": {
+    "last_completed_stage": "Stage 9A",
+    "last_completed_state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MSPM_EVIDENCE_AND_SAFE_ROUTING_FOUNDATION",
+    "first_incomplete_boundary": "separate_stage10_entry_authorization",
+    "stage9a_exit_pass": true,
+    "stage10_started": false,
+    "stage10_selector_activation_authorized": false,
+    "stage11_training_authorized": false,
+    "stage12_started": false
+  }
+}
