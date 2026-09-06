@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage9.multi-engine-comparator.v1",
+  "componentRole": "evidence_fusion_and_recommendation",
+  "stage": "Stage 9",
+  "inputs": {
+    "immutableSourceRequired": true,
+    "restorationVariantsRequireProvenance": true,
+    "musicSafetyValidationRequiredBeforeEligibility": true,
+    "supportedSafetyVerdicts": ["pass", "review_required", "reject"],
+    "optionalSemanticPreservationEvidence": true
+  },
+  "hardSafetyRules": {
+    "deterministicRejectIsIneligible": true,
+    "hardDeterministicVetoCannotBeOverridden": true,
+    "hardSemanticVetoCannotBeOverriddenWhenPresent": true,
+    "provenanceMismatchIsIneligible": true,
+    "unknownSafetyEvidenceRoutesToReviewOrOriginal": true,
+    "reviewRequiredCannotBeAutomaticWinner": true,
+    "originalAlwaysSelectable": true
+  },
+  "rankingPolicy": {
+    "policyId": "stage9.lexicographic-quality-evidence.v1",
+    "opaqueUniversalScoreForbidden": true,
+    "dimensionsInOrder": [
+      "documentQualityDelta",
+      "legibilityDelta",
+      "contrastDelta",
+      "noiseReductionEvidence",
+      "negativeStructuralRisk"
+    ],
+    "positiveImprovementEvidenceRequiredToPreferDerivative": true,
+    "deterministicTieBreakUsesArtifactIdentityOnlyForStableOrdering": true,
+    "exactEvidenceTieRoutesToReview": true,
+    "costAndLatencyCannotOverrideSafety": true
+  },
+  "outcomes": [
+    "original_preferred",
+    "restoration_variant_preferred",
+    "review_required",
+    "original_retained_no_acceptable_derivative"
+  ],
+  "outputGuarantees": {
+    "recommendationOnly": true,
+    "automaticFinalSelectionAuthorized": false,
+    "teacherApprovalImplied": false,
+    "omrCorrectnessImplied": false,
+    "musicalTruthImplied": false,
+    "reasonCodesRequired": true,
+    "auditEvidenceRequired": true,
+    "selectedOrRetainedArtifactIdRequired": true,
+    "originalFallbackAvailable": true
+  },
+  "activationBoundaries": {
+    "stage9aEntryAuthorized": false,
+    "stage10EntryAuthorized": false,
+    "stage10SelectorActivationAuthorized": false,
+    "providerSpecificActivationAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "docresLiveRuntimeAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "modelPublicationAuthorized": false
+  }
+}
