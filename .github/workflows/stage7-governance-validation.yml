@@ -50,16 +50,22 @@ jobs:
       - name: Run Stage 7 synthetic preview release drills
         run: python tools/run_stage7_preview_release_drills.py
 
+      - name: Validate Stage 7 final exit
+        run: python tools/validate_stage7_final_exit.py
+
       - name: Run Stage 7 unit tests
         run: |
           python -m unittest \
             tests.test_stage7_entry_authorization \
-            tests.test_preview_release -v
+            tests.test_preview_release \
+            tests.test_stage7_final_exit -v
 
       - name: Compile Stage 7 sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage7_entry_authorization.py \
             src/st_score_restore/preview_release.py \
+            src/st_score_restore/stage7_final_exit.py \
             tools/validate_stage7_entry_authorization.py \
-            tools/run_stage7_preview_release_drills.py
+            tools/run_stage7_preview_release_drills.py \
+            tools/validate_stage7_final_exit.py
