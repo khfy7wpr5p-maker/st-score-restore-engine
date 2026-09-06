@@ -1,6 +1,6 @@
 # ST Score Restore Engine — Development Roadmap
 
-**Current production status (2026-09-04):** Stages 1–5 COMPLETE / PASS; Stage 6 ENTRY ELIGIBLE / NOT AUTHORIZED / NOT STARTED.  
+**Current production status (2026-09-06):** Stages 1–5 COMPLETE / PASS; Stage 6 ACTIVE; S6-07 synthetic operational safety/recovery drills COMPLETE; provider UNSELECTED; Stage 7 NOT STARTED.  
 **Tracking:** Issue #104
 
 ## Current production truth
@@ -15,7 +15,10 @@ Merged `main` plus later production-effective acceptance/current-truth overlays 
 - Stage 5 final acceptance digest: `467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc`.
 - Real production `/review` screen-reader execution used Orca 46.1 + Chrome 152 + AT-SPI on temporary unmerged PR #154.
 - Bounded display scope: `png_grayscale_8bit`, input color profiles `not_inspected`, `colorManagementValidated=false`; no color-fidelity certification is claimed.
-- Stage 6 is entry-eligible only. Production identity/network infrastructure, untrusted-network deployment, training, production threshold/resource changes, preview release, and Stage 6 execution remain separately unauthorized.
+- Stage 6 provider-neutral identity, secrets/KMS/IAM, network, storage/queue/recovery, audit and deployment contracts are implemented.
+- S6-07 deterministic synthetic-only operational drills passed queue redelivery/stale-worker fencing, crash recovery/idempotent replay, deletion/restore anti-resurrection, audit fail-closed behavior, deployment/rollback gating and bounded concurrency stress.
+- Provider selection, live resource creation, production load/soak validation, independent production-security sign-off and production deployment remain separately unauthorized or incomplete.
+- The next Stage 6 safe boundary is separate S6-08 integration/security regression authorization.
 
 ## Binding delivery sequence
 
@@ -30,10 +33,25 @@ Stage 6  Identity, network and production infrastructure
 Stage 7  Preview release
 Stage 8  DocRes optional candidate
 Stage 9  Multi-engine comparator
+Stage 9A Music-Symbol Preservation Model
 Stage 10 ST Restore Selector
 Stage 11 ST Restore image model
 Stage 12 Music-application integrations
 ```
+
+### Stage 9A architecture amendment — Music-Symbol Preservation Model
+
+Stage 9A is inserted after the Stage 9 comparator foundation and before Stage 10 Selector without renumbering existing stages. The architectural decision is recorded in ADR 0018.
+
+The Stage 9A component is the **ST Music-Symbol Preservation Model (MSPM)**. It is a future learned semantic safety/veto layer that compares the immutable source with a restoration variant and asks whether musically meaningful notation/TAB symbols were preserved.
+
+Initial target classes include staff/TAB lines, noteheads, stems, flags, beams, augmentation dots, rests, accidentals, clefs, key/time signatures, barlines/repeats, ties/slurs, TAB digits/string relationship and core visually distinguishable guitar articulations.
+
+Stage 9A is not a restoration engine and is not an OMR engine. It does not generate MusicXML or automatically correct notation. It supplements, rather than replaces, the deterministic Music/TAB Safety Validator. High-confidence symbol deletion/invention/displacement may veto a candidate; insufficient or ambiguous evidence must fail closed to abstention/original/teacher review.
+
+Stage 9 may initially compare candidates using deterministic safety evidence. After Stage 9A activation, semantic preservation evidence becomes an additional comparator/selector safety dimension. Stage 10 may consume this evidence but may not override a hard deterministic or semantic veto.
+
+This roadmap amendment records architecture only. It does **not** authorize dataset collection, model training, model-weight publication, production inference or online learning. Stage 9A implementation, training, evaluation and activation require their own explicit authorizations and accepted evidence.
 
 ## Historical roadmap snapshot retained for immutable evidence binding
 
@@ -109,4 +127,4 @@ These three blocker codes are retained as historical evidence. They were later r
 
 ### Historical Stages 5–12 status
 
-At this checkpoint they were NOT STARTED, and Stage 5 was BLOCKED pending Stage 4 final PASS. That statement is historical; current Stage 5 is COMPLETE / PASS and current Stage 6 is entry-eligible but not authorized or started.
+At this checkpoint they were NOT STARTED, and Stage 5 was BLOCKED pending Stage 4 final PASS. That statement is historical. Current Stage 5 is COMPLETE / PASS; current Stage 6 is active with S6-07 synthetic operational drills complete, provider still unselected, and Stage 7 not started.
