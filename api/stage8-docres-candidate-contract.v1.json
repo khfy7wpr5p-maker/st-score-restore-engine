@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage8.docres-optional-candidate.v1",
+  "engineRole": "optional_restoration_candidate",
+  "engineName": "docres",
+  "adapterProfile": "disabled-by-default",
+  "runtime": {
+    "dependencyStatus": "UNAPPROVED",
+    "modelArtifactStatus": "UNAPPROVED",
+    "externalPackageInstallationAuthorized": false,
+    "networkFetchAuthorized": false,
+    "liveRuntimeActivationAuthorized": false,
+    "syntheticExecutionAuthorized": true
+  },
+  "sourceBoundary": {
+    "sourceArtifactImmutable": true,
+    "sourceOverwriteForbidden": true,
+    "derivedCandidateRequiresProvenance": true,
+    "originalFallbackRequired": true
+  },
+  "safetyHandoff": {
+    "musicSafetyValidationRequired": true,
+    "hardRejectRoute": "original",
+    "reviewRequiredRoute": "review",
+    "unknownVerdictRoute": "review",
+    "passRoute": "validated_candidate_hold",
+    "stage9ComparatorSelectionAuthorized": false,
+    "automaticFinalSelectionAuthorized": false
+  },
+  "claims": {
+    "omrCorrectnessClaimed": false,
+    "musicalTruthClaimed": false,
+    "universalRestorationEffectivenessClaimed": false,
+    "productionSecurityCertified": false,
+    "productionScaleValidated": false,
+    "colorFidelityCertified": false
+  },
+  "excludedScope": {
+    "realUserDocresCohort": true,
+    "liveDocresRuntime": true,
+    "externalModelDownload": true,
+    "productionDeployment": true,
+    "productionLoadSoak": true,
+    "productionPenetrationTesting": true,
+    "thresholdChanges": true,
+    "resourceLimitChanges": true,
+    "heldOutRetuning": true,
+    "modelTraining": true,
+    "modelPublication": true,
+    "stage9Entry": true
+  }
+}
