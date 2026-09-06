@@ -62,10 +62,23 @@ jobs:
       - name: Run architecture regression tests
         run: python -m unittest tests.test_restoration_pipeline_architecture -v
 
+      - name: Validate Stage 9A final exit
+        run: python tools/validate_stage9a_final_exit.py
+
+      - name: Validate Stage 9A final-exit current truth
+        run: python tools/validate_stage9a_final_exit_current_truth.py
+
+      - name: Run Stage 9A final-exit tests
+        run: python -m unittest tests.test_stage9a_final_exit -v
+
       - name: Compile Stage 9A sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage9a_entry_authorization.py \
             src/st_score_restore/music_symbol_preservation.py \
+            src/st_score_restore/stage9a_final_exit.py \
+            src/st_score_restore/stage9a_final_exit_current_truth.py \
             tools/validate_stage9a_entry_authorization.py \
-            tools/run_stage9a_mspm_drills.py
+            tools/run_stage9a_mspm_drills.py \
+            tools/validate_stage9a_final_exit.py \
+            tools/validate_stage9a_final_exit_current_truth.py

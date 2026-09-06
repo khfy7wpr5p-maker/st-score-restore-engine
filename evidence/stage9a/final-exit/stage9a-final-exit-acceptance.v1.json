@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "acceptanceId": "stage9a.final-exit-acceptance.v1",
+  "decision": "PASS",
+  "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MSPM_EVIDENCE_AND_SAFE_ROUTING_FOUNDATION",
+  "acceptedOn": "2026-09-06",
+  "blockerCount": 0,
+  "capabilityCheckpoint": {
+    "pullRequest": 184,
+    "exactHeadSha": "5686d3627bd4f1ffc7e942588c2d70daa79c7b22",
+    "capabilityMergeSha": "45dfd78c6abbed1f48428fac1359bd54fb74e75a",
+    "exactHeadCi": {
+      "repositoryValidation": {"runId": 34058008624, "runNumber": 503, "result": "SUCCESS"},
+      "stage4Governance": {"runId": 34058008629, "runNumber": 114, "result": "SUCCESS"},
+      "stage5Governance": {"runId": 34058008663, "runNumber": 106, "result": "SUCCESS"},
+      "stage6Governance": {"runId": 34058008610, "runNumber": 65, "result": "SUCCESS"},
+      "stage7Governance": {"runId": 34058008576, "runNumber": 18, "result": "SUCCESS"},
+      "stage8Governance": {"runId": 34058008617, "runNumber": 12, "result": "SUCCESS"},
+      "stage9Governance": {"runId": 34058008587, "runNumber": 5, "result": "SUCCESS"},
+      "stage9aGovernance": {"runId": 34058008665, "runNumber": 1, "result": "SUCCESS"}
+    },
+    "postmergeCi": {
+      "repositoryValidation": {"runId": 34058100446, "runNumber": 504, "result": "SUCCESS"},
+      "stage4Governance": {"runId": 34058100442, "runNumber": 115, "result": "SUCCESS"},
+      "stage5Governance": {"runId": 34058100507, "runNumber": 107, "result": "SUCCESS"},
+      "stage6Governance": {"runId": 34058100425, "runNumber": 66, "result": "SUCCESS"},
+      "stage7Governance": {"runId": 34058100472, "runNumber": 19, "result": "SUCCESS"},
+      "stage8Governance": {"runId": 34058100445, "runNumber": 13, "result": "SUCCESS"},
+      "stage9Governance": {"runId": 34058100474, "runNumber": 6, "result": "SUCCESS"},
+      "stage9aGovernance": {"runId": 34058100427, "runNumber": 2, "result": "SUCCESS"}
+    },
+    "pythonMatrix": ["3.11", "3.12"]
+  },
+  "acceptedCapabilities": {
+    "providerNeutralMspmEvidenceContractComplete": true,
+    "extensibleMusicTabTaxonomyFoundationComplete": true,
+    "sourceCandidateProvenanceBindingComplete": true,
+    "materialSemanticHarmHardVetoComplete": true,
+    "uncertainIncompleteUnavailableEvidenceFailsSafe": true,
+    "originalFallbackRetained": true,
+    "stage9ComparatorHandoffComplete": true,
+    "syntheticPreservationDrillsPass": true,
+    "learnedSemanticModelComplete": false,
+    "trainedMspmModelComplete": false,
+    "productionInferenceComplete": false
+  },
+  "artifactBindings": {
+    "entryAuthorization": {
+      "path": "evidence/stage9a/stage9a-entry-authorization.v1.json",
+      "gitBlobSha1": "11def8b796b4c54a91afb23b552278690b06730b"
+    },
+    "mspmCore": {
+      "path": "src/st_score_restore/music_symbol_preservation.py",
+      "gitBlobSha1": "5e2b17aa051e542d043cd0ebf8e4736d09fa6b7e"
+    },
+    "apiContract": {
+      "path": "api/stage9a-mspm-evidence-contract.v1.json",
+      "gitBlobSha1": "8f8e0b6df827b22b0354f4ec7f3664fcce2bc566"
+    }
+  },
+  "stage10": {
+    "entryEligible": true,
+    "entryAuthorized": false,
+    "started": false,
+    "selectorActivationAuthorized": false
+  },
+  "explicitNonClaimsAndBoundaries": {
+    "datasetCollectionAuthorized": false,
+    "userDocumentTrainingUseAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "modelArtifactDownloadAuthorized": false,
+    "networkFetchAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "automaticFinalSelectionAuthorized": false,
+    "stage10EntryAuthorized": false,
+    "stage10SelectorActivationAuthorized": false,
+    "providerSpecificActivationAuthorized": false,
+    "liveResourceCreationAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "productionLoadOrSoakValidated": false,
+    "independentProductionSecuritySignoffComplete": false,
+    "thresholdChangesAuthorized": false,
+    "resourceLimitChangesAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "omrCorrectnessEstablished": false,
+    "musicalTruthEstablished": false,
+    "universalRestorationEffectivenessEstablished": false,
+    "productionAvailabilityOrScalabilityEstablished": false,
+    "colorManagementValidated": false,
+    "colorFidelityCertified": false
+  },
+  "safetyInvariants": {
+    "historicalEvidenceImmutable": true,
+    "sourceArtifactImmutable": true,
+    "derivedArtifactsProvenanceBound": true,
+    "deterministicSafetyRemainsIndependent": true,
+    "hardDeterministicVetoNonOverridable": true,
+    "hardSemanticVetoNonOverridable": true,
+    "originalAlwaysSelectable": true,
+    "uncertainOrUnavailableSemanticEvidenceFailsSafe": true,
+    "semanticEvidenceCannotApproveCandidateByItself": true,
+    "noOpaqueUniversalPreservationScore": true,
+    "mspmEvidenceIsNotOmrTruth": true,
+    "mspmEvidenceIsNotHumanMusicalTruth": true
+  },
+  "nextSafeBoundary": "separate_stage10_entry_authorization"
+}
