@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage9a.mspm-evidence.v1",
+  "name": "ST Music-Symbol Preservation evidence contract",
+  "purpose": "Provider-neutral source-versus-restoration semantic preservation evidence for safety/comparator handoff.",
+  "productionActivationAuthorized": false,
+  "modelTrainingAuthorized": false,
+  "automaticFinalSelectionAuthorized": false,
+  "taxonomy": {
+    "version": "stage9a.music-symbol-taxonomy.v1",
+    "extensible": true,
+    "initialClasses": [
+      "staff_line",
+      "tab_line",
+      "notehead",
+      "stem",
+      "flag",
+      "beam",
+      "augmentation_dot",
+      "rest",
+      "accidental",
+      "clef",
+      "key_signature",
+      "time_signature",
+      "barline",
+      "repeat",
+      "tie",
+      "slur",
+      "tab_digit",
+      "tab_string_position_relationship",
+      "guitar_articulation"
+    ]
+  },
+  "riskCodes": [
+    "symbol_missing_after_restoration",
+    "symbol_invented_after_restoration",
+    "symbol_displaced",
+    "symbol_merged_or_split",
+    "staff_or_tab_relationship_changed",
+    "thin_symbol_at_risk",
+    "semantic_comparison_uncertain"
+  ],
+  "requiredEvidence": {
+    "contractVersion": "stage9a.mspm-evidence.v1",
+    "sourceArtifactId": "immutable source identity",
+    "candidateArtifactId": "derived restoration identity",
+    "component": ["id", "version", "artifactDigest", "mode"],
+    "taxonomyVersion": "versioned taxonomy/profile identity",
+    "assessmentState": ["assessed", "not_assessed", "unavailable"],
+    "coverageState": ["complete", "partial", "unknown"],
+    "findings": {
+      "fields": ["evidenceId", "symbolClass", "riskCode", "disposition", "materiality"],
+      "dispositionValues": ["hard_veto", "review", "observe"],
+      "materialityValues": ["material", "uncertain", "minor"],
+      "optionalFields": ["confidenceLabel", "localizationRef"]
+    }
+  },
+  "routing": {
+    "materialHarmHardVeto": "original_or_alternate_safe_path",
+    "uncertainOrIncomplete": "original_or_review",
+    "completeNoMaterialHarm": "eligible_for_stage9_comparator",
+    "componentUnavailable": "original_or_review"
+  },
+  "invariants": {
+    "sourceImmutable": true,
+    "derivedArtifactsRequireProvenance": true,
+    "deterministicSafetyRemainsIndependent": true,
+    "hardDeterministicVetoNonOverridable": true,
+    "hardSemanticVetoNonOverridable": true,
+    "semanticEvidenceCannotApproveCandidateByItself": true,
+    "originalAlwaysSelectable": true,
+    "noOpaqueUniversalPreservationScore": true,
+    "omrCorrectnessImplied": false,
+    "humanMusicalTruthImplied": false,
+    "realUserDocumentsTrainingDataByDefault": false
+  },
+  "excludedScope": {
+    "datasetCollection": true,
+    "userDocumentTrainingUse": true,
+    "modelTraining": true,
+    "modelPublication": true,
+    "productionInference": true,
+    "stage10SelectorActivation": true,
+    "providerSelection": true,
+    "liveResourceCreation": true,
+    "productionDeployment": true
+  }
+}
