@@ -1,0 +1,65 @@
+name: Stage 8 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage8-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate dependency lock
+        run: python tools/validate_dependency_lock.py
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate Stage 7 final-exit current truth
+        run: python tools/validate_stage7_final_exit_current_truth.py
+
+      - name: Validate Stage 8 entry authorization
+        run: python tools/validate_stage8_entry_authorization.py
+
+      - name: Run Stage 8 synthetic DocRes candidate drills
+        run: python tools/run_stage8_docres_candidate_drills.py
+
+      - name: Run Stage 8 unit tests
+        run: |
+          python -m unittest \
+            tests.test_stage8_entry_authorization \
+            tests.test_docres_optional_candidate -v
+
+      - name: Compile Stage 8 sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage8_entry_authorization.py \
+            src/st_score_restore/docres_optional_candidate.py \
+            tools/validate_stage8_entry_authorization.py \
+            tools/run_stage8_docres_candidate_drills.py
