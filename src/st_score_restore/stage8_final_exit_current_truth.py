@@ -27,14 +27,14 @@ def validate_stage8_final_exit_current_truth(
     final_acceptance: Mapping[str, Any],
     current_truth: Mapping[str, Any],
 ) -> dict[str, Any]:
-    exit_result = validate_stage8_final_exit(
+    validate_stage8_final_exit(
         final_acceptance,
         stage8_authorization,
         stage7_final_truth,
         docres_contract,
     )
     _require(
-        exit_result["acceptanceDigest"]["value"] == ACCEPTANCE_CANONICAL_SHA256,
+        canonical_sha256(final_acceptance) == ACCEPTANCE_CANONICAL_SHA256,
         "Stage 8 final acceptance binding drifted",
     )
     _require(isinstance(current_truth, Mapping), "Stage 8 current truth must be an object")
