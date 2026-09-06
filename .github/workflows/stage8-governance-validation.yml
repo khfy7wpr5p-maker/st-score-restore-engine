@@ -50,16 +50,22 @@ jobs:
       - name: Run Stage 8 synthetic DocRes candidate drills
         run: python tools/run_stage8_docres_candidate_drills.py
 
+      - name: Validate Stage 8 final exit
+        run: python tools/validate_stage8_final_exit.py
+
       - name: Run Stage 8 unit tests
         run: |
           python -m unittest \
             tests.test_stage8_entry_authorization \
-            tests.test_docres_optional_candidate -v
+            tests.test_docres_optional_candidate \
+            tests.test_stage8_final_exit -v
 
       - name: Compile Stage 8 sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage8_entry_authorization.py \
             src/st_score_restore/docres_optional_candidate.py \
+            src/st_score_restore/stage8_final_exit.py \
             tools/validate_stage8_entry_authorization.py \
-            tools/run_stage8_docres_candidate_drills.py
+            tools/run_stage8_docres_candidate_drills.py \
+            tools/validate_stage8_final_exit.py
