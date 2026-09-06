@@ -56,9 +56,20 @@ jobs:
       - name: Run architecture regression tests
         run: python -m unittest tests.test_restoration_pipeline_architecture -v
 
+      - name: Validate Stage 9 final exit
+        run: python tools/validate_stage9_final_exit.py
+
+      - name: Validate Stage 9 final-exit current truth
+        run: python tools/validate_stage9_final_exit_current_truth.py
+
+      - name: Run Stage 9 final-exit tests
+        run: python -m unittest tests.test_stage9_final_exit -v
+
       - name: Compile Stage 9 sources
         run: |
           python -m py_compile \
             src/st_score_restore/multi_engine_comparator.py \
             tools/validate_stage9_entry_authorization.py \
-            tools/run_stage9_comparator_drills.py
+            tools/run_stage9_comparator_drills.py \
+            tools/validate_stage9_final_exit.py \
+            tools/validate_stage9_final_exit_current_truth.py
