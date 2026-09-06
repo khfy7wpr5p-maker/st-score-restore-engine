@@ -72,6 +72,9 @@ jobs:
       - name: Run Stage 6 S6-07 synthetic operational safety/recovery drills
         run: python tools/run_stage6_s6_07_synthetic_operational_drills.py
 
+      - name: Validate Stage 6 S6-07 current truth
+        run: python tools/validate_stage6_s6_07_current_truth.py
+
       - name: Run Stage 6 governance and production security unit tests
         run: |
           python -m unittest \
@@ -92,7 +95,8 @@ jobs:
             tests.test_stage6_production_storage_deployment \
             tests.test_stage6_s6_06_current_truth \
             tests.test_stage6_s6_07_authorization \
-            tests.test_stage6_operational_drills -v
+            tests.test_stage6_operational_drills \
+            tests.test_stage6_s6_07_current_truth -v
 
       - name: Compile Stage 6 governance and production security sources
         run: |
@@ -110,6 +114,7 @@ jobs:
             src/st_score_restore/stage6_s6_06_authorization.py \
             src/st_score_restore/stage6_s6_06_current_truth.py \
             src/st_score_restore/stage6_s6_07_authorization.py \
+            src/st_score_restore/stage6_s6_07_current_truth.py \
             src/st_score_restore/stage6_operational_drills.py \
             src/st_score_restore/production_identity.py \
             src/st_score_restore/production_http_auth.py \
@@ -128,4 +133,5 @@ jobs:
             tools/validate_stage6_s6_06_authorization.py \
             tools/validate_stage6_s6_06_current_truth.py \
             tools/validate_stage6_s6_07_authorization.py \
+            tools/validate_stage6_s6_07_current_truth.py \
             tools/run_stage6_s6_07_synthetic_operational_drills.py
