@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage6_s6_06_storage_deployment_current_truth_overlay",
+  "recorded_on": "2026-09-06",
+  "production_checkpoint": {
+    "main_sha": "5b32db9b0f8a9b24421c687c987f107559ac987b",
+    "merge_pr": 167,
+    "merge_pr_title": "Stage 6: implement S6-06 production storage deployment boundary",
+    "pr_exact_head_sha": "038b0c3b056937a6f7d5869d2946c6bc2dab5728",
+    "exact_head_repository_validation_run_id": 34040419880,
+    "exact_head_repository_validation_run_number": 464,
+    "exact_head_stage4_governance_run_id": 34040419861,
+    "exact_head_stage4_governance_run_number": 75,
+    "exact_head_stage5_governance_run_id": 34040419896,
+    "exact_head_stage5_governance_run_number": 67,
+    "exact_head_stage6_governance_run_id": 34040419894,
+    "exact_head_stage6_governance_run_number": 26,
+    "postmerge_repository_validation_run_id": 34040489560,
+    "postmerge_repository_validation_run_number": 465,
+    "postmerge_stage4_governance_run_id": 34040489509,
+    "postmerge_stage4_governance_run_number": 76,
+    "postmerge_stage5_governance_run_id": 34040489491,
+    "postmerge_stage5_governance_run_number": 68,
+    "postmerge_stage6_governance_run_id": 34040489539,
+    "postmerge_stage6_governance_run_number": 27,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "stage6_entry_authorization": {
+    "authorization_id": "stage6.entry-governance-authorization.v1",
+    "authorization_digest": "58d781f3c6b22ac8350f2f94a6902f76b6310fdf62486aa90c18382566a9e9b3"
+  },
+  "s6_02_decision": {
+    "decision_id": "stage6.s6-02.production-trust-boundary-decision.v1",
+    "decision_digest": "9485e51f1398c6cff2d9be9264eb8acdf47f8c4ca0fc750062fd9e80298e3865"
+  },
+  "s6_03_authorization": {
+    "authorization_id": "stage6.s6-03.identity-authz-implementation-authorization.v1",
+    "authorization_digest": "f82421eca0ed90defd04609054f47d1972b5327f71a7f35d644ac84c5f57ce39"
+  },
+  "s6_04_authorization": {
+    "authorization_id": "stage6.s6-04.secrets-kms-iam-implementation-authorization.v1",
+    "authorization_digest": "a14b4f6dfd8b7a32b3fd9acf9f5a79ecdf6d90cff40e0e842d5e33837d1c0cef"
+  },
+  "s6_05_authorization": {
+    "authorization_id": "stage6.s6-05.production-network-implementation-authorization.v1",
+    "authorization_digest": "6815772f8f393b2bf281c75cb4500035808ec7ee5dc083d822dcefca1db9716c"
+  },
+  "s6_06_authorization": {
+    "authorization_id": "stage6.s6-06.storage-deployment-implementation-authorization.v1",
+    "decision": "AUTHORIZE_S6_06_STORAGE_DEPLOYMENT_IMPLEMENTATION",
+    "authorization_digest": "dd31e0460352128ba2ed63e0207e506a305e83fb6b462156cdaa2c9651021a10"
+  },
+  "identity": {
+    "production_identity_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false
+  },
+  "secrets_kms_iam": {
+    "production_secrets_kms_iam_contract_implemented": true,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "live_secret_key_or_iam_resource_created": false
+  },
+  "network": {
+    "production_network_security_contract_implemented": true,
+    "provider_specific_network_adapter_activated": false,
+    "live_network_resources_created": false,
+    "provider_specific_request_smuggling_certified": false,
+    "independent_production_security_signoff_complete": false
+  },
+  "storage_queue_recovery": {
+    "metadata_database_contract_implemented": true,
+    "migration_and_rollback_contract_implemented": true,
+    "encrypted_object_storage_contract_implemented": true,
+    "tenant_scoping_contract_implemented": true,
+    "external_durable_queue_contract_implemented": true,
+    "lease_fencing_and_idempotency_contract_implemented": true,
+    "crash_recovery_contract_implemented": true,
+    "retention_two_stage_deletion_contract_implemented": true,
+    "backup_restore_anti_resurrection_contract_implemented": true,
+    "environment_isolation_contract_implemented": true,
+    "provider_specific_storage_queue_adapter_activated": false,
+    "live_storage_queue_resources_created": false,
+    "distributed_stress_validation_complete": false,
+    "synthetic_operational_drills_complete": false
+  },
+  "audit": {
+    "privacy_safe_security_audit_contract_implemented": true,
+    "provider_neutral_append_only_tamper_evident_contract_implemented": true,
+    "independent_anti_rollback_anchor_required": true,
+    "provider_specific_durable_audit_store_activated": false,
+    "live_audit_resource_created": false
+  },
+  "deployment": {
+    "immutable_artifact_and_signed_provenance_contract_implemented": true,
+    "staging_health_and_migration_preflight_contract_implemented": true,
+    "rollback_contract_implemented": true,
+    "secrets_excluded_from_artifact_contract_implemented": true,
+    "privacy_safe_observability_contract_implemented": true,
+    "provider_specific_deployment_platform_activated": false,
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_evaluation_authorized": true,
+    "provider_specific_storage_deployment_activation_authorized": false,
+    "live_resource_creation_authorized": false
+  },
+  "stage6": {
+    "state": "ACTIVE_STORAGE_DEPLOYMENT_CONTRACTS_IMPLEMENTED_PROVIDER_UNSELECTED",
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "production_identity_contract_implemented": true,
+    "production_secrets_kms_iam_contract_implemented": true,
+    "production_network_security_contract_implemented": true,
+    "production_storage_deployment_implementation_authorized": true,
+    "production_storage_deployment_contracts_implemented": true,
+    "provider_specific_identity_adapter_activated": false,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "provider_specific_network_adapter_activated": false,
+    "provider_specific_storage_deployment_adapter_activated": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_s6_07_synthetic_operational_drills_authorization"
+  },
+  "stage7": {
+    "entry_authorized": false,
+    "preview_release_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_stage5_final_checkpoint_rewritten": false,
+    "historical_stage6_entry_checkpoint_rewritten": false,
+    "historical_s6_02_checkpoint_rewritten": false,
+    "historical_s6_03_checkpoint_rewritten": false,
+    "historical_s6_04_checkpoint_rewritten": false,
+    "historical_s6_05_checkpoint_rewritten": false,
+    "local_sqlite_promoted_to_production": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "raw_secrets_or_key_material_in_ordinary_git": false,
+    "provider_selection_finalized": false,
+    "live_resource_creation_authorized": false,
+    "production_deployment_authorized": false,
+    "production_operational_drills_authorized": false,
+    "production_threshold_changes_authorized": false,
+    "production_resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "temporary_pr154_merge_authorized": false
+  },
+  "compatibility_note": "This overlay records production-effective S6-06 provider-neutral storage, queue, recovery, audit and deployment-candidate contracts from PR #167 without rewriting historical Stage 5, Stage 6 entry, S6-02, S6-03, S6-04 or S6-05 checkpoints. The local SQLite/content-addressed baseline remains non-production. Provider selection remains UNSELECTED. No provider-specific database, object store, queue, backup/DR system, durable audit store, deployment platform or other live production resource is activated or created. Distributed stress validation, synthetic operational drills, provider-specific security certification, independent production security sign-off, production deployment, Stage 7, threshold/resource changes, held-out retuning, training and publication remain separately unauthorized or incomplete."
+}
