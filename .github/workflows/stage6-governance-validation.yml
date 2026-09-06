@@ -98,6 +98,9 @@ jobs:
       - name: Validate Stage 6 S6-09 final exit
         run: python tools/validate_stage6_final_exit.py
 
+      - name: Validate Stage 6 final-exit current truth
+        run: python tools/validate_stage6_final_exit_current_truth.py
+
       - name: Run Stage 6 governance and production security unit tests
         run: |
           python -m unittest \
@@ -123,7 +126,8 @@ jobs:
             tests.test_stage6_s6_08_authorization \
             tests.test_stage6_integration_security_regression \
             tests.test_stage6_s6_08_current_truth \
-            tests.test_stage6_final_exit -v
+            tests.test_stage6_final_exit \
+            tests.test_stage6_final_exit_current_truth -v
 
       - name: Compile Stage 6 governance and production security sources
         run: |
@@ -145,6 +149,7 @@ jobs:
             src/st_score_restore/stage6_s6_08_authorization.py \
             src/st_score_restore/stage6_s6_08_current_truth.py \
             src/st_score_restore/stage6_final_exit.py \
+            src/st_score_restore/stage6_final_exit_current_truth.py \
             src/st_score_restore/stage6_operational_drills.py \
             src/st_score_restore/stage6_integration_security_regression.py \
             src/st_score_restore/production_identity.py \
@@ -168,5 +173,6 @@ jobs:
             tools/validate_stage6_s6_08_authorization.py \
             tools/validate_stage6_s6_08_current_truth.py \
             tools/validate_stage6_final_exit.py \
+            tools/validate_stage6_final_exit_current_truth.py \
             tools/run_stage6_s6_07_synthetic_operational_drills.py \
             tools/run_stage6_s6_08_integration_security_regression.py

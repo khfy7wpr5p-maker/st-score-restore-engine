@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0.0",
+  "project": "ST Score Restore API / ST Score Restore Engine",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "checkpoint_type": "stage6_final_exit_current_truth_overlay",
+  "recorded_on": "2026-09-06",
+  "production_checkpoint": {
+    "main_sha": "ed5cd2657466e171165d99dba0955e57a0c3a306",
+    "merge_pr": 174,
+    "merge_pr_title": "Stage 6: complete S6-09 final exit",
+    "pr_exact_head_sha": "151a3a1e0fccddc701201625e302b5696531d278",
+    "exact_head_repository_validation_run_id": 34052211039,
+    "exact_head_repository_validation_run_number": 482,
+    "exact_head_stage4_governance_run_id": 34052211047,
+    "exact_head_stage4_governance_run_number": 93,
+    "exact_head_stage5_governance_run_id": 34052211070,
+    "exact_head_stage5_governance_run_number": 85,
+    "exact_head_stage6_governance_run_id": 34052211112,
+    "exact_head_stage6_governance_run_number": 44,
+    "postmerge_repository_validation_run_id": 34052287804,
+    "postmerge_repository_validation_run_number": 483,
+    "postmerge_stage4_governance_run_id": 34052287846,
+    "postmerge_stage4_governance_run_number": 94,
+    "postmerge_stage5_governance_run_id": 34052287797,
+    "postmerge_stage5_governance_run_number": 86,
+    "postmerge_stage6_governance_run_id": 34052287904,
+    "postmerge_stage6_governance_run_number": 45,
+    "ci_status": "success_python_3_11_and_3_12_for_repository_stage4_stage5_and_stage6_workflows"
+  },
+  "stage5": {
+    "state": "COMPLETE_PASS",
+    "exit_pass": true,
+    "final_acceptance_digest": "467eaf11c451d114d3ef41afd44c87cf2dce5cb68f89a5d6cfc45a81e1eed9fc",
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "stage6_final_exit": {
+    "acceptance_id": "stage6.final-exit-acceptance.v1",
+    "decision": "PASS",
+    "acceptance_digest": "4f4f24624b30a88f52285788a1a6c3fd6f64097f51648fce7b33fc8c219b6406",
+    "accepted_purpose": "stage7-entry-eligibility-only"
+  },
+  "identity": {
+    "production_identity_contract_implemented": true,
+    "provider_specific_identity_adapter_activated": false
+  },
+  "secrets_kms_iam": {
+    "production_secrets_kms_iam_contract_implemented": true,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "live_secret_key_or_iam_resource_created": false
+  },
+  "network": {
+    "production_network_security_contract_implemented": true,
+    "provider_specific_network_adapter_activated": false,
+    "live_network_resources_created": false,
+    "provider_specific_request_smuggling_certified": false,
+    "independent_production_security_signoff_complete": false
+  },
+  "storage_queue_recovery": {
+    "production_storage_deployment_contracts_implemented": true,
+    "synthetic_operational_drills_complete": true,
+    "bounded_synthetic_concurrency_stress_complete": true,
+    "integration_security_regression_complete": true,
+    "provider_specific_storage_queue_adapter_activated": false,
+    "live_storage_queue_resources_created": false,
+    "production_distributed_stress_validation_complete": false,
+    "production_load_or_soak_validated": false,
+    "production_concurrency_targets_or_failure_budgets_validated": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_evaluation_authorized": true,
+    "provider_specific_activation_authorized": false,
+    "live_resource_creation_authorized": false
+  },
+  "deployment": {
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "stage6": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL",
+    "exit_pass": true,
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "production_identity_contract_implemented": true,
+    "production_secrets_kms_iam_contract_implemented": true,
+    "production_network_security_contract_implemented": true,
+    "production_storage_deployment_contracts_implemented": true,
+    "synthetic_operational_drills_complete": true,
+    "integration_security_regression_complete": true,
+    "provider_neutral_stage6_deliverable_complete": true,
+    "provider_specific_identity_adapter_activated": false,
+    "provider_specific_secrets_kms_iam_activated": false,
+    "provider_specific_network_adapter_activated": false,
+    "provider_specific_storage_deployment_adapter_activated": false,
+    "production_distributed_stress_validation_complete": false,
+    "production_load_or_soak_validated": false,
+    "independent_penetration_test_or_security_signoff_complete": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "next_safe_boundary": "separate_explicit_stage7_entry_authorization"
+  },
+  "stage7": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "preview_release_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "historical_s6_08_checkpoint_rewritten": false,
+    "real_or_derivative_bytes_in_ordinary_git": false,
+    "raw_private_metrics_in_ordinary_git": false,
+    "raw_secrets_or_key_material_in_ordinary_git": false,
+    "provider_selection_finalized": false,
+    "live_resource_creation_authorized": false,
+    "production_state_mutation_authorized": false,
+    "production_operational_drills_authorized": false,
+    "production_deployment_authorized": false,
+    "production_load_or_soak_tests_authorized": false,
+    "production_penetration_test_authorized": false,
+    "production_concurrency_targets_or_failure_budgets_established": false,
+    "threshold_changes_authorized": false,
+    "resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_training_authorized": false,
+    "publication_authorized": false,
+    "stage7_entry_authorized": false,
+    "preview_release_authorized": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false,
+    "temporary_pr154_merge_authorized": false,
+    "omr_correctness_established": false,
+    "restoration_effectiveness_established": false,
+    "production_availability_or_scalability_established": false,
+    "provider_specific_security_certified": false
+  },
+  "compatibility_note": "Stage 6 is COMPLETE/PASS only for the provider-neutral contract and synthetic security-validation scope accepted by S6-09. Provider selection remains UNSELECTED. No provider-specific adapter, live resource, production state mutation, production operational drill, production deployment, load/soak certification, independent penetration/security sign-off, Stage 7 entry, preview release, model training or publication is authorized by this checkpoint."
+}
