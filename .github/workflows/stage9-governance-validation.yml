@@ -1,0 +1,64 @@
+name: Stage 9 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage9-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate dependency lock
+        run: python tools/validate_dependency_lock.py
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate Stage 8 final-exit current truth
+        run: python tools/validate_stage8_final_exit_current_truth.py
+
+      - name: Validate Stage 9 entry authorization
+        run: python tools/validate_stage9_entry_authorization.py
+
+      - name: Run Stage 9 synthetic comparator drills
+        run: python tools/run_stage9_comparator_drills.py
+
+      - name: Run Stage 9 unit tests
+        run: python -m unittest tests.test_multi_engine_comparator -v
+
+      - name: Run architecture regression tests
+        run: python -m unittest tests.test_restoration_pipeline_architecture -v
+
+      - name: Compile Stage 9 sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/multi_engine_comparator.py \
+            tools/validate_stage9_entry_authorization.py \
+            tools/run_stage9_comparator_drills.py
