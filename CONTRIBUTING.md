@@ -30,8 +30,9 @@ The following must never be silently invented, removed, moved, or reinterpreted:
 5. An open issue records deferred work but does not authorize starting it out of order.
 6. Real documents require documented rights, privacy classification, purpose limitation and retention before use.
 7. Evaluation permission, calibration permission and model-training permission must be represented separately.
-8. Preview release must precede DocRes, the comparator, ST Restore Selector and the ST Restore image model.
-9. Target music-application repositories must not be changed before the final integration stage receives separate approval.
+8. Preview release must precede DocRes, the comparator, the Stage 9A ST Music-Symbol Preservation Model, ST Restore Selector and the ST Restore image model.
+9. Stage 9A is a semantic safety/veto layer, not an OMR or restoration stage; its model training requires separate explicit training authorization.
+10. Target music-application repositories must not be changed before the final integration stage receives separate approval.
 
 Every pull request must state its roadmap stage and confirm that later stages were not started.
 
