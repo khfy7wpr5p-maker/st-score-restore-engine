@@ -60,6 +60,9 @@ jobs:
       - name: Validate Stage 6 S6-05 current truth
         run: python tools/validate_stage6_s6_05_current_truth.py
 
+      - name: Validate Stage 6 S6-06 storage/deployment authorization
+        run: python tools/validate_stage6_s6_06_authorization.py
+
       - name: Run Stage 6 governance and production security unit tests
         run: |
           python -m unittest \
@@ -75,7 +78,9 @@ jobs:
             tests.test_stage6_production_secrets_kms_iam \
             tests.test_stage6_s6_05_authorization \
             tests.test_stage6_production_network \
-            tests.test_stage6_s6_05_current_truth -v
+            tests.test_stage6_s6_05_current_truth \
+            tests.test_stage6_s6_06_authorization \
+            tests.test_stage6_production_storage_deployment -v
 
       - name: Compile Stage 6 governance and production security sources
         run: |
@@ -90,10 +95,12 @@ jobs:
             src/st_score_restore/stage6_s6_04_current_truth.py \
             src/st_score_restore/stage6_s6_05_authorization.py \
             src/st_score_restore/stage6_s6_05_current_truth.py \
+            src/st_score_restore/stage6_s6_06_authorization.py \
             src/st_score_restore/production_identity.py \
             src/st_score_restore/production_http_auth.py \
             src/st_score_restore/production_secrets_kms_iam.py \
             src/st_score_restore/production_network.py \
+            src/st_score_restore/production_storage_deployment.py \
             tools/validate_stage6_entry_authorization.py \
             tools/validate_stage6_post_entry_authorization_current_truth.py \
             tools/validate_stage6_trust_boundary_decision.py \
@@ -102,4 +109,5 @@ jobs:
             tools/validate_stage6_s6_04_authorization.py \
             tools/validate_stage6_s6_04_current_truth.py \
             tools/validate_stage6_s6_05_authorization.py \
-            tools/validate_stage6_s6_05_current_truth.py
+            tools/validate_stage6_s6_05_current_truth.py \
+            tools/validate_stage6_s6_06_authorization.py
