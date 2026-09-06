@@ -30,6 +30,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Validate dependency lock
+        run: python tools/validate_dependency_lock.py
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
       - name: Validate Stage 6 entry governance authorization
         run: python tools/validate_stage6_entry_authorization.py
 
@@ -75,6 +86,12 @@ jobs:
       - name: Validate Stage 6 S6-07 current truth
         run: python tools/validate_stage6_s6_07_current_truth.py
 
+      - name: Validate Stage 6 S6-08 integration/security regression authorization
+        run: python tools/validate_stage6_s6_08_authorization.py
+
+      - name: Run Stage 6 S6-08 integration/security regression
+        run: python tools/run_stage6_s6_08_integration_security_regression.py
+
       - name: Run Stage 6 governance and production security unit tests
         run: |
           python -m unittest \
@@ -96,7 +113,9 @@ jobs:
             tests.test_stage6_s6_06_current_truth \
             tests.test_stage6_s6_07_authorization \
             tests.test_stage6_operational_drills \
-            tests.test_stage6_s6_07_current_truth -v
+            tests.test_stage6_s6_07_current_truth \
+            tests.test_stage6_s6_08_authorization \
+            tests.test_stage6_integration_security_regression -v
 
       - name: Compile Stage 6 governance and production security sources
         run: |
@@ -115,7 +134,9 @@ jobs:
             src/st_score_restore/stage6_s6_06_current_truth.py \
             src/st_score_restore/stage6_s6_07_authorization.py \
             src/st_score_restore/stage6_s6_07_current_truth.py \
+            src/st_score_restore/stage6_s6_08_authorization.py \
             src/st_score_restore/stage6_operational_drills.py \
+            src/st_score_restore/stage6_integration_security_regression.py \
             src/st_score_restore/production_identity.py \
             src/st_score_restore/production_http_auth.py \
             src/st_score_restore/production_secrets_kms_iam.py \
@@ -134,4 +155,6 @@ jobs:
             tools/validate_stage6_s6_06_current_truth.py \
             tools/validate_stage6_s6_07_authorization.py \
             tools/validate_stage6_s6_07_current_truth.py \
-            tools/run_stage6_s6_07_synthetic_operational_drills.py
+            tools/validate_stage6_s6_08_authorization.py \
+            tools/run_stage6_s6_07_synthetic_operational_drills.py \
+            tools/run_stage6_s6_08_integration_security_regression.py
