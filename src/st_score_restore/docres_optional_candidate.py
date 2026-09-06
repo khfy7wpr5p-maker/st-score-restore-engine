@@ -95,7 +95,8 @@ def request_docres_candidate(
 
     Normal calls fail closed to the original. A synthetic executor may be used
     only when ``synthetic_only`` is true, solely to verify provenance and
-    downstream safety-handoff semantics in CI.
+    downstream safety-handoff semantics in CI. Candidate bytes are intentionally
+    not returned in the envelope, keeping this boundary metadata-only.
     """
 
     _require(isinstance(source_bytes, bytes) and bool(source_bytes), "non-empty immutable source bytes are required")
@@ -152,7 +153,6 @@ def request_docres_candidate(
         },
         "stage9ComparatorSelectionAuthorized": False,
         "syntheticOnly": True,
-        "_syntheticCandidateBytes": candidate_bytes,
     }
 
 
@@ -250,7 +250,7 @@ def run_synthetic_docres_candidate_drills() -> dict[str, Any]:
         "networkFetchPerformed": False,
         "stage9ComparatorSelectionPerformed": False,
         "scenarios": {
-            "live_runtime_gate": {key: value for key, value in live_gate.items() if not key.startswith("_")},
+            "live_runtime_gate": live_gate,
             "safety_pass": pass_handoff,
             "safety_review": review_handoff,
             "safety_reject": reject_handoff,
