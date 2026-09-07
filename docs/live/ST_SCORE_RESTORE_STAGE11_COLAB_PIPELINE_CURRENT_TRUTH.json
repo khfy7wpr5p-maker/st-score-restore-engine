@@ -1,10 +1,10 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "generated_on": "2026-09-07",
   "artifact_type": "stage11_colab_pipeline_current_truth",
-  "base_main_sha": "8c838fd4d9f2e24bb9f85c545427595381c9e5b1",
+  "base_main_sha": "e54082428fa468a73b4856b58713ada8d6fb01aa",
   "stage11": {
-    "state": "DRIVE_SOURCE_CONFIRMED_COLAB_PIPELINE_READY_AWAITING_RIGHTS_CLEARANCE_AND_FIRST_GPU_RUN",
+    "state": "CAMERAPRIMUS_RIGHTS_REVIEW_COMPLETE_NOT_ADMITTED_COLAB_PIPELINE_READY_AWAITING_RIGHTS_CLEARED_DATA_AND_FIRST_GPU_RUN",
     "exit_pass": false,
     "training_authorized": true,
     "dataset_admission_authorized": true,
@@ -18,13 +18,14 @@
     "training_started": false,
     "training_executed_on_gpu": false,
     "model_weights_established": false,
-    "camera_primus_rights_review_complete": false,
+    "camera_primus_rights_review_complete": true,
     "camera_primus_commercial_training_admitted": false,
+    "rights_cleared_training_pairs_admitted": false,
     "external_pretrained_weight_download_required": false,
     "production_inference_authorized": false,
     "automatic_final_selection_authorized": false,
     "model_publication_authorized": false,
-    "next_safe_boundary": "record_cameraprimus_rights_clearance_then_run_first_colab_gpu_baseline"
+    "next_safe_boundary": "admit_rights_cleared_public_or_synthetic_pairs_then_run_first_colab_gpu_baseline"
   },
   "drive_source": {
     "provider": "google_drive",
@@ -34,7 +35,16 @@
     "target_pattern": "<sampleId>.png",
     "ground_truth_sidecars_observed": ["agnostic", "semantic", "mei"],
     "full_corpus_enumerated_into_git": false,
-    "ordinary_git_real_bytes": false
+    "ordinary_git_real_bytes": false,
+    "commercial_training_admission": "denied_under_current_rights_evidence"
+  },
+  "rights_resolution": {
+    "decision_artifact": "evidence/stage11/training/cameraprimus-rights-review.v1.json",
+    "decision": "COMPLETE_NOT_ADMITTED_FOR_COMMERCIAL_MODEL_TRAINING",
+    "official_dataset_page_has_explicit_commercial_training_license": false,
+    "ismir_2018_paper_license_is_dataset_license": false,
+    "rism_cc_by_3_underlying_data_license_is_camera_primus_package_license": false,
+    "secondary_public_label_is_sufficient_license_grant": false
   },
   "colab": {
     "notebook": "notebooks/stage11_cameraprimus_residual_unet_colab.ipynb",
@@ -50,7 +60,8 @@
     "held_out_final_eval_default": false
   },
   "blocking_reason_codes": [
-    "CAMERAPRIMUS_COMMERCIAL_TRAINING_RIGHTS_NOT_RECORDED",
+    "CAMERAPRIMUS_COMMERCIAL_TRAINING_RIGHTS_INSUFFICIENT",
+    "RIGHTS_CLEARED_TRAINING_PAIRS_NOT_YET_ADMITTED",
     "FIRST_COLAB_GPU_RUN_NOT_EXECUTED"
   ],
   "assertions": {
@@ -61,6 +72,8 @@
     "held_out_never_train_or_tune": true,
     "private_user_student_data_not_authorized": true,
     "training_cannot_be_claimed_before_execution": true,
+    "camera_primus_not_trainable_under_current_rights_decision": true,
+    "rights_cleared_synthetic_or_explicitly_licensed_data_route_required": true,
     "model_output_not_omr_truth": true,
     "stage9a_preservation_evidence_required_before_release": true,
     "stage9_comparator_required_before_release": true,

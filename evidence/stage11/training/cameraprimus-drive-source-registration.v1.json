@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "artifactType": "stage11_cameraprimus_drive_source_registration",
   "dataset": "CameraPrIMuS",
   "provider": "google_drive",
@@ -7,8 +7,9 @@
   "driveFolderId": "1qIwmGQbcJHox00tMEteojaeU1N3UvNgO",
   "trainingPurposeAuthorization": "granted_by_project_owner_2026-09-07",
   "rightsReview": {
-    "status": "review_required",
-    "reason": "official public download and research use are evidenced, but an explicit commercial-training license grant was not observed on the official dataset page during this checkpoint",
+    "status": "complete_not_admitted",
+    "decisionArtifact": "evidence/stage11/training/cameraprimus-rights-review.v1.json",
+    "reason": "The dataset package is publicly downloadable and used in research, but the reviewed official materials do not provide an explicit dataset-license grant covering commercial model training. The paper license and the underlying RISM data license are not treated as substitute licenses for the separately distributed Camera-PrIMuS image package.",
     "officialDatasetPage": "https://grfia.dlsi.ua.es/primus/",
     "commercialTrainingAdmissionAllowed": false
   },
@@ -47,7 +48,7 @@
   "assertions": {
     "sourceDataRemainsInDrive": true,
     "ordinaryGitArtifactBytesForbidden": true,
-    "trainingFailsClosedUntilRightsApproved": true,
+    "cameraPrIMuSCommercialTrainingForbiddenUnderCurrentRightsDecision": true,
     "heldOutNeverUsedForTrainingOrTuning": true,
     "privateUserStudentDataNotAuthorizedByThisRegistration": true
   }
