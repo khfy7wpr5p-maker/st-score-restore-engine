@@ -65,10 +65,26 @@ jobs:
       - name: Run architecture regression tests
         run: python -m unittest tests.test_restoration_pipeline_architecture -v
 
+      - name: Validate Stage 10 final exit
+        run: python tools/validate_stage10_final_exit.py
+
+      - name: Validate Stage 10 final-exit current truth
+        run: python tools/validate_stage10_final_exit_current_truth.py
+
+      - name: Run Stage 10 final-exit mutation tests
+        run: |
+          python -m unittest \
+            tests.test_stage10_final_exit \
+            tests.test_stage10_final_exit_current_truth -v
+
       - name: Compile Stage 10 sources
         run: |
           python -m py_compile \
             src/st_score_restore/stage10_entry_authorization.py \
             src/st_score_restore/st_restore_selector.py \
+            src/st_score_restore/stage10_final_exit.py \
+            src/st_score_restore/stage10_final_exit_current_truth.py \
             tools/validate_stage10_entry_authorization.py \
-            tools/run_stage10_selector_drills.py
+            tools/run_stage10_selector_drills.py \
+            tools/validate_stage10_final_exit.py \
+            tools/validate_stage10_final_exit_current_truth.py
