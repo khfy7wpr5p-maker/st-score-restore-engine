@@ -53,6 +53,18 @@ jobs:
       - name: Run Stage 11 foundation tests
         run: python -m unittest tests.test_stage11_foundation -v
 
+      - name: Validate Stage 11 training authorization
+        run: python tools/validate_stage11_training_authorization.py
+
+      - name: Run Stage 11 training kickoff drills
+        run: python tools/run_stage11_training_kickoff_drills.py
+
+      - name: Run Stage 11 training kickoff tests
+        run: python -m unittest tests.test_stage11_training_kickoff -v
+
+      - name: Validate Stage 11 training kickoff current truth
+        run: python tools/validate_stage11_training_kickoff_current_truth.py
+
       - name: Run Stage 10 selector regression tests
         run: python -m unittest tests.test_st_restore_selector -v
 
@@ -74,6 +86,12 @@ jobs:
             src/st_score_restore/stage11_entry_authorization.py \
             src/st_score_restore/stage11_foundation_current_truth.py \
             src/st_score_restore/st_restore_image_model.py \
+            src/st_score_restore/stage11_training_authorization.py \
+            src/st_score_restore/stage11_training_dataset.py \
+            src/st_score_restore/stage11_training_kickoff_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
-            tools/validate_stage11_foundation_current_truth.py
+            tools/validate_stage11_foundation_current_truth.py \
+            tools/validate_stage11_training_authorization.py \
+            tools/run_stage11_training_kickoff_drills.py \
+            tools/validate_stage11_training_kickoff_current_truth.py
