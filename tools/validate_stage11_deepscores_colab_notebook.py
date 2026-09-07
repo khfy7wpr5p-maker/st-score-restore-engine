@@ -18,14 +18,14 @@ REQUIRED_TOKENS = (
     "1362",
     "352",
     "source-family leakage",
-    "PATCH=512",
-    "BATCH=4",
-    "EPOCHS=20",
+    "patch=512",
+    "batch=4",
+    "epochs=20",
     "last.pt",
     "best.pt",
     "first_gpu_run_evidence.json",
-    "RUN_HELD_OUT_FINAL=False",
-    "pretrainedWeights\":False",
+    "run_held_out_final=false",
+    "pretrainedweights\":false",
 )
 FORBIDDEN_TOKENS = (
     "wget ",
@@ -43,17 +43,32 @@ def main() -> int:
     code_cells = [cell for cell in payload.get("cells", []) if cell.get("cell_type") == "code"]
     if len(code_cells) < 4:
         raise SystemExit("notebook is unexpectedly small")
-    source = "\n".join("".join(cell.get("source", [])) if isinstance(cell.get("source"), list) else str(cell.get("source") or "") for cell in code_cells)
+    source = "\n".join(
+        "".join(cell.get("source", [])) if isinstance(cell.get("source"), list) else str(cell.get("source") or "")
+        for cell in code_cells
+    )
+    normalized_source = source.casefold()
     for token in REQUIRED_TOKENS:
-        if token not in source:
+        if token.casefold() not in normalized_source:
             raise SystemExit(f"missing notebook safety token: {token}")
     for token in FORBIDDEN_TOKENS:
-        if token in source:
+        if token.casefold() in normalized_source:
             raise SystemExit(f"forbidden network/pretrained action in notebook: {token}")
     for idx, cell in enumerate(code_cells):
         cell_source = "".join(cell.get("source", [])) if isinstance(cell.get("source"), list) else str(cell.get("source") or "")
         ast.parse(cell_source, filename=f"notebook-cell-{idx}")
-    print(json.dumps({"notebook":"valid","codeCells":len(code_cells),"heldOutDefault":False,"externalPretrainedDownloads":False}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "notebook": "valid",
+                "codeCells": len(code_cells),
+                "heldOutDefault": False,
+                "externalPretrainedDownloads": False,
+                "tokenMatching": "case_insensitive",
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 
