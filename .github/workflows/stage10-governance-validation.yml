@@ -1,0 +1,74 @@
+name: Stage 10 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage10-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate dependency lock
+        run: python tools/validate_dependency_lock.py
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate Stage 9A final-exit current truth
+        run: python tools/validate_stage9a_final_exit_current_truth.py
+
+      - name: Validate Stage 10 entry authorization
+        run: python tools/validate_stage10_entry_authorization.py
+
+      - name: Run Stage 10 synthetic selector drills
+        run: python tools/run_stage10_selector_drills.py
+
+      - name: Run Stage 10 unit tests
+        run: |
+          python -m unittest \
+            tests.test_stage10_entry_authorization \
+            tests.test_st_restore_selector -v
+
+      - name: Run Stage 9 comparator regression tests
+        run: python -m unittest tests.test_multi_engine_comparator -v
+
+      - name: Run Stage 9A preservation regression tests
+        run: python -m unittest tests.test_music_symbol_preservation -v
+
+      - name: Run architecture regression tests
+        run: python -m unittest tests.test_restoration_pipeline_architecture -v
+
+      - name: Compile Stage 10 sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage10_entry_authorization.py \
+            src/st_score_restore/st_restore_selector.py \
+            tools/validate_stage10_entry_authorization.py \
+            tools/run_stage10_selector_drills.py

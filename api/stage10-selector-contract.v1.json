@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage10.st-restore-selector.v1",
+  "name": "ST Restore Selector provider-neutral foundation",
+  "purpose": "Create a deterministic provider-neutral engine invocation plan and convert a trusted Stage 9 recommendation plus provenance-bound Stage 9A preservation evidence into an original-aware controlled selection decision without bypassing safety.",
+  "liveSelectorActivationAuthorized": false,
+  "automaticFinalSelectionAuthorized": false,
+  "productionDeploymentAuthorized": false,
+  "inputs": {
+    "sourceArtifactId": "required immutable source identity",
+    "engineCapabilities": {
+      "requiredFields": ["engineId", "approvalState", "availabilityState", "enabled"],
+      "approvalStates": ["approved", "unapproved"],
+      "availabilityStates": ["available", "unavailable"],
+      "rule": "Only explicitly approved, available and enabled engines may be planned for invocation."
+    },
+    "stage9ComparatorResult": {
+      "requiredContractVersion": "stage9.multi-engine-comparator.v1",
+      "mustBeRecommendationOnly": true,
+      "mustDeclareAutomaticFinalSelectionUnauthorized": true
+    },
+    "stage9aPreservationEvidenceByArtifactId": {
+      "requiredForRestorationVariantSelection": true,
+      "requiredContractVersion": "stage9a.mspm-evidence.v1",
+      "requiredStatus": "pass",
+      "requiredCoverageState": "complete",
+      "mustBindSourceAndCandidateIdentity": true
+    }
+  },
+  "invocationPlanning": {
+    "originalAlwaysIncluded": true,
+    "unapprovedEngineAction": "skip",
+    "unavailableEngineAction": "skip",
+    "disabledEngineAction": "skip",
+    "providerSpecificPreferenceForbidden": true,
+    "networkFetchForbidden": true,
+    "modelDownloadForbidden": true
+  },
+  "controlledSelectionPolicy": {
+    "originalOutcomes": ["original_preferred", "original_retained_no_acceptable_derivative"],
+    "reviewOutcome": "review_required",
+    "variantOutcome": "restoration_variant_preferred",
+    "variantSelectionRequires": [
+      "recommended variant exists exactly once in Stage 9 variants",
+      "variant eligible is true",
+      "variant hardVeto is false",
+      "variant reviewRequired is false",
+      "safetyVerdict is pass",
+      "matching Stage 9A preservation assessment exists",
+      "Stage 9A source and candidate identities match",
+      "Stage 9A preservation status is pass",
+      "Stage 9A coverageState is complete",
+      "Stage 9A semanticHardVeto is false",
+      "Stage 9A reviewRequired is false"
+    ],
+    "malformedOrMissingEvidenceRoute": "original_plus_review",
+    "reviewRequiredRoute": "original_plus_review",
+    "hardVetoRoute": "original",
+    "teacherApprovalImplied": false,
+    "omrCorrectnessImplied": false,
+    "musicalTruthImplied": false
+  },
+  "outputs": {
+    "invocationPlan": "deterministic list of invoke/skip recommendations with reason codes",
+    "selectionDecision": "controlled non-production source-variant decision with reason codes",
+    "originalArtifactId": "always present",
+    "selectedArtifactId": "original unless all bounded selection requirements pass",
+    "reviewRequired": "true on uncertainty or malformed evidence"
+  },
+  "lockedInvariants": [
+    "immutable source is never overwritten",
+    "original remains selectable",
+    "selector cannot bypass Music/TAB safety",
+    "selector cannot bypass Stage 9 comparator",
+    "hard deterministic veto cannot be overridden",
+    "hard semantic veto cannot be overridden",
+    "review-required evidence cannot become automatic variant selection",
+    "missing Stage 9A preservation evidence fails safe",
+    "selector decision is not teacher approval",
+    "selector decision is not OMR or human musical truth"
+  ]
+}
