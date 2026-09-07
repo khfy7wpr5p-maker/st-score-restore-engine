@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-07",
+  "artifact_type": "stage11_foundation_current_truth",
+  "production_checkpoint": {
+    "main_sha": "d3429cc877ae000206de8102713c8259d8b50897",
+    "stage10_current_truth_path": "docs/live/ST_SCORE_RESTORE_STAGE10_FINAL_EXIT_CURRENT_TRUTH.json",
+    "stage10_current_truth_git_blob_sha1": "ed19ad779408ec0acf96cba1d16d434aa53d28ec"
+  },
+  "stage10": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_ST_RESTORE_SELECTOR_FOUNDATION",
+    "exit_pass": true
+  },
+  "stage11": {
+    "state": "FOUNDATION_COMPLETE_AWAITING_SEPARATE_TRAINING_AUTHORIZATION",
+    "exit_pass": false,
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "provider_neutral_image_model_foundation_complete": true,
+    "model_interface_contract_complete": true,
+    "training_readiness_manifest_contract_complete": true,
+    "release_manifest_validation_complete": true,
+    "selector_capability_descriptor_complete": true,
+    "synthetic_research_adapter_complete": true,
+    "synthetic_drills_required": true,
+    "architecture_family": "UNSELECTED",
+    "dataset_collection_authorized": false,
+    "user_document_training_use_authorized": false,
+    "model_training_authorized": false,
+    "held_out_retuning_authorized": false,
+    "model_weights_established": false,
+    "model_artifact_download_authorized": false,
+    "network_fetch_authorized": false,
+    "model_publication_authorized": false,
+    "production_inference_authorized": false,
+    "real_user_cohort_authorized": false,
+    "next_safe_boundary": "separate_stage11_training_and_dataset_authorization"
+  },
+  "stage11_selector_descriptor": {
+    "engineId": "st_restore_image_model",
+    "approvalState": "unapproved",
+    "availabilityState": "unavailable",
+    "enabled": false,
+    "expected_stage10_action": "skip"
+  },
+  "stage12": {
+    "entry_eligible": false,
+    "entry_authorized": false,
+    "started": false,
+    "blocked_pending": "accepted_stage11_exit_after_training_evaluation_and_release_governance"
+  },
+  "deployment": {
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "assertions": {
+    "source_artifact_immutable": true,
+    "derived_artifacts_require_provenance": true,
+    "original_always_selectable": true,
+    "user_private_data_not_training_data_without_separate_authorization": true,
+    "image_model_cannot_self_approve_safety": true,
+    "independent_stage9a_evidence_required": true,
+    "stage9_comparator_required": true,
+    "stage10_selector_required": true,
+    "hard_veto_non_overridable": true,
+    "model_output_is_not_omr_truth": true,
+    "model_output_is_not_human_musical_truth": true,
+    "architecture_family_remains_open": true,
+    "production_behavior_changed": false
+  },
+  "continuation_state": {
+    "last_completed_boundary": "Stage 11 foundation",
+    "first_incomplete_boundary": "separate_stage11_training_and_dataset_authorization",
+    "stage11_exit_pass": false,
+    "stage11_training_started": false,
+    "stage12_started": false
+  }
+}
