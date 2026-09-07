@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-07",
+  "artifact_type": "stage10_final_exit_current_truth",
+  "production_checkpoint": {
+    "main_sha": "5e40d50f4c16cdae9267c5995511d160d95dfb24",
+    "merge_pr": 186,
+    "merge_title": "Stage 10: add provider-neutral ST Restore Selector foundation",
+    "final_exit_acceptance_path": "evidence/stage10/final-exit/stage10-final-exit-acceptance.v1.json",
+    "final_exit_acceptance_git_blob_sha1": "72f6a664e2ae35e6cb104e28e4835023b83b6b88",
+    "exact_head_sha": "eba6219c1c9643d1ff2fd7e9137eccdd444a3d8f",
+    "exact_head_ci": {
+      "repository_validation": {"run_id": 34087934985, "run_number": 507, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34087935023, "run_number": 118, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34087935139, "run_number": 110, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34087934967, "run_number": 69, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34087934924, "run_number": 22, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34087935016, "run_number": 16, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34087934942, "run_number": 9, "result": "SUCCESS"},
+      "stage9a_governance": {"run_id": 34087934969, "run_number": 5, "result": "SUCCESS"},
+      "stage10_governance": {"run_id": 34087935083, "run_number": 1, "result": "SUCCESS"}
+    },
+    "postmerge_ci": {
+      "repository_validation": {"run_id": 34088025455, "run_number": 508, "result": "SUCCESS"},
+      "stage4_governance": {"run_id": 34088025432, "run_number": 119, "result": "SUCCESS"},
+      "stage5_governance": {"run_id": 34088025465, "run_number": 111, "result": "SUCCESS"},
+      "stage6_governance": {"run_id": 34088025434, "run_number": 70, "result": "SUCCESS"},
+      "stage7_governance": {"run_id": 34088025463, "run_number": 23, "result": "SUCCESS"},
+      "stage8_governance": {"run_id": 34088025462, "run_number": 17, "result": "SUCCESS"},
+      "stage9_governance": {"run_id": 34088025469, "run_number": 10, "result": "SUCCESS"},
+      "stage9a_governance": {"run_id": 34088025516, "run_number": 6, "result": "SUCCESS"},
+      "stage10_governance": {"run_id": 34088025482, "run_number": 2, "result": "SUCCESS"}
+    },
+    "python_matrix": ["3.11", "3.12"]
+  },
+  "stage9a": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_MSPM_EVIDENCE_AND_SAFE_ROUTING_FOUNDATION",
+    "exit_pass": true
+  },
+  "stage10": {
+    "state": "COMPLETE_PASS_PROVIDER_NEUTRAL_ST_RESTORE_SELECTOR_FOUNDATION",
+    "exit_pass": true,
+    "entry_eligible": true,
+    "entry_authorized": true,
+    "started": true,
+    "provider_neutral_selector_contract_complete": true,
+    "engine_eligibility_planning_complete": true,
+    "original_always_included": true,
+    "stage9_recommendation_consumption_complete": true,
+    "stage9a_evidence_enforcement_complete": true,
+    "original_aware_controlled_selection_complete": true,
+    "fail_safe_review_original_fallback_complete": true,
+    "explainable_reason_codes_complete": true,
+    "synthetic_selector_drills_pass": true,
+    "live_selector_activation_authorized": false,
+    "automatic_final_selection_authorized": false,
+    "real_user_selector_cohort_authorized": false,
+    "next_safe_boundary": "separate_stage11_entry_authorization"
+  },
+  "stage11": {
+    "entry_eligible": true,
+    "entry_authorized": false,
+    "started": false,
+    "image_model_training_authorized": false,
+    "blocked_pending": "separate_explicit_stage11_entry_authorization"
+  },
+  "docres": {
+    "dependency_status": "UNAPPROVED",
+    "model_artifact_status": "UNAPPROVED",
+    "live_runtime_activation_authorized": false,
+    "real_user_cohort_authorized": false
+  },
+  "provider": {
+    "selection_status": "UNSELECTED",
+    "provider_specific_activation_authorized": false,
+    "live_resource_creation_authorized": false
+  },
+  "deployment": {
+    "production_deployment_authorized": false,
+    "production_deployment_performed": false
+  },
+  "training": {
+    "dataset_collection_authorized": false,
+    "user_document_training_use_authorized": false,
+    "model_training_authorized": false,
+    "model_publication_authorized": false,
+    "model_artifact_download_authorized": false,
+    "network_fetch_authorized": false
+  },
+  "assertions": {
+    "historical_evidence_immutable": true,
+    "source_artifact_immutable": true,
+    "derived_artifacts_provenance_bound": true,
+    "original_always_selectable": true,
+    "selector_cannot_bypass_music_tab_safety": true,
+    "selector_cannot_bypass_stage9_comparator": true,
+    "selector_cannot_bypass_stage9a_preservation_evidence": true,
+    "hard_deterministic_veto_non_overridable": true,
+    "hard_semantic_veto_non_overridable": true,
+    "review_required_cannot_become_automatic_variant_selection": true,
+    "unknown_or_malformed_evidence_fails_safe": true,
+    "selector_decision_is_not_teacher_approval": true,
+    "selector_decision_is_not_omr_truth": true,
+    "selector_decision_is_not_human_musical_truth": true,
+    "live_selector_activation_authorized": false,
+    "automatic_final_selection_authorized": false,
+    "real_user_selector_cohort_authorized": false,
+    "stage11_entry_authorized": false,
+    "stage11_image_model_training_authorized": false,
+    "live_resource_creation_authorized": false,
+    "production_deployment_authorized": false,
+    "production_load_or_soak_validated": false,
+    "independent_production_security_signoff_complete": false,
+    "threshold_changes_authorized": false,
+    "resource_limit_changes_authorized": false,
+    "held_out_retuning_authorized": false,
+    "omr_correctness_established": false,
+    "musical_truth_established": false,
+    "universal_restoration_effectiveness_established": false,
+    "production_availability_or_scalability_established": false,
+    "color_management_validated": false,
+    "color_fidelity_certified": false
+  },
+  "continuation_state": {
+    "last_completed_stage": "Stage 10",
+    "last_completed_state": "COMPLETE_PASS_PROVIDER_NEUTRAL_ST_RESTORE_SELECTOR_FOUNDATION",
+    "first_incomplete_boundary": "separate_stage11_entry_authorization",
+    "stage10_exit_pass": true,
+    "stage11_started": false,
+    "stage11_image_model_training_authorized": false,
+    "stage12_started": false
+  }
+}
