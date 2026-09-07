@@ -1,0 +1,14 @@
+{
+  "artifactType": "stage11_v2_training_evidence",
+  "bestCheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+  "commitSha": "fd04be74e0dc31ab1775b54bebd60770155cf4b3",
+  "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+  "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+  "device": "Tesla T4",
+  "epochsCompleted": 20,
+  "heldOutUsedForTraining": false,
+  "heldOutUsedForTuning": false,
+  "historyPath": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2_symbol_preservation/history.v2.json",
+  "lastCheckpointSha256": "f0cdf362977927e70cf505af5b8c79bec89b3fcb67e6792c06fecf30ac120de8",
+  "status": "completed"
+}

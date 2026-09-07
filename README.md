@@ -14,15 +14,15 @@ Safety-first visual restoration and validation engine for music scores and guita
 
 The sections below retain historical Stage 4 evidence anchors because governance history is immutable. Historical ACTIVE/BLOCKED statements describe their original checkpoints, not current production state.
 
-## Stage 11 V2 symbol-preservation development boundary — 2026-09-07
+## Stage 11 V2/V2a symbol-preservation development boundary — 2026-09-07
 
-Stage 11 V1 has a latest operator-reported Stage 9A outcome of `review_required`: visual restoration improved, but true music-symbol ink recall dropped too much (`inkRecallDelta=-0.166`). The corresponding V1 run evidence is not rewritten or silently promoted by V2 work.
+Stage 11 V1 has a latest operator-reported Stage 9A outcome of `review_required`: visual restoration improved, but true music-symbol ink recall dropped too much (`inkRecallDelta=-0.166`). The corresponding V1 run evidence is not rewritten or silently promoted by later work.
 
-Stage 11 V2 keeps the Residual U-Net family and changes the training objective and sampling so the experiment directly targets symbol preservation: DeepScoresV2 native annotation masks, 50/50 random versus symbol-centered 512x512 patches, hard-example weighting, and a composite `pixel_l1 + edge_l1 + symbol_region_l1 + ink_recall_penalty` objective. PyTorch remains Colab-only and is not a production dependency.
+Stage 11 V2 completed 20/20 development-training epochs on a Tesla T4. Its frozen best checkpoint is `363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b`. Development evaluation improved pixel L1 by **57.81%** and edge L1 by **13.60%**, while `inkRecallDelta` improved from the V1 reference `-0.166` to **-0.05994**. This is a substantial preservation improvement, but it remains `review_required` because the Stage 11 preservation gate is `inkRecallDelta >= -0.05` (ideal `>= -0.02`). Frozen held-out and Stage 9A therefore remain closed for V2.
 
-Current V2 repository state is **IMPLEMENTATION_READY_DEVELOPMENT_TRAINING_PENDING**. Development training/evaluation must pass the preservation gate (`inkRecallDelta >= -0.05`, ideal `>= -0.02`) before frozen held-out or V2 Stage 9A evaluation is allowed. Held-out data remains forbidden for training/tuning. Production inference, automatic final selection, Stage 12 entry, OMR-correctness claims, and musical-truth claims remain unauthorized.
+V2a is the authorized development-only continuation. It warm-starts from the exact V2 best checkpoint, lowers the learning rate to `5e-5`, and shifts the composite loss toward symbol preservation: `pixel_l1=0.34`, `edge_l1=0.14`, `symbol_region_l1=0.30`, `ink_recall_penalty=0.22`. It runs at most eight epochs, selects checkpoints by development gate/preservation first, retains conservative cleanup floors, writes partial checkpoints every 128 training batches, and exposes Drive-backed live status. The autonomous pipeline runs `train -> development`; only a passing V2a development gate may unlock frozen held-out and Stage 9A evaluation.
 
-Authoritative V2 development truth: `docs/live/ST_SCORE_RESTORE_STAGE11_V2_SYMBOL_PRESERVATION_CURRENT_TRUTH.json`. Design rationale: `docs/adr/0024-stage11-v2-symbol-preservation-residual-unet.md`.
+Held-out data remains forbidden for training/tuning. Production inference, automatic production promotion, Stage 12 entry, OMR-correctness claims, and musical-truth claims remain unauthorized. Authoritative current truth: `docs/live/ST_SCORE_RESTORE_STAGE11_V2_SYMBOL_PRESERVATION_CURRENT_TRUTH.json`. V2 design rationale: `docs/adr/0024-stage11-v2-symbol-preservation-residual-unet.md`.
 
 ## Historical Stage 4 production baseline and human-reference checkpoints — 2026-09-03
 

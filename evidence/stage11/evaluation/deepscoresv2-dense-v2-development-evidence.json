@@ -1,0 +1,43 @@
+{
+  "artifactType": "stage11_v2_development_evidence",
+  "backpropagationExecuted": false,
+  "checkpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+  "commitSha": "fd04be74e0dc31ab1775b54bebd60770155cf4b3",
+  "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+  "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+  "device": "CPU",
+  "gate": {
+    "developmentGatePassed": false,
+    "eligibleForFrozenHeldOutEvaluation": false,
+    "idealInkRecallDelta": -0.02,
+    "inkRecallDeltaTarget": -0.05,
+    "reasonCodes": [
+      "ink_recall_delta_below_v2_target"
+    ],
+    "status": "review_required"
+  },
+  "heldOutUsedForTraining": false,
+  "heldOutUsedForTuning": false,
+  "metrics": {
+    "baselineEdgeL1": 0.0321173555275891,
+    "baselineFalseInkRate": 0.22797101706964895,
+    "baselineInkRecall": 0.9110292172990739,
+    "baselineMse": 0.034483545750845224,
+    "baselinePixelL1": 0.1254499102360569,
+    "edgeL1ImprovementPercent": 13.596753265825802,
+    "falseInkRateDelta": -0.09770500852027908,
+    "inkRecallDelta": -0.05993542307987809,
+    "mseImprovementPercent": -2.912782577638955,
+    "pixelL1ImprovementPercent": 57.808715708373306,
+    "restoredEdgeL1": 0.027750437940994743,
+    "restoredFalseInkRate": 0.13026600854936987,
+    "restoredInkRecall": 0.8510937942191958,
+    "restoredMse": 0.035487976463628,
+    "restoredPixelL1": 0.05292892827128526
+  },
+  "modelStateSha256After": "0599953d2c7798cdc696ecd01ac17e0268310c6db49757e265c53827c0b0d5ad",
+  "modelStateSha256Before": "0599953d2c7798cdc696ecd01ac17e0268310c6db49757e265c53827c0b0d5ad",
+  "optimizerCreated": false,
+  "status": "completed",
+  "weightsMutated": false
+}
