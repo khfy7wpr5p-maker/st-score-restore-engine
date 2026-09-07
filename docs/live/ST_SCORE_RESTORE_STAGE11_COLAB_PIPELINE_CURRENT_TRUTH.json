@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "generated_on": "2026-09-07",
   "artifact_type": "stage11_colab_pipeline_current_truth",
-  "base_main_sha": "34d26c8f24d8211a170663672003532e36856487",
+  "base_main_sha": "9784d48ee3237eade688eee5a0a97ea334187d86",
   "stage11": {
     "state": "FIRST_RESIDUAL_UNET_GPU_RUN_COMPLETE_AWAITING_HELD_OUT_AND_STAGE9A_EVALUATION",
     "exit_pass": false,
@@ -28,6 +28,10 @@
     "model_weights_established": true,
     "candidate_model_established": true,
     "held_out_evaluation_completed": false,
+    "held_out_evaluation_mobile_resilient": true,
+    "held_out_cpu_fallback_enabled": true,
+    "held_out_drive_progress_resume_enabled": true,
+    "colab_background_runtime_guaranteed": false,
     "stage9a_preservation_evaluation_completed": false,
     "final_model_selected": false,
     "camera_primus_commercial_training_admitted": false,
@@ -111,8 +115,10 @@
   },
   "colab": {
     "training_notebook": "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb",
+    "held_out_evaluation_notebook": "notebooks/stage11_deepscoresv2_dense_heldout_eval_colab.ipynb",
     "drive_archive_path": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_DATA/ds2_dense.tar.gz",
-    "gpu_required_for_intended_run": true,
+    "gpu_required_for_training": true,
+    "held_out_device_policy": "cuda_preferred_cpu_fallback",
     "archive_checksum_gate_required": true,
     "safe_tar_extraction_required": true,
     "default_patch_size_hw": [512, 512],
@@ -122,7 +128,13 @@
     "loss_policy": "pixel_l1_plus_edge_preservation",
     "checkpoint_output_root": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v1",
     "resume_from_last_checkpoint": true,
-    "held_out_final_eval_default": false
+    "held_out_final_eval_default": false,
+    "held_out_progress_file": "heldout_eval_progress.v1.json",
+    "held_out_progress_persistence_every_pairs": 8,
+    "held_out_atomic_progress_write": true,
+    "held_out_resume_after_runtime_interrupt": true,
+    "colab_runtime_survival_guaranteed": false,
+    "idle_limit_bypass_or_keepalive_used": false
   },
   "blocking_reason_codes": [
     "OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED",
@@ -140,6 +152,8 @@
     "first_gpu_training_claim_supported_by_evidence": true,
     "camera_primus_not_trainable_under_current_rights_decision": true,
     "model_output_not_omr_truth": true,
+    "colab_runtime_limit_bypass_forbidden": true,
+    "colab_background_execution_not_guaranteed": true,
     "stage9a_preservation_evidence_required_before_release": true,
     "stage9_comparator_required_before_release": true,
     "stage10_selector_required_before_release": true,

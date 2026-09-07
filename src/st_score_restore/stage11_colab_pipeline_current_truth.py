@@ -23,6 +23,7 @@ def _require(condition: bool, message: str) -> None:
 
 def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> dict[str, Any]:
     _require(payload.get("artifact_type") == "stage11_colab_pipeline_current_truth", "artifact type mismatch")
+    _require(payload.get("schema_version") == "1.4.0", "unexpected schema version")
     stage11 = payload.get("stage11") or {}
     _require(stage11.get("state") == EXPECTED_STATE, "unexpected Stage 11 state")
 
@@ -48,12 +49,16 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "first_gpu_training_run_pass",
         "model_weights_established",
         "candidate_model_established",
+        "held_out_evaluation_mobile_resilient",
+        "held_out_cpu_fallback_enabled",
+        "held_out_drive_progress_resume_enabled",
     ):
         _require(stage11.get(key) is True, f"{key} must be true after the verified GPU run")
 
     for key in (
         "exit_pass",
         "held_out_evaluation_completed",
+        "colab_background_runtime_guaranteed",
         "stage9a_preservation_evaluation_completed",
         "final_model_selected",
         "camera_primus_commercial_training_admitted",
@@ -94,6 +99,18 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
     _require((artifacts.get("best_checkpoint") or {}).get("sha256") == EXPECTED_BEST_SHA256, "best checkpoint SHA256 mismatch")
     _require((artifacts.get("best_checkpoint") or {}).get("size_bytes") == 23449829, "best checkpoint size mismatch")
 
+    colab = payload.get("colab") or {}
+    _require(colab.get("training_notebook") == "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb", "training notebook mismatch")
+    _require(colab.get("held_out_evaluation_notebook") == "notebooks/stage11_deepscoresv2_dense_heldout_eval_colab.ipynb", "held-out notebook mismatch")
+    _require(colab.get("gpu_required_for_training") is True, "training must remain GPU-targeted")
+    _require(colab.get("held_out_device_policy") == "cuda_preferred_cpu_fallback", "held-out device policy mismatch")
+    _require(colab.get("held_out_progress_file") == "heldout_eval_progress.v1.json", "held-out progress file mismatch")
+    _require(colab.get("held_out_progress_persistence_every_pairs") == 8, "held-out progress cadence mismatch")
+    _require(colab.get("held_out_atomic_progress_write") is True, "held-out progress must be atomic")
+    _require(colab.get("held_out_resume_after_runtime_interrupt") is True, "held-out resume must be enabled")
+    _require(colab.get("colab_runtime_survival_guaranteed") is False, "Colab runtime survival cannot be guaranteed")
+    _require(colab.get("idle_limit_bypass_or_keepalive_used") is False, "idle/runtime-limit bypass must not be used")
+
     blockers = set(payload.get("blocking_reason_codes") or [])
     for required in (
         "OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED",
@@ -116,6 +133,8 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "first_gpu_training_claim_supported_by_evidence",
         "camera_primus_not_trainable_under_current_rights_decision",
         "model_output_not_omr_truth",
+        "colab_runtime_limit_bypass_forbidden",
+        "colab_background_execution_not_guaranteed",
         "stage9a_preservation_evidence_required_before_release",
         "stage9_comparator_required_before_release",
         "stage10_selector_required_before_release",
@@ -134,6 +153,10 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "trainingCompleted": True,
         "modelWeightsEstablished": True,
         "firstGpuTrainingRunPass": True,
+        "heldOutMobileResilient": True,
+        "heldOutCpuFallback": True,
+        "heldOutDriveResume": True,
+        "backgroundRuntimeGuaranteed": False,
         "finalStage11Pass": False,
         "nextSafeBoundary": stage11["next_safe_boundary"],
     }
