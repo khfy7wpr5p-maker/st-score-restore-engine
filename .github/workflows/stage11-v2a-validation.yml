@@ -1,0 +1,63 @@
+name: Stage 11 V2a validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage11-v2a:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate V2a notebook JSON
+        run: python -m json.tool notebooks/stage11_deepscoresv2_dense_v2a_autonomous_symbol_preservation_colab.ipynb > /dev/null
+
+      - name: Validate V2a pipeline governance
+        run: python tools/validate_stage11_v2a_pipeline.py
+
+      - name: Run V2a preservation tests
+        run: python -m unittest tests.test_stage11_v2a_preservation -v
+
+      - name: Validate updated Stage 11 V2/V2a current truth
+        run: python tools/validate_stage11_v2_current_truth.py
+
+      - name: Run updated current-truth tests
+        run: python -m unittest tests.test_stage11_v2_current_truth -v
+
+      - name: Compile V2a sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2a_preservation.py \
+            src/st_score_restore/stage11_v2_current_truth.py \
+            tools/stage11_v2a_colab_runtime.py \
+            tools/stage11_v2a_autonomous_pipeline.py \
+            tools/validate_stage11_v2a_pipeline.py
