@@ -1,0 +1,70 @@
+{
+  "artifactType": "stage11_deepscoresv2_dense_heldout_final_evidence",
+  "checkpoint": {
+    "configSha256": "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80",
+    "epoch": 19,
+    "file": "best.pt",
+    "sha256": "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683",
+    "weightsAfterSha256": "41df3de3dfc56053d3ba73b11da0065f7e0848ec53a1426b892a13460f701764",
+    "weightsBeforeSha256": "41df3de3dfc56053d3ba73b11da0065f7e0848ec53a1426b892a13460f701764",
+    "weightsMutated": false
+  },
+  "dataset": {
+    "archiveChecksumVerified": true,
+    "archiveMd5": "7237318e381e6e0848ec30eb82decb83",
+    "datasetId": "deepscoresv2.dense.v2",
+    "evaluatedPairs": 704,
+    "heldOutVariants": 2,
+    "officialHeldOutImages": 352
+  },
+  "decision": {
+    "finalStage11Pass": false,
+    "heldOutPass": true,
+    "modelPublicationAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "qualityImproved": true,
+    "stage12EntryAuthorized": false,
+    "stage9aPreservationEvaluationRequired": true
+  },
+  "execution": {
+    "backpropagationExecuted": false,
+    "completedAtUnix": 1788791225,
+    "deviceType": "cpu",
+    "executionDevice": "CPU",
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false,
+    "optimizerCreated": false,
+    "progressFile": "heldout_eval_progress.v1.json",
+    "resumedFromPersistedProgress": false
+  },
+  "generatedOn": "2026-09-07",
+  "metrics": {
+    "baseline": {
+      "edgeLoss": 0.5261153127278455,
+      "loss": 0.35252927436906073,
+      "mse": 0.07865303573808805,
+      "pixelL1": 0.19469468055070716,
+      "psnrDb": 11.042845104360296
+    },
+    "improvement": {
+      "edgeLossPercent": 17.729975159211214,
+      "lossPercent": 39.84154375995011,
+      "msePercent": 27.837392760548603,
+      "pixelL1Percent": 57.76689456518348,
+      "psnrDeltaDb": 1.416877840962247
+    },
+    "restored": {
+      "edgeLoss": 0.4328351984723921,
+      "loss": 0.21207616925467682,
+      "mse": 0.05675808126158182,
+      "pixelL1": 0.08222560971295936,
+      "psnrDb": 12.459722945322543
+    }
+  },
+  "schemaVersion": "1.0.0",
+  "sourceEvidence": {
+    "kind": "user_provided_colab_webarchive",
+    "sha256": "d2ddafb3980a6ab7a1df1ba5e709d5e2520d2766e4c896c50ddab5199cc953f7",
+    "sizeBytes": 970792
+  }
+}
