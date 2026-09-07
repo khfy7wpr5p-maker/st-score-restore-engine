@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_cameraprimus_rights_review",
+  "reviewedOn": "2026-09-07",
+  "dataset": "CameraPrIMuS",
+  "decision": "COMPLETE_NOT_ADMITTED_FOR_COMMERCIAL_MODEL_TRAINING",
+  "commercialTrainingAdmissionAllowed": false,
+  "evidence": [
+    {
+      "source": "official_camera_primus_dataset_page",
+      "url": "https://grfia.dlsi.ua.es/primus/",
+      "finding": "The dataset is publicly downloadable and described for OMR experimentation, but the page does not state an explicit dataset license granting commercial model-training rights.",
+      "scope": "dataset_page",
+      "sufficientForCommercialTrainingAdmission": false
+    },
+    {
+      "source": "camera_primus_ismir_2018_paper",
+      "url": "https://archives.ismir.net/ismir2018/paper/000033.pdf",
+      "finding": "The paper is licensed CC BY 4.0. That license applies to the paper and is not treated as an explicit license grant for the separately distributed Camera-PrIMuS dataset package.",
+      "scope": "paper",
+      "sufficientForCommercialTrainingAdmission": false
+    },
+    {
+      "source": "towards_universal_omr_ismir_2024",
+      "url": "https://zenodo.org/records/14877479/files/000101.pdf",
+      "finding": "The paper labels Camera-PrIMuS as 'License: public', but does not define standardized license terms or an explicit commercial-training grant.",
+      "scope": "secondary_research_description",
+      "sufficientForCommercialTrainingAdmission": false
+    },
+    {
+      "source": "rism_data_services",
+      "url": "https://rism.info/community/data-services.html",
+      "finding": "RISM states that its data is released under CC BY 3.0 and may be shared and adapted with attribution. This supports reuse of the underlying RISM data, but is not treated as a substitute license for the separately rendered and distorted Camera-PrIMuS image package.",
+      "scope": "underlying_source_data",
+      "sufficientForCommercialTrainingAdmission": false
+    }
+  ],
+  "reasoning": {
+    "publicAvailabilityIsNotCommercialLicense": true,
+    "paperLicenseDoesNotAutomaticallyLicenseDatasetPackage": true,
+    "underlyingSourceLicenseDoesNotAutomaticallyLicenseDerivedPackage": true,
+    "failClosedForCommercialRoadmap": true
+  },
+  "safeAlternatives": [
+    "obtain an explicit Camera-PrIMuS dataset license or written permission covering commercial model training",
+    "train on public-domain, CC0, or explicitly commercial-compatible score images with recorded attribution obligations",
+    "generate deterministic synthetic camera degradations from rights-cleared clean score images and retain full derivation provenance"
+  ],
+  "assertions": {
+    "cameraPrIMuSDriveBytesMayRemainStoredButNotAdmittedForCommercialTraining": true,
+    "noCameraPrIMuSTrainingRunMayBeClaimedUnderThisDecision": true,
+    "privateUserStudentDataRemainsUnauthorized": true,
+    "productionInferenceRemainsUnauthorized": true,
+    "stage12RemainsUnauthorized": true
+  }
+}
