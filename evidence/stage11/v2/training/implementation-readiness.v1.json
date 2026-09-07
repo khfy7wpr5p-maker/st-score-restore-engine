@@ -1,0 +1,32 @@
+{
+  "artifactType": "stage11_v2_training_implementation_readiness",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-07",
+  "status": "implementation_ready_training_not_executed",
+  "baseMainSha": "3aa92c551cf9fc91ad6ebb4758cb842e04f4022c",
+  "implementationBranch": "stage11-v2-symbol-preservation-residual-unet",
+  "governanceCodeSha": "216b75f590a45160ea5146f4296d4e1d49690a05",
+  "datasetId": "deepscoresv2.dense.v2",
+  "datasetMd5Expected": "7237318e381e6e0848ec30eb82decb83",
+  "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+  "checkpointSha256": null,
+  "gpuUsed": null,
+  "trainingExecuted": false,
+  "localRepositoryTests": {
+    "status": "pass",
+    "count": 11,
+    "scope": [
+      "native annotation parser",
+      "symbol masks",
+      "50/50 sampling",
+      "symbol-aware loss",
+      "development gate",
+      "evaluation provenance",
+      "V2 current truth"
+    ]
+  },
+  "heldOutUsedForTraining": false,
+  "heldOutUsedForTuning": false,
+  "productionInferenceAuthorized": false,
+  "stage12EntryAuthorized": false
+}
