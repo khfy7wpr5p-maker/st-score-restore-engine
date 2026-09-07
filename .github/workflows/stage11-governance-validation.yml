@@ -113,6 +113,25 @@ jobs:
       - name: Validate Stage 11 Colab pipeline current truth
         run: python tools/validate_stage11_colab_pipeline_current_truth.py
 
+      - name: Validate Stage 11 V2 notebook JSON
+        run: |
+          python -m json.tool notebooks/stage11_deepscoresv2_dense_residual_unet_v2_symbol_preservation_colab.ipynb > /dev/null
+          python -m json.tool notebooks/stage11_deepscoresv2_dense_v2_dev_eval_colab.ipynb > /dev/null
+          python -m json.tool notebooks/stage11_deepscoresv2_dense_v2_heldout_eval_colab.ipynb > /dev/null
+          python -m json.tool notebooks/stage11_deepscoresv2_dense_v2_stage9a_symbol_region_eval_colab.ipynb > /dev/null
+
+      - name: Validate Stage 11 V2 notebook and runtime governance
+        run: python tools/validate_stage11_v2_notebooks.py
+
+      - name: Run Stage 11 V2 symbol-preservation tests
+        run: python -m unittest tests.test_stage11_v2_symbol_preservation -v
+
+      - name: Validate Stage 11 V2 current truth
+        run: python tools/validate_stage11_v2_current_truth.py
+
+      - name: Run Stage 11 V2 current-truth tests
+        run: python -m unittest tests.test_stage11_v2_current_truth -v
+
       - name: Validate legacy CameraPrIMuS notebook JSON
         run: python -m json.tool notebooks/stage11_cameraprimus_residual_unet_colab.ipynb > /dev/null
 
@@ -146,6 +165,8 @@ jobs:
             src/st_score_restore/stage11_first_gpu_run_evidence.py \
             src/st_score_restore/stage11_heldout_evidence.py \
             src/st_score_restore/stage11_colab_pipeline_current_truth.py \
+            src/st_score_restore/stage11_v2_symbol_preservation.py \
+            src/st_score_restore/stage11_v2_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
             tools/validate_stage11_foundation_current_truth.py \
@@ -160,4 +181,7 @@ jobs:
             tools/validate_stage11_deepscores_heldout_notebook.py \
             tools/validate_stage11_heldout_evidence.py \
             tools/validate_stage11_stage9a_symbol_region_notebook.py \
-            tools/validate_stage11_colab_pipeline_current_truth.py
+            tools/validate_stage11_colab_pipeline_current_truth.py \
+            tools/stage11_v2_colab_runtime.py \
+            tools/validate_stage11_v2_notebooks.py \
+            tools/validate_stage11_v2_current_truth.py
