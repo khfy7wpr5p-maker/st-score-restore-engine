@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-07",
+  "artifact_type": "stage11_training_kickoff_current_truth",
+  "foundation_checkpoint": {
+    "main_sha": "2bc90eee7c9e81f6b4d2553951f21ddd298bc726",
+    "foundation_truth_path": "docs/live/ST_SCORE_RESTORE_STAGE11_FOUNDATION_CURRENT_TRUTH.json",
+    "foundation_truth_git_blob_sha1": "844e72bf496fd727e4e00b38d8f8c8c1ed493a2d"
+  },
+  "stage11": {
+    "state": "TRAINING_AUTHORIZED_AWAITING_ACCESSIBLE_ADMITTED_DATA",
+    "exit_pass": false,
+    "training_authorized": true,
+    "dataset_admission_authorized": true,
+    "architecture_experiment_selection_authorized": true,
+    "model_weight_creation_authorized": true,
+    "training_started": false,
+    "training_executable": false,
+    "model_weights_established": false,
+    "initial_public_development_candidates": 3,
+    "held_out_items_excluded_from_training": 2,
+    "user_document_training_use_authorized": false,
+    "student_document_training_use_authorized": false,
+    "private_document_training_use_authorized": false,
+    "network_fetch_authorized": false,
+    "production_inference_authorized": false,
+    "model_publication_authorized": false,
+    "next_safe_boundary": "admit_accessible_training_bytes_then_execute_reproducible_experiments"
+  },
+  "experiment_policy": {
+    "baseline_architecture": "residual_unet",
+    "challenger_architecture": "hybrid_cnn_transformer",
+    "final_architecture_selected": false,
+    "independent_stage9a_evidence_required": true,
+    "stage9_comparator_required": true,
+    "stage10_selector_required": true
+  },
+  "stage12": {
+    "entry_eligible": false,
+    "entry_authorized": false,
+    "started": false
+  },
+  "assertions": {
+    "historical_dataset_evidence_immutable": true,
+    "ordinary_git_artifact_bytes_forbidden": true,
+    "held_out_never_train_or_tune": true,
+    "private_data_requires_separate_consent": true,
+    "training_cannot_be_claimed_before_execution": true,
+    "model_output_not_omr_truth": true,
+    "model_output_not_human_musical_truth": true,
+    "production_behavior_changed": false
+  }
+}

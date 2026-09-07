@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage11.training-dataset.v1",
+  "requiredItemFields": ["datasetItemId", "sourceFamilyId", "artifactSha256", "split", "rightsStatus", "privacyClass", "trainingPermissionStatus", "artifactAccessState"],
+  "allowedSplits": ["train", "development", "held_out"],
+  "trainingAdmissionRules": {
+    "trainingPermissionMustBeGranted": true,
+    "rightsStatusMustBeApproved": true,
+    "privateOrStudentDataRequiresSeparateConsent": true,
+    "heldOutCannotTrain": true,
+    "artifactSha256Required": true,
+    "sourceFamilyLeakageForbidden": true,
+    "ordinaryGitArtifactBytesForbidden": true
+  },
+  "pairedRestorationExample": {
+    "requiredFields": ["pairId", "sourceArtifactSha256", "targetArtifactSha256", "derivationId", "degradationLabels", "provenanceComplete"],
+    "sourceAndTargetMustDiffer": true,
+    "provenanceCompleteRequired": true
+  },
+  "candidateArchitectureFamilies": ["residual_unet", "hybrid_cnn_transformer"],
+  "releaseStillRequires": ["held_out_evaluation", "stage9a_preservation_evidence", "stage9_comparator", "stage10_selector", "separate_release_authorization"]
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "authorizationId": "stage11.training-dataset-authorization.v1",
+  "decision": "AUTHORIZE_STAGE11_BOUNDED_DATASET_ADMISSION_AND_MODEL_TRAINING",
+  "decisionAuthorityReference": "authority:project-governance-owner-20260907-stage11-training-01",
+  "authorizationSourceCode": "explicit_user_authorization",
+  "authorizedOn": "2026-09-07",
+  "foundationBinding": {
+    "mainSha": "2bc90eee7c9e81f6b4d2553951f21ddd298bc726",
+    "currentTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_FOUNDATION_CURRENT_TRUTH.json",
+    "currentTruthGitBlobSha": "844e72bf496fd727e4e00b38d8f8c8c1ed493a2d",
+    "foundationState": "FOUNDATION_COMPLETE_AWAITING_SEPARATE_TRAINING_AUTHORIZATION"
+  },
+  "scope": {
+    "datasetAdmissionAuthorized": true,
+    "rightsClearedPublicDatasetCollectionAuthorized": true,
+    "syntheticDerivationAuthorized": true,
+    "architectureExperimentSelectionAuthorized": true,
+    "modelTrainingAuthorized": true,
+    "modelWeightCreationAuthorized": true,
+    "developmentEvaluationAuthorized": true,
+    "calibrationOnDedicatedDevelopmentDataAuthorized": true,
+    "userDocumentTrainingUseAuthorized": false,
+    "studentDocumentTrainingUseAuthorized": false,
+    "privateDocumentTrainingUseAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "networkFetchAuthorized": false,
+    "externalModelArtifactDownloadAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "realUserCohortAuthorized": false,
+    "automaticFinalSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "initialTrainingCandidateDatasetItems": [
+    "dataset.item.imslp799143-beethoven-op48-no3.v1",
+    "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+    "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1"
+  ],
+  "explicitlyExcludedFromTraining": [
+    "dataset.item.imslp82860-chopin-op69.v2",
+    "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1"
+  ],
+  "admissionRules": {
+    "historicalDatasetEvidenceImmutable": true,
+    "purposePermissionOverlayRequired": true,
+    "rightsReviewApprovedRequired": true,
+    "privacyNoneOrExplicitSeparateConsentRequired": true,
+    "exactArtifactDigestVerificationRequired": true,
+    "sourceFamilySplitLeakageForbidden": true,
+    "heldOutItemsNeverTrainOrTune": true,
+    "ordinaryGitArtifactBytesForbidden": true,
+    "trainingCannotExecuteWithoutAccessibleAdmittedBytes": true,
+    "derivedPairsRequireProvenance": true
+  },
+  "nextSafeBoundary": "admit_accessible_training_bytes_then_execute_reproducible_experiments"
+}
