@@ -74,7 +74,7 @@
     "archive_checksum_gate_required": true,
     "safe_tar_extraction_required": true,
     "default_patch_size_hw": [512, 512],
-    "default_batch_size": 8,
+    "default_batch_size": 4,
     "default_epochs": 20,
     "default_learning_rate": 0.0002,
     "loss_policy": "pixel_l1_plus_edge_preservation",
