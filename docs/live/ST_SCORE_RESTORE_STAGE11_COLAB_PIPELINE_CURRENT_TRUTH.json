@@ -1,10 +1,10 @@
 {
-  "schema_version": "1.4.0",
+  "schema_version": "1.5.0",
   "generated_on": "2026-09-07",
   "artifact_type": "stage11_colab_pipeline_current_truth",
-  "base_main_sha": "9784d48ee3237eade688eee5a0a97ea334187d86",
+  "base_main_sha": "39226d2a7c7335150a55da28c8406dac1bf99e28",
   "stage11": {
-    "state": "FIRST_RESIDUAL_UNET_GPU_RUN_COMPLETE_AWAITING_HELD_OUT_AND_STAGE9A_EVALUATION",
+    "state": "HELD_OUT_PASS_AWAITING_STAGE9A_PRESERVATION_EVALUATION",
     "exit_pass": false,
     "training_authorized": true,
     "dataset_admission_authorized": true,
@@ -27,11 +27,13 @@
     "first_gpu_training_run_pass": true,
     "model_weights_established": true,
     "candidate_model_established": true,
-    "held_out_evaluation_completed": false,
+    "held_out_evaluation_completed": true,
+    "held_out_pass": true,
     "held_out_evaluation_mobile_resilient": true,
     "held_out_cpu_fallback_enabled": true,
     "held_out_drive_progress_resume_enabled": true,
     "colab_background_runtime_guaranteed": false,
+    "stage9a_symbol_region_eval_notebook_ready": true,
     "stage9a_preservation_evaluation_completed": false,
     "final_model_selected": false,
     "camera_primus_commercial_training_admitted": false,
@@ -39,7 +41,7 @@
     "production_inference_authorized": false,
     "automatic_final_selection_authorized": false,
     "model_publication_authorized": false,
-    "next_safe_boundary": "evaluate_best_checkpoint_on_official_held_out_without_tuning_then_run_stage9a_preservation_checks"
+    "next_safe_boundary": "execute_stage9a_symbol_region_preservation_evaluation_without_tuning"
   },
   "training_source": {
     "dataset": "DeepScoresV2 Dense",
@@ -79,6 +81,43 @@
     "held_out_used_for_tuning": false,
     "evidence_repo_path": "evidence/stage11/training/deepscoresv2-dense-first-gpu-run.v1.json"
   },
+  "held_out_evaluation": {
+    "completed": true,
+    "pass": true,
+    "execution_device": "CPU",
+    "official_held_out_images": 352,
+    "held_out_variants": 2,
+    "evaluated_pairs": 704,
+    "checkpoint_sha256": "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683",
+    "weights_mutated": false,
+    "optimizer_created": false,
+    "backpropagation_executed": false,
+    "held_out_used_for_training": false,
+    "held_out_used_for_tuning": false,
+    "baseline": {
+      "loss": 0.35252927436906073,
+      "pixel_l1": 0.19469468055070716,
+      "edge_loss": 0.5261153127278455,
+      "mse": 0.07865303573808805,
+      "psnr_db": 11.042845104360296
+    },
+    "restored": {
+      "loss": 0.21207616925467682,
+      "pixel_l1": 0.08222560971295936,
+      "edge_loss": 0.4328351984723921,
+      "mse": 0.05675808126158182,
+      "psnr_db": 12.459722945322543
+    },
+    "improvement": {
+      "loss_percent": 39.84154375995011,
+      "pixel_l1_percent": 57.76689456518348,
+      "edge_loss_percent": 17.729975159211214,
+      "mse_percent": 27.837392760548603,
+      "psnr_delta_db": 1.416877840962247
+    },
+    "evidence_repo_path": "evidence/stage11/evaluation/deepscoresv2-dense-heldout-final.v1.json",
+    "source_webarchive_sha256": "d2ddafb3980a6ab7a1df1ba5e709d5e2520d2766e4c896c50ddab5199cc953f7"
+  },
   "model_artifacts": {
     "storage": "google_drive_only",
     "ordinary_git_model_bytes": false,
@@ -116,9 +155,11 @@
   "colab": {
     "training_notebook": "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb",
     "held_out_evaluation_notebook": "notebooks/stage11_deepscoresv2_dense_heldout_eval_colab.ipynb",
+    "stage9a_symbol_region_notebook": "notebooks/stage11_deepscoresv2_dense_stage9a_symbol_region_eval_colab.ipynb",
     "drive_archive_path": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_DATA/ds2_dense.tar.gz",
     "gpu_required_for_training": true,
     "held_out_device_policy": "cuda_preferred_cpu_fallback",
+    "stage9a_device_policy": "cuda_preferred_cpu_fallback",
     "archive_checksum_gate_required": true,
     "safe_tar_extraction_required": true,
     "default_patch_size_hw": [512, 512],
@@ -133,11 +174,13 @@
     "held_out_progress_persistence_every_pairs": 8,
     "held_out_atomic_progress_write": true,
     "held_out_resume_after_runtime_interrupt": true,
+    "stage9a_progress_file": "stage9a_symbol_region_progress.v1.json",
+    "stage9a_atomic_progress_write": true,
+    "stage9a_resume_after_runtime_interrupt": true,
     "colab_runtime_survival_guaranteed": false,
     "idle_limit_bypass_or_keepalive_used": false
   },
   "blocking_reason_codes": [
-    "OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED",
     "STAGE9A_PRESERVATION_EVALUATION_NOT_YET_EXECUTED",
     "FINAL_STAGE11_MODEL_SELECTION_NOT_YET_ESTABLISHED"
   ],
@@ -150,6 +193,7 @@
     "held_out_never_train_or_tune": true,
     "private_user_student_data_not_authorized": true,
     "first_gpu_training_claim_supported_by_evidence": true,
+    "held_out_pass_claim_supported_by_evidence": true,
     "camera_primus_not_trainable_under_current_rights_decision": true,
     "model_output_not_omr_truth": true,
     "colab_runtime_limit_bypass_forbidden": true,

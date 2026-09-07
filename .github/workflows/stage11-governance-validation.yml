@@ -98,6 +98,18 @@ jobs:
       - name: Validate held-out evaluation notebook safety and syntax
         run: python tools/validate_stage11_deepscores_heldout_notebook.py
 
+      - name: Validate held-out final evidence
+        run: python tools/validate_stage11_heldout_evidence.py
+
+      - name: Run held-out final evidence tests
+        run: python -m unittest tests.test_stage11_heldout_evidence -v
+
+      - name: Validate Stage 9A symbol-region notebook JSON
+        run: python -m json.tool notebooks/stage11_deepscoresv2_dense_stage9a_symbol_region_eval_colab.ipynb > /dev/null
+
+      - name: Validate Stage 9A symbol-region notebook safety and syntax
+        run: python tools/validate_stage11_stage9a_symbol_region_notebook.py
+
       - name: Validate Stage 11 Colab pipeline current truth
         run: python tools/validate_stage11_colab_pipeline_current_truth.py
 
@@ -132,6 +144,7 @@ jobs:
             src/st_score_restore/stage11_cameraprimus_rights_review.py \
             src/st_score_restore/stage11_deepscores_dense.py \
             src/st_score_restore/stage11_first_gpu_run_evidence.py \
+            src/st_score_restore/stage11_heldout_evidence.py \
             src/st_score_restore/stage11_colab_pipeline_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
@@ -145,4 +158,6 @@ jobs:
             tools/validate_stage11_deepscores_colab_notebook.py \
             tools/validate_stage11_first_gpu_run_evidence.py \
             tools/validate_stage11_deepscores_heldout_notebook.py \
+            tools/validate_stage11_heldout_evidence.py \
+            tools/validate_stage11_stage9a_symbol_region_notebook.py \
             tools/validate_stage11_colab_pipeline_current_truth.py

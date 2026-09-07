@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_deepscoresv2_dense_heldout_final_acceptance",
+  "generatedOn": "2026-09-07",
+  "datasetId": "deepscoresv2.dense.v2",
+  "source": {
+    "driveFolderId": "1pMYlVHdw4V6_bY2aRemxtHXGTwGLsgI4",
+    "driveFileId": "1LnLxBv-HfQEiAA8B80hWTLrorRl_iSdL",
+    "driveFileName": "heldout_final_evidence.json",
+    "driveFileSizeBytes": 1670,
+    "driveFileSha256": "fe18dc7568a7812411e6926c2a5544020bf438207c1adc02623e3e144dc70bcc"
+  },
+  "datasetIdentity": {
+    "archiveMd5": "7237318e381e6e0848ec30eb82decb83",
+    "archiveChecksumVerified": true,
+    "officialHeldOutImages": 352,
+    "heldOutVariants": 2,
+    "evaluatedPairs": 704
+  },
+  "checkpointIdentity": {
+    "file": "best.pt",
+    "epoch": 19,
+    "sha256": "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683",
+    "configSha256": "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80"
+  },
+  "execution": {
+    "deviceType": "cpu",
+    "executionDevice": "CPU",
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false,
+    "weightsBeforeSha256": "41df3de3dfc56053d3ba73b11da0065f7e0848ec53a1426b892a13460f701764",
+    "weightsAfterSha256": "41df3de3dfc56053d3ba73b11da0065f7e0848ec53a1426b892a13460f701764",
+    "weightsMutated": false
+  },
+  "baseline": {
+    "loss": 0.35252927436906073,
+    "pixelL1": 0.19469468055070716,
+    "edgeLoss": 0.5261153127278455,
+    "mse": 0.07865303573808805,
+    "psnrDb": 11.042845104360296
+  },
+  "restored": {
+    "loss": 0.21207616925467682,
+    "pixelL1": 0.08222560971295936,
+    "edgeLoss": 0.4328351984723921,
+    "mse": 0.05675808126158182,
+    "psnrDb": 12.459722945322543
+  },
+  "decision": {
+    "qualityImproved": true,
+    "heldOutPass": true,
+    "finalStage11Pass": false,
+    "stage9aPreservationEvaluationRequired": true,
+    "productionInferenceAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "nextSafeBoundary": "run_stage9a_preservation_evaluation_on_frozen_best_checkpoint"
+  }
+}

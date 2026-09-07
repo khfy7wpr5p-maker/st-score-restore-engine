@@ -6,10 +6,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-EXPECTED_STATE = "FIRST_RESIDUAL_UNET_GPU_RUN_COMPLETE_AWAITING_HELD_OUT_AND_STAGE9A_EVALUATION"
+EXPECTED_STATE = "HELD_OUT_PASS_AWAITING_STAGE9A_PRESERVATION_EVALUATION"
 EXPECTED_MD5 = "7237318e381e6e0848ec30eb82decb83"
 EXPECTED_CONFIG = "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80"
 EXPECTED_BEST_SHA256 = "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683"
+EXPECTED_WEBARCHIVE_SHA256 = "d2ddafb3980a6ab7a1df1ba5e709d5e2520d2766e4c896c50ddab5199cc953f7"
 
 
 class Stage11ColabPipelineTruthError(ValueError):
@@ -23,7 +24,7 @@ def _require(condition: bool, message: str) -> None:
 
 def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> dict[str, Any]:
     _require(payload.get("artifact_type") == "stage11_colab_pipeline_current_truth", "artifact type mismatch")
-    _require(payload.get("schema_version") == "1.4.0", "unexpected schema version")
+    _require(payload.get("schema_version") == "1.5.0", "unexpected schema version")
     stage11 = payload.get("stage11") or {}
     _require(stage11.get("state") == EXPECTED_STATE, "unexpected Stage 11 state")
 
@@ -49,15 +50,17 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "first_gpu_training_run_pass",
         "model_weights_established",
         "candidate_model_established",
+        "held_out_evaluation_completed",
+        "held_out_pass",
         "held_out_evaluation_mobile_resilient",
         "held_out_cpu_fallback_enabled",
         "held_out_drive_progress_resume_enabled",
+        "stage9a_symbol_region_eval_notebook_ready",
     ):
-        _require(stage11.get(key) is True, f"{key} must be true after the verified GPU run")
+        _require(stage11.get(key) is True, f"{key} must be true after held-out pass")
 
     for key in (
         "exit_pass",
-        "held_out_evaluation_completed",
         "colab_background_runtime_guaranteed",
         "stage9a_preservation_evaluation_completed",
         "final_model_selected",
@@ -69,7 +72,10 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         _require(stage11.get(key) is False, f"{key} must remain false at this boundary")
 
     _require(stage11.get("external_pretrained_weight_download_required") is False, "external pretrained download must not be required")
-    _require(stage11.get("next_safe_boundary") == "evaluate_best_checkpoint_on_official_held_out_without_tuning_then_run_stage9a_preservation_checks", "next safe boundary mismatch")
+    _require(
+        stage11.get("next_safe_boundary") == "execute_stage9a_symbol_region_preservation_evaluation_without_tuning",
+        "next safe boundary mismatch",
+    )
 
     source = payload.get("training_source") or {}
     _require(source.get("dataset_id") == "deepscoresv2.dense.v2", "training dataset id mismatch")
@@ -79,7 +85,7 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
     _require(source.get("official_train_images") == 1362, "official train count mismatch")
     _require(source.get("official_test_images") == 352, "official test count mismatch")
     _require(source.get("archive_md5_expected") == EXPECTED_MD5, "archive MD5 mismatch")
-    _require(source.get("archive_md5_verified") is True, "archive MD5 must now be verified")
+    _require(source.get("archive_md5_verified") is True, "archive MD5 must be verified")
     _require(source.get("ordinary_git_real_bytes") is False, "real training bytes must remain outside ordinary Git")
 
     run = payload.get("first_gpu_run") or {}
@@ -88,10 +94,25 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
     _require(run.get("best_epoch") == 19, "best epoch mismatch")
     _require(run.get("config_sha256") == EXPECTED_CONFIG, "config hash mismatch")
     _require(run.get("held_out_used_for_tuning") is False, "held-out tuning is forbidden")
-    _require(run.get("epoch19_development_loss") < run.get("epoch0_development_loss"), "development loss did not improve")
-    _require(run.get("epoch19_development_pixel_l1") < run.get("epoch0_development_pixel_l1"), "pixel L1 did not improve")
-    _require(run.get("epoch19_development_edge_loss") < run.get("epoch0_development_edge_loss"), "edge loss did not improve")
-    _require(run.get("epoch19_development_psnr_db") > run.get("epoch0_development_psnr_db"), "development PSNR did not improve")
+
+    heldout = payload.get("held_out_evaluation") or {}
+    _require(heldout.get("completed") is True, "held-out evaluation must be completed")
+    _require(heldout.get("pass") is True, "held-out evaluation must pass")
+    _require(heldout.get("official_held_out_images") == 352, "held-out image count mismatch")
+    _require(heldout.get("held_out_variants") == 2, "held-out variants mismatch")
+    _require(heldout.get("evaluated_pairs") == 704, "held-out pair count mismatch")
+    _require(heldout.get("checkpoint_sha256") == EXPECTED_BEST_SHA256, "held-out checkpoint mismatch")
+    _require(heldout.get("weights_mutated") is False, "held-out evaluation mutated weights")
+    _require(heldout.get("optimizer_created") is False, "held-out optimizer forbidden")
+    _require(heldout.get("backpropagation_executed") is False, "held-out backprop forbidden")
+    _require(heldout.get("held_out_used_for_training") is False, "held-out training forbidden")
+    _require(heldout.get("held_out_used_for_tuning") is False, "held-out tuning forbidden")
+    _require(heldout.get("source_webarchive_sha256") == EXPECTED_WEBARCHIVE_SHA256, "held-out source evidence mismatch")
+    baseline = heldout.get("baseline") or {}
+    restored = heldout.get("restored") or {}
+    for key in ("loss", "pixel_l1", "edge_loss", "mse"):
+        _require(float(restored[key]) < float(baseline[key]), f"held-out {key} did not improve")
+    _require(float(restored["psnr_db"]) > float(baseline["psnr_db"]), "held-out PSNR did not improve")
 
     artifacts = payload.get("model_artifacts") or {}
     _require(artifacts.get("storage") == "google_drive_only", "model weight storage must remain Drive-only")
@@ -102,24 +123,30 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
     colab = payload.get("colab") or {}
     _require(colab.get("training_notebook") == "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb", "training notebook mismatch")
     _require(colab.get("held_out_evaluation_notebook") == "notebooks/stage11_deepscoresv2_dense_heldout_eval_colab.ipynb", "held-out notebook mismatch")
+    _require(
+        colab.get("stage9a_symbol_region_notebook")
+        == "notebooks/stage11_deepscoresv2_dense_stage9a_symbol_region_eval_colab.ipynb",
+        "Stage 9A symbol-region notebook mismatch",
+    )
     _require(colab.get("gpu_required_for_training") is True, "training must remain GPU-targeted")
     _require(colab.get("held_out_device_policy") == "cuda_preferred_cpu_fallback", "held-out device policy mismatch")
+    _require(colab.get("stage9a_device_policy") == "cuda_preferred_cpu_fallback", "Stage 9A device policy mismatch")
     _require(colab.get("held_out_progress_file") == "heldout_eval_progress.v1.json", "held-out progress file mismatch")
-    _require(colab.get("held_out_progress_persistence_every_pairs") == 8, "held-out progress cadence mismatch")
+    _require(colab.get("stage9a_progress_file") == "stage9a_symbol_region_progress.v1.json", "Stage 9A progress file mismatch")
     _require(colab.get("held_out_atomic_progress_write") is True, "held-out progress must be atomic")
     _require(colab.get("held_out_resume_after_runtime_interrupt") is True, "held-out resume must be enabled")
+    _require(colab.get("stage9a_atomic_progress_write") is True, "Stage 9A progress must be atomic")
+    _require(colab.get("stage9a_resume_after_runtime_interrupt") is True, "Stage 9A resume must be enabled")
     _require(colab.get("colab_runtime_survival_guaranteed") is False, "Colab runtime survival cannot be guaranteed")
     _require(colab.get("idle_limit_bypass_or_keepalive_used") is False, "idle/runtime-limit bypass must not be used")
 
     blockers = set(payload.get("blocking_reason_codes") or [])
     for required in (
-        "OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED",
         "STAGE9A_PRESERVATION_EVALUATION_NOT_YET_EXECUTED",
         "FINAL_STAGE11_MODEL_SELECTION_NOT_YET_ESTABLISHED",
     ):
         _require(required in blockers, f"missing blocker: {required}")
-    _require("DEEPSCORESV2_DENSE_ARCHIVE_MD5_NOT_YET_VERIFIED_IN_COLAB" not in blockers, "obsolete checksum blocker present")
-    _require("FIRST_COLAB_GPU_RUN_NOT_EXECUTED" not in blockers, "obsolete first-run blocker present")
+    _require("OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED" not in blockers, "obsolete held-out blocker present")
 
     assertions = payload.get("assertions") or {}
     for key in (
@@ -131,6 +158,7 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "held_out_never_train_or_tune",
         "private_user_student_data_not_authorized",
         "first_gpu_training_claim_supported_by_evidence",
+        "held_out_pass_claim_supported_by_evidence",
         "camera_primus_not_trainable_under_current_rights_decision",
         "model_output_not_omr_truth",
         "colab_runtime_limit_bypass_forbidden",
@@ -147,15 +175,12 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
         "state": stage11["state"],
         "colabPipelineReady": True,
         "rightsApproved": True,
-        "archivePresent": True,
-        "checksumVerified": True,
-        "trainingStarted": True,
         "trainingCompleted": True,
         "modelWeightsEstablished": True,
         "firstGpuTrainingRunPass": True,
-        "heldOutMobileResilient": True,
-        "heldOutCpuFallback": True,
-        "heldOutDriveResume": True,
+        "heldOutPass": True,
+        "heldOutEvaluatedPairs": 704,
+        "stage9aNotebookReady": True,
         "backgroundRuntimeGuaranteed": False,
         "finalStage11Pass": False,
         "nextSafeBoundary": stage11["next_safe_boundary"],
@@ -163,5 +188,6 @@ def validate_stage11_colab_pipeline_current_truth(payload: dict[str, Any]) -> di
 
 
 def load_and_validate(path: Path) -> dict[str, Any]:
-    payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    return validate_stage11_colab_pipeline_current_truth(payload)
+    return validate_stage11_colab_pipeline_current_truth(
+        json.loads(Path(path).read_text(encoding="utf-8"))
+    )
