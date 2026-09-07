@@ -23,7 +23,9 @@ def main() -> int:
     require("run_status.v2a.json" in source, "V2a notebook must expose live Drive status")
     require("'main'" in source, "V2a notebook must default to main")
     require("pip install -e" not in source, "editable install bootstrap is forbidden in Colab")
-    require("T4 GPU" in source, "V2a notebook must fail closed without GPU")
+    require("ST_SCORE_RESTORE_DEVICE" in source, "V2a notebook must declare the execution device")
+    require("CPU mode" in source, "V2a notebook must expose CPU fallback to the operator")
+    require("T4 GPU seçin" not in source, "V2a notebook must not fail closed merely because GPU quota is unavailable")
 
     runtime = RUNTIME.read_text(encoding="utf-8")
     for token in (
@@ -35,8 +37,12 @@ def main() -> int:
         "heldOutUsedForTraining\": False",
         "heldOutUsedForTuning\": False",
         "V2a development gate did not pass; frozen held-out/Stage9A remain forbidden",
+        "def resolve_device",
+        "ST_SCORE_RESTORE_DEVICE",
+        "pin_memory=device.type == \"cuda\"",
     ):
         require(token in runtime, f"V2a runtime safety token missing: {token}")
+    require("V2a fine-tuning requires a Colab GPU" not in runtime, "V2a runtime must allow CPU fallback")
 
     pipeline = PIPELINE.read_text(encoding="utf-8")
     gate_pos = pipeline.find("eligibleForFrozenHeldOutEvaluation")
@@ -53,6 +59,7 @@ def main() -> int:
         "backgroundProcess": True,
         "partialCheckpointResume": True,
         "heldOutGateEnforced": True,
+        "cpuFallback": True,
     }, indent=2))
     return 0
 

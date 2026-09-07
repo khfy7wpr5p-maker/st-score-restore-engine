@@ -105,6 +105,23 @@ def configure_base_runtime() -> None:
     base.STAGE9A_MAX_SYMBOLS = STAGE9A_MAX_SYMBOLS
 
 
+def resolve_device(torch: Any) -> Any:
+    requested = os.environ.get("ST_SCORE_RESTORE_DEVICE", "auto").strip().lower()
+    if requested not in {"auto", "cpu", "cuda"}:
+        raise RuntimeError(f"unsupported ST_SCORE_RESTORE_DEVICE: {requested}")
+    if requested == "cpu":
+        return torch.device("cpu")
+    if requested == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError("ST_SCORE_RESTORE_DEVICE=cuda requested but CUDA is unavailable")
+        return torch.device("cuda")
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def device_label(torch: Any, device: Any) -> str:
+    return torch.cuda.get_device_name(0) if device.type == "cuda" else "CPU"
+
+
 def verify_v2_source() -> Path:
     best = V2_SOURCE_OUT / "best.pt"
     if not best.exists():
@@ -144,14 +161,13 @@ def train_mode(data: dict[str, Any]) -> None:
     configure_base_runtime()
     source = verify_v2_source()
     V2A_TRAIN_OUT.mkdir(parents=True, exist_ok=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    if device.type != "cuda":
-        raise RuntimeError("V2a fine-tuning requires a Colab GPU; choose T4 GPU")
+    device = resolve_device(torch)
+    label = device_label(torch, device)
 
     train_ds = base.make_dataset(data, "train", TRAIN_PATCHES_PER_EPOCH)
     dev_ds = base.make_dataset(data, "development", DEV_PATCHES)
-    train_loader = DataLoader(train_ds, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=True)
-    dev_loader = DataLoader(dev_ds, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=True)
+    train_loader = DataLoader(train_ds, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=device.type == "cuda")
+    dev_loader = DataLoader(dev_ds, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=device.type == "cuda")
 
     model = build_residual_unet(base_channels=32).to(device)
     source_checkpoint = torch.load(source, map_location=device)
@@ -204,7 +220,7 @@ def train_mode(data: dict[str, Any]) -> None:
                 best_rank = rank
 
     consecutive_passes = 0
-    status("training_started", device=torch.cuda.get_device_name(0), startEpoch=start_epoch, maxEpochs=V2A_MAX_EPOCHS, resumeBatch=resume_batch)
+    status("training_started", device=label, startEpoch=start_epoch, maxEpochs=V2A_MAX_EPOCHS, resumeBatch=resume_batch)
 
     for epoch in range(start_epoch, V2A_MAX_EPOCHS):
         model.train()
@@ -253,7 +269,7 @@ def train_mode(data: dict[str, Any]) -> None:
             "devLoss": dev_total / max(dev_batches, 1),
             "developmentMetrics": metrics,
             "developmentGate": gate,
-            "device": torch.cuda.get_device_name(0),
+            "device": label,
         }
         history = [r for r in history if int(r.get("epoch", -1)) != epoch]
         history.append(row)
@@ -306,7 +322,7 @@ def train_mode(data: dict[str, Any]) -> None:
         "commitSha": git_sha(),
         "datasetMd5": EXPECTED_ARCHIVE_MD5,
         "configSha256": CONFIG_SHA256,
-        "device": torch.cuda.get_device_name(0),
+        "device": label,
         "epochsCompleted": len(history),
         "bestCheckpointSha256": base.file_hash(best),
         "lastCheckpointSha256": base.file_hash(last),
@@ -340,7 +356,7 @@ def evaluation_mode(data: dict[str, Any], mode: str) -> None:
     from torch.utils.data import DataLoader
 
     configure_base_runtime()
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = resolve_device(torch)
     model, _checkpoint, best = load_frozen_model(device)
     before = base.model_state_sha256(model)
 
@@ -366,7 +382,8 @@ def evaluation_mode(data: dict[str, Any], mode: str) -> None:
     out_root.mkdir(parents=True, exist_ok=True)
     loader = DataLoader(dataset, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=device.type == "cuda")
     progress_path = out_root / f"{mode}_progress.v2a.json"
-    status(f"{mode}_evaluation_started", device=torch.cuda.get_device_name(0) if device.type == "cuda" else "CPU")
+    label = device_label(torch, device)
+    status(f"{mode}_evaluation_started", device=label)
     metrics = base.evaluate(model, loader, device, progress_path=progress_path)
     after = base.model_state_sha256(model)
     evidence_base = {
@@ -375,7 +392,7 @@ def evaluation_mode(data: dict[str, Any], mode: str) -> None:
         "configSha256": CONFIG_SHA256,
         "checkpointSha256": base.file_hash(best),
         "sourceV2CheckpointSha256": EXPECTED_V2_BEST_SHA256,
-        "device": torch.cuda.get_device_name(0) if device.type == "cuda" else "CPU",
+        "device": label,
         "weightsMutated": before != after,
         "optimizerCreated": False,
         "backpropagationExecuted": False,
