@@ -1,17 +1,17 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "generated_on": "2026-09-07",
   "artifact_type": "stage11_colab_pipeline_current_truth",
-  "base_main_sha": "9e16bc815d3d34558c74cdf3016429c2bcd0bbee",
+  "base_main_sha": "34d26c8f24d8211a170663672003532e36856487",
   "stage11": {
-    "state": "DEEPSCORESV2_DENSE_RIGHTS_APPROVED_DRIVE_ARCHIVE_PRESENT_COLAB_READY_AWAITING_CHECKSUM_AND_FIRST_GPU_RUN",
+    "state": "FIRST_RESIDUAL_UNET_GPU_RUN_COMPLETE_AWAITING_HELD_OUT_AND_STAGE9A_EVALUATION",
     "exit_pass": false,
     "training_authorized": true,
     "dataset_admission_authorized": true,
     "deepscoresv2_dense_rights_review_complete": true,
     "deepscoresv2_dense_commercial_training_admitted": true,
     "deepscoresv2_dense_drive_archive_present": true,
-    "deepscoresv2_dense_archive_checksum_verified": false,
+    "deepscoresv2_dense_archive_checksum_verified": true,
     "synthetic_degradation_pipeline_ready": true,
     "colab_pipeline_ready": true,
     "residual_unet_baseline_implemented": true,
@@ -20,16 +20,22 @@
     "official_test_preserved_as_held_out": true,
     "source_family_leakage_guard_enabled": true,
     "held_out_tuning_forbidden": true,
-    "training_executable": false,
-    "training_started": false,
-    "training_executed_on_gpu": false,
-    "model_weights_established": false,
+    "training_executable": true,
+    "training_started": true,
+    "training_completed": true,
+    "training_executed_on_gpu": true,
+    "first_gpu_training_run_pass": true,
+    "model_weights_established": true,
+    "candidate_model_established": true,
+    "held_out_evaluation_completed": false,
+    "stage9a_preservation_evaluation_completed": false,
+    "final_model_selected": false,
     "camera_primus_commercial_training_admitted": false,
     "external_pretrained_weight_download_required": false,
     "production_inference_authorized": false,
     "automatic_final_selection_authorized": false,
     "model_publication_authorized": false,
-    "next_safe_boundary": "verify_deepscoresv2_dense_md5_in_colab_then_execute_first_residual_unet_gpu_baseline"
+    "next_safe_boundary": "evaluate_best_checkpoint_on_official_held_out_without_tuning_then_run_stage9a_preservation_checks"
   },
   "training_source": {
     "dataset": "DeepScoresV2 Dense",
@@ -45,8 +51,44 @@
     "archive_file_name": "ds2_dense.tar.gz",
     "archive_size_bytes_observed": 741814529,
     "archive_md5_expected": "7237318e381e6e0848ec30eb82decb83",
-    "archive_md5_verified": false,
+    "archive_md5_verified": true,
     "ordinary_git_real_bytes": false
+  },
+  "first_gpu_run": {
+    "gpu": "Tesla T4",
+    "epochs_completed": 20,
+    "best_epoch": 19,
+    "best_development_loss": 0.2025674572762321,
+    "epoch0_development_loss": 0.21285036469207091,
+    "epoch19_development_loss": 0.2025674572762321,
+    "epoch0_development_pixel_l1": 0.08083692236858256,
+    "epoch19_development_pixel_l1": 0.07728481226984192,
+    "epoch0_development_edge_loss": 0.44004478349405174,
+    "epoch19_development_edge_loss": 0.417608801056357,
+    "epoch0_development_psnr_db": 12.141933631390378,
+    "epoch19_development_psnr_db": 12.734054473249468,
+    "development_loss_improvement_percent": 4.831049940043572,
+    "development_pixel_l1_improvement_percent": 4.39416790578011,
+    "development_edge_loss_improvement_percent": 5.098567982001316,
+    "development_psnr_improvement_db": 0.5921208418590904,
+    "config_sha256": "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80",
+    "held_out_used_for_tuning": false,
+    "evidence_repo_path": "evidence/stage11/training/deepscoresv2-dense-first-gpu-run.v1.json"
+  },
+  "model_artifacts": {
+    "storage": "google_drive_only",
+    "ordinary_git_model_bytes": false,
+    "output_folder_id": "1pMYlVHdw4V6_bY2aRemxtHXGTwGLsgI4",
+    "best_checkpoint": {
+      "file_id": "1tMecVxfC5rqYcvkkxousmSVoSepfr6sh",
+      "size_bytes": 23449829,
+      "sha256": "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683"
+    },
+    "last_checkpoint": {
+      "file_id": "1CdTuHI_mHpUV-GlRD0Lp-UgW1mExz8tX",
+      "size_bytes": 23449829,
+      "sha256": "29eea696a4b73fee16457a5d377fc51516a9aed8c84335d54f5c16625786a09f"
+    }
   },
   "synthetic_restoration_pairs": {
     "clean_role": "target",
@@ -68,7 +110,7 @@
     "patch_size_hw_default": [512, 512]
   },
   "colab": {
-    "notebook": "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb",
+    "training_notebook": "notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb",
     "drive_archive_path": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_DATA/ds2_dense.tar.gz",
     "gpu_required_for_intended_run": true,
     "archive_checksum_gate_required": true,
@@ -83,8 +125,9 @@
     "held_out_final_eval_default": false
   },
   "blocking_reason_codes": [
-    "DEEPSCORESV2_DENSE_ARCHIVE_MD5_NOT_YET_VERIFIED_IN_COLAB",
-    "FIRST_COLAB_GPU_RUN_NOT_EXECUTED"
+    "OFFICIAL_HELD_OUT_EVALUATION_NOT_YET_EXECUTED",
+    "STAGE9A_PRESERVATION_EVALUATION_NOT_YET_EXECUTED",
+    "FINAL_STAGE11_MODEL_SELECTION_NOT_YET_ESTABLISHED"
   ],
   "assertions": {
     "historical_evidence_immutable": true,
@@ -94,7 +137,7 @@
     "source_family_leakage_forbidden": true,
     "held_out_never_train_or_tune": true,
     "private_user_student_data_not_authorized": true,
-    "training_cannot_be_claimed_before_execution": true,
+    "first_gpu_training_claim_supported_by_evidence": true,
     "camera_primus_not_trainable_under_current_rights_decision": true,
     "model_output_not_omr_truth": true,
     "stage9a_preservation_evidence_required_before_release": true,

@@ -86,6 +86,18 @@ jobs:
       - name: Validate DeepScoresV2 Colab notebook safety and syntax
         run: python tools/validate_stage11_deepscores_colab_notebook.py
 
+      - name: Validate first DeepScoresV2 GPU run evidence
+        run: python tools/validate_stage11_first_gpu_run_evidence.py
+
+      - name: Run first GPU run evidence tests
+        run: python -m unittest tests.test_stage11_first_gpu_run_evidence -v
+
+      - name: Validate held-out evaluation notebook JSON
+        run: python -m json.tool notebooks/stage11_deepscoresv2_dense_heldout_eval_colab.ipynb > /dev/null
+
+      - name: Validate held-out evaluation notebook safety and syntax
+        run: python tools/validate_stage11_deepscores_heldout_notebook.py
+
       - name: Validate Stage 11 Colab pipeline current truth
         run: python tools/validate_stage11_colab_pipeline_current_truth.py
 
@@ -119,6 +131,7 @@ jobs:
             src/st_score_restore/stage11_cameraprimus.py \
             src/st_score_restore/stage11_cameraprimus_rights_review.py \
             src/st_score_restore/stage11_deepscores_dense.py \
+            src/st_score_restore/stage11_first_gpu_run_evidence.py \
             src/st_score_restore/stage11_colab_pipeline_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
@@ -130,4 +143,6 @@ jobs:
             tools/validate_stage11_cameraprimus_rights_review.py \
             tools/validate_stage11_deepscores_dense_registration.py \
             tools/validate_stage11_deepscores_colab_notebook.py \
+            tools/validate_stage11_first_gpu_run_evidence.py \
+            tools/validate_stage11_deepscores_heldout_notebook.py \
             tools/validate_stage11_colab_pipeline_current_truth.py
