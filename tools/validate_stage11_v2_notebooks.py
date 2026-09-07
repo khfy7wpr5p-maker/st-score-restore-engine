@@ -13,7 +13,7 @@ NOTEBOOKS = {
     "stage9a": ROOT / "notebooks/stage11_deepscoresv2_dense_v2_stage9a_symbol_region_eval_colab.ipynb",
 }
 RUNTIME = ROOT / "tools/stage11_v2_colab_runtime.py"
-EXPECTED_BRANCH = "stage11-v2-symbol-preservation-residual-unet"
+EXPECTED_REF = "main"
 
 
 def notebook_code(path: Path) -> str:
@@ -31,13 +31,13 @@ def notebook_code(path: Path) -> str:
 def main() -> None:
     for mode, path in NOTEBOOKS.items():
         code = notebook_code(path)
-        required = ("drive.mount", EXPECTED_BRANCH, "stage11_v2_colab_runtime.py", f'"{mode}"')
+        required = ("drive.mount", EXPECTED_REF, "stage11_v2_colab_runtime.py", f'"{mode}"', "Colab ML runtime preflight: OK")
         for token in required:
             if token not in code:
                 raise ValueError(f"{path.name}: missing token {token}")
-        for forbidden in ("keepalive", "while True", "xset", "caffeinate"):
+        for forbidden in ("keepalive", "while True", "xset", "caffeinate", '"pip","install","-e"'):
             if forbidden in code:
-                raise ValueError(f"{path.name}: forbidden runtime-bypass token {forbidden}")
+                raise ValueError(f"{path.name}: forbidden runtime-bypass/bootstrap token {forbidden}")
 
     runtime = RUNTIME.read_text(encoding="utf-8")
     ast.parse(runtime)
@@ -50,7 +50,7 @@ def main() -> None:
     ):
         if token not in runtime:
             raise ValueError(f"V2 runtime missing governance token: {token}")
-    print({"stage11V2NotebooksValid": True, "modes": sorted(NOTEBOOKS)})
+    print({"stage11V2NotebooksValid": True, "modes": sorted(NOTEBOOKS), "colabRef": EXPECTED_REF})
 
 
 if __name__ == "__main__":
