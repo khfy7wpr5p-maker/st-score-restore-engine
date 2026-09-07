@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractVersion": "stage11.st-restore-image-model-foundation.v1",
+  "name": "ST Restore Image Model provider-neutral foundation",
+  "purpose": "Define the future learned restoration model boundary without selecting one architecture, collecting training data, training weights, downloading artifacts, enabling production inference, or bypassing existing music-safety layers.",
+  "architecturePolicy": {
+    "family": "UNSELECTED",
+    "lockedToSingleFamily": false,
+    "allowedFutureFamilies": ["cnn", "vision_transformer", "diffusion", "hybrid", "ensemble", "future_unspecified"],
+    "independentSafetyEvaluationRequired": true
+  },
+  "futureObjectiveFamilies": [
+    "restoration",
+    "denoising",
+    "dewarping",
+    "deblurring",
+    "illumination_correction",
+    "super_resolution",
+    "structure_preservation"
+  ],
+  "trainingBoundary": {
+    "datasetCollectionAuthorized": false,
+    "userDocumentTrainingUseAuthorized": false,
+    "modelTrainingAuthorized": false,
+    "heldOutRetuningAuthorized": false,
+    "modelWeightCreationAuthorized": false,
+    "networkFetchAuthorized": false,
+    "modelArtifactDownloadAuthorized": false,
+    "trainingReadinessManifestMayBePrepared": true
+  },
+  "releaseManifestRequiredFields": [
+    "modelId",
+    "modelVersion",
+    "architectureFamily",
+    "weightsDigest",
+    "trainingDataManifestDigest",
+    "evaluationEvidenceDigest",
+    "calibrationEvidenceDigest",
+    "disableRollbackPlanId"
+  ],
+  "selectorHandoff": {
+    "stage10CompatibleCapabilityDescriptor": true,
+    "currentApprovalState": "unapproved",
+    "currentAvailabilityState": "unavailable",
+    "currentEnabled": false,
+    "rule": "Until separate training, evaluation and release approval are accepted, Stage 10 must skip the Stage 11 engine."
+  },
+  "syntheticResearchBoundary": {
+    "syntheticExecutorInjectionAllowed": true,
+    "realModelWeightsAllowed": false,
+    "realImageModelInferenceAllowed": false,
+    "sourceDescriptorImmutable": true,
+    "derivedCandidateRequiresProvenance": true,
+    "candidateMustProceedThroughStage9a": true,
+    "candidateMustProceedThroughStage9": true,
+    "candidateMustProceedThroughStage10": true
+  },
+  "productionBoundary": {
+    "modelPublicationAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "realUserCohortAuthorized": false,
+    "providerSpecificActivationAuthorized": false,
+    "liveResourceCreationAuthorized": false,
+    "productionDeploymentAuthorized": false,
+    "automaticFinalSelectionAuthorized": false
+  },
+  "lockedInvariants": [
+    "source identity remains immutable and traceable",
+    "derived outputs require provenance",
+    "user/private data cannot silently become training data",
+    "the image model cannot self-approve musical safety",
+    "independent Stage 9A preservation evidence remains required",
+    "Stage 9 comparison remains required",
+    "Stage 10 controlled selection remains required",
+    "hard deterministic or semantic veto cannot be overridden",
+    "released model paths must be disable-able and rollback-capable",
+    "model output is not OMR truth or human musical truth"
+  ],
+  "currentFoundationState": "FOUNDATION_COMPLETE_AWAITING_SEPARATE_TRAINING_AUTHORIZATION",
+  "nextSafeBoundary": "separate_stage11_training_and_dataset_authorization"
+}

@@ -1,0 +1,79 @@
+name: Stage 11 governance validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage11-governance:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate dependency lock
+        run: python tools/validate_dependency_lock.py
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate Stage 10 final-exit current truth
+        run: python tools/validate_stage10_final_exit_current_truth.py
+
+      - name: Validate Stage 11 entry authorization
+        run: python tools/validate_stage11_entry_authorization.py
+
+      - name: Run Stage 11 synthetic image-model drills
+        run: python tools/run_stage11_image_model_drills.py
+
+      - name: Run Stage 11 foundation tests
+        run: python -m unittest tests.test_stage11_foundation -v
+
+      - name: Run Stage 10 selector regression tests
+        run: python -m unittest tests.test_st_restore_selector -v
+
+      - name: Run Stage 9A preservation regression tests
+        run: python -m unittest tests.test_music_symbol_preservation -v
+
+      - name: Run Stage 9 comparator regression tests
+        run: python -m unittest tests.test_multi_engine_comparator -v
+
+      - name: Run architecture regression tests
+        run: python -m unittest tests.test_restoration_pipeline_architecture -v
+
+      - name: Validate Stage 11 foundation current truth
+        run: python tools/validate_stage11_foundation_current_truth.py
+
+      - name: Compile Stage 11 sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_entry_authorization.py \
+            src/st_score_restore/stage11_foundation_current_truth.py \
+            src/st_score_restore/st_restore_image_model.py \
+            tools/validate_stage11_entry_authorization.py \
+            tools/run_stage11_image_model_drills.py \
+            tools/validate_stage11_foundation_current_truth.py
