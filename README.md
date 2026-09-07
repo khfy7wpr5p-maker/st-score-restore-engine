@@ -14,6 +14,16 @@ Safety-first visual restoration and validation engine for music scores and guita
 
 The sections below retain historical Stage 4 evidence anchors because governance history is immutable. Historical ACTIVE/BLOCKED statements describe their original checkpoints, not current production state.
 
+## Stage 11 V2 symbol-preservation development boundary — 2026-09-07
+
+Stage 11 V1 has a latest operator-reported Stage 9A outcome of `review_required`: visual restoration improved, but true music-symbol ink recall dropped too much (`inkRecallDelta=-0.166`). The corresponding V1 run evidence is not rewritten or silently promoted by V2 work.
+
+Stage 11 V2 keeps the Residual U-Net family and changes the training objective and sampling so the experiment directly targets symbol preservation: DeepScoresV2 native annotation masks, 50/50 random versus symbol-centered 512x512 patches, hard-example weighting, and a composite `pixel_l1 + edge_l1 + symbol_region_l1 + ink_recall_penalty` objective. PyTorch remains Colab-only and is not a production dependency.
+
+Current V2 repository state is **IMPLEMENTATION_READY_DEVELOPMENT_TRAINING_PENDING**. Development training/evaluation must pass the preservation gate (`inkRecallDelta >= -0.05`, ideal `>= -0.02`) before frozen held-out or V2 Stage 9A evaluation is allowed. Held-out data remains forbidden for training/tuning. Production inference, automatic final selection, Stage 12 entry, OMR-correctness claims, and musical-truth claims remain unauthorized.
+
+Authoritative V2 development truth: `docs/live/ST_SCORE_RESTORE_STAGE11_V2_SYMBOL_PRESERVATION_CURRENT_TRUTH.json`. Design rationale: `docs/adr/0024-stage11-v2-symbol-preservation-residual-unet.md`.
+
 ## Historical Stage 4 production baseline and human-reference checkpoints — 2026-09-03
 
 - **Wikimedia expansion production baseline:** main `9d2326931707f65c7eb5f5b22680e8fa85665a60`, PR #125, `Stage 4: add Wikimedia development calibration expansion`, post-merge Run #324 (`33728459668`) SUCCESS on Python 3.11/3.12.

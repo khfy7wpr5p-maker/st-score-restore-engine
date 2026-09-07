@@ -1,0 +1,17 @@
+{
+  "artifactType": "stage11_v2_heldout_gate_state",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-07",
+  "status": "gate_closed",
+  "reason": "development_gate_not_yet_evidenced",
+  "heldOutEvaluationAuthorized": false,
+  "heldOutEvaluationCompleted": false,
+  "officialHeldOutImages": 352,
+  "weightsMutated": null,
+  "optimizerCreated": null,
+  "backpropagationExecuted": null,
+  "heldOutUsedForTraining": false,
+  "heldOutUsedForTuning": false,
+  "checkpointSha256": null,
+  "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d"
+}

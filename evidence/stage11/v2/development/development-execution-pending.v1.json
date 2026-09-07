@@ -1,0 +1,16 @@
+{
+  "artifactType": "stage11_v2_development_execution_state",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-07",
+  "status": "pending_real_colab_execution",
+  "developmentTrainingCompleted": false,
+  "developmentEvaluationCompleted": false,
+  "developmentGatePassed": false,
+  "eligibleForFrozenHeldOutEvaluation": false,
+  "inkRecallDeltaTarget": -0.05,
+  "idealInkRecallDelta": -0.02,
+  "metrics": null,
+  "checkpointSha256": null,
+  "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+  "heldOutUsedForTuning": false
+}

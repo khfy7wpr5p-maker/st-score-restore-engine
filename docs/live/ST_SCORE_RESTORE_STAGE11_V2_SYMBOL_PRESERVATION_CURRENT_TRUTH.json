@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_v2_symbol_preservation_current_truth",
+  "generatedOn": "2026-09-07",
+  "baseMainSha": "3aa92c551cf9fc91ad6ebb4758cb842e04f4022c",
+  "implementationBranch": "stage11-v2-symbol-preservation-residual-unet",
+  "state": "IMPLEMENTATION_READY_DEVELOPMENT_TRAINING_PENDING",
+  "trainingSource": {
+    "datasetId": "deepscoresv2.dense.v2",
+    "datasetName": "DeepScoresV2 Dense",
+    "archiveFileName": "ds2_dense.tar.gz",
+    "archiveMd5Expected": "7237318e381e6e0848ec30eb82decb83",
+    "rightsClearedForCommercialTraining": true,
+    "privateStudentUserDataAuthorized": false
+  },
+  "v1Reference": {
+    "stage9aStatus": "review_required",
+    "pixelL1ImprovementPercent": 66.25,
+    "mseImprovementPercent": 32.28,
+    "edgeL1ImprovementPercent": 12.13,
+    "falseInkRateDelta": -0.196,
+    "inkRecallDelta": -0.166,
+    "selectedSymbolRegions": 861,
+    "officialHeldOutImages": 352,
+    "source": "stage11_v2_autonomous_developer_handoff_2026-09-07",
+    "repositoryEvidenceImported": false
+  },
+  "v2Config": {
+    "modelFamily": "Residual U-Net",
+    "version": "V2",
+    "baseChannels": 32,
+    "patchSize": 512,
+    "symbolCenteredFraction": 0.5,
+    "loss": {
+      "pixel_l1": 0.4,
+      "edge_l1": 0.2,
+      "symbol_region_l1": 0.25,
+      "ink_recall_penalty": 0.15
+    },
+    "inkThreshold": 0.75,
+    "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+    "splitSeed": "st-score-restore-stage11-deepscoresv2-dense-v1"
+  },
+  "v2ConfigSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+  "developmentTargets": {
+    "inkRecallDeltaMinimum": -0.05,
+    "inkRecallDeltaIdeal": -0.02,
+    "stage9aProxyGoal": "pass",
+    "pixelRestorationMustRemainUseful": true,
+    "edgeRestorationMustNotMateriallyCollapse": true
+  },
+  "implementation": {
+    "symbolAwareParserReady": true,
+    "symbolMasksReady": true,
+    "hardExampleSamplingReady": true,
+    "compositeLossReady": true,
+    "splitLeakageGuardReused": true,
+    "trainingNotebookReady": true,
+    "developmentEvalNotebookReady": true,
+    "heldOutEvalNotebookReady": true,
+    "stage9aEvalNotebookReady": true,
+    "ciValidationReady": true
+  },
+  "gates": {
+    "developmentTrainingCompleted": false,
+    "developmentGatePassed": false,
+    "heldOutEvaluationAuthorized": false,
+    "stage9aV2EvaluationAuthorized": false,
+    "finalModelSelected": false,
+    "stage12EntryAuthorized": false,
+    "productionInferenceAuthorized": false
+  },
+  "notebooks": [
+    "notebooks/stage11_deepscoresv2_dense_residual_unet_v2_symbol_preservation_colab.ipynb",
+    "notebooks/stage11_deepscoresv2_dense_v2_dev_eval_colab.ipynb",
+    "notebooks/stage11_deepscoresv2_dense_v2_heldout_eval_colab.ipynb",
+    "notebooks/stage11_deepscoresv2_dense_v2_stage9a_symbol_region_eval_colab.ipynb"
+  ],
+  "driveLayout": {
+    "trainingInputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_DATA/DeepScoresV2/dense/",
+    "trainingOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2_symbol_preservation/",
+    "developmentEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_dev/",
+    "heldoutEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_heldout/",
+    "stage9aEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_stage9a/"
+  },
+  "safety": {
+    "historicalEvidenceImmutable": true,
+    "sourceFamilyLeakageForbidden": true,
+    "heldOutNeverTrainOrTune": true,
+    "weightsMustNotMutateDuringEvaluation": true,
+    "omrCorrectnessNotImplied": true,
+    "musicalTruthNotImplied": true,
+    "automaticProductionPromotionForbidden": true
+  },
+  "nextSafeBoundary": "run_v2_development_training_then_development_evaluation_only"
+}
