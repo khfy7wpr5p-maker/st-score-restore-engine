@@ -74,10 +74,22 @@ jobs:
       - name: Run CameraPrIMuS rights review tests
         run: python -m unittest tests.test_stage11_cameraprimus_rights_review -v
 
+      - name: Validate DeepScoresV2 Dense registration
+        run: python tools/validate_stage11_deepscores_dense_registration.py
+
+      - name: Run DeepScoresV2 Dense admission tests
+        run: python -m unittest tests.test_stage11_deepscores_dense -v
+
+      - name: Validate DeepScoresV2 Colab notebook JSON
+        run: python -m json.tool notebooks/stage11_deepscoresv2_dense_residual_unet_colab.ipynb > /dev/null
+
+      - name: Validate DeepScoresV2 Colab notebook safety and syntax
+        run: python tools/validate_stage11_deepscores_colab_notebook.py
+
       - name: Validate Stage 11 Colab pipeline current truth
         run: python tools/validate_stage11_colab_pipeline_current_truth.py
 
-      - name: Validate Colab notebook JSON
+      - name: Validate legacy CameraPrIMuS notebook JSON
         run: python -m json.tool notebooks/stage11_cameraprimus_residual_unet_colab.ipynb > /dev/null
 
       - name: Run Stage 10 selector regression tests
@@ -106,6 +118,7 @@ jobs:
             src/st_score_restore/stage11_training_kickoff_current_truth.py \
             src/st_score_restore/stage11_cameraprimus.py \
             src/st_score_restore/stage11_cameraprimus_rights_review.py \
+            src/st_score_restore/stage11_deepscores_dense.py \
             src/st_score_restore/stage11_colab_pipeline_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
@@ -115,4 +128,6 @@ jobs:
             tools/validate_stage11_training_kickoff_current_truth.py \
             tools/build_stage11_cameraprimus_manifest.py \
             tools/validate_stage11_cameraprimus_rights_review.py \
+            tools/validate_stage11_deepscores_dense_registration.py \
+            tools/validate_stage11_deepscores_colab_notebook.py \
             tools/validate_stage11_colab_pipeline_current_truth.py

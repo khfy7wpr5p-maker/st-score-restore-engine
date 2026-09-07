@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_deepscoresv2_dense_drive_source_registration",
+  "generatedOn": "2026-09-07",
+  "dataset": {
+    "datasetId": "deepscoresv2.dense.v2",
+    "name": "DeepScoresV2 Dense",
+    "sourceDoi": "10.5281/zenodo.4012193",
+    "officialRecord": "https://zenodo.org/records/4012193",
+    "rightsMetadataRecord": "https://digitalcollection.zhaw.ch/items/1376f518-211d-49c8-a658-dbc7f085d2b1",
+    "denseImageCount": 1714,
+    "officialDenseSplit": {
+      "trainImages": 1362,
+      "testImages": 352
+    }
+  },
+  "driveSource": {
+    "folderId": "1Ov_cUo6O1guuegX1GiqrRlHvTtCjHpvy",
+    "folderName": "ST_SCORE_RESTORE_STAGE11_TRAINING_DATA",
+    "fileId": "1QjvmZSpWgnc8wdfcwfmcXTdibXQnriJS",
+    "fileName": "ds2_dense.tar.gz",
+    "mimeType": "application/x-gzip",
+    "observedSizeBytes": 741814529,
+    "shared": false,
+    "sourceVisibilityStatus": "not_shared",
+    "artifactAccessState": "accessible_in_google_drive_colab_mount",
+    "ordinaryGitArtifactBytes": false
+  },
+  "rightsReview": {
+    "status": "approved",
+    "licenseId": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "commercialTrainingAllowed": true,
+    "adaptationAllowed": true,
+    "attributionRequired": true,
+    "nonCommercialRestriction": false,
+    "shareAlikeRestriction": false,
+    "evidence": [
+      {
+        "source": "ZHAW digitalcollection research-data record",
+        "relation": "same DeepScoresV2 dataset and DOI",
+        "recordedRight": "CC BY 4.0",
+        "url": "https://digitalcollection.zhaw.ch/items/1376f518-211d-49c8-a658-dbc7f085d2b1"
+      },
+      {
+        "source": "Zenodo record 4012193",
+        "relation": "official dataset distribution and checksum",
+        "url": "https://zenodo.org/records/4012193"
+      }
+    ],
+    "attributionPolicy": "retain DeepScoresV2 authors, DOI, and CC BY 4.0 notice in dataset provenance and any model/release documentation that relies on this training source"
+  },
+  "archive": {
+    "expectedMd5": "7237318e381e6e0848ec30eb82decb83",
+    "checksumSource": "Zenodo record 4012193",
+    "checksumVerificationState": "pending_first_colab_read",
+    "verifiedMd5": null,
+    "connectorRawDownloadAttempted": true,
+    "connectorRawDownloadResult": "blocked_by_268435456_byte_materialization_limit",
+    "mustVerifyBeforeExtractionOrTraining": true
+  },
+  "trainingUse": {
+    "projectOwnerAuthorization": "granted_2026-09-07",
+    "purpose": "Stage 11 non-production restoration-model training and development evaluation",
+    "cleanImageRole": "target",
+    "degradedImageRole": "deterministically_synthesized_source",
+    "syntheticDerivationAuthorized": true,
+    "officialTestPreservedAsHeldOut": true,
+    "officialTrainUsedForTrainAndDevelopmentOnly": true,
+    "sourceFamilyLeakageForbidden": true,
+    "privateUserStudentDataIncluded": false,
+    "externalPretrainedWeightsRequired": false
+  },
+  "assertions": {
+    "historicalEvidenceImmutable": true,
+    "sourceArchiveImmutable": true,
+    "archiveBytesRemainOutsideOrdinaryGit": true,
+    "trainingFailsClosedOnChecksumMismatch": true,
+    "heldOutNeverUsedForTrainingOrTuning": true,
+    "cameraPrIMuSCommercialTrainingExclusionUnchanged": true,
+    "productionInferenceAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "automaticFinalSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
