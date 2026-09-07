@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static safety/shape validator for the Stage 11 held-out evaluation notebook."""
+"""Static safety/mobile-resilience validator for the Stage 11 held-out Colab notebook."""
 
 from __future__ import annotations
 
@@ -15,7 +15,12 @@ REQUIRED_TOKENS = (
     "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683",
     "official_held_out_images=352",
     "held_out_variants=2",
-    "torch.no_grad()",
+    "torch.inference_mode()",
+    "torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")",
+    "heldout_eval_progress.v1.json",
+    "save_every=8",
+    "os.replace",
+    "resumedfrompersistedprogress",
     "optimizercreated\":false",
     "backpropagationexecuted\":false",
     "heldoutusedfortraining\":false",
@@ -35,6 +40,10 @@ FORBIDDEN_TOKENS = (
     "wget ",
     "curl ",
     "git clone",
+    "nohup",
+    "setinterval(",
+    "javascript(",
+    "keepalive",
 )
 
 
@@ -43,7 +52,7 @@ def main() -> int:
     if payload.get("nbformat") != 4:
         raise SystemExit("unexpected notebook format")
     code_cells = [c for c in payload.get("cells", []) if c.get("cell_type") == "code"]
-    if len(code_cells) < 4:
+    if len(code_cells) < 2:
         raise SystemExit("held-out notebook is unexpectedly small")
     source = "\n".join(
         "".join(c.get("source", [])) if isinstance(c.get("source"), list) else str(c.get("source") or "")
@@ -52,14 +61,23 @@ def main() -> int:
     source_lower = source.lower()
     for token in REQUIRED_TOKENS:
         if token.lower() not in source_lower:
-            raise SystemExit(f"missing held-out safety token: {token}")
+            raise SystemExit(f"missing held-out safety/resume token: {token}")
     for token in FORBIDDEN_TOKENS:
         if token.lower() in source_lower:
-            raise SystemExit(f"forbidden held-out mutation/network token: {token}")
+            raise SystemExit(f"forbidden held-out mutation/network/keepalive token: {token}")
     for idx, cell in enumerate(code_cells):
         cell_source = "".join(cell.get("source", [])) if isinstance(cell.get("source"), list) else str(cell.get("source") or "")
         ast.parse(cell_source, filename=f"heldout-notebook-cell-{idx}")
-    print(json.dumps({"notebook":"valid","codeCells":len(code_cells),"optimizerCreated":False,"backpropagation":False,"heldOutTuning":False},sort_keys=True))
+    print(json.dumps({
+        "notebook": "valid",
+        "codeCells": len(code_cells),
+        "optimizerCreated": False,
+        "backpropagation": False,
+        "heldOutTuning": False,
+        "cpuFallback": True,
+        "driveProgressResume": True,
+        "runtimeLimitBypass": False,
+    }, sort_keys=True))
     return 0
 
 
