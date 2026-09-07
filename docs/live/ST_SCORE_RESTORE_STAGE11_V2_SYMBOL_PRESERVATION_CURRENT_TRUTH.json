@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "artifactType": "stage11_v2_symbol_preservation_current_truth",
   "generatedOn": "2026-09-07",
-  "baseMainSha": "3aa92c551cf9fc91ad6ebb4758cb842e04f4022c",
-  "implementationBranch": "stage11-v2-symbol-preservation-residual-unet",
-  "state": "IMPLEMENTATION_READY_DEVELOPMENT_TRAINING_PENDING",
+  "baseMainSha": "1ac815df360b42634d670862e643860a474e1770",
+  "implementationBranch": "stage11-v2a-symbol-preservation-finetune",
+  "state": "V2_DEVELOPMENT_REVIEW_REQUIRED_V2A_READY",
   "trainingSource": {
     "datasetId": "deepscoresv2.dense.v2",
     "datasetName": "DeepScoresV2 Dense",
@@ -15,73 +15,82 @@
   },
   "v1Reference": {
     "stage9aStatus": "review_required",
-    "pixelL1ImprovementPercent": 66.25,
-    "mseImprovementPercent": 32.28,
-    "edgeL1ImprovementPercent": 12.13,
-    "falseInkRateDelta": -0.196,
     "inkRecallDelta": -0.166,
-    "selectedSymbolRegions": 861,
-    "officialHeldOutImages": 352,
-    "source": "stage11_v2_autonomous_developer_handoff_2026-09-07",
-    "repositoryEvidenceImported": false
+    "pixelL1ImprovementPercent": 66.25,
+    "edgeL1ImprovementPercent": 12.13
   },
-  "v2Config": {
+  "v2Result": {
+    "trainingCompleted": true,
+    "epochsCompleted": 20,
+    "bestCheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+    "configSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
+    "developmentStatus": "review_required",
+    "developmentGatePassed": false,
+    "inkRecallDelta": -0.05993542307987809,
+    "pixelL1ImprovementPercent": 57.808715708373306,
+    "edgeL1ImprovementPercent": 13.596753265825802,
+    "falseInkRateDelta": -0.09770500852027908,
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false,
+    "trainingEvidence": "evidence/stage11/training/deepscoresv2-dense-v2-training-evidence.json",
+    "developmentEvidence": "evidence/stage11/evaluation/deepscoresv2-dense-v2-development-evidence.json"
+  },
+  "v2aConfig": {
     "modelFamily": "Residual U-Net",
-    "version": "V2",
+    "version": "V2a",
     "baseChannels": 32,
     "patchSize": 512,
     "symbolCenteredFraction": 0.5,
     "loss": {
-      "pixel_l1": 0.4,
-      "edge_l1": 0.2,
-      "symbol_region_l1": 0.25,
-      "ink_recall_penalty": 0.15
+      "pixel_l1": 0.34,
+      "edge_l1": 0.14,
+      "symbol_region_l1": 0.3,
+      "ink_recall_penalty": 0.22
     },
     "inkThreshold": 0.75,
     "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
-    "splitSeed": "st-score-restore-stage11-deepscoresv2-dense-v1"
+    "splitSeed": "st-score-restore-stage11-deepscoresv2-dense-v1",
+    "warmStart": "V2 best.pt",
+    "warmStartCheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+    "learningRate": 0.00005,
+    "maxEpochs": 8,
+    "checkpointSelection": "v2a-development-gate-then-ink-recall-then-pixel-edge",
+    "partialCheckpointEveryTrainBatches": 128
   },
-  "v2ConfigSha256": "9f041aad61eecba66843e4456ec05e14e9bbfb40d93a39e49033ec7d4d500a4d",
-  "developmentTargets": {
+  "v2aConfigSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
+  "v2aTargets": {
     "inkRecallDeltaMinimum": -0.05,
     "inkRecallDeltaIdeal": -0.02,
-    "stage9aProxyGoal": "pass",
-    "pixelRestorationMustRemainUseful": true,
-    "edgeRestorationMustNotMateriallyCollapse": true
+    "pixelL1ImprovementFloor": 45.0,
+    "edgeL1ImprovementFloor": 5.0
   },
   "implementation": {
-    "symbolAwareParserReady": true,
-    "symbolMasksReady": true,
-    "hardExampleSamplingReady": true,
-    "compositeLossReady": true,
-    "splitLeakageGuardReused": true,
-    "trainingNotebookReady": true,
-    "developmentEvalNotebookReady": true,
-    "heldOutEvalNotebookReady": true,
-    "stage9aEvalNotebookReady": true,
-    "ciValidationReady": true
+    "v2EvidenceImported": true,
+    "v2aPolicyReady": true,
+    "v2aRuntimeReady": true,
+    "v2aAutonomousPipelineReady": true,
+    "v2aBackgroundNotebookReady": true,
+    "partialCheckpointResumeReady": true,
+    "driveStatusMonitoringReady": true,
+    "developmentGateEnforced": true
   },
   "gates": {
-    "developmentTrainingCompleted": false,
-    "developmentGatePassed": false,
+    "v2DevelopmentTrainingCompleted": true,
+    "v2DevelopmentGatePassed": false,
+    "v2aFineTuneAuthorized": true,
     "heldOutEvaluationAuthorized": false,
-    "stage9aV2EvaluationAuthorized": false,
+    "stage9aEvaluationAuthorized": false,
     "finalModelSelected": false,
     "stage12EntryAuthorized": false,
     "productionInferenceAuthorized": false
   },
-  "notebooks": [
-    "notebooks/stage11_deepscoresv2_dense_residual_unet_v2_symbol_preservation_colab.ipynb",
-    "notebooks/stage11_deepscoresv2_dense_v2_dev_eval_colab.ipynb",
-    "notebooks/stage11_deepscoresv2_dense_v2_heldout_eval_colab.ipynb",
-    "notebooks/stage11_deepscoresv2_dense_v2_stage9a_symbol_region_eval_colab.ipynb"
-  ],
+  "notebook": "notebooks/stage11_deepscoresv2_dense_v2a_autonomous_symbol_preservation_colab.ipynb",
   "driveLayout": {
-    "trainingInputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_DATA/DeepScoresV2/dense/",
-    "trainingOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2_symbol_preservation/",
-    "developmentEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_dev/",
-    "heldoutEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_heldout/",
-    "stage9aEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2_stage9a/"
+    "v2SourceRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2_symbol_preservation/",
+    "v2aTrainingOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2a_symbol_preservation/",
+    "v2aDevelopmentEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_dev/",
+    "v2aHeldoutEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_heldout/",
+    "v2aStage9aEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_stage9a/"
   },
   "safety": {
     "historicalEvidenceImmutable": true,
@@ -92,5 +101,5 @@
     "musicalTruthNotImplied": true,
     "automaticProductionPromotionForbidden": true
   },
-  "nextSafeBoundary": "run_v2_development_training_then_development_evaluation_only"
+  "nextSafeBoundary": "run_v2a_autonomous_pipeline; held-out and Stage9A unlock only if V2a development gate passes"
 }
