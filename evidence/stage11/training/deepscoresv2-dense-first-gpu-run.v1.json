@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_deepscoresv2_dense_first_gpu_run_evidence",
+  "generatedOn": "2026-09-07",
+  "sourceMainSha": "34d26c8f24d8211a170663672003532e36856487",
+  "runEvidence": {
+    "artifactType": "stage11_first_gpu_run_evidence",
+    "datasetId": "deepscoresv2.dense.v2",
+    "archiveMd5": "7237318e381e6e0848ec30eb82decb83",
+    "archiveChecksumVerified": true,
+    "gpu": "Tesla T4",
+    "epochsCompleted": 20,
+    "bestDevelopmentLoss": 0.2025674572762321,
+    "bestCheckpointExists": true,
+    "lastCheckpointExists": true,
+    "configSha256": "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80",
+    "heldOutUsedForTuning": false,
+    "productionInferenceAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "completedAtUnix": 1788780935
+  },
+  "verifiedCheckpoint": {
+    "bestEpoch": 19,
+    "checkpointEpoch": 19,
+    "bestDevelopmentLoss": 0.2025674572762321,
+    "checkpointArchiveMd5": "7237318e381e6e0848ec30eb82decb83",
+    "checkpointConfigSha256": "deff0f1270009839e234608dd9967038e1228a6b2b034e26059ac2f8cbfd0f80",
+    "checkpointHistoryLength": 20
+  },
+  "metrics": {
+    "epoch0": {
+      "train": {
+        "loss": 0.22208952035636922,
+        "pixel": 0.08583560443116664,
+        "edge": 0.45417970095284926,
+        "psnr": 11.924250688433242
+      },
+      "development": {
+        "loss": 0.21285036469207091,
+        "pixel": 0.08083692236858256,
+        "edge": 0.44004478349405174,
+        "psnr": 12.141933631390378
+      }
+    },
+    "epoch19": {
+      "train": {
+        "loss": 0.20937966631211308,
+        "pixel": 0.08057712931270243,
+        "edge": 0.4293417730684734,
+        "psnr": 12.50884865765033
+      },
+      "development": {
+        "loss": 0.2025674572762321,
+        "pixel": 0.07728481226984192,
+        "edge": 0.417608801056357,
+        "psnr": 12.734054473249468
+      }
+    },
+    "developmentImprovement": {
+      "lossPercent": 4.831049940043572,
+      "pixelL1Percent": 4.39416790578011,
+      "edgeLossPercent": 5.098567982001316,
+      "psnrDbAbsolute": 0.5921208418590904
+    }
+  },
+  "driveArtifacts": {
+    "outputFolderId": "1pMYlVHdw4V6_bY2aRemxtHXGTwGLsgI4",
+    "bestCheckpoint": {
+      "fileId": "1tMecVxfC5rqYcvkkxousmSVoSepfr6sh",
+      "sizeBytes": 23449829,
+      "sha256": "08b279161a9e8c4bd37376da221ecb4e07130724254ccf7d9591c8d32f368683"
+    },
+    "lastCheckpoint": {
+      "fileId": "1CdTuHI_mHpUV-GlRD0Lp-UgW1mExz8tX",
+      "sizeBytes": 23449829,
+      "sha256": "29eea696a4b73fee16457a5d377fc51516a9aed8c84335d54f5c16625786a09f"
+    },
+    "runHistory": {
+      "fileId": "1rwdru_hLEwJfg0x_M4jPMWvW0iV2w-UI",
+      "sizeBytes": 6999,
+      "sha256": "93b418dc429ea81a2b74b418b48cec8a2b3e24b72e2a2938eb6044cc6448ba2b"
+    },
+    "firstGpuRunEvidence": {
+      "fileId": "1FyhYD_NdN9g7iBK1tXq74vUt7Ohw8JHx",
+      "sizeBytes": 604,
+      "sha256": "542cb1f37fc4fdeda5930ee0436914b084145b912067135297aaad246d4b51ee"
+    }
+  },
+  "decision": {
+    "firstGpuTrainingRunPass": true,
+    "candidateModelEstablished": true,
+    "finalStage11Pass": false,
+    "heldOutEvaluationCompleted": false,
+    "stage9aPreservationEvaluationCompleted": false,
+    "reason": "The first GPU training run completed with valid checksum, stable checkpoint provenance, improving development metrics, and no held-out tuning. Final Stage 11 acceptance remains blocked on held-out and preservation evaluation."
+  },
+  "assertions": {
+    "heldOutUsedForTuning": false,
+    "productionInferenceAuthorized": false,
+    "modelPublicationAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "ordinaryGitContainsModelWeights": false
+  }
+}
