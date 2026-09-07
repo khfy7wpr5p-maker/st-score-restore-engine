@@ -65,6 +65,15 @@ jobs:
       - name: Validate Stage 11 training kickoff current truth
         run: python tools/validate_stage11_training_kickoff_current_truth.py
 
+      - name: Run CameraPrIMuS dataset tests
+        run: python -m unittest tests.test_stage11_cameraprimus -v
+
+      - name: Validate Stage 11 Colab pipeline current truth
+        run: python tools/validate_stage11_colab_pipeline_current_truth.py
+
+      - name: Validate Colab notebook JSON
+        run: python -m json.tool notebooks/stage11_cameraprimus_residual_unet_colab.ipynb > /dev/null
+
       - name: Run Stage 10 selector regression tests
         run: python -m unittest tests.test_st_restore_selector -v
 
@@ -89,9 +98,13 @@ jobs:
             src/st_score_restore/stage11_training_authorization.py \
             src/st_score_restore/stage11_training_dataset.py \
             src/st_score_restore/stage11_training_kickoff_current_truth.py \
+            src/st_score_restore/stage11_cameraprimus.py \
+            src/st_score_restore/stage11_colab_pipeline_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
             tools/validate_stage11_foundation_current_truth.py \
             tools/validate_stage11_training_authorization.py \
             tools/run_stage11_training_kickoff_drills.py \
-            tools/validate_stage11_training_kickoff_current_truth.py
+            tools/validate_stage11_training_kickoff_current_truth.py \
+            tools/build_stage11_cameraprimus_manifest.py \
+            tools/validate_stage11_colab_pipeline_current_truth.py

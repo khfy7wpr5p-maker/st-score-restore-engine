@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_cameraprimus_drive_source_registration",
+  "dataset": "CameraPrIMuS",
+  "provider": "google_drive",
+  "drivePath": "TEST/CameraPrIMuS/Corpus",
+  "driveFolderId": "1qIwmGQbcJHox00tMEteojaeU1N3UvNgO",
+  "trainingPurposeAuthorization": "granted_by_project_owner_2026-09-07",
+  "rightsReview": {
+    "status": "review_required",
+    "reason": "official public download and research use are evidenced, but an explicit commercial-training license grant was not observed on the official dataset page during this checkpoint",
+    "officialDatasetPage": "https://grfia.dlsi.ua.es/primus/",
+    "commercialTrainingAdmissionAllowed": false
+  },
+  "pairConvention": {
+    "source": "<sampleId>_distorted.jpg",
+    "target": "<sampleId>.png",
+    "optionalGroundTruth": [
+      "<sampleId>.agnostic",
+      "<sampleId>.semantic",
+      "<sampleId>.mei"
+    ]
+  },
+  "observedPairs": [
+    {
+      "sampleId": "230006252-1_1_1",
+      "sourceDriveFileId": "1mKYE3qpFFe4_bpM6ZncgI8bupGbPc-_5",
+      "targetDriveFileId": "1uVsnzo083vogj8lGUAh1S5HQNSjcjzwo",
+      "sourceFilename": "230006252-1_1_1_distorted.jpg",
+      "targetFilename": "230006252-1_1_1.png"
+    },
+    {
+      "sampleId": "230006610-1_3_1",
+      "sourceDriveFileId": "10h-jOCKSpNMEElRzZFpIy4eghsNvOKMu",
+      "targetDriveFileId": "1J8l5tCpLvwNICWTHyrUAU6os-J8oDvKG",
+      "sourceFilename": "230006610-1_3_1_distorted.jpg",
+      "targetFilename": "230006610-1_3_1.png"
+    }
+  ],
+  "observations": {
+    "driveSourceConfirmed": true,
+    "pairedRestorationStructureConfirmed": true,
+    "groundTruthSidecarsConfirmed": true,
+    "fullCorpusEnumeratedIntoGit": false,
+    "realArtifactBytesStoredInOrdinaryGit": false
+  },
+  "assertions": {
+    "sourceDataRemainsInDrive": true,
+    "ordinaryGitArtifactBytesForbidden": true,
+    "trainingFailsClosedUntilRightsApproved": true,
+    "heldOutNeverUsedForTrainingOrTuning": true,
+    "privateUserStudentDataNotAuthorizedByThisRegistration": true
+  }
+}
