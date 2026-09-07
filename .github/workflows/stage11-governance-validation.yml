@@ -68,6 +68,12 @@ jobs:
       - name: Run CameraPrIMuS dataset tests
         run: python -m unittest tests.test_stage11_cameraprimus -v
 
+      - name: Validate CameraPrIMuS rights review
+        run: python tools/validate_stage11_cameraprimus_rights_review.py
+
+      - name: Run CameraPrIMuS rights review tests
+        run: python -m unittest tests.test_stage11_cameraprimus_rights_review -v
+
       - name: Validate Stage 11 Colab pipeline current truth
         run: python tools/validate_stage11_colab_pipeline_current_truth.py
 
@@ -99,6 +105,7 @@ jobs:
             src/st_score_restore/stage11_training_dataset.py \
             src/st_score_restore/stage11_training_kickoff_current_truth.py \
             src/st_score_restore/stage11_cameraprimus.py \
+            src/st_score_restore/stage11_cameraprimus_rights_review.py \
             src/st_score_restore/stage11_colab_pipeline_current_truth.py \
             tools/validate_stage11_entry_authorization.py \
             tools/run_stage11_image_model_drills.py \
@@ -107,4 +114,5 @@ jobs:
             tools/run_stage11_training_kickoff_drills.py \
             tools/validate_stage11_training_kickoff_current_truth.py \
             tools/build_stage11_cameraprimus_manifest.py \
+            tools/validate_stage11_cameraprimus_rights_review.py \
             tools/validate_stage11_colab_pipeline_current_truth.py
