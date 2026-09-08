@@ -169,7 +169,7 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         self.assertEqual(0, result["familyShortage"])
         self.assertEqual(0, result["pageShortage"])
 
-    def test_real_expected_manifest_validates_but_cannot_create_pass_evidence(self) -> None:
+    def test_base_expected_manifest_remains_neutral_before_teacher_overlay(self) -> None:
         manifest = json.loads(EXPECTED_MANIFEST.read_text(encoding="utf-8"))
         result = validate_expected_class_manifest(manifest)
         self.assertEqual("pass", result["status"])
@@ -177,11 +177,13 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         self.assertEqual(0, result["eligiblePresentClassCount"])
         self.assertEqual(0.0, result["annotationCoverage"])
 
-    def test_current_truth_validates_and_remains_blocked(self) -> None:
+    def test_current_truth_validates_and_remains_detector_coverage_blocked(self) -> None:
         payload = json.loads(CURRENT_TRUTH.read_text(encoding="utf-8"))
         result = validate_current_truth(payload)
         self.assertEqual("pass", result["status"])
-        self.assertEqual("V2C_TEACHER_REVIEW_INGESTED_DETECTOR_COVERAGE_BLOCKED", result["state"])
+        self.assertEqual("V2C_TEACHER_GROUND_TRUTH_COMPLETE_DETECTOR_COVERAGE_BLOCKED", result["state"])
+        self.assertTrue(payload["independentExpectedClassEvidence"]["teacherGroundTruthComplete"])
+        self.assertEqual(1.0, payload["independentExpectedClassEvidence"]["annotationCoverage"])
         self.assertFalse(result["stage12EntryAuthorized"])
 
     def test_tampered_current_truth_promotion_fails_closed(self) -> None:
