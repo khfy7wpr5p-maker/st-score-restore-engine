@@ -5,7 +5,7 @@
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "startingMainSha": "93f368593c4c32478091b5811dd2be0f2834f1be",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "V2C_FRAMEWORK_READY_EVIDENCE_BLOCKED",
+  "state": "V2C_CORPUS_TARGET_MET_SEMANTIC_EVIDENCE_BLOCKED",
   "repositoryReconciliation": {
     "remoteV2bBranchObserved": false,
     "v2bAssumedMerged": false,
@@ -61,31 +61,50 @@
   },
   "corpus": {
     "approvedDevelopmentInventory": {
-      "sourceFamilyCount": 3,
-      "pageCount": 7,
+      "sourceFamilyCount": 5,
+      "pageCount": 20,
       "targetSourceFamilies": 5,
       "targetPages": 20,
-      "targetMet": false
+      "targetMet": true
     },
-    "existingV2aShadowRunnerExecutable": {
-      "sourceFamilyCount": 2,
-      "pageCount": 5
+    "selectionAccounting": {
+      "previousApprovedFamilies": 3,
+      "previousApprovedPages": 7,
+      "carulliSelectedNotationPages": 9,
+      "bachSelectedNotationPages": 4,
+      "carulliCoverExcluded": true
     },
-    "newlyReconciledDevelopmentFamily": {
-      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
-      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
-      "pageCount": 2,
-      "inputKind": "digital_pdf",
-      "executionStatus": "exact_v2c_repeat_execution_completed",
-      "executionEvidence": "evidence/stage11/v2c/v2c-barley-repeat-execution.v1.json"
-    }
+    "newlyAdmittedFamilies": [
+      {
+        "datasetItemId": "dataset.item.imslp675596-carulli-recueil-morceaux-faciles.v1",
+        "sourceFamilyId": "source.family.imslp675596-carulli-recueil-morceaux-faciles.v1",
+        "sourcePdfPageCount": 10,
+        "selectedPageCount": 9,
+        "selectedPages": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "sourceSha256": "db20e9ce755aa56dd9dbb0436a37a48545442e7961e471f813cde7aaa8fc0f22",
+        "sourceByteSize": 4662523,
+        "rightsEvidence": "evidence/stage11/v2c/v2c-corpus-expansion-rights.v1.json#imslp675596"
+      },
+      {
+        "datasetItemId": "dataset.item.imslp865937-bach-anna-magdalena.v1",
+        "sourceFamilyId": "source.family.imslp865937-bach-anna-magdalena.v1",
+        "sourcePdfPageCount": 44,
+        "selectedPageCount": 4,
+        "selectedPages": [4, 10, 24, 40],
+        "sourceSha256": "692d4317375048b9d520b4d756c3ce992e96ca82b10c3026a5925f1a878fc959",
+        "sourceByteSize": 3235494,
+        "rightsEvidence": "evidence/stage11/v2c/v2c-corpus-expansion-rights.v1.json#imslp865937"
+      }
+    ]
   },
   "independentExpectedClassEvidence": {
     "manifestPageCount": 7,
+    "targetCorpusPageCount": 20,
+    "manifestExpansionPendingPages": 13,
     "independentlyAnnotatedPresentOrAbsentClassCount": 0,
     "annotationCoverage": 0.0,
     "automaticSemanticPassEvidenceAvailable": false,
-    "reason": "catalog notation metadata is not promoted into per-class ground truth; detector output is forbidden as expected-presence provenance"
+    "reason": "corpus target is met, but the independent expected-class manifest still covers only the previously cataloged 7 pages and contains no independently established present/absent labels"
   },
   "determinism": {
     "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
@@ -100,14 +119,13 @@
       "maxAbsDiffAcrossRepeats": 0,
       "result": "PASS_FOR_BARLEY_CANONICAL_RUNTIME_AND_TWO_PAGE_SOURCE"
     },
-    "claim": "new Barley same-profile determinism is established; semantic preservation and full target-corpus review remain unestablished"
+    "claim": "corpus admission target is now met; full 20-page canonical repeat execution and semantic preservation remain unestablished"
   },
   "remainingBlockers": [
-    "approved corpus below 5 independent source families",
-    "approved corpus below 20 pages",
-    "independent per-page expected-class annotation not yet established",
+    "independent expected-class manifest not yet expanded from 7 to all 20 selected pages",
+    "independent per-page expected-class present/absent annotation not yet established",
     "trusted automatic detector coverage currently limited to staff_line/tab_line",
-    "full target-corpus class-aware semantic preservation execution cannot be completed until corpus and annotation gates are satisfied"
+    "full target-corpus class-aware semantic preservation execution remains pending"
   ],
   "productionBoundaries": {
     "sharedMusicSafetyValidatorModified": false,
@@ -123,5 +141,5 @@
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "add at least two more independently approved non-held-out source families and thirteen pages without weakening rights/custody policy, establish independent expected-class labels, then run the full frozen-package semantic evidence set under the canonical CPU profile"
+  "nextSafeBoundary": "expand the independent expected-class manifest to the 13 newly selected Carulli/Bach pages, obtain independent class labels, then run the exact frozen-package two-repeat semantic evidence set under the canonical CPU profile"
 }
