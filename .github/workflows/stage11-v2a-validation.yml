@@ -47,6 +47,12 @@ jobs:
       - name: Run V2a preservation tests
         run: python -m unittest tests.test_stage11_v2a_preservation -v
 
+      - name: Validate accepted V2a evaluation evidence
+        run: python tools/validate_stage11_v2a_acceptance.py
+
+      - name: Run V2a acceptance regression tests
+        run: python -m unittest tests.test_stage11_v2a_acceptance -v
+
       - name: Validate updated Stage 11 V2/V2a current truth
         run: python tools/validate_stage11_v2_current_truth.py
 
@@ -57,7 +63,9 @@ jobs:
         run: |
           python -m py_compile \
             src/st_score_restore/stage11_v2a_preservation.py \
+            src/st_score_restore/stage11_v2a_acceptance.py \
             src/st_score_restore/stage11_v2_current_truth.py \
             tools/stage11_v2a_colab_runtime.py \
             tools/stage11_v2a_autonomous_pipeline.py \
-            tools/validate_stage11_v2a_pipeline.py
+            tools/validate_stage11_v2a_pipeline.py \
+            tools/validate_stage11_v2a_acceptance.py

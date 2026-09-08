@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "1.1.0",
+  "schemaVersion": "1.2.0",
   "artifactType": "stage11_v2_symbol_preservation_current_truth",
-  "generatedOn": "2026-09-07",
-  "baseMainSha": "1ac815df360b42634d670862e643860a474e1770",
-  "implementationBranch": "stage11-v2a-symbol-preservation-finetune",
-  "state": "V2_DEVELOPMENT_REVIEW_REQUIRED_V2A_READY",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "4b4bc6d6c2fac185dea598963866f14075452fb0",
+  "implementationBranch": "stage11-v2a-evidence-acceptance-freeze",
+  "state": "V2A_HELDOUT_AND_STAGE9A_PASS_CANDIDATE_FROZEN",
   "trainingSource": {
     "datasetId": "deepscoresv2.dense.v2",
     "datasetName": "DeepScoresV2 Dense",
@@ -64,6 +64,38 @@
     "pixelL1ImprovementFloor": 45.0,
     "edgeL1ImprovementFloor": 5.0
   },
+  "v2aResult": {
+    "trainingCompleted": true,
+    "developmentStatus": "pass",
+    "developmentGatePassed": true,
+    "developmentNumericMetricsCommitted": false,
+    "developmentPassBasis": "gated_pipeline_progression",
+    "heldoutEvaluationStatus": "completed",
+    "officialHeldOutImages": 352,
+    "heldoutPreservationGatePassed": true,
+    "heldoutInkRecallDelta": -0.037029366940259933,
+    "heldoutPixelL1ImprovementPercent": 53.772181502991145,
+    "heldoutEdgeL1ImprovementPercent": 7.465588872979961,
+    "heldoutFalseInkRateDelta": -0.09465780964290552,
+    "heldoutMseImprovementPercent": -12.064218277766777,
+    "stage9aStatus": "pass",
+    "stage9aProxyOnly": true,
+    "stage9aInkRecallDelta": -0.030930931214243174,
+    "stage9aPixelL1ImprovementPercent": 47.90019887277439,
+    "stage9aEdgeL1ImprovementPercent": 5.336352757154033,
+    "stage9aFalseInkRateDelta": -0.07233098943834193,
+    "stage9aMseImprovementPercent": -19.59240047175054,
+    "idealInkRecallTargetReached": false,
+    "mseRegressionObserved": true,
+    "bestCheckpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+    "modelStateSha256": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+    "sourceRunCommitSha": "4b4bc6d6c2fac185dea598963866f14075452fb0",
+    "device": "Tesla T4",
+    "weightsMutatedDuringEvaluation": false,
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false,
+    "acceptanceEvidence": "evidence/stage11/v2a/v2a-evaluation-acceptance.v1.json"
+  },
   "implementation": {
     "v2EvidenceImported": true,
     "v2aPolicyReady": true,
@@ -72,14 +104,22 @@
     "v2aBackgroundNotebookReady": true,
     "partialCheckpointResumeReady": true,
     "driveStatusMonitoringReady": true,
-    "developmentGateEnforced": true
+    "developmentGateEnforced": true,
+    "v2aAcceptanceEvidenceImported": true,
+    "candidateCheckpointFreezeRecorded": true,
+    "consumedHeldoutRetuningGuardRecorded": true
   },
   "gates": {
     "v2DevelopmentTrainingCompleted": true,
     "v2DevelopmentGatePassed": false,
-    "v2aFineTuneAuthorized": true,
-    "heldOutEvaluationAuthorized": false,
-    "stage9aEvaluationAuthorized": false,
+    "v2aFineTuneCompleted": true,
+    "v2aDevelopmentGatePassed": true,
+    "heldOutEvaluationAuthorized": true,
+    "heldOutEvaluationCompleted": true,
+    "stage9aEvaluationAuthorized": true,
+    "stage9aEvaluationCompleted": true,
+    "candidateCheckpointFrozen": true,
+    "furtherTuningAgainstConsumedHeldoutForbidden": true,
     "finalModelSelected": false,
     "stage12EntryAuthorized": false,
     "productionInferenceAuthorized": false
@@ -99,7 +139,8 @@
     "weightsMustNotMutateDuringEvaluation": true,
     "omrCorrectnessNotImplied": true,
     "musicalTruthNotImplied": true,
-    "automaticProductionPromotionForbidden": true
+    "automaticProductionPromotionForbidden": true,
+    "consumedHeldoutCannotBeReusedForAdaptiveTuning": true
   },
-  "nextSafeBoundary": "run_v2a_autonomous_pipeline; held-out and Stage9A unlock only if V2a development gate passes"
+  "nextSafeBoundary": "verify external V2a checkpoint custody and build deterministic Stage 11 inference packaging/smoke validation; do not tune against the consumed held-out set; production and Stage 12 remain closed"
 }
