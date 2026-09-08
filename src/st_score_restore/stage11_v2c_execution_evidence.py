@@ -19,6 +19,8 @@ BARLEY_SOURCE_FAMILY_ID = "source.family.barley-mnoah-your-face-your-tongue-your
 BARLEY_SOURCE_SHA256 = "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e"
 BARLEY_SOURCE_BYTE_SIZE = 84_689
 EVIDENCE_SCHEMA_VERSION = "stage11.v2c.barley-repeat-execution.v1"
+BARLEY_RENDERER = "pdftoppm-via-render_pdf.py"
+SEMANTIC_BLOCKED_DISPOSITION = "BLOCKED_INDEPENDENT_EXPECTED_CLASS_ANNOTATION_AND_TRUSTED_CLASS_COVERAGE_INSUFFICIENT"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -40,7 +42,7 @@ def validate_barley_repeat_execution(payload: Mapping[str, Any]) -> dict[str, An
     _require(payload.get("sourcePdfSha256") == BARLEY_SOURCE_SHA256, "V2c Barley source SHA mismatch")
     _require(int(payload.get("sourcePdfByteSize", 0)) == BARLEY_SOURCE_BYTE_SIZE, "V2c Barley source size mismatch")
     _require(int(payload.get("renderDpi", 0)) == 72, "V2c Barley render DPI mismatch")
-    _require(payload.get("renderer") == "pdfium-via-render_pdf.py", "V2c Barley renderer mismatch")
+    _require(payload.get("renderer") == BARLEY_RENDERER, "V2c Barley renderer mismatch")
     _require(payload.get("packageSha256") == EXPECTED_PACKAGE_SHA256, "V2c package SHA mismatch")
     _require(int(payload.get("packageSizeBytes", 0)) == EXPECTED_PACKAGE_SIZE_BYTES, "V2c package size mismatch")
     _require(int(payload.get("repeatCount", 0)) >= 2, "V2c repeat count insufficient")
@@ -90,9 +92,12 @@ def validate_barley_repeat_execution(payload: Mapping[str, Any]) -> dict[str, An
     _require(int(aggregate.get("changedPixelsAcrossRepeats", -1)) == 0, "V2c aggregate changed pixels must be zero")
     _require(float(aggregate.get("maxAbsDiffAcrossRepeats", -1.0)) == 0.0, "V2c aggregate max diff must be zero")
 
-    _require(payload.get("semanticDisposition") == "BLOCKED_INDEPENDENT_EXPECTED_CLASS_ANNOTATION_AND_CORPUS_TARGET_INSUFFICIENT", "V2c Barley semantic disposition must remain blocked")
+    _require(payload.get("semanticDisposition") == SEMANTIC_BLOCKED_DISPOSITION, "V2c Barley semantic disposition must remain blocked")
     _require((payload.get("claimBoundary") or {}).get("semanticPreservation") == "NOT_ESTABLISHED", "V2c semantic preservation cannot be claimed")
     _require((payload.get("claimBoundary") or {}).get("rawPixelDriftIsNotMusicalTruth") is True, "V2c raw-pixel claim boundary missing")
+    correction = payload.get("provenanceCorrection") or {}
+    _require(correction.get("correctRendererLabel") == BARLEY_RENDERER, "V2c renderer provenance correction missing")
+    _require(correction.get("modelOutputHashesChanged") is False, "V2c provenance correction must not rewrite model output hashes")
     for key in (
         "heldoutAccessed",
         "trainingPerformed",
