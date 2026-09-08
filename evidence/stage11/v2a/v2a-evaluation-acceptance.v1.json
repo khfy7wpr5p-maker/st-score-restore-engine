@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "stage11.v2a.acceptance.v1",
+  "artifactType": "stage11_v2a_evaluation_acceptance",
+  "generatedOn": "2026-09-08",
+  "sourceRunCommitSha": "4b4bc6d6c2fac185dea598963866f14075452fb0",
+  "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+  "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
+  "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+  "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+  "modelStateSha256": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+  "device": "Tesla T4",
+  "evidenceCapture": {
+    "operatorProvidedColabArchive": true,
+    "developmentNumericArtifactFullyCaptured": false,
+    "heldoutMetricSegmentCaptured": true,
+    "stage9aArtifactFullyCaptured": true,
+    "developmentGatePassEstablishedByGatedPipelineProgression": true,
+    "note": "The supplied Colab archive preserves the held-out metric/result segment and the complete Stage 9A artifact. The repository runtime permits held-out/Stage 9A only after development evidence reports eligibleForFrozenHeldOutEvaluation=true; therefore progression to both later evaluations establishes the development gate pass without inventing uncaptured development metrics."
+  },
+  "development": {
+    "status": "pass",
+    "developmentGatePassed": true,
+    "eligibleForFrozenHeldOutEvaluation": true,
+    "numericMetricsCommitted": false,
+    "basis": "gated_pipeline_progression"
+  },
+  "heldout": {
+    "status": "completed",
+    "officialHeldOutImages": 352,
+    "metrics": {
+      "pixelL1ImprovementPercent": 53.772181502991145,
+      "edgeL1ImprovementPercent": 7.465588872979961,
+      "falseInkRateDelta": -0.09465780964290552,
+      "inkRecallDelta": -0.037029366940259933,
+      "mseImprovementPercent": -12.064218277766777,
+      "baselinePixelL1": 0.13166854221543128,
+      "restoredPixelL1": 0.06086749471300705,
+      "restoredEdgeL1": 0.030401522108480673,
+      "restoredFalseInkRate": 0.16314628699117087,
+      "restoredInkRecall": 0.8773464360697703,
+      "restoredMse": 0.04155239767648957
+    },
+    "weightsMutated": false,
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false
+  },
+  "stage9a": {
+    "status": "pass",
+    "proxyOnly": true,
+    "metrics": {
+      "baselineEdgeL1": 0.03597768874897156,
+      "baselineFalseInkRate": 0.24091886440874077,
+      "baselineInkRecall": 0.9095879022497684,
+      "baselineMse": 0.03941688409031485,
+      "baselinePixelL1": 0.13122575590386987,
+      "edgeL1ImprovementPercent": 5.336352757154033,
+      "falseInkRateDelta": -0.07233098943834193,
+      "inkRecallDelta": -0.030930931214243174,
+      "mseImprovementPercent": -19.59240047175054,
+      "pixelL1ImprovementPercent": 47.90019887277439,
+      "restoredEdgeL1": 0.03405779236345552,
+      "restoredFalseInkRate": 0.16858787497039884,
+      "restoredInkRecall": 0.8786569710355252,
+      "restoredMse": 0.04713959787477506,
+      "restoredPixelL1": 0.06836835785361473
+    },
+    "weightsMutated": false,
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "heldOutUsedForTraining": false,
+    "heldOutUsedForTuning": false,
+    "omrCorrectnessImplied": false,
+    "musicalTruthImplied": false
+  },
+  "decision": {
+    "preservationGatePassed": true,
+    "heldoutCleanupFloorsPassed": true,
+    "stage9aCleanupFloorsPassed": true,
+    "idealInkRecallTargetReached": false,
+    "mseRegressionObserved": true,
+    "candidateCheckpointFrozen": true,
+    "furtherTuningAgainstConsumedHeldoutForbidden": true,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "nextSafeBoundary": "verify external checkpoint custody and build deterministic Stage 11 inference packaging/smoke validation without tuning against the consumed held-out set"
+  }
+}
