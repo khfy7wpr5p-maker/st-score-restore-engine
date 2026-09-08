@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "stage11.v2c.current-truth.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "startingMainSha": "93f368593c4c32478091b5811dd2be0f2834f1be",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "V2C_FRAMEWORK_READY_EVIDENCE_BLOCKED",
+  "repositoryReconciliation": {
+    "remoteV2bBranchObserved": false,
+    "v2bAssumedMerged": false,
+    "v2cStartedFromVerifiedMain": true
+  },
+  "candidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "weightsFrozen": true
+  },
+  "canonicalCpuProfile": {
+    "device": "CPU",
+    "torch": "2.10.0+cpu",
+    "intraopThreads": 5,
+    "interopThreads": 1,
+    "deterministicAlgorithms": false,
+    "applyBeforePackageLoad": true
+  },
+  "implemented": {
+    "versionedSemanticDetectionContract": true,
+    "twelveClassNamespace": true,
+    "sameClassOneToOneMatching": true,
+    "crossClassMatchingForbidden": true,
+    "duplicateSuppression": true,
+    "detectorFailureAbstention": true,
+    "independentExpectedClassManifestContract": true,
+    "nonCircularCoverageDenominator": true,
+    "conservativeStaffTabLineDetector": true,
+    "failClosedDecisionValidator": true,
+    "corpusPlanValidator": true
+  },
+  "semanticClassSupport": {
+    "interfaceClasses": [
+      "staff_line",
+      "tab_line",
+      "notehead",
+      "stem",
+      "beam_or_flag",
+      "rest",
+      "accidental",
+      "clef",
+      "barline",
+      "tie_or_slur",
+      "tab_digit",
+      "tab_string"
+    ],
+    "currentlyImplementedAutomaticDetectors": [
+      "staff_line",
+      "tab_line"
+    ],
+    "otherClasses": "supported by the evidence interface but intentionally abstain until a trusted inference-only detector or independently validated rule detector is admitted"
+  },
+  "corpus": {
+    "approvedDevelopmentInventory": {
+      "sourceFamilyCount": 3,
+      "pageCount": 7,
+      "targetSourceFamilies": 5,
+      "targetPages": 20,
+      "targetMet": false
+    },
+    "existingV2aShadowRunnerExecutable": {
+      "sourceFamilyCount": 2,
+      "pageCount": 5
+    },
+    "newlyReconciledDevelopmentFamily": {
+      "datasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "pageCount": 2,
+      "inputKind": "digital_pdf",
+      "executionStatus": "approved_inventory_only_v2c_digital_pdf_execution_adapter_pending"
+    }
+  },
+  "independentExpectedClassEvidence": {
+    "manifestPageCount": 7,
+    "independentlyAnnotatedPresentOrAbsentClassCount": 0,
+    "annotationCoverage": 0.0,
+    "automaticSemanticPassEvidenceAvailable": false,
+    "reason": "catalog notation metadata is not promoted into per-class ground truth; detector output is forbidden as expected-presence provenance"
+  },
+  "determinism": {
+    "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
+    "v2cRepeatExecutionPerformedOnThisBranch": false,
+    "claim": "no new V2c determinism or semantic-preservation pass claim has been made"
+  },
+  "remainingBlockers": [
+    "approved corpus below 5 independent source families",
+    "approved corpus below 20 pages",
+    "independent per-page expected-class annotation not yet established",
+    "trusted automatic detector coverage currently limited to staff_line/tab_line",
+    "Barley digital-PDF V2c execution adapter not yet exercised",
+    "frozen-package V2c repeat execution evidence not yet produced"
+  ],
+  "productionBoundaries": {
+    "sharedMusicSafetyValidatorModified": false,
+    "httpApiModified": false,
+    "openApiModified": false,
+    "normalJobServiceModified": false,
+    "productionRestorationEnabled": false
+  },
+  "authorization": {
+    "trainingAuthorized": false,
+    "heldOutAccessAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "complete V2c CI, add approved non-held-out families without relaxing rights/custody rules, establish independent expected-class labels, then execute the exact frozen package twice under the canonical CPU profile"
+}
