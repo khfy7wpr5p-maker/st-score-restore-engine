@@ -1,0 +1,118 @@
+{
+  "artifactType": "stage11_v2a_shadow_current_truth",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "2c50333eab663d22a817bc2b8cfa4594aa60925b",
+  "implementationBranch": "stage11-v2a-shadow-job-handoff",
+  "state": "SHADOW_JOB_HANDOFF_VALIDATED",
+  "contractId": "stage11.v2a.shadow-job-handoff.synthetic-nonheldout.v1",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "evidenceRepoPath": "evidence/stage11/v2a/v2a-shadow-job-handoff-evidence.v1.json",
+  "contract": {
+    "artifacts": {
+      "shadowCanReplaceCurrentCandidate": false,
+      "shadowCanReplaceSafetyReport": false,
+      "shadowCandidateRole": "stage11_v2a_shadow_candidate",
+      "shadowEvidenceRole": "stage11_v2a_shadow_evidence",
+      "shadowSelectable": false
+    },
+    "authorization": {
+      "finalProductionModelSelectionAuthorized": false,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "shadowIntegrationValidationAuthorized": true,
+      "stage12EntryAuthorized": false
+    },
+    "candidate": {
+      "frozen": true,
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "packageSizeBytes": 7817857
+    },
+    "comparison": {
+      "automaticPromotionAllowed": false,
+      "metrics": [
+        "meanAbsDiff",
+        "maxAbsDiff",
+        "changedPixelFraction"
+      ],
+      "purpose": "observational_only",
+      "qualityDecisionAllowed": false
+    },
+    "contractId": "stage11.v2a.shadow-job-handoff.synthetic-nonheldout.v1",
+    "jobService": {
+      "allCurrentAttemptPagesObservedAtomically": true,
+      "existingHttpApiModified": false,
+      "integrationMode": "explicit-in-process-shadow-call",
+      "nativeGrayscalePngRequired": true,
+      "networkRouteRegistered": false,
+      "openApiModified": false,
+      "requiredJobState": "AWAITING_REVIEW",
+      "sourceDataKinds": [
+        "nonheldout_test_only",
+        "synthetic_only"
+      ],
+      "sourceMediaType": "image/png"
+    }
+  },
+  "implementation": {
+    "shadowObserverReady": true,
+    "explicitShadowJobServiceSubclassReady": true,
+    "atomicCurrentAttemptObservationReady": true,
+    "idempotentShadowRunKeyReady": true,
+    "shadowArtifactsStoredWithNonPrimaryRoles": true,
+    "shadowArtifactsUnselectable": true,
+    "auditEventReady": true,
+    "existingHttpApiUntouched": true,
+    "openApiUntouched": true,
+    "runApiUntouched": true,
+    "repositoryTestsReady": true,
+    "executionEvidenceImported": true
+  },
+  "execution": {
+    "exactFrozenPackageExecuted": true,
+    "sourceDataKind": "synthetic_only",
+    "inputShape": [
+      700,
+      900
+    ],
+    "tileCount": 4,
+    "sourceSha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+    "primaryCandidateSha256": "7a88c769440724c19361208590fc5c9ac0f343c451f20e4ec0c70b44eb7f14a6",
+    "shadowCandidateSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "meanAbsDiff": 0.02791149541735649,
+    "maxAbsDiff": 0.498039186000824,
+    "changedPixelFraction": 0.08505079365079365,
+    "qualityDecisionMade": false,
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "opencv": "4.13.0",
+      "numpy": "2.3.5",
+      "device": "CPU"
+    }
+  },
+  "authorization": {
+    "shadowIntegrationValidationAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "safety": {
+    "checkpointWeightsImmutable": true,
+    "optimizerForbidden": true,
+    "backpropagationForbidden": true,
+    "heldoutAccessForbidden": true,
+    "privateStudentUserDataForbidden": true,
+    "realUserDataForbidden": true,
+    "shadowSelectionForbidden": true,
+    "primaryCandidateReplacementForbidden": true,
+    "safetyReportReplacementForbidden": true,
+    "automaticPromotionForbidden": true,
+    "networkRouteRegistrationForbidden": true
+  },
+  "nextSafeBoundary": "approved-nonheldout-shadow-corpus-observation"
+}
