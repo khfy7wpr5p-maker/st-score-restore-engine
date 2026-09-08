@@ -1,0 +1,70 @@
+name: Stage 11 V2a shadow corpus validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage11-v2a-shadow-corpus:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate shadow corpus evidence and current truth
+        run: python tools/validate_stage11_v2a_shadow_corpus.py
+
+      - name: Run shadow corpus tests
+        run: python -m unittest tests.test_stage11_v2a_shadow_corpus -v
+
+      - name: Compile shadow corpus sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2a_shadow_corpus.py \
+            src/st_score_restore/stage11_v2a_shadow_corpus_current_truth.py \
+            tools/run_stage11_v2a_shadow_corpus.py \
+            tools/validate_stage11_v2a_shadow_corpus.py
+
+      - name: Verify committed JSON artifacts
+        run: |
+          python -m json.tool evidence/stage11/v2a/v2a-shadow-corpus-evidence.v1.json > /dev/null
+          python -m json.tool docs/live/ST_SCORE_RESTORE_STAGE11_V2A_SHADOW_CORPUS_CURRENT_TRUTH.json > /dev/null
+
+      - name: Verify production and normal application surfaces stay untouched
+        shell: bash
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          CHANGED="$(git diff --name-only "$BASE" HEAD)"
+          if echo "$CHANGED" | grep -E '^(src/st_score_restore/http_api.py|api/openapi.v1.json|tools/run_api.py|src/st_score_restore/job_service.py)$'; then
+            echo "Stage 11 non-held-out shadow corpus boundary must not modify public/normal application surfaces"
+            exit 1
+          fi
