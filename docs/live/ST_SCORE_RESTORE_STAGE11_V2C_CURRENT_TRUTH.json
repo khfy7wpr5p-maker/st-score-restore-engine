@@ -36,7 +36,8 @@
     "conservativeStaffTabLineDetector": true,
     "failClosedDecisionValidator": true,
     "corpusPlanValidator": true,
-    "exactRepeatEvidenceValidator": true
+    "barleyExactRepeatEvidenceValidator": true,
+    "full20ExactRepeatEvidenceValidator": true
   },
   "semanticClassSupport": {
     "interfaceClasses": [
@@ -98,19 +99,17 @@
     ]
   },
   "independentExpectedClassEvidence": {
-    "manifestPageCount": 7,
+    "manifestPageCount": 20,
     "targetCorpusPageCount": 20,
-    "manifestExpansionPendingPages": 13,
+    "manifestExpansionPendingPages": 0,
     "independentlyAnnotatedPresentOrAbsentClassCount": 0,
     "annotationCoverage": 0.0,
     "automaticSemanticPassEvidenceAvailable": false,
-    "reason": "corpus target is met, but the independent expected-class manifest still covers only the previously cataloged 7 pages and contains no independently established present/absent labels"
+    "reason": "the manifest now covers all 20 selected development pages, but every semantic class remains unknown_review_required until teacher or independent ground-truth evidence establishes present/absent states"
   },
   "determinism": {
     "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
-    "v2cRepeatExecutionPerformedOnThisBranch": true,
-    "newV2cExecution": {
-      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+    "barleyCrossCheck": {
       "pageCount": 2,
       "repeatCount": 2,
       "allOutputBytesStable": true,
@@ -119,13 +118,33 @@
       "maxAbsDiffAcrossRepeats": 0,
       "result": "PASS_FOR_BARLEY_CANONICAL_RUNTIME_AND_TWO_PAGE_SOURCE"
     },
-    "claim": "corpus admission target is now met; full 20-page canonical repeat execution and semantic preservation remain unestablished"
+    "full20V2cExecution": {
+      "sourceFamilyCount": 5,
+      "pageCount": 20,
+      "repeatCountPerPage": 2,
+      "allOutputBytesStable": true,
+      "allDecodedPixelsStable": true,
+      "changedPixelsAcrossRepeats": 0,
+      "maxAbsDiffAcrossRepeats": 0,
+      "result": "PASS_FOR_CANONICAL_RUNTIME_AND_FULL_20_PAGE_DEVELOPMENT_CORPUS",
+      "evidence": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json"
+    },
+    "claim": "full 5-family/20-page development-corpus determinism is established under the recorded canonical CPU profile; semantic preservation remains unestablished"
   },
+  "provenanceCorrections": [
+    {
+      "artifact": "evidence/stage11/v2c/v2c-barley-repeat-execution.v1.json",
+      "field": "renderer",
+      "previousValue": "pdfium-via-render_pdf.py",
+      "correctValue": "pdftoppm-via-render_pdf.py",
+      "basis": "the committed Barley source-render and decoded-pixel hashes reproduce exactly with pdftoppm at 72 DPI and do not reproduce with pdfium at 72 DPI",
+      "modelOutputHashesChanged": false
+    }
+  ],
   "remainingBlockers": [
-    "independent expected-class manifest not yet expanded from 7 to all 20 selected pages",
     "independent per-page expected-class present/absent annotation not yet established",
     "trusted automatic detector coverage currently limited to staff_line/tab_line",
-    "full target-corpus class-aware semantic preservation execution remains pending"
+    "full target-corpus class-aware semantic preservation scoring cannot be completed until independent expected-class labels exist"
   ],
   "productionBoundaries": {
     "sharedMusicSafetyValidatorModified": false,
@@ -141,5 +160,5 @@
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "expand the independent expected-class manifest to the 13 newly selected Carulli/Bach pages, obtain independent class labels, then run the exact frozen-package two-repeat semantic evidence set under the canonical CPU profile"
+  "nextSafeBoundary": "obtain independent teacher/ground-truth present/absent labels for the applicable semantic classes on the 20-page development corpus, then compute class-aware semantic preservation evidence without using detector output as ground truth"
 }
