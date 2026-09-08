@@ -1,0 +1,128 @@
+{
+  "artifactType": "stage11_v2a_shadow_corpus_current_truth",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "fd9f382c6130e4edb5b872b016da5e30081241ff",
+  "implementationBranch": "stage11-v2a-nonheldout-shadow-corpus",
+  "state": "NONHELDOUT_SHADOW_CORPUS_OBSERVED",
+  "contractId": "stage11.v2a.shadow-corpus.approved-nonheldout.v1",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "evidenceRepoPath": "evidence/stage11/v2a/v2a-shadow-corpus-evidence.v1.json",
+  "execution": {
+    "completed": true,
+    "sourceDataKind": "nonheldout_test_only",
+    "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+    "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+    "sourceSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+    "sourceByteSize": 1182561,
+    "eligibilityClass": "open_corpus",
+    "split": "development",
+    "purpose": "quality_evaluation",
+    "pageObservationCount": 4,
+    "sourceFamilyCount": 1,
+    "renderDpi": 72,
+    "meanOfPageMeanAbsDiff": 0.06529849022626877,
+    "meanChangedPixelFraction": 0.7433260120585702,
+    "qualityDecisionMade": false,
+    "automaticPromotionPerformed": false,
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "opencv": "4.13.0",
+      "numpy": "2.3.5",
+      "device": "CPU"
+    }
+  },
+  "implementation": {
+    "developmentOpenCorpusEligibilityGateReady": true,
+    "heldOutFailClosedReady": true,
+    "exactSourceIdentityGateReady": true,
+    "rasterOnlyPdfTransportReady": true,
+    "shapeLockedOpenCvComparatorReady": true,
+    "exactFrozenV2aObserverReady": true,
+    "observationalMetricsReady": true,
+    "committedRealExecutionEvidenceReady": true,
+    "repositoryValidationReady": true
+  },
+  "safety": {
+    "heldOutAccessForbidden": true,
+    "trainingForbidden": true,
+    "tuningForbidden": true,
+    "optimizerForbidden": true,
+    "backpropagationForbidden": true,
+    "weightMutationForbidden": true,
+    "privateStudentUserDataForbidden": true,
+    "shadowSelectionForbidden": true,
+    "automaticPromotionForbidden": true,
+    "productionInferenceForbidden": true,
+    "stage12EntryForbidden": true
+  },
+  "authorization": {
+    "shadowCorpusObservationAuthorized": true,
+    "trainingAuthorized": false,
+    "tuningAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "contract": {
+    "contractId": "stage11.v2a.shadow-corpus.approved-nonheldout.v1",
+    "candidate": {
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "packageSizeBytes": 7817857,
+      "frozen": true
+    },
+    "admission": {
+      "eligibilityClass": "open_corpus",
+      "split": "development",
+      "requiredPermission": "quality_evaluation",
+      "requiredPermissionStatus": "granted",
+      "requiredReviewStatus": "approved",
+      "requiredRevocationStatus": "not_revoked",
+      "requiredPrivacyClassification": "none",
+      "allowedSourceKinds": ["public_domain"],
+      "supportedInputKinds": ["png", "scanned_pdf"],
+      "supportedMediaTypes": ["application/pdf", "image/png"],
+      "heldOutForbidden": true
+    },
+    "transport": {
+      "pdfPolicy": "raster_only_pages",
+      "defaultRenderDpi": 72,
+      "grayscaleTransportRequired": true,
+      "normalizedDerivativeBecomesDatasetItem": false,
+      "sourceBytesModified": false
+    },
+    "primaryComparator": {
+      "engine": "opencv_safe_baseline",
+      "geometryLockedForShadowComparison": true,
+      "configuration": {
+        "orientation_enabled": false,
+        "deskew_enabled": false,
+        "perspective_enabled": false,
+        "crop_enabled": false
+      },
+      "selectable": false
+    },
+    "comparison": {
+      "purpose": "observational_only",
+      "metrics": ["meanAbsDiff", "maxAbsDiff", "changedPixelFraction", "sourceToPrimaryMeanAbsDiff", "sourceToShadowMeanAbsDiff"],
+      "qualityDecisionAllowed": false,
+      "tuningAllowed": false,
+      "automaticPromotionAllowed": false
+    },
+    "authorization": {
+      "shadowCorpusObservationAuthorized": true,
+      "trainingAuthorized": false,
+      "tuningAuthorized": false,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "finalProductionModelSelectionAuthorized": false,
+      "stage12EntryAuthorized": false
+    }
+  },
+  "nextSafeBoundary": "broaden-nonheldout-shadow-corpus-source-family-coverage"
+}
