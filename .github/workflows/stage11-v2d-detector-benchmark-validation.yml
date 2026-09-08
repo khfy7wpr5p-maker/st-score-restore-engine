@@ -5,6 +5,7 @@ on:
     paths:
       - "src/st_score_restore/stage11_v2d_detector_benchmark.py"
       - "src/st_score_restore/stage11_v2d_colab_runner.py"
+      - "src/st_score_restore/stage11_v2d_colab_resume.py"
       - "tests/test_stage11_v2d_detector_benchmark.py"
       - "evidence/stage11/v2d/**"
       - "notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb"
@@ -15,6 +16,7 @@ on:
     paths:
       - "src/st_score_restore/stage11_v2d_detector_benchmark.py"
       - "src/st_score_restore/stage11_v2d_colab_runner.py"
+      - "src/st_score_restore/stage11_v2d_colab_resume.py"
       - "tests/test_stage11_v2d_detector_benchmark.py"
       - "evidence/stage11/v2d/**"
       - "notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb"
@@ -46,6 +48,7 @@ jobs:
           python -m py_compile \
             src/st_score_restore/stage11_v2d_detector_benchmark.py \
             src/st_score_restore/stage11_v2d_colab_runner.py \
+            src/st_score_restore/stage11_v2d_colab_resume.py \
             tests/test_stage11_v2d_detector_benchmark.py
       - name: Validate V2d JSON and notebook syntax
         run: |
