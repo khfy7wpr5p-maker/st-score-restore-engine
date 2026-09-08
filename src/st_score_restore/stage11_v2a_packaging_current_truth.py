@@ -15,10 +15,16 @@ from .stage11_v2a_packaging import (
 )
 
 ARTIFACT_TYPE = "stage11_v2a_packaging_current_truth"
-SCHEMA_VERSION = "1.0.0"
-EXPECTED_STATE = "IMPLEMENTATION_READY_EXECUTION_PENDING"
-EXPECTED_BASE_MAIN_SHA = "775a4b2b1d542b54ee03c901109e7ad7496f6f3f"
-EXPECTED_BRANCH = "stage11-v2a-candidate-packaging"
+SCHEMA_VERSION = "1.1.0"
+EXPECTED_STATE = "EXECUTION_COMPLETED_CANDIDATE_PACKAGED"
+EXPECTED_BASE_MAIN_SHA = "b39b7d56aac5fccb12332d0336070bee80523cef"
+EXPECTED_BRANCH = "stage11-v2a-package-evidence-acceptance"
+EXPECTED_PACKAGE_SHA256 = "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234"
+EXPECTED_PACKAGE_SIZE_BYTES = 7817857
+EXPECTED_EVIDENCE_REPO_PATH = "evidence/stage11/v2a/v2a-candidate-package-evidence.v1.json"
+EXPECTED_DRIVE_FOLDER_ID = "1oBL1P_6slQ0j5aOguCLzJYIKAgQXnCXL"
+EXPECTED_DRIVE_EVIDENCE_FILE_ID = "1d6WRb43tItsdjTtarAHkwccdn2dKWP8D"
+EXPECTED_DRIVE_PACKAGE_FILE_ID = "1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD"
 
 
 class Stage11V2aPackagingCurrentTruthError(ValueError):
@@ -64,15 +70,36 @@ def validate_stage11_v2a_packaging_current_truth(payload: Mapping[str, Any]) -> 
         "modelStateShaVerificationReady",
         "torchscriptReloadParityReady",
         "heldoutAccessForbidden",
+        "executionEvidenceImported",
+        "drivePackageStored",
+        "driveEvidenceStored",
     ):
         _require(implementation.get(key) is True, f"implementation flag must be true: {key}")
 
     execution = payload.get("execution") or {}
-    _require(execution.get("completed") is False, "packaging execution must remain pending until real evidence exists")
-    _require(execution.get("packageSha256") is None, "package SHA must remain null before execution")
-    _require(execution.get("packageSizeBytes") is None, "package size must remain null before execution")
-    _require(str(execution.get("evidencePath") or "").endswith("candidate_package_evidence.v1.json"), "evidence path mismatch")
-    _require(str(execution.get("packagePath") or "").endswith("v2a_candidate_512.torchscript.pt"), "package path mismatch")
+    _require(execution.get("completed") is True, "packaging execution must be completed")
+    _require(execution.get("packageSha256") == EXPECTED_PACKAGE_SHA256, "package SHA mismatch")
+    _require(int(execution.get("packageSizeBytes", 0)) == EXPECTED_PACKAGE_SIZE_BYTES, "package size mismatch")
+    _require(execution.get("evidenceRepoPath") == EXPECTED_EVIDENCE_REPO_PATH, "evidence repo path mismatch")
+    _require(str(execution.get("evidencePath") or "").endswith("candidate_package_evidence.v1.json"), "Drive evidence path mismatch")
+    _require(str(execution.get("packagePath") or "").endswith("v2a_candidate_512.torchscript.pt"), "Drive package path mismatch")
+    _require(execution.get("driveFolderId") == EXPECTED_DRIVE_FOLDER_ID, "Drive package folder mismatch")
+    _require(execution.get("driveEvidenceFileId") == EXPECTED_DRIVE_EVIDENCE_FILE_ID, "Drive evidence file mismatch")
+    _require(execution.get("drivePackageFileId") == EXPECTED_DRIVE_PACKAGE_FILE_ID, "Drive package file mismatch")
+
+    environment = execution.get("environment") or {}
+    _require(environment.get("device") == "CPU", "packaging must have executed on CPU")
+    _require(bool(environment.get("python")), "Python execution version missing")
+    _require(bool(environment.get("torch")), "Torch execution version missing")
+
+    smoke = execution.get("smokeTest") or {}
+    _require(smoke.get("inputShape") == [1, 1, 512, 512], "smoke input shape mismatch")
+    _require(smoke.get("outputShape") == [1, 1, 512, 512], "smoke output shape mismatch")
+    _require(smoke.get("finite") is True, "smoke output must be finite")
+    _require(float(smoke.get("outputMin", -1.0)) >= 0.0, "smoke output below zero")
+    _require(float(smoke.get("outputMax", 2.0)) <= 1.0, "smoke output above one")
+    _require(float(smoke.get("repeatMaxAbsDiff", 1.0)) <= 1e-7, "repeat determinism failed")
+    _require(float(smoke.get("reloadMaxAbsDiff", 1.0)) <= 1e-5, "TorchScript reload parity failed")
 
     authorization = payload.get("authorization") or {}
     _require(authorization.get("candidatePackagingAuthorized") is True, "candidate packaging must be authorized")
@@ -97,9 +124,13 @@ def validate_stage11_v2a_packaging_current_truth(payload: Mapping[str, Any]) -> 
     return {
         "state": EXPECTED_STATE,
         "implementationReady": True,
-        "executionCompleted": False,
+        "executionCompleted": True,
         "candidateCheckpointFrozen": True,
+        "portableCandidateCreated": True,
         "candidatePackagingAuthorized": True,
+        "packageSha256": EXPECTED_PACKAGE_SHA256,
+        "packageSizeBytes": EXPECTED_PACKAGE_SIZE_BYTES,
+        "evidenceRepoPath": EXPECTED_EVIDENCE_REPO_PATH,
         "productionInferenceAuthorized": False,
         "stage12EntryAuthorized": False,
     }

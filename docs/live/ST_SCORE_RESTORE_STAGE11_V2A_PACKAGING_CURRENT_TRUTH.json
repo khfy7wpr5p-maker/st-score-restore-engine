@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "artifactType": "stage11_v2a_packaging_current_truth",
   "generatedOn": "2026-09-08",
-  "baseMainSha": "775a4b2b1d542b54ee03c901109e7ad7496f6f3f",
-  "implementationBranch": "stage11-v2a-candidate-packaging",
-  "state": "IMPLEMENTATION_READY_EXECUTION_PENDING",
+  "baseMainSha": "b39b7d56aac5fccb12332d0336070bee80523cef",
+  "implementationBranch": "stage11-v2a-package-evidence-acceptance",
+  "state": "EXECUTION_COMPLETED_CANDIDATE_PACKAGED",
   "candidate": {
     "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
     "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
@@ -30,14 +30,36 @@
     "checkpointShaVerificationReady": true,
     "modelStateShaVerificationReady": true,
     "torchscriptReloadParityReady": true,
-    "heldoutAccessForbidden": true
+    "heldoutAccessForbidden": true,
+    "executionEvidenceImported": true,
+    "drivePackageStored": true,
+    "driveEvidenceStored": true
   },
   "execution": {
-    "completed": false,
-    "packageSha256": null,
-    "packageSizeBytes": null,
+    "completed": true,
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "evidenceRepoPath": "evidence/stage11/v2a/v2a-candidate-package-evidence.v1.json",
     "evidencePath": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/candidate_package_evidence.v1.json",
-    "packagePath": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/v2a_candidate_512.torchscript.pt"
+    "packagePath": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/v2a_candidate_512.torchscript.pt",
+    "driveFolderId": "1oBL1P_6slQ0j5aOguCLzJYIKAgQXnCXL",
+    "driveEvidenceFileId": "1d6WRb43tItsdjTtarAHkwccdn2dKWP8D",
+    "drivePackageFileId": "1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD",
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "device": "CPU"
+    },
+    "smokeTest": {
+      "inputShape": [1, 1, 512, 512],
+      "outputShape": [1, 1, 512, 512],
+      "finite": true,
+      "outputMin": 0.0,
+      "outputMax": 1.0,
+      "outputMean": 0.6104711294174194,
+      "repeatMaxAbsDiff": 0.0,
+      "reloadMaxAbsDiff": 0.0
+    }
   },
   "authorization": {
     "candidatePackagingAuthorized": true,
@@ -57,5 +79,5 @@
   },
   "notebook": "notebooks/stage11_v2a_frozen_candidate_packaging_colab.ipynb",
   "runtime": "tools/stage11_v2a_candidate_packaging.py",
-  "nextSafeBoundary": "execute the CPU packaging notebook against the exact frozen Drive checkpoint and return the generated candidate_package_evidence.v1.json; production and Stage 12 remain closed"
+  "nextSafeBoundary": "validate the frozen portable candidate through non-training consumer/inference integration checks using synthetic or non-heldout inputs; production promotion and Stage 12 remain closed"
 }

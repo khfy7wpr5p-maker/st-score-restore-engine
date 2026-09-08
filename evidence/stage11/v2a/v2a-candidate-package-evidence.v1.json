@@ -1,0 +1,90 @@
+{
+  "artifactType": "stage11_v2a_candidate_package_evidence",
+  "authorization": {
+    "candidatePackagingAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "backpropagationExecuted": false,
+  "checkpointPath": "Google Drive file id 1ABPRUmcpOK4bqklRCxJbbMqaobuQPIK2 / best.pt",
+  "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+  "checkpointSizeBytes": 23458927,
+  "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
+  "contract": {
+    "authorization": {
+      "candidatePackagingAuthorized": true,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "stage12EntryAuthorized": false
+    },
+    "baseChannels": 32,
+    "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+    "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
+    "contractId": "stage11.v2a.frozen-candidate-package.v1",
+    "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+    "input": {
+      "channels": 1,
+      "dtype": "float32",
+      "inkValue": 0.0,
+      "layout": "NCHW",
+      "patchHeight": 512,
+      "patchWidth": 512,
+      "range": [0.0, 1.0],
+      "whiteValue": 1.0
+    },
+    "modelFamily": "Residual U-Net",
+    "modelStateSha256": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+    "output": {
+      "dtype": "float32",
+      "finiteRequired": true,
+      "layout": "NCHW",
+      "range": [0.0, 1.0],
+      "shapeMustEqualInput": true
+    },
+    "packaging": {
+      "backpropagationAllowed": false,
+      "fixedValidationPatch": [1, 1, 512, 512],
+      "format": "torchscript-trace",
+      "heldoutAccessAllowed": false,
+      "optimizerAllowed": false,
+      "reloadMaxAbsDiff": 1e-05,
+      "repeatMaxAbsDiff": 1e-07,
+      "weightsMayMutate": false
+    },
+    "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b"
+  },
+  "contractId": "stage11.v2a.frozen-candidate-package.v1",
+  "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+  "environment": {
+    "device": "CPU",
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu"
+  },
+  "heldOutAccessed": false,
+  "modelStateSha256After": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+  "modelStateSha256Before": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+  "optimizerCreated": false,
+  "package": {
+    "format": "torchscript-trace",
+    "path": "v2a_candidate_512.torchscript.pt",
+    "sha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "sizeBytes": 7817857
+  },
+  "repoCommitSha": "b39b7d56aac5fccb12332d0336070bee80523cef",
+  "schemaVersion": "stage11.v2a.package-evidence.v1",
+  "smokeTest": {
+    "finite": true,
+    "inputShape": [1, 1, 512, 512],
+    "outputMax": 1.0,
+    "outputMean": 0.6104711294174194,
+    "outputMin": 0.0,
+    "outputShape": [1, 1, 512, 512],
+    "probe": "float32_linear_ramp_0_to_1",
+    "reloadMaxAbsDiff": 0.0,
+    "repeatMaxAbsDiff": 0.0
+  },
+  "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+  "status": "completed",
+  "weightsMutated": false
+}
