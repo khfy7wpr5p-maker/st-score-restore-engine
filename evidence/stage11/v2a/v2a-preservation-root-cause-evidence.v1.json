@@ -1,0 +1,198 @@
+{
+  "artifactType": "stage11_v2a_preservation_root_cause_execution",
+  "schemaVersion": "stage11.v2a.preservation-root-cause-execution.v1",
+  "status": "completed",
+  "contractId": "stage11.v2a.preservation-root-cause.nonheldout.v1",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "environment": {
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu",
+    "opencv": "4.13.0",
+    "numpy": "2.3.5",
+    "device": "CPU"
+  },
+  "sources": {
+    "wikimedia": {
+      "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+      "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+      "byteSize": 34636,
+      "split": "development"
+    },
+    "beethoven": {
+      "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+      "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+      "sha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+      "byteSize": 1182561,
+      "split": "development"
+    }
+  },
+  "determinism": {
+    "rootCauseFinding": "cpu_intraop_thread_profile_changes_decoded_output_pixels",
+    "scopeClaim": "sufficient_for_wikimedia_pr208_pr209_drift_not_claimed_for_all_five_pages",
+    "threadProfiles": [
+      {
+        "intraopThreads": 4,
+        "shadowSha256": "6ecdd820edb5de0bbcf5a560f32015e70f3f44e5d400af58d2de63f01a4711f1",
+        "historicalIdentity": "pr209_wikimedia"
+      },
+      {
+        "intraopThreads": 5,
+        "shadowSha256": "0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3",
+        "historicalIdentity": "pr208_wikimedia"
+      },
+      {
+        "intraopThreads": 8,
+        "shadowSha256": "6ecdd820edb5de0bbcf5a560f32015e70f3f44e5d400af58d2de63f01a4711f1",
+        "historicalIdentity": "pr209_wikimedia"
+      }
+    ],
+    "repeatabilityAtThreads5": {
+      "run1Sha256": "0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3",
+      "run2Sha256": "0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3",
+      "decodedMaxAbsDiff": 0.0,
+      "byteIdentical": true,
+      "pixelIdentical": true
+    },
+    "crossProfileDifference": {
+      "profilesCompared": [5, 4],
+      "changedPixelCount": 1,
+      "decodedMaxAbsDiff": 1,
+      "pngMetadataOnlyDifference": false
+    },
+    "interpretation": {
+      "weightsChanged": false,
+      "packageChanged": false,
+      "sourceChanged": false,
+      "threadProfileIsSufficientCauseForObservedWikimediaHashSwitch": true,
+      "threadProfileIsClaimedAsSoleCauseForAllHistoricalPageDrift": false
+    }
+  },
+  "validatorRedesign": {
+    "sharedMusicSafetyValidatorModified": false,
+    "stage11OnlyAnalysisLayer": true,
+    "nearEdgeToleranceRadiusPixels": 2,
+    "singleMaximumComponentShiftRejectVetoRemovedFromStage11Interpretation": true,
+    "unreliable72DpiSystemCountSemanticVetoRemovedFromStage11Interpretation": true,
+    "wikimedia": {
+      "legacyRawInventedDarkPixels": 29866,
+      "sourceDarkPixels": 97665,
+      "rawInventionWithin1pxFraction": 0.8093,
+      "rawInventionWithin2pxFraction": 0.9174,
+      "tolerantLostDarkPixels2px": 5,
+      "distantInventedDarkPixels2px": 2467,
+      "distantInventedFraction2px": 0.02526,
+      "componentShiftDistribution": {
+        "medianPixels": 0.60,
+        "p95Pixels": 1.45,
+        "p99Pixels": 4.26,
+        "maxPixels": 19.30,
+        "singleMaximumUsedAsRejectVeto": false
+      },
+      "legacyVerdict": "reject",
+      "legacyRejectReasons": [
+        "component_shift_severe",
+        "symbol_invention_severe"
+      ],
+      "redesignedVerdict": "review_required",
+      "automaticApproval": false,
+      "semanticIdentityEstablished": false
+    },
+    "beethoven": {
+      "renderDpi": 72,
+      "pageCount": 4,
+      "geometryInterpretation": "detector_output_not_semantic_veto_when_recognition_is_unreliable",
+      "pages": [
+        {
+          "pageIndex": 0,
+          "redesignedVerdict": "reject",
+          "blockingCategory": "robust_component_preservation_and_or_distant_dark_change"
+        },
+        {
+          "pageIndex": 1,
+          "redesignedVerdict": "reject",
+          "blockingCategory": "robust_component_preservation_and_or_distant_dark_change",
+          "legacyStaffSystemCount": "1_to_8",
+          "legacyStaffLineBreakFraction": 0.13275613,
+          "legacyGeometrySemanticVetoApplicable": false
+        },
+        {
+          "pageIndex": 2,
+          "redesignedVerdict": "reject",
+          "blockingCategory": "robust_component_preservation_and_or_distant_dark_change"
+        },
+        {
+          "pageIndex": 3,
+          "redesignedVerdict": "reject",
+          "blockingCategory": "robust_component_preservation_and_or_distant_dark_change"
+        }
+      ]
+    }
+  },
+  "aggregate": {
+    "pageCount": 5,
+    "sourceFamilyCount": 2,
+    "verdictCounts": {
+      "pass": 0,
+      "reject": 4,
+      "review_required": 1
+    },
+    "preservationDisposition": "blocked",
+    "automaticPromotionPerformed": false
+  },
+  "safety": {
+    "heldOutAccessed": false,
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "weightsMutated": false,
+    "trainingPerformed": false,
+    "tuningPerformed": false,
+    "realUserDataUsed": false,
+    "studentDataUsed": false
+  },
+  "authorization": {
+    "rootCauseAnalysisAuthorized": true,
+    "trainingAuthorized": false,
+    "tuningAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "contract": {
+    "contractId": "stage11.v2a.preservation-root-cause.nonheldout.v1",
+    "candidate": {
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "packageSizeBytes": 7817857,
+      "frozen": true
+    },
+    "scope": {
+      "nonheldoutOnly": true,
+      "stage11AnalysisOnly": true,
+      "sharedMusicSafetyValidatorModified": false,
+      "httpApiModified": false,
+      "normalJobServiceModified": false,
+      "semanticPerClassIdentityClaimed": false,
+      "threadProfileCanAffectCpuOutputBytes": true
+    },
+    "analysis": {
+      "nearEdgeRasterTolerance": "euclidean-distance-transform",
+      "componentShiftStatistic": "distance-gated-nearest-centroid-distribution",
+      "singleMaxShiftIsRejectVeto": false,
+      "unreliable72DpiSystemCountIsSemanticVeto": false,
+      "semanticIdentityRequiredForAutomaticPass": true
+    },
+    "authorization": {
+      "rootCauseAnalysisAuthorized": true,
+      "trainingAuthorized": false,
+      "tuningAuthorized": false,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "finalProductionModelSelectionAuthorized": false,
+      "stage12EntryAuthorized": false
+    }
+  }
+}

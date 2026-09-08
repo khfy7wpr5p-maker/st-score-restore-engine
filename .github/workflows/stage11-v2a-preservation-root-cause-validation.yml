@@ -1,0 +1,45 @@
+name: Stage 11 V2a Preservation Root Cause Validation
+
+on:
+  pull_request:
+    paths:
+      - "src/st_score_restore/stage11_v2a_preservation_root_cause.py"
+      - "tests/test_stage11_v2a_preservation_root_cause.py"
+      - "evidence/stage11/v2a/v2a-preservation-root-cause-evidence.v1.json"
+      - "docs/live/ST_SCORE_RESTORE_STAGE11_V2A_PRESERVATION_ROOT_CAUSE_CURRENT_TRUTH.json"
+      - "docs/adr/0033-stage11-v2a-preservation-root-cause-closure.md"
+      - ".github/workflows/stage11-v2a-preservation-root-cause-validation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/st_score_restore/stage11_v2a_preservation_root_cause.py"
+      - "tests/test_stage11_v2a_preservation_root_cause.py"
+      - "evidence/stage11/v2a/v2a-preservation-root-cause-evidence.v1.json"
+      - "docs/live/ST_SCORE_RESTORE_STAGE11_V2A_PRESERVATION_ROOT_CAUSE_CURRENT_TRUTH.json"
+      - "docs/adr/0033-stage11-v2a-preservation-root-cause-closure.md"
+      - ".github/workflows/stage11-v2a-preservation-root-cause-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository
+        run: python -m pip install -e .
+      - name: Validate Stage 11 root-cause evidence and tests
+        run: python -m unittest tests.test_stage11_v2a_preservation_root_cause -v
+      - name: Revalidate preceding Stage 11 preservation boundary
+        run: python -m unittest tests.test_stage11_v2a_shadow_preservation_review -v
+      - name: Compile Stage 11 root-cause module
+        run: python -m py_compile src/st_score_restore/stage11_v2a_preservation_root_cause.py tests/test_stage11_v2a_preservation_root_cause.py

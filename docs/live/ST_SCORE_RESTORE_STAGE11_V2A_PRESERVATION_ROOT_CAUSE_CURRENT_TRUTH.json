@@ -1,0 +1,54 @@
+{
+  "artifactType": "stage11_v2a_preservation_root_cause_current_truth",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "7966102edc40aa6ab3ba5216342ae34bc237acdb",
+  "implementationBranch": "stage11-v2a-preservation-root-cause-closure",
+  "state": "ROOT_CAUSE_DIAGNOSED_VALIDATOR_REDESIGN_BLOCKED",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "evidenceRepoPath": "evidence/stage11/v2a/v2a-preservation-root-cause-evidence.v1.json",
+  "determinism": {
+    "wikimediaPr208Pr209ThreadProfileRootCauseEstablished": true,
+    "allFiveHistoricalDriftsFullyExplained": false,
+    "exactPackageUnchanged": true,
+    "exactSourceUnchanged": true,
+    "weightsMutated": false,
+    "finding": "CPU intra-op thread count is sufficient to switch the Wikimedia decoded output between the PR #208 and PR #209 identities; this is not over-claimed as the sole cause of every historical page drift."
+  },
+  "validatorRedesign": {
+    "sharedValidatorChanged": false,
+    "stage11OnlyLayerAdded": true,
+    "nearEdgePixelTolerancePixels": 2,
+    "singleMaximumComponentShiftRejectVeto": false,
+    "unreliable72DpiGeometrySemanticRejectVeto": false,
+    "wikimediaLegacyVerdict": "reject",
+    "wikimediaRedesignedVerdict": "review_required",
+    "redesignedVerdictCounts": {
+      "pass": 0,
+      "reject": 4,
+      "review_required": 1
+    },
+    "preservationDisposition": "blocked",
+    "productionPromotionStillBlocked": true,
+    "reason": "The redesign removes diagnosed false-veto mechanisms without converting unresolved semantic identity or Beethoven preservation risk into a pass."
+  },
+  "boundaries": {
+    "heldOutReaccessed": false,
+    "heldOutRetuningAllowed": false,
+    "trainingPerformed": false,
+    "tuningPerformed": false,
+    "sharedHttpApiModified": false,
+    "normalRestorationJobServiceModified": false,
+    "automaticApproval": false,
+    "automaticPromotion": false
+  },
+  "authorization": {
+    "rootCauseAnalysisAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "freeze a canonical CPU inference execution profile and broaden semantic-preservation evidence on additional approved non-held-out development sources; production promotion and Stage 12 remain closed"
+}
