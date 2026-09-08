@@ -5,7 +5,7 @@
   "sourcePdfSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
   "sourcePdfByteSize": 84689,
   "renderDpi": 72,
-  "renderer": "pdfium-via-render_pdf.py",
+  "renderer": "pdftoppm-via-render_pdf.py",
   "runtime": {
     "device": "CPU",
     "torch": "2.10.0+cpu",
@@ -108,7 +108,7 @@
     "changedPixelsAcrossRepeats": 0,
     "maxAbsDiffAcrossRepeats": 0
   },
-  "semanticDisposition": "BLOCKED_INDEPENDENT_EXPECTED_CLASS_ANNOTATION_AND_CORPUS_TARGET_INSUFFICIENT",
+  "semanticDisposition": "BLOCKED_INDEPENDENT_EXPECTED_CLASS_ANNOTATION_AND_TRUSTED_CLASS_COVERAGE_INSUFFICIENT",
   "heldoutAccessed": false,
   "trainingPerformed": false,
   "weightsMutated": false,
@@ -116,7 +116,7 @@
   "productionPromotionAuthorized": false,
   "stage12EntryAuthorized": false,
   "executionMethod": {
-    "input": "exact admitted digital PDF rendered at 72 DPI with pdfium",
+    "input": "exact admitted digital PDF rendered at 72 DPI with pdftoppm via render_pdf.py",
     "normalization": "8-bit grayscale -> float32 [0,1]",
     "tiling": {
       "patchSize": 512,
@@ -125,13 +125,20 @@
       "paddingValue": 1.0,
       "overlapMerge": "arithmetic-mean"
     },
-    "outputEncoding": "8-bit grayscale PNG, OpenCV compression=3",
+    "outputEncoding": "8-bit grayscale PNG, round(output*255), OpenCV compression=3",
     "profileAppliedBeforePackageLoad": true
+  },
+  "provenanceCorrection": {
+    "correctedOn": "2026-09-08",
+    "previousRendererLabel": "pdfium-via-render_pdf.py",
+    "correctRendererLabel": "pdftoppm-via-render_pdf.py",
+    "basis": "The committed renderedSourceSha256 and sourceDecodedPixelSha256 values reproduce exactly with pdftoppm at 72 DPI and do not reproduce with pdfium at 72 DPI.",
+    "modelOutputHashesChanged": false
   },
   "claimBoundary": {
     "determinism": "PASS_FOR_BARLEY_CANONICAL_RUNTIME_AND_TWO_PAGE_SOURCE",
     "semanticPreservation": "NOT_ESTABLISHED",
-    "reason": "independent expected-class annotation and sufficient multi-class detector/corpus coverage are not yet available",
+    "reason": "independent expected-class annotation and sufficient trusted multi-class detector coverage are not yet available",
     "rawPixelDriftIsNotMusicalTruth": true
   }
 }
