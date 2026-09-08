@@ -48,6 +48,13 @@
     "restoreExecutionMode": "GPU exploratory only",
     "finalCanonicalCpuRerunRequired": true
   },
+  "validation": {
+    "v2dWorkflow": "Stage 11 V2d Detector Benchmark Validation",
+    "latestObservedRunId": 34259455486,
+    "latestObservedConclusion": "success",
+    "pythonMatrix": ["3.11", "3.12"],
+    "v2cSemanticValidationStillGreen": true
+  },
   "safetyBoundaries": {
     "trainingAuthorized": false,
     "fineTuningAuthorized": false,
@@ -77,10 +84,11 @@
   "decision": {
     "v2cTeacherGroundTruthGatePassed": true,
     "v2dBenchmarkInfrastructureReady": true,
+    "v2dInfrastructureCiPassed": true,
     "v2dGpuBenchmarkExecuted": false,
     "semanticPreservationEstablished": false,
     "prReadyForMerge": false,
-    "reason": "the benchmark infrastructure is ready, but GPU detector results have not yet been produced and canonical CPU semantic evidence remains required"
+    "reason": "the benchmark infrastructure is CI-green, but GPU detector results have not yet been produced and canonical CPU semantic evidence remains required"
   },
   "nextSafeBoundary": "run the committed V2d Colab GPU notebook against exact Drive bytes, ingest its JSON result, select or reject detector candidates class-by-class, then rerun the admitted detector combination on canonical CPU before any PR readiness or integration decision"
 }
