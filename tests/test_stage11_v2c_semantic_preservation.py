@@ -160,14 +160,14 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         self.assertEqual(5, len(detections))
         self.assertEqual({"staff_line"}, {item.class_id for item in detections})
 
-    def test_real_v2c_corpus_plan_is_truthfully_blocked_below_target(self) -> None:
+    def test_real_v2c_corpus_plan_meets_target(self) -> None:
         plan = json.loads(CORPUS_PLAN.read_text(encoding="utf-8"))
         result = validate_corpus_plan(plan)
-        self.assertEqual("blocked", result["status"])
-        self.assertEqual(3, result["sourceFamilyCount"])
-        self.assertEqual(7, result["pageCount"])
-        self.assertEqual(2, result["familyShortage"])
-        self.assertEqual(13, result["pageShortage"])
+        self.assertEqual("pass", result["status"])
+        self.assertEqual(5, result["sourceFamilyCount"])
+        self.assertEqual(20, result["pageCount"])
+        self.assertEqual(0, result["familyShortage"])
+        self.assertEqual(0, result["pageShortage"])
 
     def test_real_expected_manifest_validates_but_cannot_create_pass_evidence(self) -> None:
         manifest = json.loads(EXPECTED_MANIFEST.read_text(encoding="utf-8"))
@@ -181,7 +181,7 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         payload = json.loads(CURRENT_TRUTH.read_text(encoding="utf-8"))
         result = validate_current_truth(payload)
         self.assertEqual("pass", result["status"])
-        self.assertEqual("V2C_FRAMEWORK_READY_EVIDENCE_BLOCKED", result["state"])
+        self.assertEqual("V2C_CORPUS_TARGET_MET_SEMANTIC_EVIDENCE_BLOCKED", result["state"])
         self.assertFalse(result["stage12EntryAuthorized"])
 
     def test_tampered_current_truth_promotion_fails_closed(self) -> None:
