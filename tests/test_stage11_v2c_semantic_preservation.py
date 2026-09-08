@@ -173,7 +173,7 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         manifest = json.loads(EXPECTED_MANIFEST.read_text(encoding="utf-8"))
         result = validate_expected_class_manifest(manifest)
         self.assertEqual("pass", result["status"])
-        self.assertEqual(7, result["pageCount"])
+        self.assertEqual(20, result["pageCount"])
         self.assertEqual(0, result["eligiblePresentClassCount"])
         self.assertEqual(0.0, result["annotationCoverage"])
 
