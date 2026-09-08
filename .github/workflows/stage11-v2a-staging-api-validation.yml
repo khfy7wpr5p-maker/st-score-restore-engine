@@ -1,0 +1,66 @@
+name: Stage 11 V2a staging API validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage11-v2a-staging-api:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate staging evidence and current truth
+        run: python tools/validate_stage11_v2a_staging_api_current_truth.py
+
+      - name: Run staging API tests
+        run: python -m unittest tests.test_stage11_v2a_staging_api -v
+
+      - name: Compile staging sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2a_staging_api.py \
+            src/st_score_restore/stage11_v2a_staging_api_current_truth.py \
+            tools/stage11_v2a_staging_api_smoke.py \
+            tools/validate_stage11_v2a_staging_api_current_truth.py
+
+      - name: Verify committed JSON artifacts
+        run: |
+          python -m json.tool evidence/stage11/v2a/v2a-staging-api-evidence.v1.json > /dev/null
+          python -m json.tool docs/live/ST_SCORE_RESTORE_STAGE11_V2A_STAGING_API_CURRENT_TRUTH.json > /dev/null
+
+      - name: Verify existing HTTP API stays untouched by staging boundary
+        run: |
+          git diff --exit-code "${{ github.event.pull_request.base.sha || github.event.before }}" HEAD -- src/st_score_restore/http_api.py api/openapi.v1.json || true
+          if git diff --name-only "${{ github.event.pull_request.base.sha || github.event.before }}" HEAD | grep -E '^(src/st_score_restore/http_api.py|api/openapi.v1.json)$'; then
+            echo "staging boundary must not modify or register in existing HTTP API"
+            exit 1
+          fi
