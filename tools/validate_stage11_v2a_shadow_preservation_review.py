@@ -9,10 +9,14 @@ from st_score_restore.stage11_v2a_shadow_preservation_review import (
     Stage11V2aShadowPreservationReviewError,
     validate_preservation_review_evidence,
 )
+from st_score_restore.stage11_v2a_shadow_preservation_review_current_truth import (
+    validate_current_truth,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "evidence" / "stage11" / "v2a" / "v2a-shadow-preservation-review-evidence.v1.json"
 EXPANDED = ROOT / "evidence" / "stage11" / "v2a" / "v2a-shadow-corpus-expanded-evidence.v1.json"
+CURRENT_TRUTH = ROOT / "docs" / "live" / "ST_SCORE_RESTORE_STAGE11_V2A_SHADOW_PRESERVATION_REVIEW_CURRENT_TRUTH.json"
 
 
 def _accepted_shadow_page_identities(payload: dict) -> dict[tuple[str, int], tuple[str, str]]:
@@ -62,11 +66,29 @@ def _compare_with_accepted_shadow_run(preservation: dict, expanded: dict) -> dic
     }
 
 
+def _bind_current_truth(current_truth: dict, cross_run: dict[str, object]) -> None:
+    identity = current_truth.get("crossRunIdentity") or {}
+    if identity.get("acceptedSourceNormalizedHashesPreserved") is not cross_run["acceptedSourceByteIdentityBound"]:
+        raise Stage11V2aShadowPreservationReviewError("current truth source-identity statement mismatch")
+    if int(identity.get("priorShadowByteMatchCount", -1)) != int(cross_run["priorShadowByteMatchCount"]):
+        raise Stage11V2aShadowPreservationReviewError("current truth prior shadow match count mismatch")
+    if int(identity.get("priorShadowByteMatchTotal", -1)) != int(cross_run["priorShadowByteMatchTotal"]):
+        raise Stage11V2aShadowPreservationReviewError("current truth prior shadow match total mismatch")
+    if bool(identity.get("priorShadowOutputByteIdentityStable")) != bool(cross_run["crossRunShadowByteIdentityStable"]):
+        raise Stage11V2aShadowPreservationReviewError("current truth cross-run stability statement mismatch")
+
+
 def main() -> int:
     payload = json.loads(EVIDENCE.read_text(encoding="utf-8"))
     expanded = json.loads(EXPANDED.read_text(encoding="utf-8"))
+    current_truth = json.loads(CURRENT_TRUTH.read_text(encoding="utf-8"))
     result = validate_preservation_review_evidence(payload)
-    result.update(_compare_with_accepted_shadow_run(payload, expanded))
+    current_truth_result = validate_current_truth(current_truth)
+    cross_run = _compare_with_accepted_shadow_run(payload, expanded)
+    _bind_current_truth(current_truth, cross_run)
+    result.update(cross_run)
+    result["currentTruthValidated"] = current_truth_result["status"] == "pass"
+    result["currentTruthState"] = current_truth_result["state"]
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
