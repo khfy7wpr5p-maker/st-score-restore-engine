@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "stage11.v2d.detector-candidate-registry.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "purpose": "development-only inference benchmark of trusted semantic detector candidates against frozen teacher ground truth",
+  "candidates": [
+    {
+      "candidateId": "oemer-onnx-segmentation-dbe2a933",
+      "upstreamRepository": "BreezeWhite/oemer",
+      "upstreamCommit": "dbe2a933d630d0f74805d717960eb259473f5978",
+      "codeLicense": "MIT",
+      "codeLicenseEvidence": "https://github.com/BreezeWhite/oemer/blob/dbe2a933d630d0f74805d717960eb259473f5978/LICENSE",
+      "weightSource": [
+        "https://github.com/BreezeWhite/oemer/releases/download/checkpoints/1st_model.onnx",
+        "https://github.com/BreezeWhite/oemer/releases/download/checkpoints/2nd_model.onnx"
+      ],
+      "weightLicenseStatus": "repo_scoped_not_separately_declared",
+      "weightLicenseNote": "Repository is MIT, but checkpoint assets do not carry a separately stated weight license in the inspected release metadata; benchmark use is allowed while production admission remains fail-closed pending explicit weight-license review.",
+      "semanticClasses": ["staff_line", "notehead", "stem", "rest", "accidental", "clef", "barline", "beam_or_flag"],
+      "runtime": "onnxruntime-gpu preferred; CPU fallback allowed for debugging only",
+      "scope": {
+        "developmentExplorationAllowed": true,
+        "trainingAllowed": false,
+        "heldOutAccessAllowed": false,
+        "detectorOutputMayBecomeGroundTruth": false,
+        "productionAdmissionAuthorized": false,
+        "stage12EntryAuthorized": false
+      }
+    },
+    {
+      "candidateId": "nota-v3-yolo11-notehead-accidental",
+      "upstreamRepository": "v-dvorak/omr-layout-analysis",
+      "upstreamCommit": "f87cf7d8100a0e0fb41ae597433ab25bd45c84fe",
+      "codeLicense": "MIT",
+      "codeLicenseEvidence": "https://github.com/v-dvorak/omr-layout-analysis/blob/main/LICENSE",
+      "weightSource": [
+        "https://github.com/v-dvorak/omr-layout-analysis/releases/download/nota-v3.0/nota-notehead-analysis-3.0-2025-02-27.pt"
+      ],
+      "weightAssetSizeBytes": 5494227,
+      "weightLicenseStatus": "repo_scoped_not_separately_declared",
+      "weightLicenseNote": "Repository is MIT and release publishes the checkpoint, but a separate checkpoint-license declaration was not observed. Ultralytics runtime licensing must also be reviewed before any commercial embedding; therefore this candidate is benchmark-only.",
+      "semanticClasses": ["notehead", "accidental"],
+      "reportedReleaseMetrics": {
+        "noteheadFullF1AtIoU50": 0.9892,
+        "noteheadHalfF1AtIoU50": 0.9896,
+        "accidentalFlatF1AtIoU50": 0.5185,
+        "accidentalNaturalF1AtIoU50": 0.9565,
+        "accidentalSharpF1AtIoU50": 0.9382
+      },
+      "scope": {
+        "developmentExplorationAllowed": true,
+        "trainingAllowed": false,
+        "heldOutAccessAllowed": false,
+        "detectorOutputMayBecomeGroundTruth": false,
+        "productionAdmissionAuthorized": false,
+        "stage12EntryAuthorized": false
+      }
+    }
+  ],
+  "selectionPolicy": {
+    "primaryCandidate": "oemer-onnx-segmentation-dbe2a933",
+    "reason": "broadest useful semantic coverage with inference-only ONNX path and permissive repository license",
+    "secondaryCandidate": "nota-v3-yolo11-notehead-accidental",
+    "secondaryUse": "cross-check notehead/accidental quality only; not admitted to production",
+    "teacherGroundTruthFrozen": true,
+    "finalCanonicalCpuRerunRequired": true
+  },
+  "claimBoundary": {
+    "candidateRegistryIsNotSemanticEvidence": true,
+    "trainingAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
