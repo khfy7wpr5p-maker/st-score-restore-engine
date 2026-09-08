@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_v2a_staging_api_current_truth",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "fecce4e668169305c1a043e0fafca0d941eca94b",
+  "implementationBranch": "stage11-v2a-staging-api-validation",
+  "state": "STAGING_REQUEST_RESPONSE_PASS",
+  "candidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "frozen": true
+  },
+  "contract": {
+    "id": "stage11.v2a.staging-api.synthetic-request-response.v1",
+    "requestMediaType": "image/png",
+    "responseMediaType": "image/png",
+    "grayscaleOnly": true,
+    "bitDepth": 8,
+    "maxInputBytes": 8388608,
+    "maxPixels": 16000000,
+    "maxDimension": 8192,
+    "networkRouteRegistered": false,
+    "existingHttpApiModified": false
+  },
+  "execution": {
+    "completed": true,
+    "sourceDataKind": "synthetic_only",
+    "requestId": "stage11-synthetic-staff-001",
+    "inputShape": [700, 900],
+    "outputShape": [700, 900],
+    "tileCount": 4,
+    "inputBytes": 5613,
+    "outputBytes": 21478,
+    "requestSha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+    "responseSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "repeatResponseSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "repeatMetadataEqual": true,
+    "finite": true,
+    "outputMin": 0.0,
+    "outputMax": 1.0,
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.3.5",
+      "opencv": "4.13.0",
+      "device": "CPU"
+    },
+    "evidenceRepoPath": "evidence/stage11/v2a/v2a-staging-api-evidence.v1.json",
+    "driveFolderId": "1oBL1P_6slQ0j5aOguCLzJYIKAgQXnCXL",
+    "driveEvidenceFileId": "1gcjHQoSYR9zwXu0G7V5X3-JBzHHG7-pW",
+    "drivePackageFileId": "1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD"
+  },
+  "safety": {
+    "syntheticInputsOnlyForAcceptance": true,
+    "heldOutAccessed": false,
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "weightsMutated": false,
+    "realUserDataUsed": false,
+    "networkRouteRegistered": false,
+    "existingHttpApiModified": false,
+    "consumedHeldoutRetuningForbidden": true
+  },
+  "authorization": {
+    "stagingRequestResponseValidationAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "validate a shadow-mode application-service handoff to the existing non-production job workflow using synthetic or otherwise nonheldout inputs only; do not expose a new public route; production, real-user rollout and Stage 12 remain closed"
+}
