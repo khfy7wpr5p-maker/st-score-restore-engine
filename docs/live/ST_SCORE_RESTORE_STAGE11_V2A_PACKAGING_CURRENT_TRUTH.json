@@ -9,7 +9,7 @@
     "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
     "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
     "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
-    "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45f2d98ab04fb894b",
+    "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
     "modelStateSha256": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
     "frozen": true
   },
