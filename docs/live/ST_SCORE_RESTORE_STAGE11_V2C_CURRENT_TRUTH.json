@@ -35,7 +35,8 @@
     "nonCircularCoverageDenominator": true,
     "conservativeStaffTabLineDetector": true,
     "failClosedDecisionValidator": true,
-    "corpusPlanValidator": true
+    "corpusPlanValidator": true,
+    "exactRepeatEvidenceValidator": true
   },
   "semanticClassSupport": {
     "interfaceClasses": [
@@ -75,7 +76,8 @@
       "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
       "pageCount": 2,
       "inputKind": "digital_pdf",
-      "executionStatus": "approved_inventory_only_v2c_digital_pdf_execution_adapter_pending"
+      "executionStatus": "exact_v2c_repeat_execution_completed",
+      "executionEvidence": "evidence/stage11/v2c/v2c-barley-repeat-execution.v1.json"
     }
   },
   "independentExpectedClassEvidence": {
@@ -87,16 +89,25 @@
   },
   "determinism": {
     "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
-    "v2cRepeatExecutionPerformedOnThisBranch": false,
-    "claim": "no new V2c determinism or semantic-preservation pass claim has been made"
+    "v2cRepeatExecutionPerformedOnThisBranch": true,
+    "newV2cExecution": {
+      "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+      "pageCount": 2,
+      "repeatCount": 2,
+      "allOutputBytesStable": true,
+      "allDecodedPixelsStable": true,
+      "changedPixelsAcrossRepeats": 0,
+      "maxAbsDiffAcrossRepeats": 0,
+      "result": "PASS_FOR_BARLEY_CANONICAL_RUNTIME_AND_TWO_PAGE_SOURCE"
+    },
+    "claim": "new Barley same-profile determinism is established; semantic preservation and full target-corpus review remain unestablished"
   },
   "remainingBlockers": [
     "approved corpus below 5 independent source families",
     "approved corpus below 20 pages",
     "independent per-page expected-class annotation not yet established",
     "trusted automatic detector coverage currently limited to staff_line/tab_line",
-    "Barley digital-PDF V2c execution adapter not yet exercised",
-    "frozen-package V2c repeat execution evidence not yet produced"
+    "full target-corpus class-aware semantic preservation execution cannot be completed until corpus and annotation gates are satisfied"
   ],
   "productionBoundaries": {
     "sharedMusicSafetyValidatorModified": false,
@@ -112,5 +123,5 @@
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "complete V2c CI, add approved non-held-out families without relaxing rights/custody rules, establish independent expected-class labels, then execute the exact frozen package twice under the canonical CPU profile"
+  "nextSafeBoundary": "add at least two more independently approved non-held-out source families and thirteen pages without weakening rights/custody policy, establish independent expected-class labels, then run the full frozen-package semantic evidence set under the canonical CPU profile"
 }
