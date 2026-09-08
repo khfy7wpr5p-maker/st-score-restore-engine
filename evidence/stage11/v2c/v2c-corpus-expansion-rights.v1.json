@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "stage11.v2c.corpus-expansion-rights.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "purpose": "development quality_evaluation only; no production promotion authority",
+  "items": [
+    {
+      "evidenceId": "imslp675596",
+      "datasetItemId": "dataset.item.imslp675596-carulli-recueil-morceaux-faciles.v1",
+      "driveFileId": "1TkE4FVRb16IhVkYH5q10WOs4wPRDdhmi",
+      "fileName": "IMSLP675596 - Recueil de differents Morceaux faciles (Carulli, Ferdinando) - Complete Score.pdf",
+      "exactByteSize": 4662523,
+      "exactSha256": "db20e9ce755aa56dd9dbb0436a37a48545442e7961e471f813cde7aaa8fc0f22",
+      "sourceLandingPage": "https://imslp.org/wiki/Recueil_de_differents_Morceaux_faciles_(Carulli,_Ferdinando)",
+      "sourceFileNumber": 675596,
+      "sourceReportedPages": 10,
+      "sourceReportedCopyright": "Public Domain",
+      "sourceReportedScan": "PDF scanned by F-Pn; Town explorer (2021/2/14)",
+      "attribution": "Ferdinando Carulli; Paris: Carli, n.d.; scan hosted by IMSLP",
+      "rightsReviewStatus": "approved",
+      "qualityEvaluationUse": "granted",
+      "selectedEvaluationPages": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "excludedFromEvaluationPages": [1],
+      "heldOut": false
+    },
+    {
+      "evidenceId": "imslp865937",
+      "datasetItemId": "dataset.item.imslp865937-bach-anna-magdalena.v1",
+      "driveFileId": "1tgd9EEplOAwJmdurUGctvQ9Rzw6U4zvX",
+      "fileName": "IMSLP865937 - Notebooks for Anna Magdalena Bach (Bach, Johann Sebastian) - Complete Score.pdf",
+      "exactByteSize": 3235494,
+      "exactSha256": "692d4317375048b9d520b4d756c3ce992e96ca82b10c3026a5925f1a878fc959",
+      "sourceLandingPage": "https://imslp.org/wiki/Notebooks_for_Anna_Magdalena_Bach_(Bach,_Johann_Sebastian)",
+      "sourceFileNumber": 865937,
+      "sourceReportedPages": 44,
+      "sourceReportedCopyright": "Public Domain - See notes on copyright status for urtext editions",
+      "sourceReportedEdition": "Neue Bach-Ausgabe, Serie V, Band 4 (pp.1-44), Bärenreiter, 1957",
+      "sourceReportedRightsNote": "IMSLP states this edition was published in Germany over 25 years ago and is public domain in its country of origin; jurisdictional caveat retained.",
+      "attribution": "Johann Sebastian Bach; editor Georg von Dadelsen; Bärenreiter 1957; scan by Sallen112 hosted by IMSLP",
+      "rightsReviewStatus": "approved",
+      "qualityEvaluationUse": "granted",
+      "selectedEvaluationPages": [4, 10, 24, 40],
+      "heldOut": false
+    }
+  ],
+  "safety": {
+    "heldOutAccessed": false,
+    "privateUserDataUsed": false,
+    "trainingUseAuthorized": false,
+    "productionPromotionAuthorized": false
+  }
+}
