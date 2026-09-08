@@ -1,0 +1,93 @@
+{
+  "artifactType": "stage11_v2a_staging_api_evidence",
+  "authorization": {
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "stagingRequestResponseValidationAuthorized": true
+  },
+  "backpropagationExecuted": false,
+  "contract": {
+    "authorization": {
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "stage12EntryAuthorized": false,
+      "stagingRequestResponseValidationAuthorized": true
+    },
+    "candidate": {
+      "frozen": true,
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "packageSizeBytes": 7817857
+    },
+    "contractId": "stage11.v2a.staging-api.synthetic-request-response.v1",
+    "execution": {
+      "existingHttpApiModified": false,
+      "heldoutAccessAllowed": false,
+      "networkRouteRegistered": false,
+      "realUserDataAllowed": false,
+      "trainingAllowed": false
+    },
+    "request": {
+      "bitDepth": 8,
+      "grayscaleOnly": true,
+      "maxDimension": 8192,
+      "maxInputBytes": 8388608,
+      "maxPixels": 16000000,
+      "mediaType": "image/png",
+      "requiredMetadata": ["requestId", "sourceDataKind"],
+      "sourceDataKinds": ["synthetic_only", "nonheldout_test_only"]
+    },
+    "response": {
+      "bitDepth": 8,
+      "grayscaleOnly": true,
+      "mediaType": "image/png",
+      "packageSha256Included": true,
+      "sha256Included": true,
+      "shapePreserved": true
+    }
+  },
+  "contractId": "stage11.v2a.staging-api.synthetic-request-response.v1",
+  "environment": {
+    "device": "CPU",
+    "numpy": "2.3.5",
+    "opencv": "4.13.0",
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu"
+  },
+  "execution": {
+    "existingHttpApiModified": false,
+    "finite": true,
+    "inputBytes": 5613,
+    "inputShape": [700, 900],
+    "networkRouteRegistered": false,
+    "outputBytes": 21478,
+    "outputMax": 1.0,
+    "outputMean": 0.897398829460144,
+    "outputMin": 0.0,
+    "outputShape": [700, 900],
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "productionInferenceAuthorized": false,
+    "repeatMetadataEqual": true,
+    "repeatResponseSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "requestId": "stage11-synthetic-staff-001",
+    "requestSha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+    "responseSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "sourceDataKind": "synthetic_only",
+    "stage12EntryAuthorized": false,
+    "tileCount": 4
+  },
+  "existingHttpApiModified": false,
+  "heldOutAccessed": false,
+  "networkRouteRegistered": false,
+  "optimizerCreated": false,
+  "packagePath": "Google Drive file id 1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD / v2a_candidate_512.torchscript.pt",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "realUserDataUsed": false,
+  "schemaVersion": "stage11.v2a.staging-api-evidence.v1",
+  "sourceDataKind": "synthetic_only",
+  "status": "completed",
+  "weightsMutated": false
+}
