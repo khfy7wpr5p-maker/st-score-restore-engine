@@ -7,6 +7,7 @@
     "candidatePackageSizeBytes": 7817857,
     "full20RepeatEvidence": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
     "teacherReviewOverlay": "evidence/stage11/v2c/v2c-teacher-review-overlay.v1.json",
+    "teacherReviewResolution": "evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json",
     "teacherReviewPdfSha256": "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
     "developmentPageCount": 20,
     "heldOutAccessed": false,
@@ -35,12 +36,13 @@
     "modelOutputShownToTeacherDuringAnnotation": false
   },
   "teacherGroundTruth": {
-    "effectivePresentCount": 170,
-    "effectiveAbsentCount": 50,
+    "effectivePresentCount": 171,
+    "effectiveAbsentCount": 51,
     "effectiveNotApplicableCount": 18,
-    "effectiveUnknownReviewRequiredCount": 2,
-    "independentlyAnnotatedPresentOrAbsentClassCount": 220,
-    "annotationCoverage": 0.990990990990991
+    "effectiveUnknownReviewRequiredCount": 0,
+    "independentlyAnnotatedPresentOrAbsentClassCount": 222,
+    "annotationCoverage": 1.0,
+    "followupConflictResolutionComplete": true
   },
   "classResults": {
     "staff_line": {
@@ -73,11 +75,11 @@
     }
   },
   "coverage": {
-    "eligibleExpectedPresentClassPageCount": 170,
+    "eligibleExpectedPresentClassPageCount": 171,
     "confidentlyEvaluatedExpectedPresentClassPageCount": 10,
-    "applicableClassDetectorCoverage": 0.058823529411764705,
+    "applicableClassDetectorCoverage": 0.05847953216374269,
     "automaticSemanticPassEvidenceAvailable": false,
-    "reason": "trusted automatic detection is limited to line geometry and confidently evaluates only 10 of 170 teacher-confirmed present class-page pairs"
+    "reason": "trusted automatic detection is limited to line geometry and confidently evaluates only 10 of 171 teacher-confirmed present class-page pairs"
   },
   "safetyAssessment": {
     "confidentSystematicDeletionEvidenced": false,
@@ -112,7 +114,7 @@
   "pageResultColumns": ["pageId","expectedStaff","expectedTab","sourceClass","candidateClass","staffSourceCount","staffCandidateCount","staffMatchedCount","tabSourceCount","tabCandidateCount","tabMatchedCount","candidateOutputSha256"],
   "claimBoundary": {
     "determinismEstablished": true,
-    "teacherGroundTruthSubstantiallyIngested": true,
+    "teacherGroundTruthComplete": true,
     "semanticPreservationEstablished": false,
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
