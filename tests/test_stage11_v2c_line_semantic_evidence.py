@@ -23,17 +23,24 @@ class Stage11V2cLineSemanticEvidenceTests(unittest.TestCase):
             "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
             payload["inputs"]["teacherReviewPdfSha256"],
         )
+        self.assertEqual(
+            "evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json",
+            payload["inputs"]["teacherReviewResolution"],
+        )
         self.assertTrue(payload["execution"]["all20CandidateOutputsReproducedAndHashMatchedFull20Evidence"])
         self.assertFalse(payload["inputs"]["heldOutAccessed"])
         self.assertFalse(payload["inputs"]["trainingPerformed"])
         self.assertFalse(payload["inputs"]["weightsMutated"])
 
-    def test_teacher_ground_truth_and_detector_coverage_are_separate(self) -> None:
+    def test_teacher_ground_truth_is_complete_but_detector_coverage_is_separate(self) -> None:
         payload = self._payload()
-        self.assertAlmostEqual(220 / 222, payload["teacherGroundTruth"]["annotationCoverage"])
-        self.assertEqual(170, payload["coverage"]["eligibleExpectedPresentClassPageCount"])
+        self.assertEqual(1.0, payload["teacherGroundTruth"]["annotationCoverage"])
+        self.assertEqual(222, payload["teacherGroundTruth"]["independentlyAnnotatedPresentOrAbsentClassCount"])
+        self.assertEqual(0, payload["teacherGroundTruth"]["effectiveUnknownReviewRequiredCount"])
+        self.assertTrue(payload["teacherGroundTruth"]["followupConflictResolutionComplete"])
+        self.assertEqual(171, payload["coverage"]["eligibleExpectedPresentClassPageCount"])
         self.assertEqual(10, payload["coverage"]["confidentlyEvaluatedExpectedPresentClassPageCount"])
-        self.assertAlmostEqual(10 / 170, payload["coverage"]["applicableClassDetectorCoverage"])
+        self.assertAlmostEqual(10 / 171, payload["coverage"]["applicableClassDetectorCoverage"])
         self.assertFalse(payload["coverage"]["automaticSemanticPassEvidenceAvailable"])
 
     def test_line_detector_results_cannot_claim_semantic_success(self) -> None:
@@ -48,6 +55,7 @@ class Stage11V2cLineSemanticEvidenceTests(unittest.TestCase):
         self.assertFalse(payload["safetyAssessment"]["detectorCoverageSufficientForSemanticPreservationClaim"])
         self.assertEqual("blocked", payload["safetyAssessment"]["disposition"])
         self.assertFalse(payload["safetyAssessment"]["hardBlocker"])
+        self.assertTrue(payload["claimBoundary"]["teacherGroundTruthComplete"])
         self.assertFalse(payload["claimBoundary"]["semanticPreservationEstablished"])
         self.assertFalse(payload["claimBoundary"]["productionPromotionAuthorized"])
         self.assertFalse(payload["claimBoundary"]["stage12EntryAuthorized"])
