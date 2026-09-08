@@ -107,7 +107,9 @@
     "developmentGateEnforced": true,
     "v2aAcceptanceEvidenceImported": true,
     "candidateCheckpointFreezeRecorded": true,
-    "consumedHeldoutRetuningGuardRecorded": true
+    "consumedHeldoutRetuningGuardRecorded": true,
+    "candidatePackageCreated": true,
+    "candidatePackageEvidenceImported": true
   },
   "gates": {
     "v2DevelopmentTrainingCompleted": true,
@@ -119,18 +121,21 @@
     "stage9aEvaluationAuthorized": true,
     "stage9aEvaluationCompleted": true,
     "candidateCheckpointFrozen": true,
+    "candidatePackagingCompleted": true,
     "furtherTuningAgainstConsumedHeldoutForbidden": true,
     "finalModelSelected": false,
     "stage12EntryAuthorized": false,
     "productionInferenceAuthorized": false
   },
   "notebook": "notebooks/stage11_deepscoresv2_dense_v2a_autonomous_symbol_preservation_colab.ipynb",
+  "packagingTruth": "docs/live/ST_SCORE_RESTORE_STAGE11_V2A_PACKAGING_CURRENT_TRUTH.json",
   "driveLayout": {
     "v2SourceRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2_symbol_preservation/",
     "v2aTrainingOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_TRAINING_OUTPUT/deepscoresv2_dense_residual_unet_v2a_symbol_preservation/",
     "v2aDevelopmentEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_dev/",
     "v2aHeldoutEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_heldout/",
-    "v2aStage9aEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_stage9a/"
+    "v2aStage9aEvalOutputRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/deepscoresv2_dense_v2a_stage9a/",
+    "v2aPackagingRoot": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/"
   },
   "safety": {
     "historicalEvidenceImmutable": true,
@@ -142,5 +147,5 @@
     "automaticProductionPromotionForbidden": true,
     "consumedHeldoutCannotBeReusedForAdaptiveTuning": true
   },
-  "nextSafeBoundary": "verify external V2a checkpoint custody and build deterministic Stage 11 inference packaging/smoke validation; do not tune against the consumed held-out set; production and Stage 12 remain closed"
+  "nextSafeBoundary": "validate the frozen portable candidate through non-training consumer/inference integration checks using synthetic or non-heldout inputs; do not tune against consumed held-out data; production and Stage 12 remain closed"
 }
