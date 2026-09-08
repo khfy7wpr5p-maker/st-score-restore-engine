@@ -1,0 +1,99 @@
+{
+  "artifactType": "stage11_v2a_shadow_corpus_expanded_current_truth",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "cef3c93c3e9f10bb0322bcfc038853f04e5289e2",
+  "implementationBranch": "stage11-v2a-shadow-corpus-source-family-expansion",
+  "state": "NONHELDOUT_SHADOW_CORPUS_SOURCE_FAMILIES_EXPANDED",
+  "contractId": "stage11.v2a.shadow-corpus.approved-nonheldout.v1",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "evidenceRepoPath": "evidence/stage11/v2a/v2a-shadow-corpus-expanded-evidence.v1.json",
+  "execution": {
+    "completed": true,
+    "executionMode": "combined-exact-read-only-shadow-observations",
+    "sourceDataKind": "nonheldout_test_only",
+    "pageObservationCount": 5,
+    "sourceFamilyCount": 2,
+    "independentSourceFamiliesVerified": true,
+    "sourceFamilies": [
+      {
+        "datasetItemId": "dataset.item.imslp799143-beethoven-op48-no3.v1",
+        "sourceFamilyId": "source.family.imslp799143-beethoven-op48-no3.v1",
+        "sourceSha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c",
+        "sourceByteSize": 1182561,
+        "inputKind": "scanned_pdf",
+        "pageObservationCount": 4
+      },
+      {
+        "datasetItemId": "dataset.item.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceFamilyId": "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+        "sourceSha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb",
+        "sourceByteSize": 34636,
+        "inputKind": "png",
+        "pageObservationCount": 1
+      }
+    ],
+    "aggregate": {
+      "meanOfPageMeanAbsDiff": 0.05885308533906937,
+      "maxPageMeanAbsDiff": 0.08925281465053558,
+      "minPageMeanAbsDiff": 0.03307146579027176,
+      "meanChangedPixelFraction": 0.7161675112963365,
+      "maxChangedPixelFraction": 0.7999121447028423,
+      "minChangedPixelFraction": 0.6075335082474017,
+      "qualityDecisionMade": false,
+      "automaticPromotionPerformed": false
+    },
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "opencv": "4.13.0",
+      "numpy": "2.3.5",
+      "device": "CPU"
+    }
+  },
+  "implementation": {
+    "historicalFirstObservationPreserved": true,
+    "secondIndependentDevelopmentFamilyObserved": true,
+    "combinedEvidenceValidatorReady": true,
+    "exactSourceIdentityRequired": true,
+    "heldOutFailClosed": true,
+    "shapeLockedOpenCvComparatorUsed": true,
+    "exactFrozenV2aPackageUsed": true,
+    "normalJobServiceUntouched": true,
+    "httpApiUntouched": true,
+    "openApiUntouched": true
+  },
+  "safety": {
+    "heldOutAccessForbidden": true,
+    "trainingForbidden": true,
+    "tuningForbidden": true,
+    "optimizerForbidden": true,
+    "backpropagationForbidden": true,
+    "weightMutationForbidden": true,
+    "privateStudentUserDataForbidden": true,
+    "realUserDataForbidden": true,
+    "shadowSelectionForbidden": true,
+    "automaticPromotionForbidden": true,
+    "productionInferenceForbidden": true,
+    "productionPromotionForbidden": true,
+    "stage12EntryForbidden": true
+  },
+  "authorization": {
+    "shadowCorpusObservationAuthorized": true,
+    "trainingAuthorized": false,
+    "tuningAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "interpretation": {
+    "metricsAreObservationalOnly": true,
+    "metricsAreQualityGate": false,
+    "metricsMayTuneModel": false,
+    "sourceFamilyExpansionEstablishesProductionReadiness": false
+  },
+  "nextSafeBoundary": "nonheldout-shadow-preservation-review-package"
+}
