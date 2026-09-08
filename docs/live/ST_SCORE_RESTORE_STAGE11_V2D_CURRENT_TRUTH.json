@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "stage11.v2d.current-truth.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "V2D_COLAB_GPU_BENCHMARK_READY_EXECUTION_PENDING",
+  "inputTruth": {
+    "approvedDevelopmentSourceFamilyCount": 5,
+    "approvedDevelopmentPageCount": 20,
+    "teacherGroundTruthComplete": true,
+    "teacherPresentOrAbsentAnnotationCount": 222,
+    "teacherAnnotationCoverage": 1.0,
+    "teacherPresentClassPageCount": 171,
+    "unresolvedTeacherConflicts": 0,
+    "full20DeterminismEstablished": true,
+    "frozenRestorePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234"
+  },
+  "detectorCandidateRegistry": {
+    "path": "evidence/stage11/v2d/v2d-detector-candidate-registry.v1.json",
+    "candidateCount": 2,
+    "primaryCandidate": "oemer-onnx-segmentation-dbe2a933",
+    "primaryUpstreamCommit": "dbe2a933d630d0f74805d717960eb259473f5978",
+    "primaryRepositoryLicense": "MIT",
+    "primaryWeightLicenseStatus": "repo_scoped_not_separately_declared",
+    "secondaryCandidate": "nota-v3-yolo11-notehead-accidental",
+    "secondaryUpstreamCommit": "f87cf7d8100a0e0fb41ae597433ab25bd45c84fe",
+    "secondaryRepositoryLicense": "MIT",
+    "secondaryWeightLicenseStatus": "repo_scoped_not_separately_declared",
+    "productionAdmittedCandidateCount": 0
+  },
+  "colabGpuBenchmark": {
+    "notebook": "notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb",
+    "executionStatus": "pending_external_colab_gpu_run",
+    "expectedOutput": "ST_SCORE_RESTORE_STAGE11_EVAL/V2D_RESULTS/v2d_colab_gpu_detector_benchmark_result.json",
+    "primaryDetectorSemanticClasses": [
+      "staff_line",
+      "notehead",
+      "stem",
+      "beam_or_flag",
+      "rest",
+      "accidental",
+      "clef",
+      "barline"
+    ],
+    "unsupportedOrDeferredClasses": ["tie_or_slur", "tab_digit", "tab_string"],
+    "gpuPurpose": "exploratory_detector_benchmark",
+    "restoreExecutionMode": "GPU exploratory only",
+    "finalCanonicalCpuRerunRequired": true
+  },
+  "safetyBoundaries": {
+    "trainingAuthorized": false,
+    "fineTuningAuthorized": false,
+    "tuningAuthorized": false,
+    "heldOutAccessAuthorized": false,
+    "detectorOutputMayBecomeTeacherGroundTruth": false,
+    "sharedMusicSafetyValidatorModified": false,
+    "httpApiModified": false,
+    "openApiModified": false,
+    "normalJobServiceModified": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "researchFindings": {
+    "oemer": {
+      "role": "primary broad inference-only benchmark candidate",
+      "basis": "upstream exposes ONNX inference maps for staff/symbols, stems-rests, noteheads and clefs-keys; project also contains post-processing for barlines, clefs, accidentals and rests",
+      "knownRisk": "upstream has open compatibility/runtime issues on newer NumPy/scikit-learn/CUDA stacks; notebook avoids SVM classifiers in first pass and records all runtime versions"
+    },
+    "notaV3": {
+      "role": "secondary notehead/accidental cross-check only",
+      "basis": "release provides a pretrained notehead/accidental detector and reports high IoU50 F1 for noteheads, natural and sharp accidentals; flat accidental performance is materially lower",
+      "knownRisk": "commercial embedding is not admitted because checkpoint-specific and Ultralytics runtime licensing require separate review"
+    }
+  },
+  "decision": {
+    "v2cTeacherGroundTruthGatePassed": true,
+    "v2dBenchmarkInfrastructureReady": true,
+    "v2dGpuBenchmarkExecuted": false,
+    "semanticPreservationEstablished": false,
+    "prReadyForMerge": false,
+    "reason": "the benchmark infrastructure is ready, but GPU detector results have not yet been produced and canonical CPU semantic evidence remains required"
+  },
+  "nextSafeBoundary": "run the committed V2d Colab GPU notebook against exact Drive bytes, ingest its JSON result, select or reject detector candidates class-by-class, then rerun the admitted detector combination on canonical CPU before any PR readiness or integration decision"
+}
