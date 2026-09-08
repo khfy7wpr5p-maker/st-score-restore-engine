@@ -134,7 +134,7 @@ class Stage11V2aShadowHandoffTests(unittest.TestCase):
             request_id="shadow:synthetic-observer",
             source_data_kind="synthetic_only",
         )
-        self.assertEqual(decode_grayscale_png(response).shape, [40, 60])
+        self.assertEqual(decode_grayscale_png(response).shape, (40, 60))
         self.assertEqual(0.0, evidence["comparison"]["meanAbsDiff"])
         self.assertFalse(evidence["comparison"]["qualityDecisionMade"])
         self.assertFalse(evidence["safety"]["shadowSelectable"])
