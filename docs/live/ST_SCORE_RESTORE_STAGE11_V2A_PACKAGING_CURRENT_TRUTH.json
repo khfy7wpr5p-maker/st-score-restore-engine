@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_v2a_packaging_current_truth",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "775a4b2b1d542b54ee03c901109e7ad7496f6f3f",
+  "implementationBranch": "stage11-v2a-candidate-packaging",
+  "state": "IMPLEMENTATION_READY_EXECUTION_PENDING",
+  "candidate": {
+    "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+    "configSha256": "1250731992c01c238dd2376a95ced1d1c6f76dcdf87deb473ec94a0aa58f7818",
+    "datasetMd5": "7237318e381e6e0848ec30eb82decb83",
+    "sourceV2CheckpointSha256": "363cb63bff2367c1119a4eea449a19d468a802160f45b4fe1f2d98ab04fb894b",
+    "modelStateSha256": "1d8becbebfb2b86beb21b4f757c6dacb01354c981bc7216b6e988fc74fd2d32b",
+    "frozen": true
+  },
+  "contract": {
+    "id": "stage11.v2a.frozen-candidate-package.v1",
+    "format": "torchscript-trace",
+    "inputShape": [1, 1, 512, 512],
+    "inputRange": [0.0, 1.0],
+    "outputShapeMustEqualInput": true,
+    "outputRange": [0.0, 1.0],
+    "repeatMaxAbsDiff": 1e-7,
+    "reloadMaxAbsDiff": 1e-5
+  },
+  "implementation": {
+    "packagingContractReady": true,
+    "packagingRuntimeReady": true,
+    "cpuPackagingNotebookReady": true,
+    "checkpointShaVerificationReady": true,
+    "modelStateShaVerificationReady": true,
+    "torchscriptReloadParityReady": true,
+    "heldoutAccessForbidden": true
+  },
+  "execution": {
+    "completed": false,
+    "packageSha256": null,
+    "packageSizeBytes": null,
+    "evidencePath": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/candidate_package_evidence.v1.json",
+    "packagePath": "MyDrive/ST_SCORE_RESTORE_STAGE11_PACKAGING/deepscoresv2_dense_v2a_candidate/v2a_candidate_512.torchscript.pt"
+  },
+  "authorization": {
+    "candidatePackagingAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "safety": {
+    "checkpointWeightsImmutable": true,
+    "optimizerForbidden": true,
+    "backpropagationForbidden": true,
+    "consumedHeldoutAccessForbidden": true,
+    "privateStudentUserDataForbidden": true,
+    "omrCorrectnessNotImplied": true,
+    "musicalTruthNotImplied": true
+  },
+  "notebook": "notebooks/stage11_v2a_frozen_candidate_packaging_colab.ipynb",
+  "runtime": "tools/stage11_v2a_candidate_packaging.py",
+  "nextSafeBoundary": "execute the CPU packaging notebook against the exact frozen Drive checkpoint and return the generated candidate_package_evidence.v1.json; production and Stage 12 remain closed"
+}
