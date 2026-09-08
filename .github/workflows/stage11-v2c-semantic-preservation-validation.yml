@@ -86,6 +86,7 @@ jobs:
               Path('evidence/stage11/v2c/v2c-corpus-plan.v1.json'),
               Path('evidence/stage11/v2c/v2c-expected-class-manifest.v1.json'),
               Path('evidence/stage11/v2c/v2c-teacher-review-overlay.v1.json'),
+              Path('evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json'),
               Path('evidence/stage11/v2c/v2c-barley-repeat-execution.v1.json'),
               Path('evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json'),
               Path('evidence/stage11/v2c/v2c-line-semantic-evidence.v1.json'),
