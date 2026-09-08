@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "stage11_v2a_consumer_adapter_current_truth",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "1ef01bc74f5248c774b92ab3ebef2a7fea697a83",
+  "implementationBranch": "stage11-v2a-consumer-adapter-validation",
+  "state": "SYNTHETIC_CONSUMER_INTEGRATION_PASS",
+  "candidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "packageFormat": "torchscript-trace",
+    "checkpointSha256": "15afc73233c91a80a7ef1285cb631d5d3acd681e9cfed9a93b35642bf39fff4c",
+    "frozen": true
+  },
+  "adapter": {
+    "contractId": "stage11.v2a.consumer-adapter.synthetic-integration.v1",
+    "input": "2-D grayscale uint8 or float",
+    "floatRange": [0.0, 1.0],
+    "uint8Range": [0, 255],
+    "patchSize": 512,
+    "overlap": 64,
+    "stride": 448,
+    "paddingValue": 1.0,
+    "overlapMerge": "arithmetic-mean",
+    "outputShapePreserved": true,
+    "outputRange": [0.0, 1.0]
+  },
+  "execution": {
+    "completed": true,
+    "sourceDataKind": "synthetic_only",
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.3.5",
+      "device": "CPU"
+    },
+    "cases": [
+      {
+        "name": "white_small_u8",
+        "inputShape": [300, 700],
+        "outputShape": [300, 700],
+        "tileCount": 2,
+        "finite": true,
+        "outputMin": 1.0,
+        "outputMax": 1.0
+      },
+      {
+        "name": "synthetic_staff_float",
+        "inputShape": [700, 900],
+        "outputShape": [700, 900],
+        "tileCount": 4,
+        "finite": true,
+        "outputMin": 0.0,
+        "outputMax": 1.0
+      },
+      {
+        "name": "direct_512_float",
+        "inputShape": [512, 512],
+        "outputShape": [512, 512],
+        "tileCount": 1,
+        "finite": true,
+        "outputMin": 0.0,
+        "outputMax": 1.0
+      }
+    ],
+    "repeatMaxAbsDiff": 0.0,
+    "direct512ParityMaxAbsDiff": 0.0,
+    "evidenceRepoPath": "evidence/stage11/v2a/v2a-consumer-adapter-evidence.v1.json",
+    "driveFolderId": "1oBL1P_6slQ0j5aOguCLzJYIKAgQXnCXL",
+    "driveEvidenceFileId": "1cznegKPNxAN0xrByg9T4FVCatwkHBgSf",
+    "drivePackageFileId": "1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD"
+  },
+  "safety": {
+    "heldOutAccessed": false,
+    "optimizerCreated": false,
+    "backpropagationExecuted": false,
+    "weightsMutated": false,
+    "syntheticInputsOnly": true,
+    "consumedHeldoutRetuningForbidden": true,
+    "privateStudentUserDataForbidden": true
+  },
+  "authorization": {
+    "developmentConsumerIntegrationValidationAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "define and validate a staging-only API request/response adapter around this exact frozen package using synthetic or otherwise non-heldout inputs; production promotion, real-user rollout and Stage 12 remain closed"
+}

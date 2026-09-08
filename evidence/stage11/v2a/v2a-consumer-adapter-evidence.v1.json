@@ -1,0 +1,94 @@
+{
+  "artifactType": "stage11_v2a_consumer_adapter_evidence",
+  "authorization": {
+    "developmentConsumerIntegrationValidationAuthorized": true,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "backpropagationExecuted": false,
+  "cases": [
+    {
+      "finite": true,
+      "inputShape": [300, 700],
+      "name": "white_small_u8",
+      "outputMax": 1.0,
+      "outputMean": 1.0,
+      "outputMin": 1.0,
+      "outputShape": [300, 700],
+      "tileCount": 2
+    },
+    {
+      "finite": true,
+      "inputShape": [700, 900],
+      "name": "synthetic_staff_float",
+      "outputMax": 1.0,
+      "outputMean": 0.897398829460144,
+      "outputMin": 0.0,
+      "outputShape": [700, 900],
+      "tileCount": 4
+    },
+    {
+      "finite": true,
+      "inputShape": [512, 512],
+      "name": "direct_512_float",
+      "outputMax": 1.0,
+      "outputMean": 0.6104710698127747,
+      "outputMin": 0.0,
+      "outputShape": [512, 512],
+      "tileCount": 1
+    }
+  ],
+  "contract": {
+    "authorization": {
+      "developmentConsumerIntegrationValidationAuthorized": true,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "stage12EntryAuthorized": false
+    },
+    "contractId": "stage11.v2a.consumer-adapter.synthetic-integration.v1",
+    "input": {
+      "acceptedDtypes": ["uint8", "float"],
+      "floatRange": [0.0, 1.0],
+      "grayscale": true,
+      "rank": 2,
+      "uint8Range": [0, 255]
+    },
+    "packageFormat": "torchscript-trace",
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "tiling": {
+      "outputShapePreserved": true,
+      "overlap": 64,
+      "overlapMerge": "arithmetic-mean",
+      "paddingValue": 1.0,
+      "patchSize": 512,
+      "stride": 448
+    },
+    "validation": {
+      "direct512ParityTolerance": 1e-06,
+      "finiteOutputRequired": true,
+      "outputRange": [0.0, 1.0],
+      "repeatTolerance": 1e-07,
+      "syntheticInputsOnly": true
+    }
+  },
+  "contractId": "stage11.v2a.consumer-adapter.synthetic-integration.v1",
+  "direct512ParityMaxAbsDiff": 0.0,
+  "environment": {
+    "device": "CPU",
+    "numpy": "2.3.5",
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu"
+  },
+  "heldOutAccessed": false,
+  "optimizerCreated": false,
+  "packagePath": "Google Drive file id 1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD / v2a_candidate_512.torchscript.pt",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "repeatMaxAbsDiff": 0.0,
+  "schemaVersion": "stage11.v2a.consumer-adapter-evidence.v1",
+  "sourceDataKind": "synthetic_only",
+  "status": "completed",
+  "weightsMutated": false
+}

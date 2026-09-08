@@ -1,0 +1,61 @@
+name: Stage 11 V2a consumer adapter validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage11-v2a-consumer-adapter:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install exact binary runtime
+        run: |
+          python -m pip install \
+            --disable-pip-version-check \
+            --only-binary=:all: \
+            --no-deps \
+            -r requirements.lock
+
+      - name: Validate consumer adapter evidence and current truth
+        run: python tools/validate_stage11_v2a_consumer_adapter_current_truth.py
+
+      - name: Run consumer adapter unit tests
+        run: python -m unittest tests.test_stage11_v2a_consumer_adapter -v
+
+      - name: Run consumer adapter truth tests
+        run: python -m unittest tests.test_stage11_v2a_consumer_adapter_current_truth -v
+
+      - name: Compile consumer adapter sources
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2a_consumer_adapter.py \
+            src/st_score_restore/stage11_v2a_consumer_adapter_current_truth.py \
+            tools/stage11_v2a_consumer_adapter_smoke.py \
+            tools/validate_stage11_v2a_consumer_adapter_current_truth.py
+
+      - name: Verify committed JSON artifacts
+        run: |
+          python -m json.tool evidence/stage11/v2a/v2a-consumer-adapter-evidence.v1.json > /dev/null
+          python -m json.tool docs/live/ST_SCORE_RESTORE_STAGE11_V2A_CONSUMER_ADAPTER_CURRENT_TRUTH.json > /dev/null

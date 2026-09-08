@@ -61,6 +61,14 @@
       "reloadMaxAbsDiff": 0.0
     }
   },
+  "consumerAdapterValidation": {
+    "completed": true,
+    "state": "SYNTHETIC_CONSUMER_INTEGRATION_PASS",
+    "contractId": "stage11.v2a.consumer-adapter.synthetic-integration.v1",
+    "currentTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2A_CONSUMER_ADAPTER_CURRENT_TRUTH.json",
+    "evidenceRepoPath": "evidence/stage11/v2a/v2a-consumer-adapter-evidence.v1.json",
+    "driveEvidenceFileId": "1cznegKPNxAN0xrByg9T4FVCatwkHBgSf"
+  },
   "authorization": {
     "candidatePackagingAuthorized": true,
     "productionInferenceAuthorized": false,
@@ -79,5 +87,5 @@
   },
   "notebook": "notebooks/stage11_v2a_frozen_candidate_packaging_colab.ipynb",
   "runtime": "tools/stage11_v2a_candidate_packaging.py",
-  "nextSafeBoundary": "validate the frozen portable candidate through non-training consumer/inference integration checks using synthetic or non-heldout inputs; production promotion and Stage 12 remain closed"
+  "nextSafeBoundary": "define and validate a staging-only API request/response adapter around the exact frozen package using synthetic or otherwise nonheldout inputs; production inference, production promotion and Stage 12 remain closed"
 }
