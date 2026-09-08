@@ -5,7 +5,7 @@
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "startingMainSha": "93f368593c4c32478091b5811dd2be0f2834f1be",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "V2C_TEACHER_REVIEW_INGESTED_DETECTOR_COVERAGE_BLOCKED",
+  "state": "V2C_TEACHER_GROUND_TRUTH_COMPLETE_DETECTOR_COVERAGE_BLOCKED",
   "repositoryReconciliation": {
     "remoteV2bBranchObserved": false,
     "v2bAssumedMerged": false,
@@ -39,6 +39,7 @@
     "barleyExactRepeatEvidenceValidator": true,
     "full20ExactRepeatEvidenceValidator": true,
     "teacherReviewOverlayValidator": true,
+    "teacherFollowupResolutionValidator": true,
     "teacherGroundedLineSemanticEvidence": true
   },
   "semanticClassSupport": {
@@ -84,23 +85,22 @@
     "reviewPdfPageCount": 21,
     "reviewPageCount": 20,
     "semanticResponseFieldCount": 240,
-    "acceptedResponseCount": 238,
-    "unresolvedConflictCount": 2,
+    "acceptedResponseCount": 240,
+    "originalConflictCount": 2,
+    "resolvedConflictCount": 2,
+    "unresolvedConflictCount": 0,
     "overlayEvidence": "evidence/stage11/v2c/v2c-teacher-review-overlay.v1.json",
-    "unresolvedConflicts": [
+    "resolutionEvidence": "evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json",
+    "resolvedFields": [
       {
         "pageId": "carulli-morceaux-faciles-p3",
         "classId": "tab_string",
-        "reviewerSelectedState": "present",
-        "effectiveState": "unknown_review_required",
-        "reason": "reviewer note states TAB is absent while the tab_string field was selected present"
+        "resolvedState": "absent"
       },
       {
         "pageId": "bach-anna-magdalena-p24",
         "classId": "notehead",
-        "reviewerSelectedState": "not_applicable",
-        "effectiveState": "unknown_review_required",
-        "reason": "source page visibly contains noteheads while the notehead field was selected not_applicable"
+        "resolvedState": "present"
       }
     ]
   },
@@ -108,15 +108,16 @@
     "baseManifestPageCount": 20,
     "effectiveTeacherReviewedPageCount": 20,
     "effectiveStateCounts": {
-      "present": 170,
-      "absent": 50,
+      "present": 171,
+      "absent": 51,
       "not_applicable": 18,
-      "unknown_review_required": 2
+      "unknown_review_required": 0
     },
-    "independentlyAnnotatedPresentOrAbsentClassCount": 220,
-    "annotationCoverage": 0.990990990990991,
+    "independentlyAnnotatedPresentOrAbsentClassCount": 222,
+    "annotationCoverage": 1.0,
+    "teacherGroundTruthComplete": true,
     "automaticSemanticPassEvidenceAvailable": false,
-    "reason": "teacher review substantially establishes the independent denominator, but two review conflicts remain and trusted detector coverage is still insufficient"
+    "reason": "independent teacher ground truth is complete for the applicable class-page denominator, but trusted automatic detector coverage remains insufficient"
   },
   "determinism": {
     "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
@@ -158,9 +159,9 @@
       "candidateDetectionsOnExpectedAbsentPages": ["carulli-morceaux-faciles-p2", "carulli-morceaux-faciles-p7"],
       "interpretation": "likely staff-as-TAB rule-detector false positives; not confident symbol invention"
     },
-    "eligibleExpectedPresentClassPageCount": 170,
+    "eligibleExpectedPresentClassPageCount": 171,
     "confidentlyEvaluatedExpectedPresentClassPageCount": 10,
-    "applicableClassDetectorCoverage": 0.058823529411764705,
+    "applicableClassDetectorCoverage": 0.05847953216374269,
     "detectorCoverageSufficientForSemanticPreservationClaim": false,
     "confidentSystematicDeletionEvidenced": false,
     "confidentSystematicInventionEvidenced": false,
@@ -177,8 +178,7 @@
     }
   ],
   "remainingBlockers": [
-    "two teacher-review field conflicts remain unresolved",
-    "trusted automatic semantic detector coverage is only 10 of 170 teacher-confirmed present class-page pairs",
+    "trusted automatic semantic detector coverage is only 10 of 171 teacher-confirmed present class-page pairs",
     "TAB-present pages are not confidently evaluated by the current line detector",
     "notehead/stem/beam_or_flag/rest/accidental/clef/barline/tie_or_slur/tab_digit/tab_string lack admitted trusted automatic detectors"
   ],
@@ -196,5 +196,5 @@
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "resolve the two teacher-review conflicts, then improve or admit inference-only trusted semantic detectors without training and rerun class-aware source-versus-candidate evidence; do not merge or promote while detector coverage remains insufficient"
+  "nextSafeBoundary": "improve or admit inference-only trusted semantic detectors without training, then rerun class-aware source-versus-candidate evidence; do not merge or promote while detector coverage remains insufficient"
 }
