@@ -1,0 +1,97 @@
+{
+  "artifactType": "stage11_v2a_shadow_preservation_review_current_truth",
+  "schemaVersion": "1.0.0",
+  "generatedOn": "2026-09-08",
+  "baseMainSha": "af23595d423dbc513029040cf5b66b906dc8ce12",
+  "implementationBranch": "stage11-v2a-shadow-preservation-review",
+  "state": "NONHELDOUT_SHADOW_PRESERVATION_REVIEW_BLOCKED",
+  "contractId": "stage11.v2a.shadow-preservation-review.nonheldout.v1",
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "evidenceRepoPath": "evidence/stage11/v2a/v2a-shadow-preservation-review-evidence.v1.json",
+  "execution": {
+    "completed": true,
+    "sourceDataKind": "nonheldout_test_only",
+    "pageCount": 5,
+    "sourceFamilyCount": 2,
+    "verdictCounts": {
+      "pass": 0,
+      "review_required": 0,
+      "reject": 5
+    },
+    "preservationDisposition": "blocked",
+    "meanNonLineInkRecall": 0.95896717,
+    "minNonLineInkRecall": 0.94285043,
+    "meanComponentRecall": 0.509732472,
+    "minComponentRecall": 0.21262058,
+    "meanRiskScore": 80.0,
+    "maxRiskScore": 80.0,
+    "automaticPromotionPerformed": false,
+    "environment": {
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu",
+      "opencv": "4.13.0",
+      "numpy": "2.3.5",
+      "device": "CPU"
+    }
+  },
+  "wikimediaStaffTabObservation": {
+    "staffSourceSystems": 3,
+    "staffCandidateSystems": 3,
+    "staffLineBreakFraction": 0.0,
+    "tabSourceSystems": 3,
+    "tabCandidateSystems": 3,
+    "tabLineBreakFraction": 0.0,
+    "nonLineInkRecall": 0.97646035,
+    "componentRecall": 0.96259843,
+    "rejectReasons": [
+      "component_shift_severe",
+      "symbol_invention_severe"
+    ]
+  },
+  "interpretation": {
+    "stage9aHeldoutPassRemainsHistoricalFact": true,
+    "thisReviewOverridesProductionPromotion": true,
+    "structuralVetoTriggered": true,
+    "semanticPerClassIdentityClaimed": false,
+    "newMusicalSymbolCreationProven": false,
+    "pitchRhythmTabSemanticChangeProven": false,
+    "binaryInventionMayIncludeDarkeningOrThickeningNearExistingInk": true,
+    "beethoven72DpiSystemRecognitionHasUncertainty": true,
+    "humanOrIndependentSemanticReviewStillRequiredBeforeAnyPromotion": true,
+    "consumedHeldoutMayNotBeUsedForRetuning": true
+  },
+  "crossRunIdentity": {
+    "acceptedSourceNormalizedHashesPreserved": true,
+    "priorShadowOutputByteIdentityStable": false,
+    "priorShadowByteMatchCount": 1,
+    "priorShadowByteMatchTotal": 5,
+    "rootCauseResolved": false,
+    "note": "Fresh exact-package/source execution produced different output PNG hashes on four of five pages compared with the prior shadow observation. No cause is asserted; this is a separate determinism/root-cause blocker."
+  },
+  "safety": {
+    "heldOutAccessForbidden": true,
+    "trainingForbidden": true,
+    "tuningForbidden": true,
+    "optimizerForbidden": true,
+    "backpropagationForbidden": true,
+    "weightMutationForbidden": true,
+    "privateStudentUserDataForbidden": true,
+    "realUserDataForbidden": true,
+    "automaticPromotionForbidden": true,
+    "productionInferenceForbidden": true,
+    "productionPromotionForbidden": true,
+    "stage12EntryForbidden": true
+  },
+  "authorization": {
+    "preservationReviewAuthorized": true,
+    "trainingAuthorized": false,
+    "tuningAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "finalProductionModelSelectionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "diagnose-shadow-output-byte-drift-and-structural-veto-root-causes-with-nonheldout-data-only"
+}
