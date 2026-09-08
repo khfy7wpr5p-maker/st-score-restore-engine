@@ -181,7 +181,7 @@ class Stage11V2cSemanticPreservationTests(unittest.TestCase):
         payload = json.loads(CURRENT_TRUTH.read_text(encoding="utf-8"))
         result = validate_current_truth(payload)
         self.assertEqual("pass", result["status"])
-        self.assertEqual("V2C_CORPUS_TARGET_MET_SEMANTIC_EVIDENCE_BLOCKED", result["state"])
+        self.assertEqual("V2C_TEACHER_REVIEW_INGESTED_DETECTOR_COVERAGE_BLOCKED", result["state"])
         self.assertFalse(result["stage12EntryAuthorized"])
 
     def test_tampered_current_truth_promotion_fails_closed(self) -> None:
