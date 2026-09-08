@@ -1,0 +1,169 @@
+{
+  "artifactType": "stage11_v2a_shadow_job_handoff_evidence",
+  "authorization": {
+    "finalProductionModelSelectionAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "realUserRolloutAuthorized": false,
+    "shadowIntegrationValidationAuthorized": true,
+    "stage12EntryAuthorized": false
+  },
+  "backpropagationExecuted": false,
+  "contract": {
+    "artifacts": {
+      "shadowCanReplaceCurrentCandidate": false,
+      "shadowCanReplaceSafetyReport": false,
+      "shadowCandidateRole": "stage11_v2a_shadow_candidate",
+      "shadowEvidenceRole": "stage11_v2a_shadow_evidence",
+      "shadowSelectable": false
+    },
+    "authorization": {
+      "finalProductionModelSelectionAuthorized": false,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "shadowIntegrationValidationAuthorized": true,
+      "stage12EntryAuthorized": false
+    },
+    "candidate": {
+      "frozen": true,
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "packageSizeBytes": 7817857
+    },
+    "comparison": {
+      "automaticPromotionAllowed": false,
+      "metrics": [
+        "meanAbsDiff",
+        "maxAbsDiff",
+        "changedPixelFraction"
+      ],
+      "purpose": "observational_only",
+      "qualityDecisionAllowed": false
+    },
+    "contractId": "stage11.v2a.shadow-job-handoff.synthetic-nonheldout.v1",
+    "jobService": {
+      "allCurrentAttemptPagesObservedAtomically": true,
+      "existingHttpApiModified": false,
+      "integrationMode": "explicit-in-process-shadow-call",
+      "nativeGrayscalePngRequired": true,
+      "networkRouteRegistered": false,
+      "openApiModified": false,
+      "requiredJobState": "AWAITING_REVIEW",
+      "sourceDataKinds": [
+        "nonheldout_test_only",
+        "synthetic_only"
+      ],
+      "sourceMediaType": "image/png"
+    }
+  },
+  "contractId": "stage11.v2a.shadow-job-handoff.synthetic-nonheldout.v1",
+  "exactFrozenPackageExecuted": true,
+  "execution": {
+    "environment": {
+      "device": "CPU",
+      "numpy": "2.3.5",
+      "opencv": "4.13.0",
+      "python": "3.13.5",
+      "torch": "2.10.0+cpu"
+    },
+    "note": "Exact frozen TorchScript package execution was performed locally with synthetic-only pixels. The existing RestorationJobService storage/selection handoff is separately exercised by repository tests using an injected deterministic staging handle because the private model package is not committed to the repository.",
+    "primaryCandidateSha256": "7a88c769440724c19361208590fc5c9ac0f343c451f20e4ec0c70b44eb7f14a6",
+    "primaryComparator": "same-pixel grayscale PNG encoded with OpenCV PNG compression 9, matching the disabled-operation primary restoration candidate encoding path used by repository integration tests",
+    "shadowCandidateSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+    "sourceGenerator": "synthetic_staff_page_v1",
+    "sourceSha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+    "syntheticInputShape": [
+      700,
+      900
+    ],
+    "tileCount": 4
+  },
+  "existingHttpApiModified": false,
+  "existingJobServiceIntegrationCoveredByTests": true,
+  "generatedOn": "2026-09-08",
+  "heldOutAccessed": false,
+  "networkRouteRegistered": false,
+  "observation": {
+    "artifactType": "stage11_v2a_shadow_observation",
+    "authorization": {
+      "finalProductionModelSelectionAuthorized": false,
+      "productionInferenceAuthorized": false,
+      "productionPromotionAuthorized": false,
+      "realUserRolloutAuthorized": false,
+      "shadowIntegrationValidationAuthorized": true,
+      "stage12EntryAuthorized": false
+    },
+    "comparison": {
+      "automaticPromotionPerformed": false,
+      "changedPixelFraction": 0.08505079365079365,
+      "maxAbsDiff": 0.498039186000824,
+      "meanAbsDiff": 0.02791149541735649,
+      "purpose": "observational_only",
+      "qualityDecisionMade": false
+    },
+    "contractId": "stage11.v2a.shadow-job-handoff.synthetic-nonheldout.v1",
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "primaryCandidate": {
+      "byteSize": 1862,
+      "sha256": "7a88c769440724c19361208590fc5c9ac0f343c451f20e4ec0c70b44eb7f14a6",
+      "shape": [
+        700,
+        900
+      ]
+    },
+    "requestId": "shadow-job-synthetic-001",
+    "safety": {
+      "backpropagationExecuted": false,
+      "heldOutAccessed": false,
+      "optimizerCreated": false,
+      "primaryCandidateReplacementAllowed": false,
+      "realUserDataUsed": false,
+      "safetyReportReplacementAllowed": false,
+      "shadowSelectable": false,
+      "weightsMutated": false
+    },
+    "schemaVersion": "stage11.v2a.shadow-observation.v1",
+    "shadowCandidate": {
+      "byteSize": 21478,
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "sha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+      "shape": [
+        700,
+        900
+      ]
+    },
+    "source": {
+      "byteSize": 5613,
+      "sha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+      "shape": [
+        700,
+        900
+      ]
+    },
+    "sourceDataKind": "synthetic_only",
+    "status": "completed",
+    "transport": {
+      "existingHttpApiModified": false,
+      "networkRouteRegistered": false,
+      "requestSha256": "cfbf82cab845b8b4d2ce3b8d98f76eb9d44326916536a9384a116246f303f352",
+      "responseSha256": "7a3033100e433236293700673d847701960252669634a07507069ad045678c60",
+      "tileCount": 4
+    }
+  },
+  "openApiModified": false,
+  "optimizerCreated": false,
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "realUserDataUsed": false,
+  "schemaVersion": "stage11.v2a.shadow-job-handoff-evidence.v1",
+  "selectionInvariants": {
+    "primaryCandidateUnchanged": true,
+    "primarySafetyReportUnchanged": true,
+    "reviewDecisionUnchanged": true,
+    "selectedArtifactUnchanged": true,
+    "shadowSelectable": false
+  },
+  "sourceDataKind": "synthetic_only",
+  "status": "completed",
+  "weightsMutated": false
+}
