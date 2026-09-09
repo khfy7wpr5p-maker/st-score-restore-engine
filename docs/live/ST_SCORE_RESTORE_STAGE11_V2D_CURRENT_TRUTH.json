@@ -4,7 +4,7 @@
   "generatedOn": "2026-09-09",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "CANONICAL_NOTEHEAD_ACCEPTED_SPATIAL_TEACHER_REVIEW_PACKAGE_READY",
+  "state": "CLEF_TEACHER_BOX_TRUTH_ACCEPTED_P4_SOURCE_QUALIFICATION_PREREGISTERED",
   "inputTruth": {
     "approvedDevelopmentSourceFamilyCount": 5,
     "approvedDevelopmentPageCount": 20,
@@ -71,7 +71,7 @@
     }
   },
   "clefFeasibility": {
-    "status": "REVIEW_ONLY_NO_CANONICAL_RERUN",
+    "status": "SUPERSEDED_BY_TEACHER_BOX_QUALIFICATION_PENDING",
     "evidencePath": "evidence/stage11/v2d/v2d-clef-feasibility-audit.v1.json",
     "evaluatedTeacherPresentPages": 18,
     "pagesAtSourceRecallGte0_80": 12,
@@ -80,7 +80,50 @@
     "pooledSourceRecall": 0.7679180887372014,
     "candidateOnlyCount": 107,
     "candidateCount": 557,
-    "newColabRunRequiredNow": false
+    "interpretation": "exploratory source-versus-restored disagreement only; not absolute detector precision/recall"
+  },
+  "clefTeacherTruth": {
+    "status": "ACCEPTED_CLEF_BOX_TRUTH",
+    "bindingPath": "evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json",
+    "taxonomyAmendmentPath": "evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json",
+    "driveFileId": "1zd48RNvW5htuFj2w4oTjiBMa1OFgYH6j",
+    "driveFolderId": "11JIiEupmBx7KOa29pjMNdBry59j8g58B",
+    "filename": "clef_box_teacher_completion.v1.json",
+    "byteSize": 70465,
+    "sha256": "68df771d5ace9f0b968452ff532fa2693fa2cd3405477d91fa3a98eccb190d54",
+    "reviewerName": "Önder",
+    "reviewDate": "2026-09-09",
+    "reviewPageCount": 18,
+    "completedPageCount": 18,
+    "clefBoxCount": 213,
+    "clefTypeCounts": {
+      "treble": 165,
+      "bass": 34,
+      "tab": 12,
+      "soprano": 2
+    },
+    "duplicateBoxIdCount": 0,
+    "outOfBoundsBoxCount": 0,
+    "ambiguousBoxCount": 0,
+    "truncatedBoxCount": 0,
+    "reviewBasis": "source_page_only",
+    "detectorOutputShownToReviewer": false,
+    "restoredOutputShownToReviewer": false
+  },
+  "clefSourceQualification": {
+    "status": "PREREGISTERED_MEASUREMENT_PENDING",
+    "contractPath": "evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json",
+    "sourceImagesOnly": true,
+    "restoredImagesEvaluated": false,
+    "teacherClefBoxCount": 213,
+    "reviewPageCount": 18,
+    "sourceFamilyCount": 5,
+    "matchingMethod": "greedy_one_to_one_descending_iou",
+    "primaryIouThreshold": 0.5,
+    "requiredMetrics": ["tp", "fp", "fn", "precision", "recall", "f1"],
+    "aggregation": ["page", "source_family", "pooled"],
+    "measurementDoesNotAutoQualifyDetector": true,
+    "detectorQualified": false
   },
   "classMatrix": {
     "PASS": ["notehead"],
@@ -90,25 +133,25 @@
   },
   "strategyPath": "evidence/stage11/v2d/v2d-next-semantic-class-strategy.v1.json",
   "spatialTeacherReview": {
-    "status": "WORK_PACKAGE_READY_HUMAN_ANNOTATION_PENDING",
+    "status": "CLEF_COMPLETE_STAFF_LINE_PENDING",
     "workPackagePath": "evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json",
     "reviewGuidePath": "docs/stage11-v2d-spatial-teacher-review-guide.md",
     "semanticClasses": ["clef", "staff_line"],
     "teacherPresentPageCount": 18,
     "sourceFamilyCount": 5,
-    "humanAnnotationsPopulated": 0,
+    "clefBoxLabelsComplete": true,
+    "staffLineLabelsComplete": false,
     "teacherSpatialLabelsComplete": false,
     "detectorOutputShownToReviewer": false,
-    "restoredOutputShownToReviewer": false,
-    "newColabRunRequiredNow": false
+    "restoredOutputShownToReviewer": false
   },
   "validation": {
     "canonicalNoteheadBindingWorkflow": "Stage 11 V2d Canonical Notehead Evidence Validation",
+    "spatialTeacherReviewWorkflow": "Stage 11 V2d Spatial Teacher Review Validation",
     "pythonMatrix": ["3.11", "3.12"],
-    "localFocusedTestsPassed": true,
-    "localFullSuitePassed": true,
-    "fullSuiteTestCount": 1224,
-    "spatialTeacherReviewPackageLocalValidationPassed": true
+    "clefTeacherCompletionFailClosedValidatorAdded": true,
+    "clefSourceQualificationContractValidatorAdded": true,
+    "p4ExecutionResultAvailable": false
   },
   "safetyBoundaries": {
     "trainingAuthorized": false,
@@ -137,12 +180,17 @@
     "canonicalNoteheadRerunExecuted": true,
     "noteheadClassEvidenceAccepted": true,
     "spatialTeacherReviewWorkPackageReady": true,
+    "clefTeacherBoxReviewCompleted": true,
+    "clefTeacherTruthAccepted": true,
+    "staffLineTeacherReviewCompleted": false,
     "spatialTeacherReviewCompleted": false,
-    "clefCanonicalRerunAuthorized": false,
+    "clefSourceQualificationPreregistered": true,
+    "clefSourceQualificationExecuted": false,
+    "clefDetectorQualified": false,
     "semanticPreservationEstablished": false,
     "overallStage11PassAuthorized": false,
     "productionReady": false,
     "prReadyForMerge": false
   },
-  "nextSafeBoundary": "obtain independent human clef boxes and staff-line masks/topology in a separate hash-bound completion artifact; do not prepare another detector runner or request Colab yet"
+  "nextSafeBoundary": "statically validate and execute the frozen source-only P4 clef detector measurement against the accepted 213 teacher boxes; keep detector qualification as a separate decision; staff-line teacher masks/topology remain pending"
 }
