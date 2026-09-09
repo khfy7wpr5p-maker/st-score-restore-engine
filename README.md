@@ -114,3 +114,15 @@ This architecture update does not authorize Stage 9A model training, data collec
 ## Safety boundary
 
 Raw private metrics are custody-only and forbidden in ordinary Git. Unavailable metrics must be `not_applicable`, never fabricated numeric zeroes. Model/automatic predictions cannot become human reference truth. Development and held-out evidence remain strictly separated. Model evaluation, calibration and training permissions remain separate from normal processing and teacher review.
+
+## License
+
+The original ST Score Restore Engine source code and project documentation are
+proprietary. Copyright © 2026 Önder Özüdoğru. All rights reserved.
+
+No use, copying, modification, distribution, hosting, software-as-a-service
+operation, or commercial exploitation is permitted without a separate written
+license from the copyright holder. See [LICENSE](LICENSE) for the controlling
+terms. Third-party components and artifacts remain subject to their own terms;
+see [LICENSES/](LICENSES/) and
+[docs/dependency-reviews/](docs/dependency-reviews/).
