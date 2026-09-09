@@ -11,26 +11,25 @@
     "heldOutAccessAuthorized": false,
     "trainingAuthorized": false
   },
-  "classStrategies": [
-    {
-      "classId": "clef",
-      "currentDisposition": "REVIEW_ONLY",
-      "teacherSpatialTruthStatus": "CLEF_BOX_TRUTH_ACCEPTED",
-      "teacherTruthBindingPath": "evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json",
-      "teacherClefBoxCount": 213,
-      "teacherClefTypeCounts": {
-        "treble": 165,
-        "bass": 34,
-        "tab": 12,
-        "soprano": 2
-      },
-      "taxonomyAmendmentPath": "evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json",
-      "qualificationContractPath": "evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json",
-      "primaryFailureHypothesis": "the combined Oemer clefs_keys map plus source-derived geometry heuristic may confuse key-signature components with clefs and may miss or fragment real clefs",
-      "nextValidator": "source-only frozen Oemer clef boxes matched one-to-one against the 213 independent teacher boxes at preregistered IoU >= 0.50",
-      "requiredEvidence": "page, source-family, and pooled TP/FP/FN/precision/recall/F1; subtype classification is explicitly out of scope for the current detector",
-      "measurementDoesNotAutoQualifyDetector": true
+  "clefQualification": {
+    "currentDisposition": "REVIEW_ONLY",
+    "teacherSpatialTruthStatus": "CLEF_BOX_TRUTH_ACCEPTED",
+    "teacherTruthBindingPath": "evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json",
+    "teacherClefBoxCount": 213,
+    "teacherClefTypeCounts": {
+      "treble": 165,
+      "bass": 34,
+      "tab": 12,
+      "soprano": 2
     },
+    "taxonomyAmendmentPath": "evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json",
+    "qualificationContractPath": "evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json",
+    "primaryFailureHypothesis": "the combined Oemer clefs_keys map plus source-derived geometry heuristic may confuse key-signature components with clefs and may miss or fragment real clefs",
+    "nextValidator": "source-only frozen Oemer clef boxes matched one-to-one against the 213 independent teacher boxes at preregistered IoU >= 0.50",
+    "requiredEvidence": "page, source-family, and pooled TP/FP/FN/precision/recall/F1; subtype classification is explicitly out of scope for the current detector",
+    "measurementDoesNotAutoQualifyDetector": true
+  },
+  "classStrategies": [
     {
       "classId": "accidental",
       "currentDisposition": "REJECTED_CURRENT_DETECTOR",
