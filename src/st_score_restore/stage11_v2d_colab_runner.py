@@ -38,7 +38,7 @@ RESULT_ROOT = Path("/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/V2D_RES
 RESULT_FILENAME = "v2d_colab_gpu_detector_benchmark_result.json"
 SOURCE_RENDER_VERSION = "pdftoppm-72dpi-singlepage.v1"
 RESTORE_ALGORITHM_VERSION = "v2d-frozen-restore-512-overlap64-png3.v1"
-DETECTOR_LOGIC_VERSION = "oemer-dbe2a933-semantic-boxes.v1"
+DETECTOR_LOGIC_VERSION = "oemer-dbe2a933-semantic-boxes-source-coordinates.v2"
 
 TARGETS: dict[str, dict[str, Any]] = {
     "restore_model": {"drive_id":"1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD","sha256":"7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234","size":7817857,"kind":"torchscript","filename":"v2a_candidate_512.torchscript.pt"},
@@ -229,25 +229,34 @@ def _greedy_recall(src: list[tuple[float,float,float,float]], cand: list[tuple[f
 
 def _detect_semantic_boxes(path: Path, generate_pred: Any) -> dict[str,list[tuple[float,float,float,float]]]:
     staff,symbols,stems_rests,notehead,clefs_keys=generate_pred(str(path),use_tf=False); unit=_estimate_unit(staff)
+    gray=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+    if gray is None: raise RuntimeError(f"cannot read {path}")
+    if staff.ndim!=2 or staff.shape[0]<=0 or staff.shape[1]<=0: raise RuntimeError("invalid Oemer prediction geometry")
+    scale_x=gray.shape[1]/staff.shape[1]; scale_y=gray.shape[0]/staff.shape[0]
+    def source_box(x1: int,y1: int,x2: int,y2: int) -> tuple[float,float,float,float]:
+        return (
+            float(max(0,min(gray.shape[1],x1*scale_x))),
+            float(max(0,min(gray.shape[0],y1*scale_y))),
+            float(max(0,min(gray.shape[1],x2*scale_x))),
+            float(max(0,min(gray.shape[0],y2*scale_y))),
+        )
     out={k:[] for k in ["staff_line","tab_line","notehead","stem","beam_or_flag","rest","accidental","clef","barline"]}
     for x1,y1,x2,y2,_ in _component_boxes(notehead,max(3,int(unit*unit*.08))):
         w,h=x2-x1,y2-y1
-        if .35*unit<=w<=2.2*unit and .35*unit<=h<=2.2*unit: out["notehead"].append(tuple(map(float,(x1,y1,x2,y2))))
+        if .35*unit<=w<=2.2*unit and .35*unit<=h<=2.2*unit: out["notehead"].append(source_box(x1,y1,x2,y2))
     for x1,y1,x2,y2,_ in _component_boxes(stems_rests,max(3,int(unit*.5))):
-        w,h=x2-x1,y2-y1; b=tuple(map(float,(x1,y1,x2,y2)))
+        w,h=x2-x1,y2-y1; b=source_box(x1,y1,x2,y2)
         if h>=3.6*unit and w<=1.5*unit: out["barline"].append(b)
         elif h>=1.8*unit and w<=1.2*unit: out["stem"].append(b)
         elif .45*unit<=w<=3*unit and .45*unit<=h<=3.6*unit: out["rest"].append(b)
     for x1,y1,x2,y2,_ in _component_boxes(clefs_keys,max(3,int(unit*unit*.10))):
-        w,h=x2-x1,y2-y1; b=tuple(map(float,(x1,y1,x2,y2)))
+        w,h=x2-x1,y2-y1; b=source_box(x1,y1,x2,y2)
         if h>=2.4*unit and w>=.8*unit: out["clef"].append(b)
         elif .45*unit<=h<=3*unit and .25*unit<=w<=2.2*unit: out["accidental"].append(b)
     residue=(symbols>0).astype(np.uint8); residue[(notehead>0)|(stems_rests>0)|(clefs_keys>0)|(staff>0)]=0
     for x1,y1,x2,y2,_ in _component_boxes(residue,max(3,int(unit*unit*.10))):
         w,h=x2-x1,y2-y1
-        if (w>=1.4*unit and h<=1.8*unit) or (h>=.8*unit and w<=1.8*unit): out["beam_or_flag"].append(tuple(map(float,(x1,y1,x2,y2))))
-    gray=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
-    if gray is None: raise RuntimeError(f"cannot read {path}")
+        if (w>=1.4*unit and h<=1.8*unit) or (h>=.8*unit and w<=1.8*unit): out["beam_or_flag"].append(source_box(x1,y1,x2,y2))
     for d in conservative_line_system_detector(gray): out[d.class_id].append(tuple(map(float,d.bbox)))
     return out
 
