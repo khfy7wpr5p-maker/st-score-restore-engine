@@ -6,6 +6,9 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import cv2
+import numpy as np
+
 from st_score_restore.stage11_v2d_clef_source_qualification_colab import (
     PROGRESS_SCHEMA,
     SOURCE_TARGETS,
@@ -15,6 +18,7 @@ from st_score_restore.stage11_v2d_clef_source_qualification_colab import (
     _page_descriptors,
     _teacher_boxes,
 )
+from st_score_restore.stage11_v2d_colab_runner import _detect_semantic_boxes
 from st_score_restore.stage11_v2d_spatial_teacher_review import EXPECTED_PAGES
 
 
@@ -77,7 +81,8 @@ class Stage11V2dClefSourceQualificationColabTests(unittest.TestCase):
                     (0.0, 0.0, 10.0, 10.0),
                     (21.0, 21.0, 31.0, 31.0),
                     (50.0, 50.0, 60.0, 60.0),
-                ]
+                ],
+                "accidental": [(70.0, 10.0, 75.0, 20.0)],
             }
             with patch(
                 "st_score_restore.stage11_v2d_clef_source_qualification_colab._detect_semantic_boxes",
@@ -96,6 +101,35 @@ class Stage11V2dClefSourceQualificationColabTests(unittest.TestCase):
         self.assertEqual(3, record["detectorBoxCount"])
         self.assertEqual((2, 1, 0), (record["tp"], record["fp"], record["fn"]))
         self.assertEqual(2, len(record["matches"]))
+        self.assertEqual(1, record["keyCandidateCount"])
+        self.assertEqual([[70.0, 10.0, 75.0, 20.0]], record["keyCandidateBoxes"])
+        self.assertEqual("diagnostic_only_no_teacher_truth", record["keyMeasurementBoundary"])
+
+    def test_semantic_boxes_are_normalized_to_source_image_coordinates(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source = Path(temp_dir) / "source.png"
+            self.assertTrue(cv2.imwrite(str(source), np.full((100, 200), 255, dtype=np.uint8)))
+
+            def generate_pred(_path: str, use_tf: bool = False):
+                self.assertFalse(use_tf)
+                shape = (200, 400)
+                staff = np.zeros(shape, dtype=np.uint8)
+                symbols = np.zeros(shape, dtype=np.uint8)
+                stems_rests = np.zeros(shape, dtype=np.uint8)
+                notehead = np.zeros(shape, dtype=np.uint8)
+                clefs_keys = np.zeros(shape, dtype=np.uint8)
+                clefs_keys[60:90, 40:50] = 1
+                clefs_keys[100:110, 100:105] = 1
+                return staff, symbols, stems_rests, notehead, clefs_keys
+
+            with patch(
+                "st_score_restore.stage11_v2d_colab_runner.conservative_line_system_detector",
+                return_value=[],
+            ):
+                boxes = _detect_semantic_boxes(source, generate_pred)
+
+        self.assertEqual([(20.0, 30.0, 25.0, 45.0)], boxes["clef"])
+        self.assertEqual([(50.0, 50.0, 52.5, 55.0)], boxes["accidental"])
 
     def test_progress_reuse_requires_exact_fingerprint(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
