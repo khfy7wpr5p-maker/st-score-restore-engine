@@ -4,7 +4,7 @@
   "generatedOn": "2026-09-09",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "CANONICAL_NOTEHEAD_CLASS_EVIDENCE_ACCEPTED_OTHER_CLASSES_OPEN",
+  "state": "CANONICAL_NOTEHEAD_ACCEPTED_SPATIAL_TEACHER_REVIEW_PACKAGE_READY",
   "inputTruth": {
     "approvedDevelopmentSourceFamilyCount": 5,
     "approvedDevelopmentPageCount": 20,
@@ -89,12 +89,26 @@
     "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"]
   },
   "strategyPath": "evidence/stage11/v2d/v2d-next-semantic-class-strategy.v1.json",
+  "spatialTeacherReview": {
+    "status": "WORK_PACKAGE_READY_HUMAN_ANNOTATION_PENDING",
+    "workPackagePath": "evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json",
+    "reviewGuidePath": "docs/stage11-v2d-spatial-teacher-review-guide.md",
+    "semanticClasses": ["clef", "staff_line"],
+    "teacherPresentPageCount": 18,
+    "sourceFamilyCount": 5,
+    "humanAnnotationsPopulated": 0,
+    "teacherSpatialLabelsComplete": false,
+    "detectorOutputShownToReviewer": false,
+    "restoredOutputShownToReviewer": false,
+    "newColabRunRequiredNow": false
+  },
   "validation": {
     "canonicalNoteheadBindingWorkflow": "Stage 11 V2d Canonical Notehead Evidence Validation",
     "pythonMatrix": ["3.11", "3.12"],
     "localFocusedTestsPassed": true,
     "localFullSuitePassed": true,
-    "fullSuiteTestCount": 1217
+    "fullSuiteTestCount": 1224,
+    "spatialTeacherReviewPackageLocalValidationPassed": true
   },
   "safetyBoundaries": {
     "trainingAuthorized": false,
@@ -122,11 +136,13 @@
     "v2dGpuBenchmarkExecuted": true,
     "canonicalNoteheadRerunExecuted": true,
     "noteheadClassEvidenceAccepted": true,
+    "spatialTeacherReviewWorkPackageReady": true,
+    "spatialTeacherReviewCompleted": false,
     "clefCanonicalRerunAuthorized": false,
     "semanticPreservationEstablished": false,
     "overallStage11PassAuthorized": false,
     "productionReady": false,
     "prReadyForMerge": false
   },
-  "nextSafeBoundary": "create teacher-reviewed clef box and staff-line mask/topology evidence before preparing another detector runner or requesting Colab"
+  "nextSafeBoundary": "obtain independent human clef boxes and staff-line masks/topology in a separate hash-bound completion artifact; do not prepare another detector runner or request Colab yet"
 }
