@@ -21,6 +21,9 @@ class Stage11V2dCanonicalCpuRestoreGpuNoteheadSemanticRerunTests(unittest.TestCa
     def test_detector_gpu_profile_is_explicit_and_cost_bounded(self) -> None:
         self.assertEqual("1.20.2", gpu.GPU_ORT)
         self.assertEqual("CUDAExecutionProvider", gpu.GPU_PROVIDER)
+        self.assertEqual("DEFAULT", gpu.GPU_PROVIDER_OPTIONS["cudnn_conv_algo_search"])
+        self.assertEqual("0", gpu.GPU_PROVIDER_OPTIONS["use_tf32"])
+        self.assertEqual((16, 8, 4, 2, 1), gpu.GPU_BATCH_CANDIDATES)
         self.assertLessEqual(gpu.MAX_PROJECTED_GPU_SECONDS, 45 * 60)
         self.assertLessEqual(gpu.MAX_TOTAL_WALL_SECONDS, 60 * 60)
 
@@ -32,11 +35,14 @@ class Stage11V2dCanonicalCpuRestoreGpuNoteheadSemanticRerunTests(unittest.TestCa
         self.assertEqual(gpu._canonical_boxes(a), gpu._canonical_boxes(b))
         self.assertNotEqual(gpu._canonical_boxes(a), gpu._canonical_boxes(c))
 
-    def test_runner_is_fail_closed_and_does_not_modify_restore_schema(self) -> None:
+    def test_runner_is_fail_closed_and_disables_whole_session_fallback(self) -> None:
         text = RUNNER.read_text(encoding="utf-8")
         tree = ast.parse(text)
         self.assertIn("BLOCKED_BY_CPU_GPU_EQUIVALENCE", text)
         self.assertIn("gpuDetectorAdmittedOnlyAfterCpuCanaryEquivalence", text)
+        self.assertIn("sess.disable_fallback()", text)
+        self.assertIn("TRUE GPU BATCH PROBE PASS", text)
+        self.assertIn("cudnn_conv_algo_search", text)
         self.assertIn("Intentionally keep cpu.SCHEMA and cpu.RESTORE_DIR unchanged", text)
         self.assertIn("semanticPreservationEstablished", text)
         self.assertNotIn("optimizer.step", text)
@@ -48,6 +54,8 @@ class Stage11V2dCanonicalCpuRestoreGpuNoteheadSemanticRerunTests(unittest.TestCa
         self.assertIn("onnxruntime-gpu==1.20.2", notebook)
         self.assertIn("CUDAExecutionProvider", notebook)
         self.assertIn("nvidia-smi", notebook)
+        self.assertIn("TRUE GPU BATCH PROBE PASS", notebook)
+        self.assertIn("whole-session fallback: disabled", notebook)
         self.assertIn("CPU↔GPU CANARY EQUIVALENCE PASS", notebook)
         self.assertIn("stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun", notebook)
 
