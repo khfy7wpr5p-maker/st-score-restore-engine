@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "stage11.v2d.clef-box-teacher-completion-binding.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "completion": {
+    "filename": "clef_box_teacher_completion.v1.json",
+    "driveFileId": "1zd48RNvW5htuFj2w4oTjiBMa1OFgYH6j",
+    "driveFolderId": "11JIiEupmBx7KOa29pjMNdBry59j8g58B",
+    "byteSize": 70465,
+    "sha256": "68df771d5ace9f0b968452ff532fa2693fa2cd3405477d91fa3a98eccb190d54",
+    "schemaVersion": "stage11.v2d.clef-box-teacher-review-completion.v1",
+    "reviewerName": "Önder",
+    "reviewDate": "2026-09-09"
+  },
+  "sourceReviewBundle": {
+    "filename": "ST_SCORE_RESTORE_STAGE11_V2D_SPATIAL_TEACHER_REVIEW_PACKAGE_2026-09-09.zip",
+    "byteSize": 18175904,
+    "sha256": "e5609d2f79139c209618a0fa8d61145ab55a6e548c0124e4664bb59d87366559",
+    "pageCount": 18
+  },
+  "taxonomyAmendmentPath": "evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json",
+  "independenceBoundary": {
+    "reviewBasis": "source_page_only",
+    "modelOutputShown": false,
+    "restoredOutputShown": false,
+    "detectorOutputUsedAsGroundTruth": false
+  },
+  "validatedSummary": {
+    "reviewPageCount": 18,
+    "completedPageCount": 18,
+    "clefBoxCount": 213,
+    "clefTypeCounts": {
+      "treble": 165,
+      "bass": 34,
+      "tab": 12,
+      "soprano": 2
+    },
+    "duplicateBoxIdCount": 0,
+    "outOfBoundsBoxCount": 0,
+    "ambiguousBoxCount": 0,
+    "truncatedBoxCount": 0,
+    "clefBoxLabelsComplete": true,
+    "staffLineLabelsComplete": false
+  },
+  "ingestionDecision": {
+    "clefTeacherTruthAccepted": true,
+    "staffLineTeacherTruthAccepted": false,
+    "teacherSpatialLabelsComplete": false,
+    "nextStep": "P4_SOURCE_ONLY_CLEF_DETECTOR_QUALIFICATION"
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
