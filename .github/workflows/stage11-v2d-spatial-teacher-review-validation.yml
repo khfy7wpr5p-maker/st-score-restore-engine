@@ -4,8 +4,15 @@ on:
   pull_request:
     paths:
       - 'src/st_score_restore/stage11_v2d_spatial_teacher_review.py'
+      - 'src/st_score_restore/stage11_v2d_clef_teacher_completion.py'
+      - 'src/st_score_restore/stage11_v2d_clef_source_qualification.py'
       - 'tests/test_stage11_v2d_spatial_teacher_review.py'
+      - 'tests/test_stage11_v2d_clef_teacher_completion.py'
+      - 'tests/test_stage11_v2d_clef_source_qualification.py'
       - 'evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json'
       - 'docs/stage11-v2d-spatial-teacher-review-guide.md'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-spatial-teacher-review-validation.yml'
@@ -14,8 +21,15 @@ on:
       - stage11-v2c-semantic-detector-corpus-expansion
     paths:
       - 'src/st_score_restore/stage11_v2d_spatial_teacher_review.py'
+      - 'src/st_score_restore/stage11_v2d_clef_teacher_completion.py'
+      - 'src/st_score_restore/stage11_v2d_clef_source_qualification.py'
       - 'tests/test_stage11_v2d_spatial_teacher_review.py'
+      - 'tests/test_stage11_v2d_clef_teacher_completion.py'
+      - 'tests/test_stage11_v2d_clef_source_qualification.py'
       - 'evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json'
       - 'docs/stage11-v2d-spatial-teacher-review-guide.md'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-spatial-teacher-review-validation.yml'
@@ -35,8 +49,22 @@ jobs:
       - run: python -m pip install -e .
       - name: Validate pristine spatial review package
         run: python -m unittest tests.test_stage11_v2d_spatial_teacher_review -v
-      - name: Compile validator and tests
-        run: python -m py_compile src/st_score_restore/stage11_v2d_spatial_teacher_review.py tests/test_stage11_v2d_spatial_teacher_review.py
-      - name: Validate work-package JSON syntax
-        run: python -m json.tool evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json >/dev/null
-
+      - name: Validate clef teacher completion contract
+        run: python -m unittest tests.test_stage11_v2d_clef_teacher_completion -v
+      - name: Validate P4 clef source qualification contract
+        run: python -m unittest tests.test_stage11_v2d_clef_source_qualification -v
+      - name: Compile validators and tests
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2d_spatial_teacher_review.py \
+            src/st_score_restore/stage11_v2d_clef_teacher_completion.py \
+            src/st_score_restore/stage11_v2d_clef_source_qualification.py \
+            tests/test_stage11_v2d_spatial_teacher_review.py \
+            tests/test_stage11_v2d_clef_teacher_completion.py \
+            tests/test_stage11_v2d_clef_source_qualification.py
+      - name: Validate Stage 11 V2d spatial JSON syntax
+        run: |
+          python -m json.tool evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json >/dev/null
+          python -m json.tool evidence/stage11/v2d/v2d-clef-teacher-taxonomy-amendment.v1.json >/dev/null
+          python -m json.tool evidence/stage11/v2d/v2d-clef-box-teacher-completion-binding.v1.json >/dev/null
+          python -m json.tool evidence/stage11/v2d/v2d-clef-source-qualification-contract.v1.json >/dev/null
