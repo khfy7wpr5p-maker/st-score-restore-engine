@@ -6,9 +6,11 @@ on:
       - "src/st_score_restore/stage11_v2d_detector_benchmark.py"
       - "src/st_score_restore/stage11_v2d_colab_runner.py"
       - "src/st_score_restore/stage11_v2d_colab_resume.py"
+      - "src/st_score_restore/stage11_v2d_canonical_cpu_notehead_bridge.py"
       - "tests/test_stage11_v2d_detector_benchmark.py"
       - "evidence/stage11/v2d/**"
       - "notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb"
+      - "notebooks/stage11_v2d_canonical_cpu_notehead_bridge.ipynb"
       - "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json"
       - ".github/workflows/stage11-v2d-detector-benchmark-validation.yml"
   push:
@@ -17,9 +19,11 @@ on:
       - "src/st_score_restore/stage11_v2d_detector_benchmark.py"
       - "src/st_score_restore/stage11_v2d_colab_runner.py"
       - "src/st_score_restore/stage11_v2d_colab_resume.py"
+      - "src/st_score_restore/stage11_v2d_canonical_cpu_notehead_bridge.py"
       - "tests/test_stage11_v2d_detector_benchmark.py"
       - "evidence/stage11/v2d/**"
       - "notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb"
+      - "notebooks/stage11_v2d_canonical_cpu_notehead_bridge.ipynb"
       - "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json"
       - ".github/workflows/stage11-v2d-detector-benchmark-validation.yml"
 
@@ -49,18 +53,28 @@ jobs:
             src/st_score_restore/stage11_v2d_detector_benchmark.py \
             src/st_score_restore/stage11_v2d_colab_runner.py \
             src/st_score_restore/stage11_v2d_colab_resume.py \
+            src/st_score_restore/stage11_v2d_canonical_cpu_notehead_bridge.py \
             tests/test_stage11_v2d_detector_benchmark.py
       - name: Validate V2d JSON and notebook syntax
         run: |
           python - <<'PY'
+          import ast
           import json
           from pathlib import Path
-          paths = [
+
+          json_paths = [
               Path('evidence/stage11/v2d/v2d-detector-candidate-registry.v1.json'),
+              Path('evidence/stage11/v2d/v2d-class-selection-decision.v1.json'),
               Path('notebooks/stage11_v2d_colab_gpu_detector_benchmark.ipynb'),
+              Path('notebooks/stage11_v2d_canonical_cpu_notehead_bridge.ipynb'),
               Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'),
           ]
-          for path in paths:
-              json.loads(path.read_text(encoding='utf-8'))
+          for path in json_paths:
+              payload = json.loads(path.read_text(encoding='utf-8'))
               print(f'valid json: {path}')
+              if path.suffix == '.ipynb':
+                  for cell in payload.get('cells', []):
+                      if cell.get('cell_type') == 'code':
+                          ast.parse(''.join(cell.get('source', [])))
+                  print(f'valid notebook python syntax: {path}')
           PY
