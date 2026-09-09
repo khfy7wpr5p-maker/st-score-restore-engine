@@ -39,6 +39,7 @@ from .stage11_v2d_colab_runner import _detect_semantic_boxes
 RESULT_SCHEMA = "stage11.v2d.clef-source-qualification-execution.v1"
 PROGRESS_SCHEMA = "stage11.v2d.clef-source-qualification-page.v1"
 PINNED_ORT_VERSION = "1.20.1"
+DETECTOR_LOGIC_ID = "stage11_v2d_colab_runner._detect_semantic_boxes.source-coordinate-v2"
 ROOT = Path("/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_CLEF_SOURCE_QUALIFICATION")
 INPUT_ROOT = ROOT / "exact_inputs"
 SOURCE_ROOT = ROOT / "source_pages"
@@ -284,7 +285,7 @@ def _fingerprint(page_id: str, source_sha256: str, teacher_boxes: list[list[floa
             "teacherBoxes": teacher_boxes,
             "oemerCommit": OEMER_COMMIT,
             "checkpoints": dict(checkpoint_hashes),
-            "detectorLogic": "stage11_v2d_colab_runner._detect_semantic_boxes",
+            "detectorLogic": DETECTOR_LOGIC_ID,
             "iouThreshold": PRIMARY_IOU_THRESHOLD,
         },
         sort_keys=True,
@@ -314,7 +315,9 @@ def _compute_page(
     checkpoint_hashes: Mapping[str, str],
 ) -> dict[str, Any]:
     teacher = _teacher_boxes(teacher_page)
-    detector = [list(map(float, box)) for box in _detect_semantic_boxes(source_path, generate_pred)["clef"]]
+    semantic = _detect_semantic_boxes(source_path, generate_pred)
+    detector = [list(map(float, box)) for box in semantic["clef"]]
+    key_candidates = [list(map(float, box)) for box in semantic.get("accidental", [])]
     match = greedy_one_to_one_match(teacher, detector, iou_threshold=PRIMARY_IOU_THRESHOLD)
     fingerprint = _fingerprint(page_id, sha256_file(source_path), teacher, checkpoint_hashes)
     return {
@@ -331,6 +334,9 @@ def _compute_page(
         "detectorBoxCount": len(detector),
         "teacherBoxes": teacher,
         "detectorBoxes": detector,
+        "keyCandidateCount": len(key_candidates),
+        "keyCandidateBoxes": key_candidates,
+        "keyMeasurementBoundary": "diagnostic_only_no_teacher_truth",
         "matches": match["matches"],
         "tp": match["tp"],
         "fp": match["fp"],
@@ -416,13 +422,20 @@ def run() -> Path:
             "checkpointSha256": checkpoint_hashes,
             "executionProvider": "CPUExecutionProvider",
             "onnxruntimeVersion": PINNED_ORT_VERSION,
-            "logic": "stage11_v2d_colab_runner._detect_semantic_boxes",
+            "logic": DETECTOR_LOGIC_ID,
+            "coordinateSpace": "original_source_image_pixels",
             "clefSubtypeClassificationEvaluated": False,
         },
         "matching": {
             "method": "greedy_one_to_one_descending_iou",
             "primaryIouThreshold": PRIMARY_IOU_THRESHOLD,
             "thresholdPreregistered": True,
+        },
+        "keySignatureDiagnostic": {
+            "status": "unscored",
+            "teacherTruthAvailable": False,
+            "candidateCount": sum(int(record.get("keyCandidateCount", 0)) for record in page_records),
+            "reason": "key candidates are recorded separately and never mixed into the clef score",
         },
         "pageEvidence": page_records,
         "sourceFamilyMetrics": measurement["sourceFamilyMetrics"],
