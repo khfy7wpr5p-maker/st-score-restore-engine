@@ -1,9 +1,13 @@
 {
   "claimBoundary": {
     "detectorOutputUsedAsGroundTruth": false,
+    "noteheadClassEvidenceAccepted": true,
+    "overallStage11PassAuthorized": false,
     "productionReady": false,
+    "productionPromotionAuthorized": false,
     "selectionDoesNotUpgradeClaims": true,
-    "semanticPreservationEstablished": false
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
   },
   "classResults": [
     {
@@ -139,6 +143,15 @@
       "rateAtRecallGte0_80AmongEvaluated": 0.0
     }
   ],
+  "canonicalOutcome": {
+    "bindingPath": "evidence/stage11/v2d/v2d-canonical-notehead-result-binding.v1.json",
+    "classId": "notehead",
+    "decision": "PASS_CANONICAL_CLASS_EVIDENCE",
+    "resultByteSize": 23228,
+    "resultDriveFileId": "15ZspsDK3jAAtfqmmebBebopEpo3a1Xpn",
+    "resultSha256": "ab6197bcf0dd58407ffd4401d61aefc195e5c8dd63cb68e5a05deee261dd2e54",
+    "reviewedOn": "2026-09-09"
+  },
   "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
   "generatedOn": "2026-09-09",
   "nextStep": {
@@ -155,6 +168,9 @@
     "trainingAllowed": false
   },
   "reviewMethod": {
+    "canonicalClassEvidenceAccepted": [
+      "notehead"
+    ],
     "postBenchmarkEvidenceReview": true,
     "preRegisteredUniversalThreshold": false,
     "rejectedForCanonicalClaimInput": [

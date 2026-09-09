@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "stage11.v2d.next-semantic-class-strategy.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "principles": {
+    "detectorRole": "measurement_only",
+    "detectorOutputUsedAsGroundTruth": false,
+    "preferIndependentCrossChecks": true,
+    "avoidPermanentOemerLockIn": true,
+    "audiverisIncluded": false,
+    "heldOutAccessAuthorized": false,
+    "trainingAuthorized": false
+  },
+  "classStrategies": [
+    {
+      "classId": "accidental",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.5384054592927967,
+      "primaryFailureHypothesis": "the combined clefs_keys map and geometry split confound accidentals, clefs, and key signatures",
+      "nextValidator": "teacher-reviewed accidental boxes plus a permissively licensed accidental detector or connected-component shape cross-check",
+      "requiredEvidence": "family-stratified box precision/recall before preservation recall"
+    },
+    {
+      "classId": "barline",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.45735490700625026,
+      "primaryFailureHypothesis": "barlines are inferred from the stems_rests map by height/width alone, so stems and staff geometry are confounded",
+      "nextValidator": "staff-system-aware vertical-line topology with continuity, system-boundary, and repeat-bar checks",
+      "requiredEvidence": "teacher-reviewed line endpoints and barline type labels"
+    },
+    {
+      "classId": "beam_or_flag",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.3862696245501668,
+      "primaryFailureHypothesis": "residual-symbol connected components merge beams, flags, text, and other ink after subtracting imperfect masks",
+      "nextValidator": "notehead/stem graph adjacency plus oriented stroke topology",
+      "requiredEvidence": "teacher-reviewed beam-group and flag attachments, not isolated component boxes only"
+    },
+    {
+      "classId": "rest",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.46058851053933914,
+      "primaryFailureHypothesis": "the stems_rests channel is split by coarse geometry and one teacher-present page has no source detections",
+      "nextValidator": "small rest detector cross-checked against staff position and duration-shape families",
+      "requiredEvidence": "teacher-reviewed rest boxes and rest-type labels"
+    },
+    {
+      "classId": "staff_line",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.6,
+      "primaryFailureHypothesis": "the conservative line-system detector intentionally abstains and provides only 10/18 evaluable pages",
+      "nextValidator": "line-continuity, spacing, count, and gap statistics compared source-to-restored at system level",
+      "requiredEvidence": "teacher-reviewed staff systems and line masks; evaluate topology rather than object boxes"
+    },
+    {
+      "classId": "stem",
+      "currentDisposition": "REJECTED_CURRENT_DETECTOR",
+      "observedMeanSourceRecall": 0.5997025098290498,
+      "primaryFailureHypothesis": "stems and barlines share a segmentation channel and are separated by fixed geometry thresholds",
+      "nextValidator": "vertical-stroke extraction linked to notehead attachment and staff-relative length",
+      "requiredEvidence": "teacher-reviewed stem-to-notehead graph edges"
+    },
+    {
+      "classId": "tie_or_slur",
+      "currentDisposition": "UNSUPPORTED",
+      "primaryFailureHypothesis": "current Oemer benchmark exposes no admitted tie/slur measurement output",
+      "nextValidator": "thin-curve detector with endpoint proximity to noteheads and arc-continuity checks",
+      "requiredEvidence": "teacher-reviewed curve masks plus tie-versus-slur relationship labels"
+    },
+    {
+      "classId": "tab_digit",
+      "currentDisposition": "UNSUPPORTED",
+      "primaryFailureHypothesis": "current detector has no TAB numeral class",
+      "nextValidator": "digit OCR/detector restricted to validated TAB staff regions",
+      "requiredEvidence": "teacher-reviewed digit boxes, values, and string-line assignment"
+    },
+    {
+      "classId": "tab_line",
+      "currentDisposition": "UNSUPPORTED",
+      "primaryFailureHypothesis": "current semantic detector does not distinguish TAB systems from standard staves",
+      "nextValidator": "parallel-line topology with six-line prior used only after TAB-region classification",
+      "requiredEvidence": "teacher-reviewed TAB system polygons and individual line masks"
+    },
+    {
+      "classId": "tab_string",
+      "currentDisposition": "UNSUPPORTED",
+      "primaryFailureHypothesis": "TAB string identity is a relationship, not an isolated visual symbol",
+      "nextValidator": "assign detected digits to ordered TAB lines with geometry and ambiguity abstention",
+      "requiredEvidence": "teacher-reviewed digit-to-string relationships"
+    }
+  ],
+  "crossCuttingRequirements": {
+    "separateDetectorErrorFromRestoreDamage": [
+      "measure detector precision/recall on source images against teacher box or mask truth",
+      "only then compare source and restored detections with the same frozen detector",
+      "label teacher-detector mismatch separately from missing or added restored detections"
+    ],
+    "candidateAdmission": [
+      "permissive code and checkpoint license review",
+      "pinned weights and runtime",
+      "offline reproducibility",
+      "one-canary CPU/GPU equivalence when providers differ",
+      "bounded runtime and durable cache",
+      "no API dependency or production lock-in without a separate ADR"
+    ]
+  },
+  "currentClassMatrix": {
+    "PASS": ["notehead"],
+    "REVIEW_ONLY": ["clef"],
+    "REJECTED_CURRENT_DETECTOR": ["accidental", "barline", "beam_or_flag", "rest", "staff_line", "stem"],
+    "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"]
+  },
+  "nextSmallestSafeAction": "create a development-only teacher box/mask annotation package for clef and staff_line before preparing any new detector or Colab run",
+  "claimBoundary": {
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
