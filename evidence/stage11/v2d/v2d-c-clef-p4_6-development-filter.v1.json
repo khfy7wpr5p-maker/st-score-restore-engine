@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_6-development-filter.v1",
+  "generatedOn": "2026-09-10",
+  "status": "DEVELOPMENT_FILTER_FROZEN_FOR_REMEASUREMENT",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "purpose": "Reduce false positives from the P4.5 source-image C-clef localizer using only normalized candidate geometry. This is development tuning, not detector qualification.",
+  "inputs": {
+    "candidateArtifact": {
+      "driveFileId": "1aQkTrxqwNaMNO6JPXk_tD6PdBwuJP_fw",
+      "filename": "p4_5_source_image_candidates.v1.json",
+      "byteSize": 164561,
+      "sha256": "0c1c921d0c0f19849a9eb36efabe4f1dc658ca4d7a3d3aa904f1c42d97157832"
+    },
+    "measurementArtifact": {
+      "driveFileId": "1EbJPtUXzyfWXf2-ZX5OOJ4RdE9Z6IeUT",
+      "filename": "p4_5_source_image_localizer_result.v1.json",
+      "byteSize": 55683,
+      "sha256": "e2a046fdbba52ff1394b3676c1e103f26518da7ff5306d68ee1026eff5de2e45"
+    },
+    "teacherBoxCount": 71,
+    "pageCount": 29,
+    "primaryIouThreshold": 0.5
+  },
+  "filter": {
+    "id": "source-image-c-clef-geometric-filter.p4_6.v1",
+    "usesTeacherLabelsAtInference": false,
+    "usesPageIdAtInference": false,
+    "usesSourceGroupAtInference": false,
+    "usesEomer": false,
+    "usesOnnx": false,
+    "usesGpu": false,
+    "rules": [
+      "areaInStaffSpacesSquared >= 4.15",
+      "areaInStaffSpacesSquared <= 9.80",
+      "widthInStaffSpaces >= 2.00",
+      "heightInStaffSpaces <= 6.10",
+      "if staffSpacing < 12.00 then heightInStaffSpaces >= 5.00"
+    ]
+  },
+  "developmentTuningDisclosure": {
+    "thresholdsSelectedAfterReviewingP4_5DevelopmentLabels": true,
+    "qualificationEvidence": false,
+    "heldOutAccessed": false,
+    "retuneAfterHoldoutAllowed": false
+  },
+  "expectedDevelopmentRemeasurement": {
+    "pooled": {
+      "tp": 66,
+      "fp": 5,
+      "fn": 5,
+      "precision": 0.9295774647887324,
+      "recall": 0.9295774647887324,
+      "f1": 0.9295774647887324
+    },
+    "subtypeRecall": {
+      "C1": {"tp": 20, "teacherBoxes": 20, "recall": 1.0},
+      "C3": {"tp": 33, "teacherBoxes": 36, "recall": 0.9166666666666666},
+      "C4": {"tp": 13, "teacherBoxes": 15, "recall": 0.8666666666666667}
+    }
+  },
+  "safetyBoundary": {
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "nextStep": "Execute deterministic offline remeasurement on the frozen P4.5 candidate artifact, bind the result, then freeze before any independent holdout evaluation."
+  }
+}
