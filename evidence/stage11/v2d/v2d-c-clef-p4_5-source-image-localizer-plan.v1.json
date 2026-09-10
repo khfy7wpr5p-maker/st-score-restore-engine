@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_5-source-image-localizer-plan.v1",
+  "generatedOn": "2026-09-10",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "status": "PREREGISTERED_DEVELOPMENT_LOCALIZATION",
+  "purpose": "Test whether C-clef glyph localization can be recovered directly from source PNGs without requiring EOMER clefs_keys output.",
+  "inputs": {
+    "sourceManifestSha256": "365d45462b9d7b422a640e47bacdd5c8a5f16860198dec37121946411f6b3294",
+    "teacherTruthSha256": "1104d916faaf8d3c391cca9eda0354d21259f722cdcfe0f414c140796a5ffc5b",
+    "pageCount": 29,
+    "teacherBoxCount": 71,
+    "teacherLabelCounts": {"C1": 20, "C3": 36, "C4": 15, "AMBIGUOUS": 0}
+  },
+  "inferenceBoundary": {
+    "primaryInput": "original source PNG only",
+    "eomerUsed": false,
+    "onnxUsed": false,
+    "gpuRequired": false,
+    "restoreModelLoaded": false,
+    "teacherTruthReadDuringCandidateGeneration": false,
+    "teacherTruthUse": "evaluation_only_after_all_page_candidates_are_generated",
+    "heldOutAccessed": false,
+    "trainingUsed": false
+  },
+  "frozenParameters": {
+    "grayscaleDarkThreshold": 180,
+    "centralBandLeftRatio": 0.18,
+    "centralBandRightRatio": 0.82,
+    "staffRowCoverageCandidates": [0.35, 0.40, 0.45, 0.50, 0.55],
+    "staffSpacingMinimumPixels": 5.0,
+    "staffSpacingMaximumPixels": 50.0,
+    "staffGapDeviationMaximumRatio": 0.25,
+    "staffGapDeviationMinimumPixels": 3.0,
+    "staffDedupCenterToleranceInSpaces": 0.60,
+    "staffDedupSpacingToleranceRatio": 0.35,
+    "staffLineRemovalHorizontalKernelPageWidthRatio": 0.04,
+    "staffLineRemovalHorizontalKernelMinimumPixels": 25,
+    "staffLineRemovalVerticalDilatePixels": 3,
+    "barlineProbeTopMarginInSpaces": 2.0,
+    "barlineProbeBottomMarginInSpaces": 2.0,
+    "barlineProbeLeftPageRatio": 0.30,
+    "barlineStrongColumnOccupancyRatio": 0.75,
+    "barlineMaximumLeftPageRatio": 0.20,
+    "glyphWindowXOffsetInSpaces": 0.20,
+    "glyphWindowWidthInSpaces": 4.50,
+    "glyphWindowTopMarginInSpaces": 2.0,
+    "glyphWindowBottomMarginInSpaces": 2.5,
+    "glyphReconnectKernelWidthInSpaces": 0.15,
+    "glyphReconnectKernelHeightInSpaces": 0.60,
+    "componentMinimumWidthInSpaces": 1.0,
+    "componentMaximumWidthInSpaces": 4.8,
+    "componentMinimumHeightInSpaces": 2.5,
+    "componentMaximumHeightInSpaces": 7.0,
+    "componentMinimumAreaInStaffSpacesSquared": 0.6,
+    "candidateSelection": "leftmost qualifying component after detected system barline"
+  },
+  "measurement": {
+    "primaryIouThreshold": 0.50,
+    "diagnosticIouThreshold": 0.30,
+    "matching": "greedy_one_to_one_descending_iou",
+    "requiredBreakdown": ["pooled", "per_page", "per_teacher_subtype"],
+    "developmentTargetOnly": {
+      "pooledLocalizationRecallMinimum": 0.90,
+      "eachSubtypeLocalizationRecallMinimum": 0.80
+    }
+  },
+  "interpretationBoundary": {
+    "localizationOnly": true,
+    "candidatePrecisionDoesNotQualifyFinalDetector": true,
+    "subtypeClassifierIncluded": false,
+    "detectorQualified": false,
+    "qualificationDecisionAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextIfTargetMet": "Freeze a separate C-clef shape/subtype classifier on development data, then evaluate the complete detector before independent held-out qualification.",
+  "nextIfTargetMissed": "Version a new source-image localizer; do not alter this v1 after viewing its 29-page metrics."
+}
