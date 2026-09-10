@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-adapter-p4_3-development-measurement-binding.v1",
+  "generatedOn": "2026-09-10",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "status": "REJECTED_CURRENT_ADAPTER",
+  "purpose": "Bind the completed source-only 29-page C-clef development measurement without retuning the measured adapter.",
+  "measurementArtifact": {
+    "driveFileId": "1cCjcO990fkxGs9fQMUYLtR2HDUEaIlCe",
+    "drivePath": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_C_CLEF_ADAPTER_MEASUREMENT/p4_c_clef_adapter_measurement.v1.json",
+    "byteSize": 199800,
+    "sha256": "bf360e69f8a146ab58cd613fafcf15649219218d37798d9f21d6acedad8501ec",
+    "generatedAt": "2026-09-10T19:47:00Z",
+    "runtimeSeconds": 8870.202279806137
+  },
+  "measurementContract": {
+    "sourceOnly": true,
+    "trainingUsed": false,
+    "thresholdTuningUsed": false,
+    "teacherTruthConsumedAtInference": false,
+    "matchingMethod": "greedy_one_to_one_descending_iou",
+    "primaryIouThreshold": 0.5,
+    "adapterId": "oemer-c-clef-staff-anchor.p4_3.v1",
+    "oemerVersion": "0.1.8",
+    "onnxruntimeVersion": "1.20.2",
+    "executionProvider": "HYBRID_UNET_CPU_SEGNET_CUDA_WHOLE_SESSION_FALLBACK_DISABLED"
+  },
+  "teacherTruth": {
+    "pageCount": 29,
+    "boxCount": 71,
+    "labelCounts": {
+      "C1": 20,
+      "C3": 36,
+      "C4": 15,
+      "AMBIGUOUS": 0
+    },
+    "sha256": "1104d916faaf8d3c391cca9eda0354d21259f722cdcfe0f414c140796a5ffc5b",
+    "sourceManifestSha256": "365d45462b9d7b422a640e47bacdd5c8a5f16860198dec37121946411f6b3294"
+  },
+  "pooledMetrics": {
+    "tp": 44,
+    "fp": 182,
+    "fn": 27,
+    "precision": 0.19469026548672566,
+    "recall": 0.6197183098591549,
+    "f1": 0.2962962962962963
+  },
+  "subtypeMetrics": {
+    "C1": {
+      "tp": 0,
+      "fp": 3,
+      "fn": 20,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "C3": {
+      "tp": 29,
+      "fp": 131,
+      "fn": 7,
+      "precision": 0.18125,
+      "recall": 0.8055555555555556,
+      "f1": 0.29591836734693877
+    },
+    "C4": {
+      "tp": 15,
+      "fp": 48,
+      "fn": 0,
+      "precision": 0.23809523809523808,
+      "recall": 1.0,
+      "f1": 0.3846153846153846
+    }
+  },
+  "sourceGroupMetrics": {
+    "C1_C4_MIXED": {
+      "teacherBoxes": 49,
+      "acceptedDetections": 156,
+      "tp": 27,
+      "fp": 129,
+      "fn": 22,
+      "precision": 0.17307692307692307,
+      "recall": 0.5510204081632653,
+      "f1": 0.2634146341463414
+    },
+    "C3_ALTO": {
+      "teacherBoxes": 17,
+      "acceptedDetections": 33,
+      "tp": 12,
+      "fp": 21,
+      "fn": 5,
+      "precision": 0.36363636363636365,
+      "recall": 0.7058823529411765,
+      "f1": 0.48
+    },
+    "C4_TENOR": {
+      "teacherBoxes": 5,
+      "acceptedDetections": 37,
+      "tp": 5,
+      "fp": 32,
+      "fn": 0,
+      "precision": 0.13513513513513514,
+      "recall": 1.0,
+      "f1": 0.2380952380952381
+    }
+  },
+  "rootCauseDiagnostics": {
+    "acceptedDetectionCount": 226,
+    "falsePositiveFractionOfAcceptedDetections": 0.8053097345132744,
+    "c1Localization": {
+      "teacherCount": 20,
+      "matchedCount": 0,
+      "interpretation": "No accepted detector box reached IoU 0.50 with any C1 teacher box. The stored result alone cannot distinguish an upstream EOMER mask miss from an adapter rejection; raw rejected-box/mask evidence was not persisted."
+    },
+    "adapterArchitectureObservation": "The measured adapter assigns subtype from the geometric center of an accepted connected component relative to the nearest staff line. This is only a proxy for the C-clef middle-C pointer and is not a direct pointer localization method.",
+    "overgenerationObservation": "The adapter accepted 226 detections for 71 teacher boxes. C3 and C4 recall is materially higher than precision, showing that candidate admission is the dominant failure mode after localization.",
+    "rejectedCandidateReasonTotals": {
+      "height": 3201,
+      "no_five_line_staff": 422,
+      "right_page_region": 44,
+      "unsupported_anchor_line": 23,
+      "width": 19,
+      "no_c_clef_vertical_spine": 1
+    },
+    "postMeasurementRetuningPerformed": false
+  },
+  "decision": {
+    "measurementComplete": true,
+    "currentAdapterQualified": false,
+    "currentAdapterDisposition": "REJECTED_CURRENT_ADAPTER",
+    "reason": "C1 recall is 0/20 and pooled precision is 0.19469026548672566 with 182 false positives. The current geometric-center/staff-anchor adapter is not safe as a semantic-preservation detector.",
+    "reuseAsTeacherGroundTruth": false,
+    "productionInferenceAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "rerunCurrentP4_3Authorized": false
+  },
+  "nextSafeBoundary": {
+    "action": "Start a separately versioned C-clef detector design; do not retune p4_3 after observing its metrics.",
+    "requirements": [
+      "Persist raw EOMER clefs_keys masks or raw connected-component candidates before adapter rejection so C1 failure can be localized exactly.",
+      "Replace bounding-box-center subtype anchoring with direct middle-C pointer or C-clef-shape localization.",
+      "Add staff-context candidate control to prevent multiple unrelated symbols from being accepted as clefs.",
+      "Freeze the new adapter before evaluation and use an independent held-out C-clef set for qualification."
+    ]
+  }
+}
