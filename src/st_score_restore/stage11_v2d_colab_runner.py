@@ -28,6 +28,7 @@ from .stage11_v2d_detector_benchmark import (
     validate_detector_benchmark_result,
 )
 from .stage11_v2c_semantic_preservation import conservative_line_system_detector
+from .stage11_v2d_clef_adapter import detect_tab_clef_markers, resolve_oemer_clef_candidates
 
 PINNED_ORT_VERSION = "1.20.1"
 OEMER_UPSTREAM_COMMIT = "dbe2a933d630d0f74805d717960eb259473f5978"
@@ -38,7 +39,7 @@ RESULT_ROOT = Path("/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/V2D_RES
 RESULT_FILENAME = "v2d_colab_gpu_detector_benchmark_result.json"
 SOURCE_RENDER_VERSION = "pdftoppm-72dpi-singlepage.v1"
 RESTORE_ALGORITHM_VERSION = "v2d-frozen-restore-512-overlap64-png3.v1"
-DETECTOR_LOGIC_VERSION = "oemer-dbe2a933-semantic-boxes-source-coordinates.v2"
+DETECTOR_LOGIC_VERSION = "oemer-dbe2a933-semantic-boxes-clef-adapter-p4_2.v1"
 
 TARGETS: dict[str, dict[str, Any]] = {
     "restore_model": {"drive_id":"1oJ9lOEpq7trDD8XZpVwCzQzMQ2mk-wWD","sha256":"7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234","size":7817857,"kind":"torchscript","filename":"v2a_candidate_512.torchscript.pt"},
@@ -227,7 +228,7 @@ def _greedy_recall(src: list[tuple[float,float,float,float]], cand: list[tuple[f
         if i not in si and j not in ci: si.add(i); ci.add(j); matched+=1
     return matched/max(1,len(src)),matched,max(0,len(cand)-matched)
 
-def _detect_semantic_boxes(path: Path, generate_pred: Any) -> dict[str,list[tuple[float,float,float,float]]]:
+def _detect_semantic_boxes(path: Path, generate_pred: Any) -> dict[str,Any]:
     staff,symbols,stems_rests,notehead,clefs_keys=generate_pred(str(path),use_tf=False); unit=_estimate_unit(staff)
     gray=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
     if gray is None: raise RuntimeError(f"cannot read {path}")
@@ -249,10 +250,25 @@ def _detect_semantic_boxes(path: Path, generate_pred: Any) -> dict[str,list[tupl
         if h>=3.6*unit and w<=1.5*unit: out["barline"].append(b)
         elif h>=1.8*unit and w<=1.2*unit: out["stem"].append(b)
         elif .45*unit<=w<=3*unit and .45*unit<=h<=3.6*unit: out["rest"].append(b)
+    combined_clef_key_candidates=[]
     for x1,y1,x2,y2,_ in _component_boxes(clefs_keys,max(3,int(unit*unit*.10))):
         w,h=x2-x1,y2-y1; b=source_box(x1,y1,x2,y2)
-        if h>=2.4*unit and w>=.8*unit: out["clef"].append(b)
+        if h>=2.4*unit and w>=.8*unit: combined_clef_key_candidates.append(b)
         elif .45*unit<=h<=3*unit and .25*unit<=w<=2.2*unit: out["accidental"].append(b)
+    clef_resolution=resolve_oemer_clef_candidates(
+        combined_clef_key_candidates,
+        source_width=gray.shape[1],
+        source_height=gray.shape[0],
+    )
+    out["clef"].extend(clef_resolution["clefBoxes"])
+    out["clef_types"]=list(clef_resolution["clefTypes"])
+    out["clef_detections"]=list(clef_resolution["detections"])
+    tab_resolution=detect_tab_clef_markers(gray)
+    out["clef"].extend(tab_resolution["clefBoxes"])
+    out["clef_types"].extend(tab_resolution["clefTypes"])
+    out["clef_detections"].extend(tab_resolution["detections"])
+    out["tab_clef_abstentions"]=list(tab_resolution["abstentions"])
+    out["accidental"].extend(clef_resolution["keyCandidateBoxes"])
     residue=(symbols>0).astype(np.uint8); residue[(notehead>0)|(stems_rests>0)|(clefs_keys>0)|(staff>0)]=0
     for x1,y1,x2,y2,_ in _component_boxes(residue,max(3,int(unit*unit*.10))):
         w,h=x2-x1,y2-y1

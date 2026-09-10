@@ -82,6 +82,7 @@ class Stage11V2dClefSourceQualificationColabTests(unittest.TestCase):
                     (21.0, 21.0, 31.0, 31.0),
                     (50.0, 50.0, 60.0, 60.0),
                 ],
+                "clef_types": ["treble", "bass", "treble"],
                 "accidental": [(70.0, 10.0, 75.0, 20.0)],
             }
             with patch(
@@ -101,6 +102,7 @@ class Stage11V2dClefSourceQualificationColabTests(unittest.TestCase):
         self.assertEqual(3, record["detectorBoxCount"])
         self.assertEqual((2, 1, 0), (record["tp"], record["fp"], record["fn"]))
         self.assertEqual(2, len(record["matches"]))
+        self.assertEqual(["treble", "bass", "treble"], record["detectorClefTypes"])
         self.assertEqual(1, record["keyCandidateCount"])
         self.assertEqual([[70.0, 10.0, 75.0, 20.0]], record["keyCandidateBoxes"])
         self.assertEqual("diagnostic_only_no_teacher_truth", record["keyMeasurementBoundary"])
@@ -128,7 +130,8 @@ class Stage11V2dClefSourceQualificationColabTests(unittest.TestCase):
             ):
                 boxes = _detect_semantic_boxes(source, generate_pred)
 
-        self.assertEqual([(20.0, 30.0, 25.0, 45.0)], boxes["clef"])
+        self.assertEqual([(18.875, 29.25, 26.125, 45.75)], boxes["clef"])
+        self.assertEqual(["treble"], boxes["clef_types"])
         self.assertEqual([(50.0, 50.0, 52.5, 55.0)], boxes["accidental"])
 
     def test_progress_reuse_requires_exact_fingerprint(self) -> None:

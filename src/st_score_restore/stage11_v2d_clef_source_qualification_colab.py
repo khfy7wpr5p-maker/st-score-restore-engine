@@ -39,7 +39,7 @@ from .stage11_v2d_colab_runner import _detect_semantic_boxes
 RESULT_SCHEMA = "stage11.v2d.clef-source-qualification-execution.v1"
 PROGRESS_SCHEMA = "stage11.v2d.clef-source-qualification-page.v1"
 PINNED_ORT_VERSION = "1.20.1"
-DETECTOR_LOGIC_ID = "stage11_v2d_colab_runner._detect_semantic_boxes.source-coordinate-v2"
+DETECTOR_LOGIC_ID = "stage11_v2d_colab_runner._detect_semantic_boxes.clef-adapter-p4_2-v1"
 ROOT = Path("/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_CLEF_SOURCE_QUALIFICATION")
 INPUT_ROOT = ROOT / "exact_inputs"
 SOURCE_ROOT = ROOT / "source_pages"
@@ -317,6 +317,9 @@ def _compute_page(
     teacher = _teacher_boxes(teacher_page)
     semantic = _detect_semantic_boxes(source_path, generate_pred)
     detector = [list(map(float, box)) for box in semantic["clef"]]
+    clef_types = [str(value) for value in semantic.get("clef_types", [])]
+    if clef_types and len(clef_types) != len(detector):
+        raise RuntimeError("clef subtype output does not align with detector boxes")
     key_candidates = [list(map(float, box)) for box in semantic.get("accidental", [])]
     match = greedy_one_to_one_match(teacher, detector, iou_threshold=PRIMARY_IOU_THRESHOLD)
     fingerprint = _fingerprint(page_id, sha256_file(source_path), teacher, checkpoint_hashes)
@@ -334,6 +337,8 @@ def _compute_page(
         "detectorBoxCount": len(detector),
         "teacherBoxes": teacher,
         "detectorBoxes": detector,
+        "detectorClefTypes": clef_types,
+        "clefSubtypeBoundary": "development_diagnostic_not_preregistered",
         "keyCandidateCount": len(key_candidates),
         "keyCandidateBoxes": key_candidates,
         "keyMeasurementBoundary": "diagnostic_only_no_teacher_truth",
@@ -425,6 +430,8 @@ def run() -> Path:
             "logic": DETECTOR_LOGIC_ID,
             "coordinateSpace": "original_source_image_pixels",
             "clefSubtypeClassificationEvaluated": False,
+            "clefSubtypeDiagnosticAvailable": True,
+            "supportedClefSubtypeDiagnostics": ["treble", "bass"],
         },
         "matching": {
             "method": "greedy_one_to_one_descending_iou",
