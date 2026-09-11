@@ -6,6 +6,7 @@ on:
       - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'tests/test_stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-development-result-binding.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_11-glyph-proposal-validation.yml'
   push:
     branches:
@@ -14,6 +15,7 @@ on:
       - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'tests/test_stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-development-result-binding.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_11-glyph-proposal-validation.yml'
 
 permissions:
@@ -43,16 +45,30 @@ jobs:
           python -m py_compile \
             src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py \
             tests/test_stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py
-      - name: Validate development plan JSON
+      - name: Validate P4.11 JSON evidence
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          path = Path('evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-plan.v1.json')
-          payload = json.loads(path.read_text(encoding='utf-8'))
-          assert payload['developmentOnly'] is True
-          assert payload['qualificationEvidence'] is False
-          assert payload['safety']['newIndependentHoldoutAccess'] is False
-          assert payload['safety']['detectorQualified'] is False
-          print('valid:', path)
+
+          plan_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-plan.v1.json')
+          plan = json.loads(plan_path.read_text(encoding='utf-8'))
+          assert plan['developmentOnly'] is True
+          assert plan['qualificationEvidence'] is False
+          assert plan['safety']['newIndependentHoldoutAccess'] is False
+          assert plan['safety']['detectorQualified'] is False
+
+          binding_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-development-result-binding.v1.json')
+          binding = json.loads(binding_path.read_text(encoding='utf-8'))
+          assert binding['developmentOnly'] is True
+          assert binding['qualificationEvidence'] is False
+          assert binding['result']['pooled']['tp'] == 38
+          assert binding['result']['pooled']['fn'] == 0
+          assert binding['result']['pooled']['recall'] == 1.0
+          assert binding['result']['proposalCount'] == 26732
+          assert binding['decisionBoundary']['precisionGateFrozen'] is False
+          assert binding['decisionBoundary']['detectorQualified'] is False
+          assert binding['decisionBoundary']['newIndependentHoldoutMustRemainClosed'] is True
+          print('valid:', plan_path)
+          print('valid:', binding_path)
           PY
