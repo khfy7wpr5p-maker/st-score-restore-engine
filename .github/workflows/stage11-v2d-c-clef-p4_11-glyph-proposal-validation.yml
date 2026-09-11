@@ -32,8 +32,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install repository
-        run: python -m pip install -e .
+      - name: Install repository and test runner
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest
       - name: Run P4.11 focused tests
         run: python -m pytest tests/test_stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py -q
       - name: Compile runner and tests
