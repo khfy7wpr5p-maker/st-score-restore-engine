@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_11-source-glyph-proposal-development-result-binding.v1",
+  "status": "DEVELOPMENT_PROPOSAL_TARGET_MET_LOCAL_EXACT_REMEASUREMENT",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "runner": {
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py",
+    "planPath": "evidence/stage11/v2d/v2d-c-clef-p4_11-source-glyph-proposal-plan.v1.json",
+    "runnerCommit": "f86086cc3dc32aa499657113d8aa2c9e5e0c9904",
+    "testsCommit": "9398574d1f4d7f58a4df21089b69faab8a4e21e3"
+  },
+  "exactInputIdentity": {
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "v32SourceOnlyCandidateArtifactSha256": "ec2e855a044d009b895dc02ea2e8d5132a58359e5d880abd7cfb11a6bf9c0897",
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "v32RawCandidateCount": 95778
+  },
+  "measurementMethod": {
+    "name": "LOCAL_EXACT_BYTES_REMEASUREMENT_OF_REPOSITORY_RUNNER_LOGIC",
+    "teacherTruthReadDuringProposalGeneration": false,
+    "sourcePixelsUsed": true,
+    "frozenV32StaffGeometryUsed": true,
+    "newIndependentHoldoutAccessed": false,
+    "description": "The exact frozen P4.9 source PNG bytes, source manifest, teacher truth, and v3.2 source-only candidate artifact were mirrored locally. Phase A generated and froze all source-glyph proposals before Phase B opened the already-spent P4.9 teacher truth for development-only IoU 0.50 evaluation.",
+    "notClaimed": "This binding is not independent qualification evidence and does not claim a Drive-hosted official P4.11 runner execution."
+  },
+  "artifacts": {
+    "proposalArtifact": {
+      "fileName": "p4_11_source_glyph_proposals_before_teacher.v1.json",
+      "sha256": "70cfb4189520360a6f03d5a87d077c54f1ceef33d3ca32e9f5e36d4e5ce6eb04",
+      "driveFileId": null
+    },
+    "resultArtifact": {
+      "fileName": "p4_11_source_glyph_proposal_result.v1.json",
+      "sha256": "5cf7cd00493013078b6b02c8b22fe16a9c276434e551bb9829ff751683a3fa83",
+      "driveFileId": null
+    }
+  },
+  "result": {
+    "proposalCount": 26732,
+    "candidateReductionFromV32": 0.7208962392198626,
+    "pooled": {
+      "tp": 38,
+      "fn": 0,
+      "recall": 1.0
+    },
+    "perSubtypeRecall": {
+      "C1": 1.0,
+      "C3": 1.0,
+      "C4": 1.0
+    },
+    "developmentProposalTarget": {
+      "pooledRecallAtLeast": 0.9,
+      "eachSubtypeRecallAtLeast": 0.8,
+      "candidateReductionAtLeast": 0.7,
+      "met": true
+    }
+  },
+  "interpretation": {
+    "localizationRecallPreserved": true,
+    "hypothesisSurfaceReduced": true,
+    "precisionSolved": false,
+    "nextSafeAction": "Extract and freeze source-image semantic features on the reduced 26732-proposal development artifact, then select/freeze a precision policy before any new independent holdout is opened."
+  },
+  "decisionBoundary": {
+    "proposalGeneratorDevelopmentCandidateAccepted": true,
+    "precisionGateFrozen": false,
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutMustRemainClosed": true
+  }
+}
