@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-localizer-v3-development-plan.v1",
+  "status": "FROZEN_FOR_DEVELOPMENT_REMEASUREMENT",
+  "date": "2026-09-11",
+  "scope": "C-clef source-image localizer development only",
+  "input": {
+    "dataset": "P4.9 spent holdout reclassified for development/failure analysis only",
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095"
+  },
+  "rootCauseFromP4_10": {
+    "LOCALIZER_MISS": 11,
+    "LOCALIZER_GEOMETRY_NEAR_MISS": 6,
+    "CANONICAL_FILTER_REJECTION": 6,
+    "STAFF_DETECTION_FAILURE": 4,
+    "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH": 4
+  },
+  "design": {
+    "staffPolicy": "use frozen P4.5 staff detector when >=3 sane staffs are found; otherwise use strict isolated full-width projection fallback; Hough fallback removed",
+    "staffSpacingSanity": "spacing must be >= max(4 px, 0.0015 * imageHeight) and <= max(20 px, 0.02 * imageHeight)",
+    "scanPolicy": "scan the full staff width rather than only the initial-clef window",
+    "anchors": ["C1 line", "C3 line", "C4 line"],
+    "baseCandidateSizeStaffSpaces": [3.2, 5.2],
+    "smallSpacingVariant": [3.0, 4.8],
+    "denseWidePageVariant": [3.4, 5.4],
+    "xOffsetsStaffSpaces": [0.0, 1.25],
+    "teacherTruthUsedDuringCandidateGeneration": false
+  },
+  "localExactPageCanary": {
+    "developmentOnly": true,
+    "teacherBoxes": 38,
+    "matchedAtIou0_50": 35,
+    "candidateRecall": 0.9210526315789473,
+    "subtypeRecall": {
+      "C1": 1.0,
+      "C3": 0.9047619047619048,
+      "C4": 0.8
+    },
+    "targetMet": true
+  },
+  "target": {
+    "pooledCandidateRecallAtLeast": 0.90,
+    "eachSubtypeCandidateRecallAtLeast": 0.80,
+    "primaryIou": 0.50
+  },
+  "governance": {
+    "p4_9CanQualifyThisDetector": false,
+    "qualificationEvidence": false,
+    "detectorQualified": false,
+    "trainingOrFineTuning": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "nextIfTargetMet": "design a separately frozen precision gate on development data, then require a new independent holdout for qualification"
+  }
+}
