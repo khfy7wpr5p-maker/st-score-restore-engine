@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-localizer-v3_2-development-result-binding.v1",
+  "status": "COMPLETE_TARGET_MET",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "measurementContract": {
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "primaryIoU": 0.5,
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "labelCounts": {"C1": 12, "C3": 21, "C4": 5, "AMBIGUOUS": 0}
+  },
+  "runnerFreeze": {
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_10_localizer_v3_2_candidate_ceiling.py",
+    "runnerCommit": "661a7b68f5ba2454b3223d3f621aaab40bf89c77",
+    "runnerBlobSha1": "b2cf37dae0e971255d7804fe0056c7936419927e",
+    "pinnedV3_1Commit": "670c1c0a4aa5670d066e769e43eddec49607021a",
+    "planCommit": "18698b71d41faa54276b6d783f27abfaa54a51d0",
+    "regressionTestsCommit": "846213d0d753aa114dacf77801b464886adb9d2e"
+  },
+  "measurementMethod": {
+    "name": "DETERMINISTIC_AFFECTED_PATH_REMEASUREMENT_FROM_FROZEN_V3_1_ARTIFACT",
+    "reason": "v3.2 changes only the no-sane-P4.5-staff fallback. Frozen v3.1 diagnostics show only p4_9-02-dies-irae-p0001 has p45Sane=0; all other ten pages remain on byte-equivalent v3.1 inference paths.",
+    "phaseA": "The frozen v3.1 source-only candidate artifact was copied for unaffected pages. The sole affected source page was regenerated from source pixels only with v3.2, then the combined source-only candidate artifact was frozen before teacher evaluation.",
+    "evaluatorCrossCheck": "The local IoU 0.50 evaluator reproduced the official v3.1 result exactly before evaluating v3.2: TP=34, FN=4, pooled recall=0.8947368421052632; C1=0.9166666666666666, C3=0.9047619047619048, C4=0.8.",
+    "notClaimed": "This binding does not claim that the complete 11-page v3.2 runner was executed in Colab. It binds an equivalent deterministic development remeasurement and remains non-qualification evidence."
+  },
+  "affectedPage": {
+    "pageId": "p4_9-02-dies-irae-p0001",
+    "sourceImageSha256": "372b5aa6cfb5845421b866cb281f191f849519bfcb775608075db245e315d9d7",
+    "sourceSpacingHint": 62.5,
+    "staffHypothesisCount": 12,
+    "candidateCount": 3771,
+    "matchedTeacherBoxes": 4,
+    "teacherBoxes": 4,
+    "candidateRecall": 1.0,
+    "bestMatchedIoU": [0.8932284349536387, 0.868, 0.8117692307692308, 0.7140248539181946]
+  },
+  "candidateArtifact": {
+    "driveFileId": "1S6fREVRCih59kvYt6ebNFtVGYwcfMTfA",
+    "fileName": "p4_10_localizer_v3_2_candidates_before_teacher.v1.json",
+    "sha256": "ec2e855a044d009b895dc02ea2e8d5132a58359e5d880abd7cfb11a6bf9c0897",
+    "byteSize": 31353270,
+    "candidateCountTotal": 95778
+  },
+  "resultArtifact": {
+    "driveFileId": "1oPGb_47ZwPu2aCOQqTLToG4n-ADXwvsL",
+    "fileName": "p4_10_localizer_v3_2_candidate_ceiling_result.v1.json",
+    "sha256": "bc231b68540655b7afd67d4c02f8880ebb5df0ddc045ba9f1cb89190019e8f52",
+    "byteSize": 9531
+  },
+  "result": {
+    "pooled": {"tp": 38, "fn": 0, "recall": 1.0},
+    "perSubtypeRecall": {"C1": 1.0, "C3": 1.0, "C4": 1.0},
+    "developmentCandidateCeilingTarget": {
+      "pooledRecallAtLeast": 0.9,
+      "eachSubtypeRecallAtLeast": 0.8,
+      "met": true
+    }
+  },
+  "decisionBoundary": {
+    "localizerCandidateGenerationFrozen": true,
+    "next": "Develop and freeze a precision gate on frozen development candidates only, measuring recall loss explicitly.",
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutRequiredAfterPrecisionGateFreeze": true
+  }
+}
