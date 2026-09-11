@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "P4_10_LOCALIZER_V3_1_DEVELOPMENT_PLAN",
+  "phase": "Stage 11 v2d / P4.10",
+  "status": "FROZEN_FOR_DEVELOPMENT_REMEASUREMENT",
+  "developmentOnly": true,
+  "p4_9Status": "SPENT_HOLDOUT_RECLASSIFIED_FOR_FAILURE_DEVELOPMENT_ONLY",
+  "qualificationEvidence": false,
+  "detectorQualified": false,
+  "stage11PassAuthorized": false,
+  "stage12Authorized": false,
+  "inputs": {
+    "p4_9ManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "p4_9TeacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "p4_10_v3OfficialResult": {
+      "tp": 33,
+      "fn": 5,
+      "recall": 0.868421052631579,
+      "subtypeRecall": {
+        "C1": 0.8333333333333334,
+        "C3": 0.9047619047619048,
+        "C4": 0.8
+      }
+    }
+  },
+  "rootCause": {
+    "missesConcentratedOnPages": [
+      "p4_9-03-kyrie-a-p0001",
+      "p4_9-04-kyrie-b-p0001"
+    ],
+    "kyrieA": "one C1 candidate is an IoU near-miss at 0.4994195; a general -0.75 staff-space horizontal hypothesis recovers it",
+    "kyrieB": "strict projection produced too few staff hypotheses; periodic five-line projection hypotheses recover multiple real staffs without page-name rules"
+  },
+  "v3_1Changes": {
+    "horizontalHypothesesStaffSpaces": [-0.75, 0.0, 1.25],
+    "periodicProjectionFallback": {
+      "enabledOnlyWhenStrictProjectionStaffCountBelow": 8,
+      "minimumSpacingPx": "max(7, round(0.004 * pageHeight))",
+      "maximumSpacingPx": "min(18, max(minimumSpacingPx, round(0.012 * pageHeight)))",
+      "minimumMeanHorizontalSupport": 0.12,
+      "minimumSupportedLines": 4,
+      "minimumPerLineSupport": 0.06,
+      "maxHypotheses": 20,
+      "centerNmsDistanceStaffSpaces": 2.3
+    },
+    "pageSpecificRules": false,
+    "teacherCoordinatesUsedAtInference": false
+  },
+  "localCanaryPrediction": {
+    "tp": 37,
+    "fn": 1,
+    "recall": 0.9736842105263158,
+    "subtype": {
+      "C1": {"tp": 11, "teacherBoxes": 12, "recall": 0.9166666666666666},
+      "C3": {"tp": 21, "teacherBoxes": 21, "recall": 1.0},
+      "C4": {"tp": 5, "teacherBoxes": 5, "recall": 1.0}
+    },
+    "candidateCountApprox": 125676,
+    "note": "candidate count is intentionally not a production target; a separate precision stage must prune it"
+  },
+  "developmentTarget": {
+    "pooledRecallAtLeast": 0.9,
+    "eachSubtypeRecallAtLeast": 0.8
+  },
+  "nextIfTargetMet": "freeze candidate-recall localizer and design a separate precision/pruning stage; do not use P4.9 for qualification"
+}
