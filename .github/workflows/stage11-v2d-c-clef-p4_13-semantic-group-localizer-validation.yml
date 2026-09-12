@@ -8,6 +8,7 @@ on:
       - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
   push:
     branches:
@@ -18,6 +19,7 @@ on:
       - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
       - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
 
 permissions:
@@ -49,7 +51,7 @@ jobs:
             src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py \
             src/st_score_restore/stage11_v2d_c_clef_p4_13_semantic_group_localizer.py \
             tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py
-      - name: Validate preregistered development plan
+      - name: Validate preregistered development plan and result binding
         run: |
           python - <<'PY'
           import json
@@ -72,5 +74,23 @@ jobs:
           assert plan['safety']['overallStage11PassAuthorized'] is False
           assert plan['safety']['productionReady'] is False
           assert plan['safety']['stage12EntryAuthorized'] is False
+
+          binding_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json')
+          if binding_path.is_file():
+              binding = json.loads(binding_path.read_text(encoding='utf-8'))
+              assert binding['developmentOnly'] is True
+              assert binding['qualificationEvidence'] is False
+              assert binding['result']['p4_12RetainedProposalCount'] == 7204
+              assert binding['result']['p4_13ExactComponentGroupCount'] == 1543
+              assert binding['result']['sourceInkRefined']['tp'] == 21
+              assert binding['result']['sourceInkRefined']['fn'] == 17
+              assert abs(binding['result']['sourceInkRefined']['recall'] - (21 / 38)) < 1e-12
+              assert binding['interpretation']['p4_13ExactGroupCollapseRecallSafe'] is False
+              assert binding['interpretation']['precisionSolved'] is False
+              assert binding['decisionBoundary']['p4_13AcceptedAsFinalPrecisionPolicy'] is False
+              assert binding['decisionBoundary']['detectorQualified'] is False
+              assert binding['decisionBoundary']['clefDisposition'] == 'REVIEW_ONLY'
+              assert binding['decisionBoundary']['newIndependentHoldoutMustRemainClosed'] is True
           print('valid:', plan_path)
+          print('valid:', binding_path)
           PY
