@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-human-mask-topology-plan.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-12",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "objective": "Create independent human staff-line masks and staff-system topology on the existing 20-page V2c development corpus before any source/restored staff-line qualification measurement.",
+  "inputs": {
+    "corpusPlan": "evidence/stage11/v2c/v2c-corpus-plan.v1.json",
+    "full20ExecutionEvidence": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
+    "lineSemanticEvidence": "evidence/stage11/v2c/v2c-line-semantic-evidence.v1.json",
+    "nextSemanticClassStrategy": "evidence/stage11/v2d/v2d-next-semantic-class-strategy.v1.json",
+    "sourceFamilyCount": 5,
+    "developmentPageCount": 20,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2
+  },
+  "annotationScope": {
+    "staffPresentPages": [
+      "beethoven-op48-no3-p2",
+      "beethoven-op48-no3-p3",
+      "wikimedia-guitar-technical-exercise-no1-p1",
+      "barley-your-face-your-tongue-your-wit-p1",
+      "barley-your-face-your-tongue-your-wit-p2",
+      "carulli-morceaux-faciles-p2",
+      "carulli-morceaux-faciles-p3",
+      "carulli-morceaux-faciles-p4",
+      "carulli-morceaux-faciles-p5",
+      "carulli-morceaux-faciles-p6",
+      "carulli-morceaux-faciles-p7",
+      "carulli-morceaux-faciles-p8",
+      "carulli-morceaux-faciles-p9",
+      "carulli-morceaux-faciles-p10",
+      "bach-anna-magdalena-p4",
+      "bach-anna-magdalena-p10",
+      "bach-anna-magdalena-p24",
+      "bach-anna-magdalena-p40"
+    ],
+    "staffAbsentPages": [
+      "beethoven-op48-no3-p1",
+      "beethoven-op48-no3-p4"
+    ],
+    "teacherMustSeeOnlySourceRender": true,
+    "detectorOutputsHidden": true,
+    "restoredOutputsHidden": true,
+    "existingLineDetectorGeometryHidden": true
+  },
+  "requiredTeacherArtifact": {
+    "artifactType": "STAFF_LINE_TEACHER_MASK_TOPOLOGY",
+    "pageCoverage": "all 20 pages, including explicit zero-system records on teacher-confirmed staff-absent pages",
+    "perPage": {
+      "requiredFields": [
+        "pageId",
+        "sourceRenderSha256",
+        "width",
+        "height",
+        "completed",
+        "staffLineMaskPath",
+        "staffLineMaskSha256",
+        "systems"
+      ],
+      "maskContract": {
+        "format": "PNG",
+        "dimensions": "exact source-render width x height",
+        "binaryValues": [0, 255],
+        "foregroundMeaning": "teacher-confirmed standard staff-line pixels only; exclude stems, barlines, beams, ledger lines, text and TAB lines"
+      },
+      "systemContract": {
+        "systemIdUniqueWithinPage": true,
+        "requiredFields": ["systemId", "bbox", "lineCount", "lines", "status"],
+        "standardStaffLineCount": 5,
+        "lineOrder": "top_to_bottom_1_through_5",
+        "lineRequiredFields": ["lineIndex", "centerlinePoints"],
+        "centerlinePoints": "ordered source-pixel [x,y] points tracing the visible staff-line centre; at least two points per visible segment",
+        "allowedStatus": ["CONFIRMED", "AMBIGUOUS"]
+      }
+    }
+  },
+  "qualityControl": {
+    "sourceIdentityMustMatchFull20Evidence": true,
+    "all20PagesAccountedFor": true,
+    "all18TeacherPresentPagesCompleted": true,
+    "twoTeacherAbsentPagesHaveZeroSystemsAndEmptyMask": true,
+    "maskDimensionsMustMatchSource": true,
+    "maskMustBeBinary": true,
+    "confirmedSystemsMustHaveExactlyFiveOrderedLines": true,
+    "lineIndexesMustBeExactly": [1, 2, 3, 4, 5],
+    "ambiguousSystemsDoNotCountAsQualificationTruth": true,
+    "unresolvedAmbiguityPreventsStaffLineQualification": true
+  },
+  "postAnnotationMeasurement": {
+    "freezeTeacherArtifactBeforeDetectorMeasurement": true,
+    "firstStep": "measure source-image staff-line/system detector against teacher masks/topology",
+    "metrics": [
+      "mask precision",
+      "mask recall",
+      "mask F1",
+      "system coverage",
+      "five-line count correctness",
+      "line-order correctness",
+      "inter-line spacing error",
+      "continuity/gap statistics"
+    ],
+    "secondStepOnlyAfterSourceDetectorAdequacy": "compare source versus restored staff-line topology with the same frozen validator",
+    "detectorOutputUsedAsGroundTruth": false
+  },
+  "safety": {
+    "heldOutAccessAuthorized": false,
+    "trainingAuthorized": false,
+    "detectorQualified": false,
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextAction": "Prepare the source-only teacher annotation package and completion validator. Do not fabricate masks or topology; human annotation is the next required dependency."
+}
