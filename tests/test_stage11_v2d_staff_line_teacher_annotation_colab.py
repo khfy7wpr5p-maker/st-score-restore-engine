@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from PIL import Image
+import cv2
 
 import st_score_restore.stage11_v2d_staff_line_teacher_annotation_colab as mod
 
@@ -61,8 +61,9 @@ class StaffLineTeacherAnnotationColabTests(unittest.TestCase):
                 rel, sha = mod._render_mask("page", 100, 100, confirmed + ambiguous)
             self.assertEqual("masks/page.png", rel)
             self.assertEqual(64, len(sha))
-            with Image.open(mask_dir / "page.png") as image:
-                values = set(image.getdata())
+            image = cv2.imread(str(mask_dir / "page.png"), cv2.IMREAD_GRAYSCALE)
+            self.assertIsNotNone(image)
+            values = set(image.reshape(-1).tolist())
             self.assertTrue(values.issubset({0, 255}))
             self.assertIn(255, values)
 
