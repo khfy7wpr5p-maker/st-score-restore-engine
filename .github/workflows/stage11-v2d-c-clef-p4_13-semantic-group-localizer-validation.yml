@@ -1,0 +1,76 @@
+name: Stage 11 V2d C-clef P4.13 Semantic Group Localizer Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
+      - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
+      - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py'
+      - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
+      - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository and test runner
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest
+      - name: Run P4.13 focused tests
+        run: python -m pytest tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py -q
+      - name: Compile P4.11-P4.13 chain and focused tests
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2d_c_clef_p4_11_glyph_proposal_generator.py \
+            src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py \
+            src/st_score_restore/stage11_v2d_c_clef_p4_13_semantic_group_localizer.py \
+            tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py
+      - name: Validate preregistered development plan
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          plan_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json')
+          plan = json.loads(plan_path.read_text(encoding='utf-8'))
+          assert plan['developmentOnly'] is True
+          assert plan['qualificationEvidence'] is False
+          assert plan['phaseA']['teacherTruthClosed'] is True
+          assert plan['phaseA']['newIndependentHoldoutAccessed'] is False
+          assert plan['semanticScore']['calibratedProbability'] is False
+          assert plan['semanticScore']['teacherFitted'] is False
+          assert abs(sum(plan['semanticScore']['weights'].values()) - 1.0) < 1e-12
+          assert plan['grouping']['scoreBeforeRepresentativeSelection'] is True
+          assert plan['grouping']['firstWinsNms'] is False
+          assert plan['grouping']['crossGroupSuppression'] is False
+          assert plan['phaseB']['automaticQualificationDecision'] is False
+          assert plan['safety']['detectorQualified'] is False
+          assert plan['safety']['overallStage11PassAuthorized'] is False
+          assert plan['safety']['productionReady'] is False
+          assert plan['safety']['stage12EntryAuthorized'] is False
+          print('valid:', plan_path)
+          PY
