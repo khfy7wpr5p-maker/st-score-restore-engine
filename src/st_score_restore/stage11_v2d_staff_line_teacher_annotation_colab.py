@@ -18,11 +18,11 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
-from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageDraw
+import cv2
+import numpy as np
 
 
 ROOT = Path("/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/STAFF_LINE_TEACHER_MASK_TOPOLOGY")
@@ -103,6 +103,15 @@ def _source_path(page_id: str) -> Path:
     return SOURCE_DIR / f"{page_id}.png"
 
 
+def _read_source_image(path: Path) -> np.ndarray:
+    image = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    if image is None or image.ndim not in (2, 3):
+        raise RuntimeError(f"Unable to decode source image: {path}")
+    if image.ndim == 3 and image.shape[2] not in (1, 3, 4):
+        raise RuntimeError(f"Unsupported source image channel count: {path}")
+    return image
+
+
 def validate_prepared_sources() -> dict[str, dict[str, Any]]:
     contracts: dict[str, dict[str, Any]] = {}
     missing: list[str] = []
@@ -116,8 +125,8 @@ def validate_prepared_sources() -> dict[str, dict[str, Any]]:
         if actual_sha != SOURCE_SHA256[page_id]:
             bad_sha.append(f"{page_id}: {actual_sha}")
             continue
-        with Image.open(path) as image:
-            width, height = image.size
+        image = _read_source_image(path)
+        height, width = image.shape[:2]
         contracts[page_id] = {
             "pageId": page_id,
             "sourceRenderSha256": actual_sha,
@@ -179,15 +188,29 @@ def load_or_create_artifact() -> dict[str, Any]:
     return artifact
 
 
-def _make_preview_data_uri(image: Image.Image, max_width: int = 1800) -> tuple[str, int, int]:
-    preview = image.convert("RGB")
-    if preview.width > max_width:
-        ratio = max_width / preview.width
-        preview = preview.resize((max_width, max(1, round(preview.height * ratio))))
-    buffer = BytesIO()
-    preview.save(buffer, format="JPEG", quality=90, optimize=True)
-    uri = "data:image/jpeg;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
-    return uri, preview.width, preview.height
+def _make_preview_data_uri(image: np.ndarray, max_width: int = 1800) -> tuple[str, int, int]:
+    if image.ndim == 3 and image.shape[2] == 4:
+        preview = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
+    elif image.ndim == 3 and image.shape[2] == 1:
+        preview = image[:, :, 0]
+    else:
+        preview = image.copy()
+    height, width = preview.shape[:2]
+    if width > max_width:
+        ratio = max_width / width
+        preview = cv2.resize(
+            preview,
+            (max_width, max(1, round(height * ratio))),
+            interpolation=cv2.INTER_AREA,
+        )
+    ok, encoded = cv2.imencode(
+        ".jpg", preview, [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+    )
+    if not ok:
+        raise RuntimeError("Unable to encode source preview JPEG")
+    preview_height, preview_width = preview.shape[:2]
+    uri = "data:image/jpeg;base64," + base64.b64encode(encoded.tobytes()).decode("ascii")
+    return uri, int(preview_width), int(preview_height)
 
 
 def _sanitize_systems(raw_systems: Any, width: int, height: int) -> list[dict[str, Any]]:
@@ -223,7 +246,6 @@ def _sanitize_systems(raw_systems: Any, width: int, height: int) -> list[dict[st
                 cleaned_points.append([x, y])
                 all_points.append((x, y))
             lines.append({"lineIndex": line_index, "centerlinePoints": cleaned_points})
-        # Enforce top-to-bottom line order using each line's median Y.
         line_medians = []
         for line in lines:
             ys = sorted(point[1] for point in line["centerlinePoints"])
@@ -253,17 +275,25 @@ def _sanitize_systems(raw_systems: Any, width: int, height: int) -> list[dict[st
 
 
 def _render_mask(page_id: str, width: int, height: int, systems: list[dict[str, Any]]) -> tuple[str, str]:
-    mask = Image.new("L", (width, height), 0)
-    draw = ImageDraw.Draw(mask)
+    mask = np.zeros((height, width), dtype=np.uint8)
     for system in systems:
         if system["status"] != "CONFIRMED":
             continue
         stroke_width = int(system.get("strokeWidth", 1))
         for line in system["lines"]:
-            points = [tuple(map(int, point)) for point in line["centerlinePoints"]]
-            draw.line(points, fill=255, width=stroke_width, joint="curve")
+            points = np.asarray(line["centerlinePoints"], dtype=np.int32).reshape((-1, 1, 2))
+            cv2.polylines(
+                mask,
+                [points],
+                isClosed=False,
+                color=255,
+                thickness=stroke_width,
+                lineType=cv2.LINE_8,
+            )
     mask_path = MASK_DIR / f"{page_id}.png"
-    mask.save(mask_path, format="PNG", optimize=False)
+    mask_path.parent.mkdir(parents=True, exist_ok=True)
+    if not cv2.imwrite(str(mask_path), mask):
+        raise RuntimeError(f"Unable to write mask PNG: {mask_path}")
     return f"masks/{page_id}.png", sha256_file(mask_path)
 
 
@@ -286,7 +316,6 @@ def _progress(artifact: dict[str, Any]) -> None:
 
 
 def _annotation_js(config_json: str) -> str:
-    # Kept source-blinded: image plus already-entered HUMAN strokes only.
     return r"""
 new Promise((resolve) => {
   const cfg = __CFG__;
@@ -294,46 +323,27 @@ new Promise((resolve) => {
   document.body.style.background = "#202124";
   document.body.style.color = "white";
   document.body.style.fontFamily = "Arial, sans-serif";
-
   const old = document.getElementById("st-staff-root");
   if (old) old.remove();
-
   const root = document.createElement("div");
   root.id = "st-staff-root";
   root.style.cssText = "padding:12px;min-height:1000px;";
   root.innerHTML = `
     <div style="max-width:1500px;margin:0 auto;">
       <h2 style="margin:0 0 6px;">Stage 11 — Staff-line Teacher Truth</h2>
-      <div style="margin-bottom:10px;">
-        <b>${cfg.pageNo}/${cfg.pageCount}</b> — ${cfg.pageId}<br>
-        <span style="font-size:13px;">Yalnız kaynak nota gösteriliyor. Restore/detector çıktısı yok.</span>
-      </div>
+      <div style="margin-bottom:10px;"><b>${cfg.pageNo}/${cfg.pageCount}</b> — ${cfg.pageId}<br>
+        <span style="font-size:13px;">Yalnız kaynak nota gösteriliyor. Restore/detector çıktısı yok.</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-        <button id="newSystem">Yeni porte sistemi</button>
-        <button id="undoPoint">Son noktayı sil</button>
-        <button id="nextLine">Sonraki çizgi</button>
-        <button id="finishSystem">Porteyi tamamla</button>
+        <button id="newSystem">Yeni porte sistemi</button><button id="undoPoint">Son noktayı sil</button>
+        <button id="nextLine">Sonraki çizgi</button><button id="finishSystem">Porteyi tamamla</button>
         <button id="undoSystem">Son porteyi sil</button>
-        <label>Kalınlık:
-          <input id="strokeWidth" type="number" min="1" max="8" value="2" style="width:55px;">
-        </label>
-        <label>Durum:
-          <select id="status"><option>CONFIRMED</option><option>AMBIGUOUS</option></select>
-        </label>
-        <label>Zoom:
-          <select id="zoom">
-            <option value="0.5">50%</option>
-            <option value="0.75">75%</option>
-            <option value="1" selected>100%</option>
-            <option value="1.25">125%</option>
-            <option value="1.5">150%</option>
-          </select>
-        </label>
+        <label>Kalınlık: <input id="strokeWidth" type="number" min="1" max="8" value="2" style="width:55px;"></label>
+        <label>Durum: <select id="status"><option>CONFIRMED</option><option>AMBIGUOUS</option></select></label>
+        <label>Zoom: <select id="zoom"><option value="0.5">50%</option><option value="0.75">75%</option><option value="1" selected>100%</option><option value="1.25">125%</option><option value="1.5">150%</option></select></label>
       </div>
       <div id="msg" style="padding:6px 0;font-weight:bold;">Yeni porte sistemi ile başlayın.</div>
       <div style="width:100%;height:760px;overflow:auto;background:white;border:2px solid #777;">
-        <canvas id="canvas" style="display:block;max-width:none;cursor:crosshair;"></canvas>
-      </div>
+        <canvas id="canvas" style="display:block;max-width:none;cursor:crosshair;"></canvas></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;padding-bottom:30px;">
         <button id="save" style="font-size:18px;font-weight:bold;padding:10px 16px;">Sayfayı kaydet</button>
         <button id="empty" style="font-size:17px;padding:10px 16px;">Bu sayfada standart porte yok</button>
@@ -341,7 +351,6 @@ new Promise((resolve) => {
       </div>
     </div>`;
   document.body.appendChild(root);
-
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const msg = document.getElementById("msg");
@@ -349,59 +358,33 @@ new Promise((resolve) => {
   const image = new Image();
   canvas.width = cfg.previewWidth;
   canvas.height = cfg.previewHeight;
-
   let systems = JSON.parse(JSON.stringify(cfg.existingSystems || []));
   let current = null;
   let currentLine = 0;
   const colors = ["#ff0000", "#00aa00", "#0066ff", "#cc00cc", "#ff8800"];
-
-  function srcToPreview(p) {
-    return [p[0] * cfg.previewWidth / cfg.sourceWidth, p[1] * cfg.previewHeight / cfg.sourceHeight];
-  }
-  function previewToSrc(x, y) {
-    return [x * cfg.sourceWidth / cfg.previewWidth, y * cfg.sourceHeight / cfg.previewHeight];
-  }
+  function srcToPreview(p) { return [p[0] * cfg.previewWidth / cfg.sourceWidth, p[1] * cfg.previewHeight / cfg.sourceHeight]; }
+  function previewToSrc(x, y) { return [x * cfg.sourceWidth / cfg.previewWidth, y * cfg.sourceHeight / cfg.previewHeight]; }
   function setMessage(text) { msg.textContent = text; }
-  function applyZoom() {
-    const z = Number(zoom.value);
-    canvas.style.width = `${Math.round(cfg.previewWidth * z)}px`;
-    canvas.style.height = `${Math.round(cfg.previewHeight * z)}px`;
-  }
+  function applyZoom() { const z = Number(zoom.value); canvas.style.width = `${Math.round(cfg.previewWidth * z)}px`; canvas.style.height = `${Math.round(cfg.previewHeight * z)}px`; }
   function drawPolyline(points, color, width) {
     if (!points || points.length === 0) return;
     const pts = points.map(srcToPreview);
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = Math.max(1, width * cfg.previewWidth / cfg.sourceWidth);
-    ctx.beginPath();
-    ctx.moveTo(pts[0][0], pts[0][1]);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = Math.max(1, width * cfg.previewWidth / cfg.sourceWidth);
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
     for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
     ctx.stroke();
-    for (const p of pts) {
-      ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, Math.PI * 2); ctx.fill();
-    }
+    for (const p of pts) { ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, Math.PI * 2); ctx.fill(); }
   }
   function redraw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(image,0,0,canvas.width,canvas.height);
-    for (const s of systems) {
-      for (let i=0;i<5;i++) drawPolyline(s.lines[i].centerlinePoints, colors[i], s.strokeWidth || 2);
-    }
-    if (current) {
-      for (let i=0;i<5;i++) drawPolyline(current.lines[i].centerlinePoints, colors[i], current.strokeWidth || 2);
-    }
+    ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(image,0,0,canvas.width,canvas.height);
+    for (const s of systems) for (let i=0;i<5;i++) drawPolyline(s.lines[i].centerlinePoints, colors[i], s.strokeWidth || 2);
+    if (current) for (let i=0;i<5;i++) drawPolyline(current.lines[i].centerlinePoints, colors[i], current.strokeWidth || 2);
   }
   function startSystem() {
     if (current) { setMessage("Önce mevcut porteyi tamamlayın veya son noktaları geri alın."); return; }
     const sw = Math.max(1, Math.min(8, Number(document.getElementById("strokeWidth").value || 2)));
-    current = {
-      status: document.getElementById("status").value,
-      strokeWidth: sw,
-      lines: [1,2,3,4,5].map(i => ({lineIndex:i, centerlinePoints:[]}))
-    };
-    currentLine = 0;
-    setMessage("Porte çizgisi 1/5: soldan sağa en az iki nokta tıklayın.");
-    redraw();
+    current = {status: document.getElementById("status").value, strokeWidth: sw, lines: [1,2,3,4,5].map(i => ({lineIndex:i, centerlinePoints:[]}))};
+    currentLine = 0; setMessage("Porte çizgisi 1/5: soldan sağa en az iki nokta tıklayın."); redraw();
   }
   function canvasPoint(e) {
     const rect = canvas.getBoundingClientRect();
@@ -409,65 +392,37 @@ new Promise((resolve) => {
     const py = (e.clientY - rect.top) * canvas.height / rect.height;
     return previewToSrc(px, py);
   }
-  canvas.addEventListener("click", (e) => {
-    if (!current) return;
-    const p = canvasPoint(e);
-    current.lines[currentLine].centerlinePoints.push(p);
-    redraw();
-  });
+  canvas.addEventListener("click", (e) => { if (!current) return; current.lines[currentLine].centerlinePoints.push(canvasPoint(e)); redraw(); });
   document.getElementById("newSystem").onclick = startSystem;
-  document.getElementById("undoPoint").onclick = () => {
-    if (!current) return;
-    const pts = current.lines[currentLine].centerlinePoints;
-    if (pts.length) pts.pop();
-    redraw();
-  };
+  document.getElementById("undoPoint").onclick = () => { if (!current) return; const pts = current.lines[currentLine].centerlinePoints; if (pts.length) pts.pop(); redraw(); };
   document.getElementById("nextLine").onclick = () => {
     if (!current) { setMessage("Önce yeni porte sistemi açın."); return; }
-    if (current.lines[currentLine].centerlinePoints.length < 2) {
-      setMessage(`Çizgi ${currentLine+1} için en az iki nokta gerekli.`); return;
-    }
+    if (current.lines[currentLine].centerlinePoints.length < 2) { setMessage(`Çizgi ${currentLine+1} için en az iki nokta gerekli.`); return; }
     if (currentLine >= 4) { setMessage("5. çizgidesiniz. Porteyi tamamlayın."); return; }
-    currentLine += 1;
-    setMessage(`Porte çizgisi ${currentLine+1}/5: soldan sağa en az iki nokta tıklayın.`);
-    redraw();
+    currentLine += 1; setMessage(`Porte çizgisi ${currentLine+1}/5: soldan sağa en az iki nokta tıklayın.`); redraw();
   };
   document.getElementById("finishSystem").onclick = () => {
     if (!current) { setMessage("Açık porte yok."); return; }
-    if (current.lines.some(line => line.centerlinePoints.length < 2)) {
-      setMessage("Beş çizginin her birinde en az iki nokta olmalı."); return;
-    }
+    if (current.lines.some(line => line.centerlinePoints.length < 2)) { setMessage("Beş çizginin her birinde en az iki nokta olmalı."); return; }
     current.strokeWidth = Math.max(1, Math.min(8, Number(document.getElementById("strokeWidth").value || 2)));
-    current.status = document.getElementById("status").value;
-    systems.push(current);
-    current = null; currentLine = 0;
-    setMessage(`Porte kaydedildi. Toplam ${systems.length}. Başka porte varsa yeni porte sistemi açın.`);
-    redraw();
+    current.status = document.getElementById("status").value; systems.push(current); current = null; currentLine = 0;
+    setMessage(`Porte kaydedildi. Toplam ${systems.length}. Başka porte varsa yeni porte sistemi açın.`); redraw();
   };
   document.getElementById("undoSystem").onclick = () => {
     if (current) { current = null; currentLine = 0; redraw(); setMessage("Açık porte silindi."); return; }
-    if (systems.length) systems.pop();
-    redraw(); setMessage(`Son porte silindi. Kalan: ${systems.length}.`);
+    if (systems.length) systems.pop(); redraw(); setMessage(`Son porte silindi. Kalan: ${systems.length}.`);
   };
   zoom.onchange = applyZoom;
   document.getElementById("save").onclick = () => {
     if (current) { setMessage("Açık porteyi önce tamamlayın."); return; }
-    if (cfg.expectedStaffPresent && systems.length === 0) {
-      setMessage("Bu sayfa staff-present olarak kayıtlı; en az bir porte girin veya yanlışsa 'porte yok' ile insan kararını açıkça verin.");
-      return;
-    }
-    resolve({action:"save", systems});
-    root.remove();
+    if (cfg.expectedStaffPresent && systems.length === 0) { setMessage("Bu sayfa staff-present olarak kayıtlı; en az bir porte girin veya yanlışsa 'porte yok' ile insan kararını açıkça verin."); return; }
+    resolve({action:"save", systems}); root.remove();
   };
   document.getElementById("empty").onclick = () => {
     if (!confirm("Bu kaynak sayfada standart 5 çizgili porte bulunmadığını onaylıyor musunuz?")) return;
-    resolve({action:"empty", systems:[]});
-    root.remove();
+    resolve({action:"empty", systems:[]}); root.remove();
   };
-  document.getElementById("cancel").onclick = () => {
-    resolve({action:"cancel"});
-    root.remove();
-  };
+  document.getElementById("cancel").onclick = () => { resolve({action:"cancel"}); root.remove(); };
   image.onload = () => { applyZoom(); redraw(); };
   image.src = cfg.image;
 })
@@ -481,18 +436,17 @@ def annotate_page(page_id: str, artifact: dict[str, Any]) -> str:
     image_path = _source_path(page_id)
     if sha256_file(image_path) != page["sourceRenderSha256"]:
         raise RuntimeError(f"{page_id}: source changed after preparation")
-    with Image.open(image_path) as src:
-        source = src.convert("RGB")
-        source_width, source_height = source.size
-        image_uri, preview_width, preview_height = _make_preview_data_uri(source)
+    source = _read_source_image(image_path)
+    source_height, source_width = source.shape[:2]
+    image_uri, preview_width, preview_height = _make_preview_data_uri(source)
 
     config = {
         "image": image_uri,
         "pageId": page_id,
         "pageNo": PAGE_IDS.index(page_id) + 1,
         "pageCount": len(PAGE_IDS),
-        "sourceWidth": source_width,
-        "sourceHeight": source_height,
+        "sourceWidth": int(source_width),
+        "sourceHeight": int(source_height),
         "previewWidth": preview_width,
         "previewHeight": preview_height,
         "expectedStaffPresent": bool(page["expectedStaffPresent"]),
@@ -529,7 +483,7 @@ def run_annotation() -> dict[str, Any]:
 
     artifact = load_or_create_artifact()
     _progress(artifact)
-    print(f"Verified source pages: 20/20")
+    print("Verified source pages: 20/20")
     print(f"Completed: {artifact['completedPageCount']}/20")
     print(f"Artifact: {ARTIFACT_PATH}")
 
