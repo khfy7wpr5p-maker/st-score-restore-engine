@@ -45,7 +45,7 @@
   "result": {
     "p4_12RetainedProposalCount": 7204,
     "p4_13ExactComponentGroupCount": 1543,
-    "proposalCollapseFraction": 0.785813437, 
+    "proposalCollapseFraction": 0.7858134369794558,
     "originalRepresentative": {
       "tp": 21,
       "fp": 1522,
