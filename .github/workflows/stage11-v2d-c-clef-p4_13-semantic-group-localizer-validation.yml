@@ -9,6 +9,7 @@ on:
       - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-no-training-development-disposition.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
   push:
     branches:
@@ -20,6 +21,7 @@ on:
       - 'tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-plan.v1.json'
       - 'evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-no-training-development-disposition.v1.json'
       - '.github/workflows/stage11-v2d-c-clef-p4_13-semantic-group-localizer-validation.yml'
 
 permissions:
@@ -51,7 +53,7 @@ jobs:
             src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py \
             src/st_score_restore/stage11_v2d_c_clef_p4_13_semantic_group_localizer.py \
             tests/test_stage11_v2d_c_clef_p4_13_semantic_group_localizer.py
-      - name: Validate preregistered development plan and result binding
+      - name: Validate preregistered development plan, result binding, and disposition
         run: |
           python - <<'PY'
           import json
@@ -76,21 +78,35 @@ jobs:
           assert plan['safety']['stage12EntryAuthorized'] is False
 
           binding_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_13-semantic-group-localizer-development-result-binding.v1.json')
-          if binding_path.is_file():
-              binding = json.loads(binding_path.read_text(encoding='utf-8'))
-              assert binding['developmentOnly'] is True
-              assert binding['qualificationEvidence'] is False
-              assert binding['result']['p4_12RetainedProposalCount'] == 7204
-              assert binding['result']['p4_13ExactComponentGroupCount'] == 1543
-              assert binding['result']['sourceInkRefined']['tp'] == 21
-              assert binding['result']['sourceInkRefined']['fn'] == 17
-              assert abs(binding['result']['sourceInkRefined']['recall'] - (21 / 38)) < 1e-12
-              assert binding['interpretation']['p4_13ExactGroupCollapseRecallSafe'] is False
-              assert binding['interpretation']['precisionSolved'] is False
-              assert binding['decisionBoundary']['p4_13AcceptedAsFinalPrecisionPolicy'] is False
-              assert binding['decisionBoundary']['detectorQualified'] is False
-              assert binding['decisionBoundary']['clefDisposition'] == 'REVIEW_ONLY'
-              assert binding['decisionBoundary']['newIndependentHoldoutMustRemainClosed'] is True
+          binding = json.loads(binding_path.read_text(encoding='utf-8'))
+          assert binding['developmentOnly'] is True
+          assert binding['qualificationEvidence'] is False
+          assert binding['result']['p4_12RetainedProposalCount'] == 7204
+          assert binding['result']['p4_13ExactComponentGroupCount'] == 1543
+          assert binding['result']['sourceInkRefined']['tp'] == 21
+          assert binding['result']['sourceInkRefined']['fn'] == 17
+          assert abs(binding['result']['sourceInkRefined']['recall'] - (21 / 38)) < 1e-12
+          assert binding['interpretation']['p4_13ExactGroupCollapseRecallSafe'] is False
+          assert binding['interpretation']['precisionSolved'] is False
+          assert binding['decisionBoundary']['p4_13AcceptedAsFinalPrecisionPolicy'] is False
+          assert binding['decisionBoundary']['detectorQualified'] is False
+          assert binding['decisionBoundary']['clefDisposition'] == 'REVIEW_ONLY'
+          assert binding['decisionBoundary']['newIndependentHoldoutMustRemainClosed'] is True
+
+          disposition_path = Path('evidence/stage11/v2d/v2d-c-clef-no-training-development-disposition.v1.json')
+          disposition = json.loads(disposition_path.read_text(encoding='utf-8'))
+          assert disposition['status'] == 'NO_TRAINING_DETECTOR_TRACK_CONCLUDED_REVIEW_ONLY'
+          assert disposition['scope']['trainingAllowed'] is False
+          assert disposition['acceptedDevelopmentFacts']['p4_12SemanticSieve']['recall'] == 1.0
+          assert disposition['acceptedDevelopmentFacts']['p4_13ExactGroupLocalizer']['acceptedAsFinalPolicy'] is False
+          assert disposition['technicalConclusion']['canonicalDevelopmentFallback'] == 'P4.12'
+          assert disposition['technicalConclusion']['destructiveGroupCollapseAllowed'] is False
+          assert disposition['productDisposition']['clef'] == 'REVIEW_ONLY'
+          assert disposition['futureWorkBoundary']['trainingEnabledClassifierRequiresExplicitScopeChange'] is True
+          assert disposition['safety']['overallStage11PassAuthorized'] is False
+          assert disposition['safety']['productionReady'] is False
+          assert disposition['safety']['stage12EntryAuthorized'] is False
           print('valid:', plan_path)
           print('valid:', binding_path)
+          print('valid:', disposition_path)
           PY
