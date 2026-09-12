@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-root-cause-diagnostic-runner-binding.v1",
+  "status": "READY_TO_RUN",
+  "runnerCommit": "c1d8ccc8ef770c03c50dfc20db0780daca2bcc12",
+  "planCommit": "c990a622f9f4b8744f497992a2802790ad9a11c9",
+  "runnerPath": "src/st_score_restore/stage11_v2d_c_clef_p4_10_root_cause_diagnostic.py",
+  "expectedFrozenReplay": {"tp": 7, "fp": 13, "fn": 31},
+  "governance": {
+    "diagnosticOnly": true,
+    "p4_9IsSpentHoldout": true,
+    "p4_8PolicyChanged": false,
+    "qualificationRetuningAuthorized": false,
+    "newIndependentHoldoutRequiredForAnyFutureQualification": true
+  }
+}

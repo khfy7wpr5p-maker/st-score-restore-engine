@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "stage11.v2d.clef-teacher-taxonomy-amendment.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "workPackage": {
+    "path": "evidence/stage11/v2d/v2d-spatial-teacher-review-work-package.v1.json",
+    "schemaVersion": "stage11.v2d.spatial-teacher-review-work-package.v1",
+    "baseAllowedClefTypes": [
+      "treble",
+      "bass",
+      "alto",
+      "tenor",
+      "percussion",
+      "tab",
+      "other",
+      "unknown"
+    ],
+    "mutated": false
+  },
+  "amendment": {
+    "reason": "The independent teacher review contains two visible Soprano C clefs. The original UI taxonomy did not expose this valid C-clef subtype.",
+    "addedClefTypes": [
+      {
+        "clefType": "soprano",
+        "semanticName": "Soprano C clef",
+        "displayLabelTr": "Soprano Do anahtarı"
+      }
+    ],
+    "effectiveAllowedClefTypes": [
+      "treble",
+      "bass",
+      "alto",
+      "tenor",
+      "soprano",
+      "percussion",
+      "tab",
+      "other",
+      "unknown"
+    ],
+    "appliesToCompletionSchema": "stage11.v2d.clef-box-teacher-review-completion.v1",
+    "modelOutputUsed": false,
+    "detectorOutputUsed": false,
+    "trainingPerformed": false
+  },
+  "claimBoundary": {
+    "teacherSpatialLabelsComplete": false,
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

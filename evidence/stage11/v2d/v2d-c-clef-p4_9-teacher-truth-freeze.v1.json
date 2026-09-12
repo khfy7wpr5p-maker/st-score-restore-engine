@@ -1,0 +1,49 @@
+{
+  "artifactType": "C_CLEF_P4_9_TEACHER_TRUTH_FREEZE",
+  "schemaVersion": "1.0.0",
+  "phase": "Stage 11 v2d / P4.9 independent C-clef holdout",
+  "status": "TEACHER_TRUTH_FROZEN_BEFORE_P4_8_HOLDOUT_EVALUATION",
+  "driveRootFolderId": "1H-aKH14ohAi6iITOlQT09ZMjNqTK3tTH",
+  "teacherTruth": {
+    "driveFileId": "1LCqoisTpfpwdhjefeSZgrL-EDi5DD0uu",
+    "fileName": "c_clef_p4_9_holdout_teacher_boxes.v1.json",
+    "sha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "pageCount": 11,
+    "completedPageCount": 11,
+    "boxCount": 38,
+    "labelCounts": {
+      "C1": 12,
+      "C3": 21,
+      "C4": 5,
+      "AMBIGUOUS": 0
+    },
+    "detectorOutputsAccessedDuringAnnotation": false,
+    "annotationStatus": "ANNOTATION_COMPLETE_PENDING_FREEZE"
+  },
+  "holdoutSafety": {
+    "p4_7HoldoutReused": false,
+    "duplicatePhysicalPagesCountedOnce": true,
+    "preparedRenderDpi": 200,
+    "teacherTruthMayNotBeEditedAfterFreeze": true,
+    "p4_8PolicyMayNotBeRetunedAfterHoldoutAccess": true,
+    "qualificationRunCountAuthorized": 1
+  },
+  "frozenP4_8Policy": {
+    "developmentPolicySpecCommit": "3ddda8672af9907b34e55b20f8dc168b9b64fc8c",
+    "developmentRemeasurementRunnerCommit": "074d1e88163e94ae28399be56eaded5e26581941",
+    "developmentResultBindingCommit": "f2692192b41cede5aa8afffe54868545de5f6cae",
+    "routeSpacingPx": 12.0,
+    "verticalMirrorSimilarityMinimum": 0.86,
+    "bottomPaddingStaffSpaces": 0.25,
+    "primaryIou": 0.50,
+    "dedupIou": 0.50
+  },
+  "safetyBoundaries": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeAction": "Run the frozen P4.8 policy exactly once on the P4.9 prepared 11-page holdout. Freeze candidates before teacher-truth access. Do not retune P4.8 after this holdout is opened."
+}

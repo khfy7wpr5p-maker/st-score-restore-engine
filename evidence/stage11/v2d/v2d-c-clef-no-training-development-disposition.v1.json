@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-no-training-development-disposition.v1",
+  "status": "NO_TRAINING_DETECTOR_TRACK_CONCLUDED_REVIEW_ONLY",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "scope": {
+    "trainingAllowed": false,
+    "fineTuningAllowed": false,
+    "optimizerOrBackpropAllowed": false,
+    "newIndependentHoldoutAccessed": false
+  },
+  "acceptedDevelopmentFacts": {
+    "v3_2CandidateCeiling": {
+      "candidateCount": 95778,
+      "teacherBoxesLocalized": 38,
+      "teacherBoxCount": 38,
+      "recall": 1.0
+    },
+    "p4_11SourceProposalSurface": {
+      "proposalCount": 26732,
+      "teacherBoxesLocalized": 38,
+      "teacherBoxCount": 38,
+      "recall": 1.0
+    },
+    "p4_12SemanticSieve": {
+      "retainedProposalCount": 7204,
+      "teacherBoxesLocalized": 38,
+      "teacherBoxCount": 38,
+      "recall": 1.0,
+      "precisionSolved": false
+    },
+    "p4_13ExactGroupLocalizer": {
+      "exactComponentGroupCount": 1543,
+      "tp": 21,
+      "fp": 1522,
+      "fn": 17,
+      "precision": 0.013609850939727802,
+      "recall": 0.5526315789473685,
+      "acceptedAsFinalPolicy": false
+    }
+  },
+  "technicalConclusion": {
+    "canonicalDevelopmentFallback": "P4.12",
+    "destructiveGroupCollapseAllowed": false,
+    "finalPrecisionPolicyFrozen": false,
+    "detectorQualified": false,
+    "reason": "The no-training deterministic path achieved full development localization coverage but did not produce a recall-safe high-precision final detector. P4.13 loses 17 of 38 teacher boxes after representative collapse and therefore cannot be promoted.",
+    "newIndependentHoldoutDisposition": "DO_NOT_OPEN_OR_SPEND_UNTIL_A_FINAL_PRECISION_POLICY_EXISTS"
+  },
+  "productDisposition": {
+    "clef": "REVIEW_ONLY",
+    "teacherReviewRequired": true,
+    "sourceHypothesesMaySupportReviewUI": true,
+    "automaticCclefQualification": false,
+    "automaticProductionPromotion": false
+  },
+  "futureWorkBoundary": {
+    "requiredForAutomaticQualification": "A separately scoped precision/classification policy must be developed and frozen from spent development data before any new independent holdout is opened.",
+    "trainingEnabledClassifierRequiresExplicitScopeChange": true,
+    "doNotReuseP4_9AsIndependentHoldout": true,
+    "doNotTreatP4_12ProposalPrecisionAsDetectorPrecision": true
+  },
+  "safety": {
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

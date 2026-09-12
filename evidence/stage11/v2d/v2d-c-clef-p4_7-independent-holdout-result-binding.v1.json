@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_7-independent-holdout-result-binding.v1",
+  "status": "HOLDOUT_FAIL_RECORDED",
+  "heldOut": true,
+  "qualificationEvidence": true,
+  "teacherTruth": {
+    "pageCount": 15,
+    "boxCount": 25,
+    "labelCounts": {
+      "C1": 10,
+      "C3": 10,
+      "C4": 5,
+      "AMBIGUOUS": 0
+    },
+    "sha256": "309bdd3858e71b5770d97f2f9f150075a9694ce4c75590fb22958ff2be24e4c0"
+  },
+  "frozenImplementation": {
+    "p4_5Commit": "7130bdf94bcf9247a0b33e9342db22746b46f289",
+    "p4_6Commit": "76caac8a7c76606bf09051ae5cd1704e32ef29dd",
+    "filterId": "source-image-c-clef-geometric-filter.p4_6.v1",
+    "primaryIoU": 0.5,
+    "postHoldoutRetuningAllowed": false
+  },
+  "artifacts": {
+    "rawCandidateSha256": "f25c7eaf035f0c00f5bbc3e1c4576568ef60376a8dece0e37da67ae3bed87cbf",
+    "filteredCandidateSha256": "88d95b1a509dea9aa09c601e997b43cae31aacc6ddd7c06065cc1ec013f02972",
+    "resultSha256": "c5fab88bbc381b84eb7485c9698ae161fe0ce4779ffb27a2d0ab082325862d42"
+  },
+  "pooled": {
+    "tp": 9,
+    "fp": 13,
+    "fn": 16,
+    "precision": 0.4090909090909091,
+    "recall": 0.36,
+    "f1": 0.3829787234042554
+  },
+  "perManifestGroup": {
+    "C1": {
+      "teacherBoxes": 10,
+      "tp": 9,
+      "fp": 9,
+      "fn": 1,
+      "precision": 0.5,
+      "recall": 0.9,
+      "f1": 0.6428571428571429
+    },
+    "C3": {
+      "teacherBoxes": 10,
+      "tp": 0,
+      "fp": 4,
+      "fn": 10,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "C4": {
+      "teacherBoxes": 5,
+      "tp": 0,
+      "fp": 0,
+      "fn": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  },
+  "decision": {
+    "holdoutTargetMet": false,
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "nextSafeAction": "Record P4.7 as holdout FAIL. Do not retune P4.6 on this holdout; create a new detector version using development data only."
+  }
+}

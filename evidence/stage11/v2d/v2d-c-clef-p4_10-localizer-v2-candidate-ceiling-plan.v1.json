@@ -1,0 +1,45 @@
+{
+  "artifactType": "C_CLEF_P4_10_LOCALIZER_V2_CANDIDATE_CEILING_PLAN",
+  "schemaVersion": "1.0.0",
+  "phase": "Stage 11 v2d / P4.10 development",
+  "status": "PREREGISTERED_BEFORE_MEASUREMENT",
+  "motivation": {
+    "p4_9FalseNegatives": 31,
+    "preFilterFailures": 21,
+    "preFilterFailureFraction": 0.6774193548387096,
+    "rootCauseEvidenceSha256": "551478db383abb18ad4bb8dec71fb445e6c281170526fe11777c1dc5d8d20be2"
+  },
+  "developmentData": {
+    "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostics": true,
+    "p4_9CannotQualifyThisOrAnyFutureRetunedDetector": true,
+    "teacherBoxes": 38,
+    "pages": 11
+  },
+  "localizerV2CandidateGeneration": {
+    "staffSources": [
+      "frozen_p4_5_projection_staffs",
+      "fallback_multi_band_projection_staffs",
+      "fallback_probabilistic_hough_horizontal_staffs"
+    ],
+    "clefWindow": "staff-start region with broader x/y margins than P4.5",
+    "componentPolicy": "retain relaxed connected components, merge nearby fragments, and emit geometry-padded candidate variants",
+    "singleCandidatePerStaffRestriction": false,
+    "teacherCoordinatesUsedDuringCandidateGeneration": false
+  },
+  "measurement": {
+    "primaryIoU": 0.50,
+    "purpose": "candidate recall ceiling only",
+    "precisionIsQualificationMetric": false,
+    "targetPooledCandidateRecallAtLeast": 0.90,
+    "targetEachSubtypeCandidateRecallAtLeast": 0.80,
+    "reportCandidateCount": true,
+    "reportStaffRecovery": true
+  },
+  "boundaries": {
+    "noProductionPolicy": true,
+    "noFinalPrecisionGate": true,
+    "noDetectorQualification": true,
+    "noStage11Pass": true,
+    "brandNewIndependentHoldoutRequiredAfterAnyFutureFreeze": true
+  }
+}

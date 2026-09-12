@@ -1,0 +1,75 @@
+name: Stage 11 V2d Staff-Line Teacher Truth Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/st_score_restore/stage11_v2d_staff_line_teacher_truth.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_teacher_annotation_colab.py'
+      - 'tests/test_stage11_v2d_staff_line_teacher_truth.py'
+      - 'tests/test_stage11_v2d_staff_line_teacher_annotation_colab.py'
+      - 'evidence/stage11/v2d/v2d-staff-line-human-mask-topology-plan.v1.json'
+      - '.github/workflows/stage11-v2d-staff-line-teacher-truth-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'src/st_score_restore/stage11_v2d_staff_line_teacher_truth.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_teacher_annotation_colab.py'
+      - 'tests/test_stage11_v2d_staff_line_teacher_truth.py'
+      - 'tests/test_stage11_v2d_staff_line_teacher_annotation_colab.py'
+      - 'evidence/stage11/v2d/v2d-staff-line-human-mask-topology-plan.v1.json'
+      - '.github/workflows/stage11-v2d-staff-line-teacher-truth-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository
+        run: python -m pip install -e .
+      - name: Run staff-line teacher-truth tests
+        run: |
+          python -m unittest tests.test_stage11_v2d_staff_line_teacher_truth -v
+          python -m unittest tests.test_stage11_v2d_staff_line_teacher_annotation_colab -v
+      - name: Compile validator, Colab runner and tests
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2d_staff_line_teacher_truth.py \
+            src/st_score_restore/stage11_v2d_staff_line_teacher_annotation_colab.py \
+            tests/test_stage11_v2d_staff_line_teacher_truth.py \
+            tests/test_stage11_v2d_staff_line_teacher_annotation_colab.py
+      - name: Validate preregistered plan boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('evidence/stage11/v2d/v2d-staff-line-human-mask-topology-plan.v1.json')
+          plan = json.loads(path.read_text(encoding='utf-8'))
+          assert plan['developmentOnly'] is True
+          assert plan['qualificationEvidence'] is False
+          assert plan['inputs']['developmentPageCount'] == 20
+          assert plan['inputs']['staffPresentPageCount'] == 18
+          assert plan['annotationScope']['teacherMustSeeOnlySourceRender'] is True
+          assert plan['annotationScope']['detectorOutputsHidden'] is True
+          assert plan['annotationScope']['restoredOutputsHidden'] is True
+          assert plan['qualityControl']['confirmedSystemsMustHaveExactlyFiveOrderedLines'] is True
+          assert plan['postAnnotationMeasurement']['freezeTeacherArtifactBeforeDetectorMeasurement'] is True
+          assert plan['safety']['heldOutAccessAuthorized'] is False
+          assert plan['safety']['trainingAuthorized'] is False
+          assert plan['safety']['detectorQualified'] is False
+          assert plan['safety']['overallStage11PassAuthorized'] is False
+          assert plan['safety']['productionReady'] is False
+          assert plan['safety']['stage12EntryAuthorized'] is False
+          print('valid:', path)
+          PY

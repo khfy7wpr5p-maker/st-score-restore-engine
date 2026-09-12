@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "stage11.v2c.current-truth.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "startingMainSha": "93f368593c4c32478091b5811dd2be0f2834f1be",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "V2C_TEACHER_GROUND_TRUTH_COMPLETE_DETECTOR_COVERAGE_BLOCKED",
+  "repositoryReconciliation": {
+    "remoteV2bBranchObserved": false,
+    "v2bAssumedMerged": false,
+    "v2cStartedFromVerifiedMain": true
+  },
+  "candidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "weightsFrozen": true
+  },
+  "canonicalCpuProfile": {
+    "device": "CPU",
+    "torch": "2.10.0+cpu",
+    "intraopThreads": 5,
+    "interopThreads": 1,
+    "deterministicAlgorithms": false,
+    "applyBeforePackageLoad": true
+  },
+  "implemented": {
+    "versionedSemanticDetectionContract": true,
+    "twelveClassNamespace": true,
+    "sameClassOneToOneMatching": true,
+    "crossClassMatchingForbidden": true,
+    "duplicateSuppression": true,
+    "detectorFailureAbstention": true,
+    "independentExpectedClassManifestContract": true,
+    "nonCircularCoverageDenominator": true,
+    "conservativeStaffTabLineDetector": true,
+    "failClosedDecisionValidator": true,
+    "corpusPlanValidator": true,
+    "barleyExactRepeatEvidenceValidator": true,
+    "full20ExactRepeatEvidenceValidator": true,
+    "teacherReviewOverlayValidator": true,
+    "teacherFollowupResolutionValidator": true,
+    "teacherGroundedLineSemanticEvidence": true
+  },
+  "semanticClassSupport": {
+    "interfaceClasses": [
+      "staff_line",
+      "tab_line",
+      "notehead",
+      "stem",
+      "beam_or_flag",
+      "rest",
+      "accidental",
+      "clef",
+      "barline",
+      "tie_or_slur",
+      "tab_digit",
+      "tab_string"
+    ],
+    "currentlyImplementedAutomaticDetectors": ["staff_line", "tab_line"],
+    "otherClasses": "supported by the evidence interface but intentionally abstain until a trusted inference-only detector or independently validated rule detector is admitted"
+  },
+  "corpus": {
+    "approvedDevelopmentInventory": {
+      "sourceFamilyCount": 5,
+      "pageCount": 20,
+      "targetSourceFamilies": 5,
+      "targetPages": 20,
+      "targetMet": true
+    },
+    "selectionAccounting": {
+      "previousApprovedFamilies": 3,
+      "previousApprovedPages": 7,
+      "carulliSelectedNotationPages": 9,
+      "bachSelectedNotationPages": 4,
+      "carulliCoverExcluded": true
+    }
+  },
+  "teacherReview": {
+    "submitted": true,
+    "sourceOnlyReview": true,
+    "modelOutputShownDuringReview": false,
+    "sourceReviewPdfSha256": "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
+    "sourceReviewPdfByteSize": 30385082,
+    "reviewPdfPageCount": 21,
+    "reviewPageCount": 20,
+    "semanticResponseFieldCount": 240,
+    "acceptedResponseCount": 240,
+    "originalConflictCount": 2,
+    "resolvedConflictCount": 2,
+    "unresolvedConflictCount": 0,
+    "overlayEvidence": "evidence/stage11/v2c/v2c-teacher-review-overlay.v1.json",
+    "resolutionEvidence": "evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json",
+    "resolvedFields": [
+      {
+        "pageId": "carulli-morceaux-faciles-p3",
+        "classId": "tab_string",
+        "resolvedState": "absent"
+      },
+      {
+        "pageId": "bach-anna-magdalena-p24",
+        "classId": "notehead",
+        "resolvedState": "present"
+      }
+    ]
+  },
+  "independentExpectedClassEvidence": {
+    "baseManifestPageCount": 20,
+    "effectiveTeacherReviewedPageCount": 20,
+    "effectiveStateCounts": {
+      "present": 171,
+      "absent": 51,
+      "not_applicable": 18,
+      "unknown_review_required": 0
+    },
+    "independentlyAnnotatedPresentOrAbsentClassCount": 222,
+    "annotationCoverage": 1.0,
+    "teacherGroundTruthComplete": true,
+    "automaticSemanticPassEvidenceAvailable": false,
+    "reason": "independent teacher ground truth is complete for the applicable class-page denominator, but trusted automatic detector coverage remains insufficient"
+  },
+  "determinism": {
+    "historicalV2bHandoffResult": "PASS_FOR_RECORDED_RUNTIME_AND_CORPUS",
+    "full20V2cExecution": {
+      "sourceFamilyCount": 5,
+      "pageCount": 20,
+      "repeatCountPerPage": 2,
+      "allOutputBytesStable": true,
+      "allDecodedPixelsStable": true,
+      "changedPixelsAcrossRepeats": 0,
+      "maxAbsDiffAcrossRepeats": 0,
+      "result": "PASS_FOR_CANONICAL_RUNTIME_AND_FULL_20_PAGE_DEVELOPMENT_CORPUS",
+      "evidence": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json"
+    },
+    "claim": "full 5-family/20-page development-corpus determinism is established under the recorded canonical CPU profile; semantic preservation remains unestablished"
+  },
+  "semanticEvaluation": {
+    "evidence": "evidence/stage11/v2c/v2c-line-semantic-evidence.v1.json",
+    "all20CandidateOutputsReproducedAndHashMatchedFull20Evidence": true,
+    "lineDetector": {
+      "id": "stage11-v2c-line-system.v1",
+      "trustedScope": ["staff_line", "tab_line"],
+      "limitations": "first qualifying horizontal system only; weak staff/TAB discrimination on scans; no pitch/rhythm/note/TAB-digit identity"
+    },
+    "staffLine": {
+      "expectedPresentPages": 18,
+      "confidentlyEvaluatedPresentPages": 10,
+      "presentPageCoverage": 0.5555555555555556,
+      "sourceDetectionCount": 50,
+      "candidateDetectionCount": 50,
+      "matchedCount": 30,
+      "sourceRecallOnEvaluatedDetections": 0.6,
+      "candidateOnlyRateOnEvaluatedDetections": 0.4
+    },
+    "tabLine": {
+      "expectedPresentPages": 3,
+      "confidentlyEvaluatedPresentPages": 0,
+      "presentPageCoverage": 0.0,
+      "candidateDetectionsOnExpectedAbsentPages": ["carulli-morceaux-faciles-p2", "carulli-morceaux-faciles-p7"],
+      "interpretation": "likely staff-as-TAB rule-detector false positives; not confident symbol invention"
+    },
+    "eligibleExpectedPresentClassPageCount": 171,
+    "confidentlyEvaluatedExpectedPresentClassPageCount": 10,
+    "applicableClassDetectorCoverage": 0.05847953216374269,
+    "detectorCoverageSufficientForSemanticPreservationClaim": false,
+    "confidentSystematicDeletionEvidenced": false,
+    "confidentSystematicInventionEvidenced": false,
+    "hardBlocker": false
+  },
+  "provenanceCorrections": [
+    {
+      "artifact": "evidence/stage11/v2c/v2c-barley-repeat-execution.v1.json",
+      "field": "renderer",
+      "previousValue": "pdfium-via-render_pdf.py",
+      "correctValue": "pdftoppm-via-render_pdf.py",
+      "basis": "the committed Barley source-render and decoded-pixel hashes reproduce exactly with pdftoppm at 72 DPI and do not reproduce with pdfium at 72 DPI",
+      "modelOutputHashesChanged": false
+    }
+  ],
+  "remainingBlockers": [
+    "trusted automatic semantic detector coverage is only 10 of 171 teacher-confirmed present class-page pairs",
+    "TAB-present pages are not confidently evaluated by the current line detector",
+    "notehead/stem/beam_or_flag/rest/accidental/clef/barline/tie_or_slur/tab_digit/tab_string lack admitted trusted automatic detectors"
+  ],
+  "productionBoundaries": {
+    "sharedMusicSafetyValidatorModified": false,
+    "httpApiModified": false,
+    "openApiModified": false,
+    "normalJobServiceModified": false,
+    "productionRestorationEnabled": false
+  },
+  "authorization": {
+    "trainingAuthorized": false,
+    "heldOutAccessAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "improve or admit inference-only trusted semantic detectors without training, then rerun class-aware source-versus-candidate evidence; do not merge or promote while detector coverage remains insufficient"
+}

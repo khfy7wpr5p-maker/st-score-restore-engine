@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-teacher-truth-hash-reconciliation.v1",
+  "generatedOn": "2026-09-12",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "teacherArtifact": {
+    "driveFileId": "1GeC-L9yHc4LBb_yFZq5tHxusGWp84_s5",
+    "currentRevisionId": "0B_DZ__-6E05rT05HN255aVc3RE55UldGaHlOZUVGOHBRaUN3PQ",
+    "currentRawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "currentByteSize": 327525,
+    "semanticCounts": {
+      "pageCount": 20,
+      "completedPageCount": 20,
+      "confirmedSystemCount": 197,
+      "confirmedLineCount": 985,
+      "ambiguousSystemCount": 0
+    },
+    "sourceShaMatchedPages": 20,
+    "reconstructedTeacherMaskShaMatchedPages": 20
+  },
+  "legacyBinding": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json",
+    "recordedTeacherArtifactSha256": "28ea439c270fd72dca8099518f388ed2f54dadfd9ed3bc730f2a5daad229edc6",
+    "matchesCurrentRawFileSha256": false
+  },
+  "disposition": {
+    "legacyHashMustNotBeUsedAsCurrentRawByteIdentity": true,
+    "currentTeacherGeometryUsableForDevelopmentScoring": true,
+    "reason": "The current Drive teacher artifact is complete and internally consistent; all 20 source hashes and all 20 reconstructed binary mask hashes match the artifact records. The legacy baseline binding's teacher artifact digest does not equal the current raw file SHA-256, so the older digest is retained only as historical metadata and is not reused as byte identity.",
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  }
+}

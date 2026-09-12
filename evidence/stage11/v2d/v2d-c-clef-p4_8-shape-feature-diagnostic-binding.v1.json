@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_8-shape-feature-diagnostic-binding.v1",
+  "status": "COMPLETE",
+  "developmentOnly": true,
+  "p4_7HoldoutAccessed": false,
+  "thresholdSelected": false,
+  "shapeResultSha256": "17c702deb8c685d650791019d09887a7b9c1f69ce33075d9cdd0cc2e0c918526",
+  "unlabeledFeatureArtifactSha256": "393122d3e33df63d4871a39c6a94af594490752e12544e5500d3b795df35b19e",
+  "topOverallFeatures": [
+    {"feature":"bottomThirdDensity","separation":0.8620184726289705,"direction":"TP_HIGHER"},
+    {"feature":"cleanInkDensity","separation":0.8264248704663213,"direction":"TP_HIGHER"},
+    {"feature":"inkDensity","separation":0.7244311781932867,"direction":"TP_HIGHER"},
+    {"feature":"middleThirdDensity","separation":0.7196440639783735,"direction":"TP_HIGHER"},
+    {"feature":"topThirdDensity","separation":0.6882743861230006,"direction":"TP_HIGHER"}
+  ],
+  "interpretation": {
+    "shapeFeaturesAreUseful": true,
+    "simpleTwoFeatureGateFrozen": false,
+    "reason": "TP/FP overlap remains too large to freeze a precision gate without an additional semantic staff-line anchor feature.",
+    "nextSafeAction": "Measure C-clef staff-line anchor and mirror features on development data only; do not read P4.7 holdout."
+  },
+  "decisionBoundary": {
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

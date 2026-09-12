@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-source-baseline-development-result-binding.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-12",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "scope": "Frozen unchanged source-only conservative_line_system_detector measured against completed independent human staff-line masks/topology on the existing 20-page V2c development corpus.",
+  "measuredRepositoryState": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headShaBeforeBindingCommit": "0601fa17d4635f33242b21f1b145752f196f8436",
+    "detectorSourcePath": "src/st_score_restore/stage11_v2c_semantic_preservation.py",
+    "detectorSourceBlobSha": "5e75cdf0514e8be69d025a887b66023e50c86058",
+    "function": "conservative_line_system_detector",
+    "detectorVersion": "stage11-v2c-line-system.v1",
+    "detectorChangedOrTunedForThisMeasurement": false
+  },
+  "teacherTruth": {
+    "schemaVersion": "stage11.v2d.staff-line-teacher-mask-topology.v1",
+    "status": "ANNOTATION_COMPLETE",
+    "teacherAnnotationIndependent": true,
+    "detectorOutputsShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "pageCount": 20,
+    "completedPageCount": 20,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2,
+    "confirmedSystemCount": 197,
+    "confirmedLineCount": 985,
+    "ambiguousSystemCount": 0,
+    "artifactSha256": "28ea439c270fd72dca8099518f388ed2f54dadfd9ed3bc730f2a5daad229edc6",
+    "driveFileId": "1GeC-L9yHc4LBb_yFZq5tHxusGWp84_s5"
+  },
+  "sourceOnlyFreeze": {
+    "teacherArtifactLoadedDuringDetectorPhase": false,
+    "rawArtifactSha256": "cd45d8199d5e80362eee58c7749f928170f8708f0b8ee851b53aa6191952af65",
+    "driveFileId": "149mrC8R3WlpbRmtKGW_X7qY_bVNvyENU",
+    "pageCount": 20,
+    "pagesWithAnyDetection": 10,
+    "pagesWithStaffLineDetection": 10,
+    "pagesWithTabLineDetection": 0,
+    "staffLineDetectionCount": 50,
+    "tabLineDetectionCount": 0
+  },
+  "measurementIntegrity": {
+    "sourceIdentityMatchedPages": 20,
+    "sourceIdentityPageCount": 20,
+    "teacherMaskShaMatchedPages": 20,
+    "teacherMaskPageCount": 20,
+    "evaluationArtifactSha256": "18294179f56040c134d23a4082bd9ad1a160486fb1942d4bd92c1992def7406d",
+    "evaluationDriveFileId": "1J9qCqWZ_zxlI53nfadyu5qvd4pX99K1t"
+  },
+  "developmentMetrics": {
+    "teacherPresentPageCount": 18,
+    "teacherAbsentPageCount": 2,
+    "presentPagesWithAnyStaffDetection": 10,
+    "presentPageDetectionCoverage": 0.5555555555555556,
+    "absentPagesWithNoStaffDetection": 2,
+    "absentPageSpecificity": 1.0,
+    "teacherConfirmedSystemCount": 197,
+    "predictedStaffSystemCount": 10,
+    "diagnosticSystemMatchRule": "Nearest teacher system; all five predicted row centres within 0.5 times the local teacher median staff spacing. This is diagnostic only, not a binding acceptance threshold.",
+    "diagnosticMatchedSystemCountAtHalfSpacing": 10,
+    "diagnosticSystemRecallAtHalfSpacing": 0.050761421319796954,
+    "systemMatchSensitivity": {
+      "0.25_staff_spacing": {"matchedSystems": 7, "teacherSystemRecall": 0.03553299492385787},
+      "0.5_staff_spacing": {"matchedSystems": 10, "teacherSystemRecall": 0.050761421319796954},
+      "1.0_staff_spacing": {"matchedSystems": 10, "teacherSystemRecall": 0.050761421319796954}
+    },
+    "fiveLineCountCorrectRateAmongPredictedSystems": 1.0,
+    "mask": {
+      "tpPixels": 30655,
+      "fpPixels": 102125,
+      "fnPixels": 623054,
+      "precision": 0.23087061304413314,
+      "recall": 0.046893954343599366,
+      "f1": 0.07795404640115755,
+      "rasterizationNote": "Detector full-width staff-line bboxes were rasterized as their half-open rectangular bands."
+    },
+    "matchedGeometry": {
+      "meanAbsoluteLineYErrorPixels": 0.61,
+      "medianAbsoluteLineYErrorPixels": 0.5,
+      "meanNormalizedLineYError": 0.1022979242979243,
+      "meanAbsoluteInterLineSpacingErrorPixels": 0.575,
+      "meanNormalizedInterLineSpacingError": 0.08684981684981685
+    }
+  },
+  "representationLimit": "The current baseline emits full-width line bboxes and returns immediately after the first qualifying 5/6-line system. It therefore cannot represent all systems on a page or measure true line continuity/gap topology from detector output.",
+  "decision": {
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "restoredImageTopologyComparisonAuthorizedByThisResult": false,
+    "reason": "The preregistered second step requires source-detector adequacy first. The unchanged baseline covers only 10/18 staff-present pages and at most one system per page, yielding only 10/197 diagnostic system matches.",
+    "bindingAcceptanceThresholdsDeclared": false,
+    "nextSmallestSafeAction": "Keep restored-output comparison closed. Develop an explicitly versioned source-only multi-system staff detector on the spent development corpus, freeze its output before teacher scoring, and require sparse per-system five-line geometry/trace output rather than first-match full-width boxes."
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
