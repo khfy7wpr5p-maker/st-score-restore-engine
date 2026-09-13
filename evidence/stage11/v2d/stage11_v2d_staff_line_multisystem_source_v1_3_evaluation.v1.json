@@ -1,0 +1,132 @@
+{
+  "candidate": {
+    "config": {
+      "spacingConsensus": {
+        "min_anchor_systems": 2,
+        "min_fallback_systems": 2,
+        "weak_spacing_ratio_max": 1.18,
+        "weak_spacing_ratio_min": 0.82
+      }
+    },
+    "generationMode": "deterministic-successor-filter-over-frozen-v1.2-source-output",
+    "heldOutAccessed": false,
+    "moduleBlobSha": "623ded1e40bfebdcbff0b4bbfe124b8716b3c907",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "moduleSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "pageIdentityUsed": false,
+    "pageSpecificRulesUsed": false,
+    "parentRawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "restoredOutputsLoadedDuringInference": false,
+    "sourceOnly": true,
+    "teacherCoordinatesUsedDuringInference": false,
+    "trainingOrFineTuningPerformed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.3"
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "prReadyForMerge": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLinePass": false,
+    "stage12EntryAuthorized": false
+  },
+  "comparisonToFrozenV1_2": {
+    "delta": {
+      "falsePositiveSystems": -18,
+      "matchedSystems": -1,
+      "precision": 0.07932263814616758,
+      "predictedSystems": -19,
+      "recall": -0.005076142131979711
+    },
+    "v1_2": {
+      "absentPageSpecificity": 1.0,
+      "falsePositiveSystemCount": 46,
+      "matchedSystemCount": 141,
+      "predictedSystemCount": 187,
+      "predictedSystemPrecisionAtHalfSpacing": 0.7540106951871658,
+      "presentPageCoverage": 1.0,
+      "teacherSystemRecallAtHalfSpacing": 0.7157360406091371
+    },
+    "v1_3": {
+      "absentPageSpecificity": 1.0,
+      "falsePositiveSystemCount": 28,
+      "matchedSystemCount": 140,
+      "predictedSystemCount": 168,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+      "presentPageCoverage": 1.0,
+      "teacherSystemRecallAtHalfSpacing": 0.7106598984771574
+    }
+  },
+  "developmentOnly": true,
+  "developmentReadinessAssessment": {
+    "absentPageSpecificityRequired": 1.0,
+    "engineeringGuidanceOnly": true,
+    "fiveLineCountCorrectRateRequired": 1.0,
+    "freshIndependentHoldoutAuthorized": false,
+    "lineOrderCorrectRateRequired": 1.0,
+    "observedMeetsGuidance": true,
+    "precisionTargetAtLeast": 0.82,
+    "presentPageCoverageRequired": 1.0,
+    "qualificationClaim": false,
+    "recallTargetAtLeast": 0.7
+  },
+  "freezeBoundary": {
+    "byteRepeatDeterminismVerified": true,
+    "consumedIndependentHoldoutAccessedForCandidateDevelopment": false,
+    "pageCount": 20,
+    "predictedSystemCount": 168,
+    "rawArtifactBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json",
+    "rawArtifactSha256": "eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b",
+    "sourceIdentityMatchedCount": 20,
+    "suppressedWeakSystemCount": 19,
+    "teacherCoordinatesUsedDuringInference": false,
+    "teacherTruthAccessedBeforeRawFreeze": false
+  },
+  "generatedOn": "2026-09-13",
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_3-evaluation.v1",
+  "scorerCompatibility": {
+    "expectedFrozenV1MatchedSystemCount": 71,
+    "expectedTeacherSystemCount": 197,
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "passed": true,
+    "reproducedMatchedSystemCountAtHalfSpacing": 71,
+    "reproducedTeacherSystemCount": 197,
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "toleranceFraction": 0.5
+  },
+  "scoring": {
+    "absentPageSpecificity": {
+      "clean": 2,
+      "rate": 1.0,
+      "total": 2
+    },
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "matchedSystemCount": 140,
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "predictedSystemCount": 168,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+    "presentPageCoverage": {
+      "detected": 18,
+      "rate": 1.0,
+      "total": 18
+    },
+    "teacherSystemCount": 197,
+    "teacherSystemRecallAtHalfSpacing": 0.7106598984771574,
+    "toleranceFraction": 0.5
+  },
+  "teacherTruth": {
+    "ambiguousSystemCount": 0,
+    "confirmedLineCount": 985,
+    "confirmedSystemCount": 197,
+    "pageCount": 20,
+    "sha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "usedOnlyAfterCandidateRawFreezeForDevelopmentScoring": true
+  }
+}
