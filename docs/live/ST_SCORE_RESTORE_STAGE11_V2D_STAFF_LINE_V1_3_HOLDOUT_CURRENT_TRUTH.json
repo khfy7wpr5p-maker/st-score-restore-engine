@@ -3,6 +3,7 @@
   "generatedOn": "2026-09-14",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "checkpointHeadBeforeMetadataCommit": "3f5c1a16b2413651b16332c30ede7e4299457fb3",
   "state": "V1_3_FRESH_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_REVIEW_PENDING",
   "authority": {
     "scope": "v1.3 fresh independent staff-line holdout qualification only",
