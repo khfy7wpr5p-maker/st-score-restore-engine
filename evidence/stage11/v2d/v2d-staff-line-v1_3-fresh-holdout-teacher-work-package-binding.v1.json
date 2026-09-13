@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1",
+  "generatedOn": "2026-09-14",
+  "status": "BLIND_TEACHER_WORK_PACKAGE_READY_HUMAN_REVIEW_PENDING",
+  "authorizationPath": "evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json",
+  "sourceFreezePath": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json",
+  "qualificationPolicyPath": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+  "source": {
+    "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+    "artifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "artifactByteSize": 647003,
+    "pageCount": 1,
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "providerSpecificIdentifiersCommittedToGit": false
+  },
+  "teacherWorkPackage": {
+    "privateWorkPackageFileName": "stage11_v2d_staff_line_v1_3_nearer_phone_teacher_work_package.v1.json",
+    "privateWorkPackageSha256": "9675a5b01399af9976bd343f6d0d917f760df8844f807d2e72ec93173015eba0",
+    "privateNotebookFileName": "stage11_v2d_staff_line_v1_3_nearer_phone_blind_teacher_annotation_colab.ipynb",
+    "privateNotebookSha256": "26f362bafafbb18c083bc8726249d73c6640a60bed141b307eefe4ba6f4c8056",
+    "providerSpecificIdentifiersCommittedToGit": false,
+    "teacherArtifactExpectedStatusWhenComplete": "ANNOTATION_COMPLETE",
+    "teacherPageCount": 1,
+    "teacherAnnotationStatus": "PENDING_HUMAN_REVIEW"
+  },
+  "blindBoundary": {
+    "sourceOnlyRawFrozenBeforeWorkPackage": true,
+    "teacherTruthExistedAtRawFreeze": false,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "notebookLoadsDetectorRawOutput": false,
+    "notebookContainsDetectorRawArtifactHash": false,
+    "notebookContainsProviderFileId": false,
+    "teacherMustUseSourceOnly": true
+  },
+  "annotationContract": {
+    "standardFiveLineStaffOnly": true,
+    "allVisibleRealStaffSystemsRequired": true,
+    "eachConfirmedSystemRequiresExactlyFiveOrderedLines": true,
+    "staffAbsentRequiresZeroSystems": true,
+    "allowedSystemStatus": ["CONFIRMED", "AMBIGUOUS"],
+    "detectorAssistedAnnotationForbidden": true
+  },
+  "qualification": {
+    "scoringExecuted": false,
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLinePass": false,
+    "nextGate": "Complete and freeze independent human teacher topology, then score the already-frozen v1.3 raw output exactly once against the unchanged frozen policy."
+  },
+  "claimBoundary": {
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}
