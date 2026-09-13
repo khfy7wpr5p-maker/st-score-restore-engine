@@ -1,0 +1,74 @@
+{
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "comparisonToV1": {
+    "absentPageSpecificity": {"absoluteDelta": 0.0, "v1": 1.0, "v1_1": 1.0},
+    "matchedSystemCountAtHalfSpacing": {"delta": 20, "v1": 71, "v1_1": 91},
+    "predictedSystemCount": {"delta": 25, "v1": 89, "v1_1": 114},
+    "predictedSystemPrecisionAtHalfSpacing": {"absoluteDelta": 0.0004928050463237632, "v1": 0.797752808988764, "v1_1": 0.7982456140350878},
+    "presentPageCoverage": {"absoluteDelta": 0.16666666666666663, "v1": 0.8333333333333334, "v1_1": 1.0},
+    "teacherSystemRecallAtHalfSpacing": {"absoluteDelta": 0.10152284263959388, "v1": 0.3604060913705584, "v1_1": 0.4619289340101523}
+  },
+  "decision": {
+    "bindingQualificationAcceptanceThresholdsDeclared": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "materialDevelopmentImprovementObserved": true,
+    "nextSmallestSafeAction": "Freeze a separate qualification/acceptance policy before any fresh independent holdout. Keep restored-output comparison closed until source-detector adequacy is established under that policy.",
+    "reason": "V1.1 raises comparable half-spacing matched systems from 71 to 91 and covers all 18 staff-present development pages while preserving approximately 0.798 predicted-system precision and 2/2 staff-absent specificity. However it still misses 106/197 teacher-confirmed systems at the 0.5-spacing diagnostic, and the same spent development corpus cannot qualify staff_line.",
+    "restoredImageTopologyComparisonAuthorized": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR"
+  },
+  "detector": {
+    "detectorSourceSha256": "cb6271d667792275afb9c51e4f3a84fde0d426538b034223c8b0be6fc23fdc9a",
+    "heldOutAccessed": false,
+    "localRegressionTests": "7/7 PASS",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "pageSpecificRulesUsed": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "teacherArtifactLoadedDuringInference": false,
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "testSourceSha256": "2391d7c5c7557ce7e24d5d33ded44157b0f5db8227bbd7b129e962df7c6ec258",
+    "trainingOrFineTuningPerformed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.1"
+  },
+  "developmentMetrics": {
+    "absentPageSpecificity": {"clean": 2, "rate": 1.0, "total": 2},
+    "diagnosticMatchedSystemCountAtHalfSpacing": 91,
+    "diagnosticPredictedSystemPrecisionAtHalfSpacing": 0.7982456140350878,
+    "diagnosticTeacherSystemRecallAtHalfSpacing": 0.4619289340101523,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "maskDiagnosticsRecomputed": false,
+    "predictedSystemCount": 114,
+    "presentPageCoverage": {"detected": 18, "rate": 1.0, "total": 18},
+    "teacherSystemCount": 197
+  },
+  "developmentOnly": true,
+  "generatedOn": "2026-09-13",
+  "phaseAFreeze": {
+    "byteRepeatDeterminismVerified": true,
+    "pageCount": 20,
+    "predictedSystemCount": 114,
+    "rawArtifactFileName": "stage11_v2d_staff_line_multisystem_source_raw.v1_1.json",
+    "rawArtifactFileSha256": "9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575",
+    "sourceIdentityMatchedPages": 20
+  },
+  "phaseBTeacherScoring": {
+    "evaluationFileName": "stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json",
+    "evaluationFileSha256": "592a68ae342998e3d260094a91400139bec3c00611fb4cebd78d99bd7d13973d",
+    "teacherConfirmedLineCount": 985,
+    "teacherConfirmedSystemCount": 197,
+    "teacherDriveFileId": "1GeC-L9yHc4LBb_yFZq5tHxusGWp84_s5",
+    "teacherPageCount": 20,
+    "teacherRawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+  },
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_1-development-result-binding.v1"
+}
