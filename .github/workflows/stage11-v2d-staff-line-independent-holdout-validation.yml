@@ -8,7 +8,7 @@ on:
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
-      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
   push:
     branches:
@@ -19,7 +19,7 @@ on:
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
-      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
 
 permissions:
@@ -111,12 +111,22 @@ jobs:
           for forbidden in ('predictedsystemcount', 'perpagepredictedsystemcounts', 'f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb'):
               assert forbidden not in text
           PY
-      - name: Validate claim stop gate
+      - name: Validate holdout live truth and stop gate
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+          truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json').read_text())
           freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json').read_text())
-          for key in ('semanticPreservationEstablished','overallStage11PassAuthorized','restoredImageTopologyComparisonAuthorized','productionReady','productionPromotionAuthorized','stage12EntryAuthorized','prReadyForMerge'):
-              assert freeze['claimBoundary'][key] is False
+          assert truth['state'] == 'INDEPENDENT_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_TRUTH_PENDING'
+          assert truth['authorization']['freshIndependentHoldoutAuthorized'] is True
+          assert truth['authorization']['restoredOutputStaffTopologyComparisonAuthorized'] is False
+          assert truth['sourceOnlyRawFreeze']['rawArtifactSha256'] == freeze['rawFreeze']['rawArtifactSha256']
+          assert truth['sourceOnlyRawFreeze']['byteRepeatDeterminismVerified'] is True
+          assert truth['blindTeacherReview']['status'] == 'PENDING_HUMAN_REVIEW'
+          assert truth['blindTeacherReview']['completedPageCount'] == 0
+          assert truth['qualification']['scoringExecuted'] is False
+          assert truth['qualification']['detectorQualified'] is False
+          for key in ('staffLinePass','semanticPreservationEstablished','overallStage11PassAuthorized','restoredImageTopologyComparisonAuthorized','productionReady','productionPromotionAuthorized','stage12EntryAuthorized','prReadyForMerge'):
+              assert truth['claimBoundary'][key] is False
           PY
