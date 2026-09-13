@@ -1,0 +1,122 @@
+name: Stage 11 V2d Staff-Line Independent Holdout Freeze Validation
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Validate authorization and immutable policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          auth = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v1.json').read_text())
+          policy = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json').read_text())
+          assert auth['status'] == 'AUTHORIZED_FOR_ONE_FRESH_INDEPENDENT_HOLDOUT_QUALIFICATION'
+          assert auth['authorizedActions']['runFrozenV1_2SourceOnlyDetectorWithoutRetuning'] is True
+          assert auth['stillForbidden']['detectorRetuningAfterHoldoutAccess'] is True
+          assert auth['stillForbidden']['restoredOutputStaffTopologyComparison'] is True
+          assert auth['stillForbidden']['pullRequestMerge'] is True
+          assert policy['status'] == 'FROZEN_PRE_HOLDOUT'
+          assert policy['freezeBoundary']['thresholdMovementAfterFreshHoldoutAccessAllowed'] is False
+          req = policy['futureIndependentHoldoutQualification']['requirements']
+          assert req['teacherSystemRecallAtHalfSpacingMin'] == 0.65
+          assert req['predictedSystemPrecisionAtHalfSpacingMin'] == 0.80
+          assert req['presentPageCoverageMin'] == 0.95
+          assert req['absentPageSpecificityMin'] == 1.0
+          PY
+      - name: Validate source freeze identity and determinism
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          plan = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json').read_text())
+          freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json').read_text())
+          assert plan['status'] == 'FROZEN_BEFORE_HOLDOUT_DETECTOR_EXECUTION'
+          assert plan['holdoutSource']['datasetItemId'] == 'dataset.item.imslp82860-chopin-op69.v2'
+          assert plan['holdoutSource']['useAllPdfPages'] is True
+          assert plan['holdoutSource']['pageSelectionOrCherryPickingAllowed'] is False
+          assert plan['detectorExecution']['retuningAllowed'] is False
+          assert freeze['status'] == 'SOURCE_ONLY_RAW_FROZEN_TEACHER_TRUTH_PENDING'
+          assert freeze['holdoutSource']['pdfPageCount'] == 8
+          assert freeze['holdoutSource']['allPagesUsed'] is True
+          assert freeze['holdoutSource']['pageCherryPickingPerformed'] is False
+          assert freeze['rawFreeze']['pageCount'] == 8
+          assert freeze['rawFreeze']['sourceIdentityMatchedPages'] == 8
+          assert freeze['rawFreeze']['sourceIdentityMatchRate'] == 1.0
+          assert freeze['rawFreeze']['predictedSystemCount'] == 128
+          assert freeze['rawFreeze']['perPagePredictedSystemCounts'] == [5,13,18,18,23,17,18,16]
+          assert freeze['rawFreeze']['rawArtifactSha256'] == 'f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb'
+          assert freeze['rawFreeze']['byteRepeatDeterminismVerified'] is True
+          assert freeze['rawFreeze']['repeatArtifactSha256'] == freeze['rawFreeze']['rawArtifactSha256']
+          assert freeze['detector']['retunedAfterHoldoutAccess'] is False
+          assert freeze['detector']['teacherCoordinatesUsedDuringInference'] is False
+          assert freeze['detector']['restoredOutputsUsedDuringInference'] is False
+          assert freeze['qualification']['scoringExecuted'] is False
+          assert freeze['qualification']['detectorQualified'] is False
+          PY
+      - name: Validate blind teacher package contains no detector leakage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json')
+          data = json.loads(p.read_text())
+          text = p.read_text().lower()
+          assert data['status'] == 'READY_FOR_BLIND_HUMAN_ANNOTATION'
+          assert data['independentHoldout'] is True
+          assert data['teacherAnnotationIndependent'] is True
+          assert data['detectorOutputsShownToTeacher'] is False
+          assert data['detectorPredictedCountsShownToTeacher'] is False
+          assert data['lineDetectorGeometryShownToTeacher'] is False
+          assert data['restoredOutputsShownToTeacher'] is False
+          assert len(data['pages']) == 8
+          assert all(page['completed'] is False for page in data['pages'])
+          assert all(page['staffPresent'] is None for page in data['pages'])
+          assert all(page['systems'] is None for page in data['pages'])
+          assert all(page['sourceFileName'] == f"chopin-op69-holdout-p{i}.png" for i, page in enumerate(data['pages'], 1))
+          for forbidden in ('predictedsystemcount', 'perpagepredictedsystemcounts', 'f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb'):
+              assert forbidden not in text
+          PY
+      - name: Validate claim stop gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json').read_text())
+          for key in ('semanticPreservationEstablished','overallStage11PassAuthorized','restoredImageTopologyComparisonAuthorized','productionReady','productionPromotionAuthorized','stage12EntryAuthorized','prReadyForMerge'):
+              assert freeze['claimBoundary'][key] is False
+          PY
