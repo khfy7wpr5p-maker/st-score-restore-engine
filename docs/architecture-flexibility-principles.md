@@ -1,7 +1,8 @@
 # ST Score Restore Engine — Architecture Flexibility Principles
 
-**Status:** Normative design guidance
-**Date:** 2026-09-06
+**Status:** Normative design guidance  
+**Date:** 2026-09-06  
+**Updated:** 2026-09-13
 
 ST Score Restore is safety-first, but safety-first does not mean algorithmically narrow. The architecture should protect a small set of product-critical invariants while leaving implementation methods, model families, pipelines, evidence fusion, deployment profiles and future research paths open to improvement.
 
@@ -132,3 +133,19 @@ Hard constraints should be limited to product-critical properties such as:
 8. explicit distinction between restoration evidence, OMR output and human musical truth.
 
 Everything else should remain open to evidence-driven improvement unless a later ADR establishes a justified constraint.
+
+## 11. Detector development, scoring and qualification are separate layers
+
+Semantic-preservation detectors may iterate quickly on already-spent development data, but detector construction, teacher scoring and independent qualification must remain architecturally distinct.
+
+For a class-specific source detector:
+
+- inference should consume only the inputs allowed by its declared capability boundary;
+- teacher coordinates, review labels and held-out truth must not silently become inference features or page-specific tuning rules;
+- a candidate should be frozen before teacher scoring that is used to characterize it;
+- repeated use of the same development corpus can demonstrate improvement but cannot by itself qualify a detector;
+- acceptance metrics and thresholds should be frozen before a fresh independent holdout is opened;
+- weak source detection should not be used to support strong claims about restored-output semantic preservation;
+- historical detector versions and evidence should remain immutable so regressions and gains stay auditable.
+
+The Stage 11 V2d staff-line path is the current concrete example: v1.1 materially improves development recall and page coverage while remaining `REJECTED_CURRENT_DETECTOR`. The implementation is still replaceable; the architectural requirement is the evidence boundary, not the current OpenCV technique.
