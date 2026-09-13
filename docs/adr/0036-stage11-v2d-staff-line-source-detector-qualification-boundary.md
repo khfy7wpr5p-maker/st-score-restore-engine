@@ -65,3 +65,36 @@ No training/fine-tuning is authorized by this ADR. No new private/user/student d
 ## Reversal or migration path
 
 A later ADR may supersede this boundary after a frozen qualification policy and independent evidence justify a new disposition. Any replacement detector must retain provenance, deterministic/reproducible evaluation, source-only inference during qualification, and separation of teacher/holdout truth from candidate generation.
+
+## Post-decision evidence update — 2026-09-13
+
+This update records what happened after the original architectural decision without rewriting the decision history above.
+
+A separately versioned v1.2 candidate was developed and frozen on the already-spent development corpus. Its development result materially improved source recall to `0.7157360406` while retaining `1.0` staff-present page coverage and `1.0` staff-absent specificity on development data. The qualification policy was frozen before fresh holdout access.
+
+Exactly one fresh independent Chopin Op.69 holdout qualification was then explicitly authorized, executed and consumed. The source-only v1.2 raw output was frozen before teacher truth, teacher review was completed independently, and the historical v1 scorer anchor `71/197` was reproduced exactly before holdout scoring.
+
+Holdout result:
+
+- teacher systems: 88;
+- predicted systems: 128;
+- matched systems: 80;
+- teacher-system recall @ 0.5 spacing: `0.9090909091` — PASS;
+- predicted-system precision: `0.625` — FAIL against the frozen `>= 0.80` threshold;
+- present-page coverage: `1.0` — PASS;
+- absent-page specificity: `0.0` — FAIL against the required `1.0`;
+- five-line count correctness: `1.0` — PASS;
+- line-order correctness: `1.0` — PASS;
+- six-line/TAB rejection: `1.0` — PASS;
+- source identity and byte-repeat determinism: PASS.
+
+The conjunctive qualification therefore failed. The binding disposition is `QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR`; `detectorQualified=false` and `sourceDetectorAdequacyEstablished=false` remain authoritative.
+
+The engineering lesson is now primarily about false-positive suppression rather than raw source recall. However, the consumed holdout may not be used to retune v1.2 or to tune a future candidate. Future staff-line work requires a separately versioned candidate developed on non-holdout development evidence, frozen before any new independent holdout, followed by new explicit authorization for another independent qualification. Restored-output topology comparison remains separately closed.
+
+Authoritative post-decision evidence:
+
+- `evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json`
+- `evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json`
+- `evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json`
+- `docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json`
