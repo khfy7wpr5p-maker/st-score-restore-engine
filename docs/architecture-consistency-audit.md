@@ -8,7 +8,8 @@
 **Stage 2:** COMPLETE / PASS / production-effective  
 **Stage 3:** COMPLETE / PASS / production-effective  
 **Stage 4:** ACTIVE / NOT_READY  
-**Stage 5:** BLOCKED pending Stage 4 final exit PASS
+**Stage 5:** BLOCKED pending Stage 4 final exit PASS  
+**Latest architecture overlay:** 2026-09-13 — Stage 11 V2d semantic-preservation / staff-line v1.1
 
 ## Authority
 
@@ -84,6 +85,71 @@ Chopin `dataset.item.imslp82860-chopin-op69.v2` remains `held_out_evaluation` on
 
 Resolved historical blockers remain historical only; none of the three current blockers is closed by PR #130. Reference-bundle acceptance permits candidate derivation only after a separate exact calibration-execution authorization opens that next gate.
 
+## Stage 11 V2d current architecture overlay — 2026-09-13
+
+This section is a later architecture overlay and does not rewrite the historical Stage 4 evidence above.
+
+### Current Stage 11 semantic-preservation chain
+
+The frozen V2a Restore package remains unchanged. V2c/V2d evaluates semantic preservation through class-specific evidence that is independent of the restoration candidate. The current class matrix is:
+
+- `PASS`: `notehead` at canonical class-evidence level only;
+- `REVIEW_ONLY`: `clef`;
+- `REJECTED_CURRENT_DETECTOR`: `accidental`, `barline`, `beam_or_flag`, `rest`, `staff_line`, `stem`;
+- `UNSUPPORTED`: `tab_digit`, `tab_line`, `tab_string`, `tie_or_slur`.
+
+Neither class-level progress nor detector development establishes overall semantic preservation.
+
+### Staff-line evidence state
+
+Independent teacher staff topology is complete on the existing development corpus:
+
+- 20/20 pages complete;
+- 18 staff-present pages;
+- 2 staff-absent pages;
+- 197 confirmed systems;
+- 985 confirmed lines;
+- 0 ambiguous systems;
+- teacher raw SHA-256 `28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7`.
+
+The frozen source-only v1.1 candidate `stage11-v2d-staff-multisystem-source.v1.1` is a material development improvement over v1:
+
+| Diagnostic | v1 | v1.1 |
+|---|---:|---:|
+| predicted systems | 89 | 114 |
+| 0.5-spacing one-to-one matches | 71 | 91 |
+| teacher-system recall | 0.360406 | 0.461929 |
+| predicted-system precision | 0.797753 | 0.798246 |
+| staff-present page coverage | 15/18 | 18/18 |
+| staff-absent specificity | 2/2 | 2/2 |
+
+V1.1 also preserves five-line count correctness 1.0, line-order correctness 1.0, byte-repeat determinism, source identity 20/20, and local regression tests 7/7 PASS. Its frozen raw artifact SHA-256 is `9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575`.
+
+However, 106/197 teacher-confirmed systems remain unmatched at the same diagnostic. The same spent development corpus was used to develop and score v1.1. Therefore `sourceDetectorAdequacyEstablished=false`, `detectorQualified=false`, and `staff_line=REJECTED_CURRENT_DETECTOR` remain correct.
+
+### Architectural gate after v1.1
+
+ADR 0036 freezes the next boundary:
+
+1. detector development, teacher scoring, and qualification remain separate;
+2. no fresh independent holdout is opened until a qualification/acceptance policy is frozen;
+3. that policy must predeclare matching rules, metrics, thresholds, specificity, determinism and six-line TAB rejection expectations;
+4. restored-image topology comparison remains closed until source-detector adequacy is established under that policy;
+5. any v1.2 development work before qualification remains source-only and uses only already-spent development data;
+6. no development result may set production or Stage 12 authorization flags.
+
+### Stage 11 safety truth
+
+The following remain false:
+
+- `semanticPreservationEstablished`;
+- `overallStage11PassAuthorized`;
+- `productionReady`;
+- `productionPromotionAuthorized`;
+- `stage12EntryAuthorized`.
+
+PR #211 remains Draft/open/unmerged. Merge is a separate authorization decision.
+
 ## Consistency conclusion
 
-The architecture is consistent only when historical checkpoints, immutable work-package templates, separate human completion evidence, governance acceptance, execution authorization, and execution evidence remain distinct. Raw private metrics stay outside ordinary Git; unavailable metrics use `not_applicable`, not fabricated zeroes; insufficient evidence causes abstention; production thresholds/resources remain unchanged; Stage 4 PASS and Stage 5 entry remain false.
+The architecture is consistent only when historical checkpoints, immutable evidence, source-only candidate development, independent teacher truth, qualification policy, independent holdout evidence, restored-output comparison and production authorization remain distinct layers. Development improvement is recorded without being promoted into qualification. The current smallest safe boundary is to freeze a staff-line qualification policy before any fresh holdout, while keeping restored-output comparison and production/Stage 12 gates closed.
