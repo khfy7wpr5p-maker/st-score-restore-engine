@@ -1,0 +1,263 @@
+{
+  "schema_version": "1.0.0",
+  "document_type": "AUTONOMOUS_DEVELOPER_HANDOFF",
+  "project": {
+    "name": "ST Score Restore Engine",
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "pull_request": 211,
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "base_branch": "main",
+    "prepared_from_head": "e12369c5a4b7f35edc142c849b2fe29e22605c0e",
+    "date": "2026-09-13",
+    "task_id": "STAGE11_V2D_STAFF_LINE_V1_2_SOURCE_ONLY_RECALL_AND_QUALIFICATION_POLICY",
+    "execution_mode": "AUTONOMOUS_SAFE_CONTINUATION"
+  },
+  "developer_instruction": "Refresh PR #211 metadata and the branch HEAD before any write. Continue autonomously from the frozen v1.1 staff-line result. Do not merge. Do not open new holdout data. Preserve all source/teacher/restored-data boundaries and stop at the explicit gates below.",
+  "architecture_documents_updated": {
+    "adr_0036": {
+      "path": "docs/adr/0036-stage11-v2d-staff-line-source-detector-qualification-boundary.md",
+      "commit": "a71d8f3675f6e4819d411a2dfb5925692d2d19f6",
+      "purpose": "Separates detector development, teacher scoring, qualification, holdout and restored-output comparison."
+    },
+    "flexibility_principles": {
+      "path": "docs/architecture-flexibility-principles.md",
+      "commit": "af9d80ed68d5c110762e8ac5e9fb3208d14b40fd",
+      "purpose": "Adds the rule that source-detector development, scoring and qualification are separate layers."
+    },
+    "consistency_audit": {
+      "path": "docs/architecture-consistency-audit.md",
+      "commit": "4c141b91dd744896aafd2e10a802639124cb332e",
+      "purpose": "Adds the 2026-09-13 Stage 11 V2d staff-line architecture overlay and current gate."
+    },
+    "current_truth": {
+      "path": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json",
+      "commit": "e12369c5a4b7f35edc142c849b2fe29e22605c0e",
+      "state": "STAFF_LINE_V1_1_DEVELOPMENT_IMPROVED_QUALIFICATION_POLICY_PENDING"
+    }
+  },
+  "current_repository_truth": {
+    "pr_state": "open",
+    "pr_draft": true,
+    "pr_merged": false,
+    "pr_mergeable_at_handoff": true,
+    "frozen_restore_package_sha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "development_corpus": {
+      "source_family_count": 5,
+      "page_count": 20,
+      "staff_present_pages": 18,
+      "staff_absent_pages": 2,
+      "teacher_confirmed_systems": 197,
+      "teacher_confirmed_lines": 985,
+      "ambiguous_systems": 0,
+      "teacher_raw_sha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+    },
+    "class_matrix": {
+      "PASS": ["notehead"],
+      "REVIEW_ONLY": ["clef"],
+      "REJECTED_CURRENT_DETECTOR": ["accidental", "barline", "beam_or_flag", "rest", "staff_line", "stem"],
+      "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"]
+    },
+    "global_flags": {
+      "semanticPreservationEstablished": false,
+      "overallStage11PassAuthorized": false,
+      "productionReady": false,
+      "productionPromotionAuthorized": false,
+      "stage12EntryAuthorized": false
+    }
+  },
+  "frozen_staff_line_versions": {
+    "baseline": {
+      "version": "stage11-v2c-line-system.v1",
+      "disposition": "REJECTED_CURRENT_DETECTOR",
+      "present_page_coverage": 0.5556,
+      "matched_systems_at_half_spacing": 10,
+      "teacher_system_recall_at_half_spacing": 0.05076,
+      "absent_page_specificity": 1.0
+    },
+    "v1": {
+      "version": "stage11-v2d-staff-multisystem-source.v1",
+      "module": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py",
+      "raw_artifact_sha256": "7bf5e84ce6088edaa5894015757086fea204fcf169013b8605a5121dddf442f4",
+      "predicted_systems": 89,
+      "matched_systems_at_half_spacing": 71,
+      "teacher_system_recall_at_half_spacing": 0.3604060913705584,
+      "predicted_system_precision_at_half_spacing": 0.797752808988764,
+      "present_page_coverage": 0.8333333333333334,
+      "absent_page_specificity": 1.0,
+      "immutable": true
+    },
+    "v1_1": {
+      "version": "stage11-v2d-staff-multisystem-source.v1.1",
+      "module": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+      "test": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+      "development_plan": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json",
+      "result_binding": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json",
+      "evaluation": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json",
+      "detector_source_sha256": "cb6271d667792275afb9c51e4f3a84fde0d426538b034223c8b0be6fc23fdc9a",
+      "raw_artifact_sha256": "9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575",
+      "predicted_systems": 114,
+      "matched_systems_at_half_spacing": 91,
+      "teacher_system_recall_at_half_spacing": 0.4619289340101523,
+      "predicted_system_precision_at_half_spacing": 0.7982456140350878,
+      "present_page_coverage": 1.0,
+      "absent_page_specificity": 1.0,
+      "five_line_count_correct_rate": 1.0,
+      "line_order_correct_rate": 1.0,
+      "source_identity_matched_pages": 20,
+      "byte_repeat_determinism_verified": true,
+      "local_regression_tests": "7/7 PASS",
+      "material_development_improvement_observed": true,
+      "source_detector_adequacy_established": false,
+      "detector_qualified": false,
+      "disposition": "REJECTED_CURRENT_DETECTOR",
+      "immutable_after_handoff": true
+    }
+  },
+  "current_problem": {
+    "summary": "V1.1 materially improves coverage and recall without losing precision/specificity, but it still misses 106 of 197 teacher-confirmed systems at the 0.5-spacing diagnostic. The same spent development corpus cannot qualify staff_line.",
+    "primary_failure": "insufficient source-detector recall on faint, broken, skewed or locally weak staff-line systems while preserving text/TAB rejection",
+    "must_preserve": [
+      "18/18 staff-present page coverage",
+      "2/2 staff-absent specificity",
+      "approximately 0.798 predicted-system precision or better",
+      "five-line count correctness",
+      "line ordering",
+      "six-line TAB-like rejection",
+      "determinism",
+      "no page-specific rules"
+    ]
+  },
+  "primary_goal": "Freeze a qualification/acceptance policy before any fresh holdout, then develop a separately versioned v1.2 source-only staff-line candidate on the already-spent 20-page development corpus. Improve recall materially without sacrificing precision, absent-page specificity, TAB rejection or determinism. Freeze v1.2 source output before teacher scoring. Stop before any new independent holdout or restored-output comparison.",
+  "non_binding_development_targets": {
+    "teacher_system_recall_at_half_spacing": ">= 0.60 if achievable without safety regression",
+    "predicted_system_precision_at_half_spacing": ">= 0.75 and preferably >= v1.1",
+    "present_page_coverage": "18/18",
+    "absent_page_specificity": "2/2 = 1.0",
+    "five_line_count_correct_rate": "1.0",
+    "line_order_correct_rate": "1.0",
+    "determinism": "byte-repeat stable",
+    "tab_six_line_rejection": "no regression"
+  },
+  "important_threshold_rule": "The development targets above are not qualification thresholds. Do not silently convert them into PASS criteria. Create and freeze a separate qualification policy with explicit rationale before any fresh holdout is opened.",
+  "technical_focus": [
+    "Keep v1 and v1.1 immutable; create a new v1.2 module/test/evidence namespace.",
+    "Use source-derived multi-scale horizontal evidence with bounded deterministic fusion.",
+    "Improve sensitivity to faded/broken staff ridges without admitting text baselines or decorative horizontal structure.",
+    "Use local spacing evidence and cross-staff suppression; do not use page-specific thresholds.",
+    "Retain or strengthen staff-height/topology sanity checks.",
+    "Retain skew tolerance only when deterministic and bounded.",
+    "Retain tolerant six-line neighbor rejection so guitar TAB lanes are not promoted to five-line staff systems.",
+    "Prefer auditable source-derived diagnostics: ridge/segment support, strip support, local gap modes, candidate rejection reasons and deduplication reasons.",
+    "Do not use teacher coordinates as inference input or tune a page rule to a teacher box."
+  ],
+  "execution_plan": {
+    "B0_refresh_and_lock": [
+      "Refresh PR #211 and branch HEAD before writes.",
+      "Read ADR 0036, architecture consistency audit, architecture flexibility principles and V2D current truth.",
+      "Confirm PR is Draft/Open/Unmerged and merge remains unauthorized."
+    ],
+    "B1_freeze_qualification_policy": [
+      "Create a versioned staff_line qualification/acceptance policy artifact before any fresh holdout access.",
+      "Predeclare matching rule, metrics, threshold semantics, staff-absent specificity, determinism, line-count/order, TAB rejection, failure/abstention behavior and evidence binding.",
+      "Do not use a fresh holdout to select or move thresholds.",
+      "Do not declare staff_line PASS from development data."
+    ],
+    "B2_source_only_root_cause": [
+      "Use only the already-spent 20-page source corpus.",
+      "Keep teacher coordinate files closed during candidate generation/inference.",
+      "Instrument v1.1/v1.2 source diagnostics to isolate missed faint/broken systems and false-positive suppressors.",
+      "Do not load restored outputs."
+    ],
+    "B3_implement_v1_2": [
+      "Create src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py.",
+      "Create tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py.",
+      "Preserve v1/v1.1 files and evidence unchanged.",
+      "Add deterministic synthetic/local tests for five-line acceptance, six-line TAB rejection, text/decorative rejection, cross-staff suppression, faint/broken lines, skew tolerance, blank pages, and identity mismatch."
+    ],
+    "B4_full20_source_only_ablation": [
+      "Run all 20 exact frozen source pages source-only.",
+      "Compare source-only behavior against frozen v1.1 without teacher coordinates.",
+      "Reject explosive candidate growth, staff-absent contamination or obvious TAB promotion before freeze."
+    ],
+    "B5_freeze_v1_2": [
+      "Select the smallest defensible v1.2 candidate.",
+      "Freeze exact code SHA/config/source SHA inventory/raw JSON and SHA sidecar.",
+      "Verify byte-repeat determinism and 20/20 source identity.",
+      "Set sourceOnly=true, teacherUsedAtInference=false, restoredUsedAtInference=false, heldOutAccessed=false, trainingUsed=false and pageSpecificRulesUsed=false."
+    ],
+    "B6_teacher_score_after_freeze": [
+      "Only after B5, score the frozen v1.2 output against the existing 20-page teacher topology.",
+      "Use the same one-to-one 0.5 staff-spacing diagnostic used for v1/v1.1 plus any metrics frozen in the qualification policy.",
+      "Record per-page and aggregate metrics.",
+      "If v1.2 is insufficient, record REJECTED_CURRENT_DETECTOR or development-only candidate status; do not retune the same frozen v1.2 after seeing teacher results."
+    ],
+    "B7_compare_and_decide": [
+      "Compare baseline, v1, v1.1 and v1.2 on identical development diagnostics.",
+      "Development improvement may justify another version but cannot qualify staff_line.",
+      "Prepare, but do not execute, a fresh independent holdout plan if the frozen qualification policy and development evidence justify it."
+    ],
+    "B8_ci_and_docs": [
+      "Run Python 3.11 and 3.12 staff-line validation on the exact new HEAD.",
+      "Update V2D current truth, architecture consistency overlay and PR body with observed facts only.",
+      "Keep PR #211 Draft and unmerged."
+    ],
+    "B9_stop_gate": [
+      "STOP before any fresh independent holdout access.",
+      "STOP before restored-image topology comparison.",
+      "STOP before merge.",
+      "STOP before production, Stage 11 overall PASS, or Stage 12 authorization."
+    ]
+  },
+  "allowed_autonomous_actions": [
+    "read and modify development-only staff-line code/tests/docs/evidence in the v1.2 scope",
+    "run source-only ablations on the already-spent 20-page corpus",
+    "freeze a qualification policy without opening holdout data",
+    "freeze v1.2 source output",
+    "score frozen v1.2 against the existing development teacher truth after freeze",
+    "run CI and fix CI defects without weakening safety rules",
+    "update architecture/current-truth/PR documentation with observed results"
+  ],
+  "prohibited_without_new_authorization": [
+    "merge PR #211",
+    "open or inspect a new independent holdout",
+    "use restored V2a outputs to tune or compare staff topology before source adequacy gate",
+    "training, fine-tuning, optimizer or backprop work in this detector line",
+    "modify the frozen V2a Restore package",
+    "modify shared production music-safety validators",
+    "modify HTTP API, OpenAPI or normal job-service behavior",
+    "use private/user/student data",
+    "set semanticPreservationEstablished=true",
+    "set overallStage11PassAuthorized=true",
+    "set productionReady=true or productionPromotionAuthorized=true",
+    "set stage12EntryAuthorized=true"
+  ],
+  "required_files_to_read_first": [
+    "docs/adr/0036-stage11-v2d-staff-line-source-detector-qualification-boundary.md",
+    "docs/architecture-consistency-audit.md",
+    "docs/architecture-flexibility-principles.md",
+    "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json",
+    "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py",
+    "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json",
+    "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json",
+    "evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json",
+    ".github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml"
+  ],
+  "final_report_required": {
+    "must_include": [
+      "exact final HEAD",
+      "files changed and commit SHAs",
+      "qualification policy path and status",
+      "v1.2 source-only freeze identity if created",
+      "baseline/v1/v1.1/v1.2 metric comparison",
+      "Python 3.11/3.12 CI status",
+      "staff_line disposition",
+      "whether fresh holdout remains closed",
+      "whether restored-output comparison remains closed",
+      "explicit confirmation that PR remains Draft/Open/Unmerged"
+    ],
+    "success_is_not_merge": true,
+    "success_definition": "A reproducible, safer continuation with frozen policy/evidence and an honest detector disposition. If v1.2 does not meet the frozen development expectations, record the failure cleanly rather than weakening gates."
+  }
+}
