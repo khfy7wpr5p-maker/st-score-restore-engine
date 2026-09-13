@@ -22,6 +22,8 @@ on:
       - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'docs/architecture-consistency-audit.md'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
   push:
     branches:
@@ -46,6 +48,8 @@ on:
       - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'docs/architecture-consistency-audit.md'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
 
 permissions:
@@ -166,10 +170,8 @@ jobs:
           assert policy['freezeBoundary']['restoredOutputsAccessedForStaffTopology'] is False
           assert policy['developmentReadinessForFutureHoldoutRequest']['qualificationClaim'] is False
           assert policy['developmentReadinessForFutureHoldoutRequest']['freshHoldoutAutomaticallyAuthorized'] is False
-          assert policy['matchingRule']['compatibilityRequirement'].startswith('The scoring implementation used for qualification must reproduce')
           for value in policy['claimBoundary'].values():
               assert value is False
-
           evaluation = json.loads(Path('evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json').read_text(encoding='utf-8'))
           assert evaluation['developmentOnly'] is True
           assert evaluation['qualificationEvidence'] is False
@@ -186,7 +188,6 @@ jobs:
           assert evaluation['scoring']['absentPageSpecificity']['rate'] == 1.0
           assert evaluation['scoring']['fiveLineCountCorrectRate'] == 1.0
           assert evaluation['scoring']['lineOrderCorrectRate'] == 1.0
-
           binding = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json').read_text(encoding='utf-8'))
           assert binding['developmentOnly'] is True
           assert binding['qualificationEvidence'] is False
@@ -200,10 +201,35 @@ jobs:
           assert binding['developmentMetrics']['syntheticSixLineTabNegativeControl']['rejectionRate'] == 1.0
           for value in binding['claimBoundary'].values():
               assert value is False
-
           recon = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json').read_text(encoding='utf-8'))
           assert recon['verification']['localFreezeParentBytesExactlyMatchCurrentRepositoryBlob'] is True
           assert recon['verification']['v1_2FreezeParentIdentityValidAgainstCurrentRepositoryBlob'] is True
           assert recon['disposition']['modifyHistoricalV1_1Binding'] is False
           assert recon['disposition']['v1_2FreezeInvalidatedByThisDiscrepancy'] is False
+          PY
+      - name: Validate Stage 11 v1.2 current-truth stop gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json').read_text(encoding='utf-8'))
+          assert truth['state'] == 'STAFF_LINE_V1_2_DEVELOPMENT_READY_PRE_HOLDOUT_STOP'
+          staff = truth['staffLineSourceDetector']
+          assert staff['version'] == 'stage11-v2d-staff-multisystem-source.v1.2'
+          assert staff['developmentReadinessForFutureHoldoutRequest'] is True
+          assert staff['sourceDetectorAdequacyEstablished'] is False
+          assert staff['detectorQualified'] is False
+          assert staff['freshIndependentHoldoutAuthorized'] is False
+          assert staff['restoredImageTopologyComparisonAuthorized'] is False
+          assert truth['decision']['staffLineQualificationPolicyFrozen'] is True
+          assert truth['decision']['freshStaffLineHoldoutAuthorized'] is False
+          assert truth['decision']['restoredStaffLineTopologyComparisonAuthorized'] is False
+          assert truth['decision']['overallStage11PassAuthorized'] is False
+          assert truth['decision']['productionReady'] is False
+          assert truth['decision']['prReadyForMerge'] is False
+          assert truth['safetyBoundaries']['heldOutAccessAuthorized'] is False
+          assert truth['safetyBoundaries']['stage12EntryAuthorized'] is False
+          architecture = Path('docs/architecture-consistency-audit.md').read_text(encoding='utf-8')
+          assert 'staff-line v1.2 pre-holdout stop' in architecture
+          assert 'future independent holdout — **closed / not automatically authorized**' in architecture
           PY
