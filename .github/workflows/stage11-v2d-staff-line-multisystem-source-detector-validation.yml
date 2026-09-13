@@ -4,10 +4,15 @@ on:
   pull_request:
     paths:
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
   push:
@@ -15,10 +20,15 @@ on:
       - stage11-v2c-semantic-detector-corpus-expansion
     paths:
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
 
@@ -41,13 +51,17 @@ jobs:
       - name: Install repository
         run: python -m pip install -e .
       - name: Run multi-system source-detector tests
-        run: python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector -v
-      - name: Compile source detector and tests
+        run: |
+          python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector -v
+          python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_1 -v
+      - name: Compile source detectors and tests
         run: |
           python -m py_compile \
             src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py \
-            tests/test_stage11_v2d_staff_line_multisystem_source_detector.py
-      - name: Validate development-only plan and source-only boundary
+            src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py \
+            tests/test_stage11_v2d_staff_line_multisystem_source_detector.py \
+            tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py
+      - name: Validate v1 development-only plan and source-only boundary
         run: |
           python - <<'PY'
           import json
@@ -125,4 +139,54 @@ jobs:
           assert recon['disposition']['stage12EntryAuthorized'] is False
           print('valid:', result_path)
           print('valid:', recon_path)
+          PY
+      - name: Validate frozen v1.1 development result binding
+        run: |
+          python - <<'PY'
+          import inspect
+          import json
+          from pathlib import Path
+          from st_score_restore import stage11_v2d_staff_line_multisystem_source_detector_v1_1 as detector
+
+          plan_path = Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json')
+          plan = json.loads(plan_path.read_text(encoding='utf-8'))
+          assert plan['developmentOnly'] is True
+          assert plan['qualificationEvidence'] is False
+
+          result_path = Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json')
+          result = json.loads(result_path.read_text(encoding='utf-8'))
+          assert result['developmentOnly'] is True
+          assert result['qualificationEvidence'] is False
+          assert result['detector']['version'] == 'stage11-v2d-staff-multisystem-source.v1.1'
+          assert result['detector']['teacherArtifactLoadedDuringInference'] is False
+          assert result['detector']['restoredOutputsLoadedDuringInference'] is False
+          assert result['detector']['heldOutAccessed'] is False
+          assert result['detector']['trainingOrFineTuningPerformed'] is False
+          assert result['detector']['pageSpecificRulesUsed'] is False
+          assert result['phaseAFreeze']['pageCount'] == 20
+          assert result['phaseAFreeze']['sourceIdentityMatchedPages'] == 20
+          assert result['phaseAFreeze']['predictedSystemCount'] == 114
+          assert result['phaseAFreeze']['byteRepeatDeterminismVerified'] is True
+          assert result['phaseBTeacherScoring']['teacherPageCount'] == 20
+          assert result['phaseBTeacherScoring']['teacherConfirmedSystemCount'] == 197
+          assert result['phaseBTeacherScoring']['teacherConfirmedLineCount'] == 985
+          assert result['developmentMetrics']['presentPageCoverage']['detected'] == 18
+          assert result['developmentMetrics']['absentPageSpecificity']['clean'] == 2
+          assert result['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 91
+          assert abs(result['developmentMetrics']['diagnosticTeacherSystemRecallAtHalfSpacing'] - 0.4619289340101523) < 1e-12
+          assert abs(result['developmentMetrics']['diagnosticPredictedSystemPrecisionAtHalfSpacing'] - 0.7982456140350878) < 1e-12
+          assert result['developmentMetrics']['fiveLineCountCorrectRate'] == 1.0
+          assert result['developmentMetrics']['lineOrderCorrectRate'] == 1.0
+          assert result['decision']['materialDevelopmentImprovementObserved'] is True
+          assert result['decision']['sourceDetectorAdequacyEstablished'] is False
+          assert result['decision']['restoredImageTopologyComparisonAuthorized'] is False
+          assert result['decision']['staffLineDisposition'] == 'REJECTED_CURRENT_DETECTOR'
+          for key in ('detectorQualified','semanticPreservationEstablished','overallStage11PassAuthorized','productionReady','productionPromotionAuthorized','stage12EntryAuthorized'):
+              assert result['claimBoundary'][key] is False
+
+          sig = inspect.signature(detector.detect_staff_systems)
+          assert list(sig.parameters) == ['image', 'config']
+          assert sig.parameters['config'].kind is inspect.Parameter.KEYWORD_ONLY
+          print('valid:', plan_path)
+          print('valid:', result_path)
           PY
