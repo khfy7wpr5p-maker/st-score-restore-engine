@@ -148,4 +148,20 @@ For a class-specific source detector:
 - weak source detection should not be used to support strong claims about restored-output semantic preservation;
 - historical detector versions and evidence should remain immutable so regressions and gains stay auditable.
 
-The Stage 11 V2d staff-line path is the current concrete example: v1.1 materially improves development recall and page coverage while remaining `REJECTED_CURRENT_DETECTOR`. The implementation is still replaceable; the architectural requirement is the evidence boundary, not the current OpenCV technique.
+The Stage 11 V2d staff-line path is the current concrete example. V1.2 improved development recall substantially and then achieved `0.9090909091` teacher-system recall on the independent holdout, but failed the pre-frozen qualification policy on predicted-system precision (`0.625`) and staff-absent specificity (`0.0`). Its final disposition is therefore `REJECTED_CURRENT_DETECTOR`. The implementation remains replaceable; the architectural requirement is the evidence boundary, not the current OpenCV technique.
+
+## 12. A consumed holdout is evidence, not future tuning data
+
+Once an independent holdout has been opened and scored, its role changes permanently: it becomes qualification evidence for the frozen candidate that consumed it.
+
+The architecture therefore requires:
+
+- a failed holdout must not be reused to retune the same detector version;
+- a future detector version must not use observed holdout geometry, per-page failures, or holdout-specific thresholds as development input;
+- future improvements should be motivated at the failure-mode level (for example generic false-positive suppression) and developed on authorized non-holdout data;
+- any changed acceptance policy must be frozen before a new independent holdout is accessed;
+- a new candidate must be frozen before a new independent holdout is consumed;
+- another independent qualification requires new explicit authorization;
+- restored-output comparison remains a later, separately authorized layer even after source-detector qualification.
+
+This prevents the holdout from silently becoming a development set while still allowing the project to learn the high-level engineering lesson that a detector may have strong recall but insufficient false-positive control.
