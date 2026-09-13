@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_3-holdout-current-truth.v1",
+  "generatedOn": "2026-09-14",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "V1_3_FRESH_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_REVIEW_PENDING",
+  "authority": {
+    "scope": "v1.3 fresh independent staff-line holdout qualification only",
+    "historicalV1_2HoldoutTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
+    "historicalEvidenceRewritten": false
+  },
+  "candidate": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.3",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "moduleSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "developmentResultBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json",
+    "developmentReadyBeforeHoldoutAccess": true,
+    "detectorQualified": false
+  },
+  "qualificationPolicy": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "status": "FROZEN_PRE_HOLDOUT",
+    "thresholdMovementAfterHoldoutAccessAllowed": false,
+    "teacherSystemRecallAtHalfSpacingMin": 0.65,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+    "presentPageCoverageMin": 0.95,
+    "absentPageSpecificityMin": 1.0,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "lineOrderCorrectRateMin": 1.0,
+    "tabSixLineRejectionRateMin": 1.0,
+    "byteRepeatDeterminismRequired": true,
+    "sourceIdentityMatchRateRequired": 1.0,
+    "allCriteriaRequired": true
+  },
+  "authorization": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json",
+    "status": "CONSUMED_BY_V1_3_RAW_FREEZE_QUALIFICATION_IN_PROGRESS",
+    "freshIndependentHoldoutAuthorized": false,
+    "anotherIndependentHoldoutAuthorized": false,
+    "restoredOutputStaffTopologyComparisonAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "holdoutSource": {
+    "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+    "artifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "artifactByteSize": 647003,
+    "mediaType": "image/jpeg",
+    "width": 2048,
+    "height": 1536,
+    "pageCount": 1,
+    "allPagesUsed": true,
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "sourceFamilyIndependentFromConsumedChopin": true,
+    "providerSpecificIdentifiersCommittedToGit": false
+  },
+  "sourceOnlyRawFreeze": {
+    "bindingPath": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json",
+    "pageCount": 1,
+    "sourceIdentityMatchedPages": 1,
+    "sourceIdentityMatchRate": 1.0,
+    "predictedSystemCount": 3,
+    "rawArtifactSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "sourceManifestSha256": "4dd873e0aa99d04b293f2fa74209ffcd7237b20b2bfc6c9c9b4285cd864673e7",
+    "byteRepeatDeterminismVerified": true,
+    "teacherTruthExistedAtRawFreeze": false,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "retunedAfterHoldoutAccess": false,
+    "pageSpecificRulesUsed": false
+  },
+  "blindTeacherReview": {
+    "status": "PENDING_HUMAN_REVIEW",
+    "bindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1.json",
+    "privateNotebookSha256": "26f362bafafbb18c083bc8726249d73c6640a60bed141b307eefe4ba6f4c8056",
+    "privateWorkPackageSha256": "9675a5b01399af9976bd343f6d0d917f760df8844f807d2e72ec93173015eba0",
+    "sourcePageCount": 1,
+    "completedPageCount": 0,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "teacherAnnotationIndependentRequired": true
+  },
+  "validation": {
+    "workflow": "Stage 11 V2d Staff-Line V1.3 Fresh Holdout Validation",
+    "runId": 34783303970,
+    "python311": "SUCCESS",
+    "python312": "SUCCESS"
+  },
+  "qualification": {
+    "scoringExecuted": false,
+    "scoreExactlyOnceAgainstFrozenRaw": false,
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLinePass": false,
+    "reason": "Independent human teacher topology is still pending. Scoring is forbidden until that blind teacher truth is complete and frozen."
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "pullRequest": {
+    "number": 211,
+    "mustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "nextSafeBoundary": "Complete the one-page blind human teacher annotation using source only. Freeze the resulting teacher truth. Only then score the already-frozen v1.3 raw holdout exactly once against the unchanged qualification policy. Do not retune v1.3 or move thresholds in response to this holdout."
+}
