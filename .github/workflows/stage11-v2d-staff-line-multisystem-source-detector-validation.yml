@@ -6,11 +6,13 @@ on:
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
       - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py'
       - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json'
@@ -22,7 +24,11 @@ on:
       - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json'
+      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - 'docs/architecture-consistency-audit.md'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
   push:
@@ -32,23 +38,17 @@ on:
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
       - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py'
       - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
       - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json'
-      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json'
+      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - 'docs/architecture-consistency-audit.md'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
 
@@ -75,161 +75,127 @@ jobs:
           python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector -v
           python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_1 -v
           python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_2 -v
+          python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_3 -v
       - name: Compile source detectors and tests
         run: |
           python -m py_compile \
             src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py \
             src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py \
             src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py \
+            src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py \
             src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py \
             src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py \
             tests/test_stage11_v2d_staff_line_multisystem_source_detector.py \
             tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py \
-            tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py
-      - name: Validate v1 development-only plan and source-only boundary
+            tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py \
+            tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py
+      - name: Validate historical development evidence remains frozen
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          plan_path = Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json')
-          plan = json.loads(plan_path.read_text(encoding='utf-8'))
-          assert plan['developmentOnly'] is True
-          assert plan['qualificationEvidence'] is False
-          assert plan['inputs']['newIndependentHoldoutAccessAuthorized'] is False
-          assert plan['inputs']['restoredOutputsAuthorizedForDetectorDevelopment'] is False
-          assert plan['detectorContract']['sourceOnly'] is True
-          assert plan['detectorContract']['deterministic'] is True
-          assert plan['detectorContract']['trainingOrFineTuning'] is False
-          assert plan['detectorContract']['teacherCoordinatesUsedDuringInference'] is False
-          assert plan['detectorContract']['pageIdSpecificRulesForbidden'] is True
-          assert plan['detectorContract']['mustProcessWholePage'] is True
-          assert plan['detectorContract']['mustReturnAllSupportedSystemsInsteadOfFirstMatch'] is True
-          for key in ('detectorQualified','semanticPreservationEstablished','overallStage11PassAuthorized','productionReady','stage12EntryAuthorized'):
-              assert plan['claimBoundary'][key] is False
-          source = Path('src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py').read_text(encoding='utf-8')
-          assert 'def detect_staff_systems(' in source
-          assert 'def freeze_source_folder(' in source
-          assert 'page_id' not in source[source.index('def detect_staff_systems('):source.index('def sha256_file(')]
-          assert 'restored_outputs' not in source.lower()
+          v1 = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json').read_text())
+          assert v1['developmentOnly'] is True and v1['qualificationEvidence'] is False
+          assert v1['phaseAFreeze']['pageCount'] == 20
+          assert v1['phaseAFreeze']['predictedSystemCount'] == 89
+          assert v1['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 71
+          v11 = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json').read_text())
+          assert v11['developmentOnly'] is True and v11['qualificationEvidence'] is False
+          assert v11['phaseAFreeze']['predictedSystemCount'] == 114
+          assert v11['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 91
+          v12 = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json').read_text())
+          assert v12['developmentOnly'] is True and v12['qualificationEvidence'] is False
+          assert v12['phaseAFreeze']['rawArtifactSha256'] == 'b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76'
+          assert v12['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 141
+          assert abs(v12['developmentMetrics']['diagnosticTeacherSystemRecallAtHalfSpacing'] - 0.7157360406091371) < 1e-12
+          assert abs(v12['developmentMetrics']['diagnosticPredictedSystemPrecisionAtHalfSpacing'] - 0.7540106951871658) < 1e-12
+          assert v12['decision']['detectorQualified'] is False
+          assert v12['decision']['freshIndependentHoldoutAuthorized'] is False
+          assert v12['decision']['restoredImageTopologyComparisonAuthorized'] is False
           PY
-      - name: Validate frozen v1 development result binding
+      - name: Validate v1.3 development-only freeze and scoring boundary
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          result = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json').read_text(encoding='utf-8'))
-          assert result['developmentOnly'] is True
-          assert result['qualificationEvidence'] is False
-          assert result['phaseAFreeze']['pageCount'] == 20
-          assert result['phaseAFreeze']['sourceIdentityMatchedPages'] == 20
-          assert result['phaseAFreeze']['predictedSystemCount'] == 89
-          assert result['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 71
-          assert result['developmentMetrics']['fiveLineCountCorrectRate'] == 1.0
-          assert result['developmentMetrics']['lineOrderCorrectRate'] == 1.0
-          assert result['decision']['sourceDetectorAdequacyEstablished'] is False
-          assert result['decision']['restoredImageTopologyComparisonAuthorized'] is False
-          recon = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json').read_text(encoding='utf-8'))
-          assert recon['teacherArtifact']['sourceShaMatchedPages'] == 20
-          assert recon['teacherArtifact']['reconstructedTeacherMaskShaMatchedPages'] == 20
-          PY
-      - name: Validate frozen v1.1 development result binding
-        run: |
-          python - <<'PY'
-          import inspect
-          import json
-          from pathlib import Path
-          from st_score_restore import stage11_v2d_staff_line_multisystem_source_detector_v1_1 as detector
-          plan = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json').read_text(encoding='utf-8'))
-          assert plan['developmentOnly'] is True
-          assert plan['qualificationEvidence'] is False
-          result = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json').read_text(encoding='utf-8'))
-          assert result['developmentOnly'] is True
-          assert result['qualificationEvidence'] is False
-          assert result['phaseAFreeze']['pageCount'] == 20
-          assert result['phaseAFreeze']['sourceIdentityMatchedPages'] == 20
-          assert result['phaseAFreeze']['predictedSystemCount'] == 114
-          assert result['phaseAFreeze']['byteRepeatDeterminismVerified'] is True
-          assert result['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 91
-          assert abs(result['developmentMetrics']['diagnosticTeacherSystemRecallAtHalfSpacing'] - 0.4619289340101523) < 1e-12
-          assert abs(result['developmentMetrics']['diagnosticPredictedSystemPrecisionAtHalfSpacing'] - 0.7982456140350878) < 1e-12
-          assert result['developmentMetrics']['fiveLineCountCorrectRate'] == 1.0
-          assert result['developmentMetrics']['lineOrderCorrectRate'] == 1.0
-          assert result['decision']['sourceDetectorAdequacyEstablished'] is False
-          sig = inspect.signature(detector.detect_staff_systems)
-          assert list(sig.parameters) == ['image', 'config']
-          assert sig.parameters['config'].kind is inspect.Parameter.KEYWORD_ONLY
-          PY
-      - name: Validate frozen pre-holdout policy and v1.2 development result
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          policy = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json').read_text(encoding='utf-8'))
-          assert policy['status'] == 'FROZEN_PRE_HOLDOUT'
-          assert policy['freezeBoundary']['freshIndependentHoldoutAccessed'] is False
-          assert policy['freezeBoundary']['restoredOutputsAccessedForStaffTopology'] is False
-          assert policy['developmentReadinessForFutureHoldoutRequest']['qualificationClaim'] is False
-          assert policy['developmentReadinessForFutureHoldoutRequest']['freshHoldoutAutomaticallyAuthorized'] is False
-          for value in policy['claimBoundary'].values():
-              assert value is False
-          evaluation = json.loads(Path('evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json').read_text(encoding='utf-8'))
-          assert evaluation['developmentOnly'] is True
-          assert evaluation['qualificationEvidence'] is False
+          raw = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json').read_text())
+          assert raw['developmentOnly'] is True and raw['qualificationEvidence'] is False
+          assert raw['candidate']['version'] == 'stage11-v2d-staff-multisystem-source.v1.3'
+          assert raw['candidate']['parentVersion'] == 'stage11-v2d-staff-multisystem-source.v1.2'
+          assert raw['candidate']['parentRawArtifactSha256'] == 'b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76'
+          assert raw['rawArtifact']['sha256'] == 'eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b'
+          assert raw['rawArtifact']['repeatArtifactSha256'] == raw['rawArtifact']['sha256']
+          assert raw['rawArtifact']['pageCount'] == 20
+          assert raw['rawArtifact']['sourceIdentityMatchedCount'] == 20
+          assert raw['rawArtifact']['predictedSystemCount'] == 168
+          assert raw['rawArtifact']['byteRepeatDeterminismVerified'] is True
+          for key in ('teacherArtifactLoadedDuringInference','teacherCoordinatesUsedDuringInference','restoredOutputsLoadedDuringInference','heldOutAccessed','consumedChopinHoldoutUsedForTuning','trainingOrFineTuningPerformed','pageIdentityUsed','pageSpecificRulesUsed'):
+              assert raw['inferenceBoundary'][key] is False
+          evaluation = json.loads(Path('evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json').read_text())
+          assert evaluation['developmentOnly'] is True and evaluation['qualificationEvidence'] is False
           assert evaluation['scorerCompatibility']['passed'] is True
           assert evaluation['scorerCompatibility']['reproducedMatchedSystemCountAtHalfSpacing'] == 71
-          assert evaluation['frozenRawArtifact']['pageCount'] == 20
-          assert evaluation['frozenRawArtifact']['predictedSystemCount'] == 187
-          assert evaluation['frozenRawArtifact']['sourceIdentityMatchedCount'] == 20
-          assert evaluation['frozenRawArtifact']['byteRepeatDeterminismVerified'] is True
-          assert evaluation['scoring']['matchedSystemCount'] == 141
-          assert abs(evaluation['scoring']['teacherSystemRecallAtHalfSpacing'] - 0.7157360406091371) < 1e-12
-          assert abs(evaluation['scoring']['predictedSystemPrecisionAtHalfSpacing'] - 0.7540106951871658) < 1e-12
-          assert evaluation['scoring']['presentPageCoverage']['rate'] == 1.0
-          assert evaluation['scoring']['absentPageSpecificity']['rate'] == 1.0
-          assert evaluation['scoring']['fiveLineCountCorrectRate'] == 1.0
-          assert evaluation['scoring']['lineOrderCorrectRate'] == 1.0
-          binding = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json').read_text(encoding='utf-8'))
-          assert binding['developmentOnly'] is True
-          assert binding['qualificationEvidence'] is False
-          assert binding['phaseAFreeze']['rawArtifactSha256'] == 'b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76'
-          assert binding['phaseAFreeze']['byteRepeatDeterminismVerified'] is True
-          assert binding['decision']['developmentReadinessForFutureHoldoutRequest'] is True
-          assert binding['decision']['sourceDetectorAdequacyEstablished'] is False
-          assert binding['decision']['detectorQualified'] is False
-          assert binding['decision']['freshIndependentHoldoutAuthorized'] is False
-          assert binding['decision']['restoredImageTopologyComparisonAuthorized'] is False
-          assert binding['developmentMetrics']['syntheticSixLineTabNegativeControl']['rejectionRate'] == 1.0
-          for value in binding['claimBoundary'].values():
-              assert value is False
-          recon = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json').read_text(encoding='utf-8'))
-          assert recon['verification']['localFreezeParentBytesExactlyMatchCurrentRepositoryBlob'] is True
-          assert recon['verification']['v1_2FreezeParentIdentityValidAgainstCurrentRepositoryBlob'] is True
-          assert recon['disposition']['modifyHistoricalV1_1Binding'] is False
-          assert recon['disposition']['v1_2FreezeInvalidatedByThisDiscrepancy'] is False
+          assert evaluation['freezeBoundary']['rawArtifactSha256'] == raw['rawArtifact']['sha256']
+          scoring = evaluation['scoring']
+          assert scoring['teacherSystemCount'] == 197
+          assert scoring['predictedSystemCount'] == 168
+          assert scoring['matchedSystemCount'] == 140
+          assert abs(scoring['teacherSystemRecallAtHalfSpacing'] - 0.7106598984771574) < 1e-12
+          assert abs(scoring['predictedSystemPrecisionAtHalfSpacing'] - 0.8333333333333334) < 1e-12
+          assert scoring['presentPageCoverage']['rate'] == 1.0
+          assert scoring['absentPageSpecificity']['rate'] == 1.0
+          assert scoring['fiveLineCountCorrectRate'] == 1.0
+          assert scoring['lineOrderCorrectRate'] == 1.0
+          assert evaluation['comparisonToFrozenV1_2']['delta']['falsePositiveSystems'] == -18
+          assert evaluation['developmentReadinessAssessment']['observedMeetsGuidance'] is True
+          assert evaluation['developmentReadinessAssessment']['qualificationClaim'] is False
+          assert evaluation['developmentReadinessAssessment']['freshIndependentHoldoutAuthorized'] is False
+          assert all(value is False for value in evaluation['claimBoundary'].values())
           PY
-      - name: Validate Stage 11 v1.2 current-truth stop gate
+      - name: Validate consumed-holdout firewall and current stop gate
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json').read_text(encoding='utf-8'))
-          assert truth['state'] == 'STAFF_LINE_V1_2_DEVELOPMENT_READY_PRE_HOLDOUT_STOP'
-          staff = truth['staffLineSourceDetector']
-          assert staff['version'] == 'stage11-v2d-staff-multisystem-source.v1.2'
-          assert staff['developmentReadinessForFutureHoldoutRequest'] is True
-          assert staff['sourceDetectorAdequacyEstablished'] is False
-          assert staff['detectorQualified'] is False
-          assert staff['freshIndependentHoldoutAuthorized'] is False
-          assert staff['restoredImageTopologyComparisonAuthorized'] is False
-          assert truth['decision']['staffLineQualificationPolicyFrozen'] is True
-          assert truth['decision']['freshStaffLineHoldoutAuthorized'] is False
-          assert truth['decision']['restoredStaffLineTopologyComparisonAuthorized'] is False
-          assert truth['decision']['overallStage11PassAuthorized'] is False
-          assert truth['decision']['productionReady'] is False
-          assert truth['decision']['prReadyForMerge'] is False
-          assert truth['safetyBoundaries']['heldOutAccessAuthorized'] is False
-          assert truth['safetyBoundaries']['stage12EntryAuthorized'] is False
+          truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json').read_text())
+          assert truth['state'] == 'INDEPENDENT_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR'
+          assert truth['authority']['historicalEvidenceRewritten'] is False
+          assert truth['qualificationPolicy']['status'] == 'FROZEN_PRE_HOLDOUT'
+          assert truth['qualificationPolicy']['thresholdMovementAllowed'] is False
+          assert truth['authorization']['status'] == 'CONSUMED_BY_ONE_FRESH_INDEPENDENT_HOLDOUT_QUALIFICATION'
+          assert truth['authorization']['freshIndependentHoldoutAuthorized'] is False
+          assert truth['authorization']['restoredOutputStaffTopologyComparisonAuthorized'] is False
+          assert truth['authorization']['pullRequestMergeAuthorized'] is False
+          assert truth['sourceOnlyRawFreeze']['detectorVersion'] == 'stage11-v2d-staff-multisystem-source.v1.2'
+          assert truth['sourceOnlyRawFreeze']['retunedAfterHoldoutAccess'] is False
+          qualification = truth['qualification']
+          assert qualification['detectorQualified'] is False
+          assert qualification['sourceDetectorAdequacyEstablished'] is False
+          assert qualification['staffLineDisposition'] == 'REJECTED_CURRENT_DETECTOR'
+          assert qualification['noRetuningAgainstConsumedHoldout'] is True
+          assert set(qualification['failedCriteria']) == {'predictedSystemPrecisionAtHalfSpacing','absentPageSpecificity'}
+          assert all(value is False for value in truth['claimBoundary'].values())
+          assert truth['pullRequest']['mustRemainDraft'] is True
+          assert truth['pullRequest']['mergeAuthorized'] is False
           architecture = Path('docs/architecture-consistency-audit.md').read_text(encoding='utf-8')
-          assert 'staff-line v1.2 pre-holdout stop' in architecture
-          assert 'future independent holdout — **closed / not automatically authorized**' in architecture
+          assert '### Consumed-holdout stop gate' in architecture
+          assert 'retuning v1.2 against the consumed holdout — **forbidden**' in architecture
+          assert 'A new independent holdout requires a new candidate freeze and a new explicit authorization.' in architecture
+          PY
+      - name: Validate optional v1.3 development result binding
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json')
+          if path.exists():
+              binding = json.loads(path.read_text())
+              assert binding['developmentOnly'] is True
+              assert binding['qualificationEvidence'] is False
+              assert binding['decision']['developmentReadinessForFreshHoldoutRequest'] is True
+              assert binding['decision']['freshIndependentHoldoutAuthorized'] is False
+              assert binding['decision']['detectorQualified'] is False
+              assert binding['decision']['sourceDetectorAdequacyEstablished'] is False
+              assert binding['decision']['restoredImageTopologyComparisonAuthorized'] is False
+              assert all(value is False for value in binding['claimBoundary'].values())
           PY
