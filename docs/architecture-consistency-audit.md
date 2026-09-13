@@ -9,7 +9,7 @@
 **Stage 3:** COMPLETE / PASS / production-effective  
 **Stage 4:** ACTIVE / NOT_READY  
 **Stage 5:** BLOCKED pending Stage 4 final exit PASS  
-**Latest architecture overlay:** 2026-09-13 — Stage 11 V2d semantic-preservation / staff-line v1.1
+**Latest architecture overlay:** 2026-09-13 — Stage 11 V2d semantic-preservation / staff-line v1.2 pre-holdout stop
 
 ## Authority
 
@@ -91,16 +91,16 @@ This section is a later architecture overlay and does not rewrite the historical
 
 ### Current Stage 11 semantic-preservation chain
 
-The frozen V2a Restore package remains unchanged. V2c/V2d evaluates semantic preservation through class-specific evidence that is independent of the restoration candidate. The current class matrix is:
+The frozen V2a Restore package remains unchanged. V2c/V2d evaluates semantic preservation through class-specific evidence that is independent of the restoration candidate. The current class matrix remains conservative:
 
 - `PASS`: `notehead` at canonical class-evidence level only;
 - `REVIEW_ONLY`: `clef`;
-- `REJECTED_CURRENT_DETECTOR`: `accidental`, `barline`, `beam_or_flag`, `rest`, `staff_line`, `stem`;
+- non-PASS/unqualified: `accidental`, `barline`, `beam_or_flag`, `rest`, `staff_line`, `stem`;
 - `UNSUPPORTED`: `tab_digit`, `tab_line`, `tab_string`, `tie_or_slur`.
 
 Neither class-level progress nor detector development establishes overall semantic preservation.
 
-### Staff-line evidence state
+### Staff-line teacher truth and policy boundary
 
 Independent teacher staff topology is complete on the existing development corpus:
 
@@ -112,36 +112,52 @@ Independent teacher staff topology is complete on the existing development corpu
 - 0 ambiguous systems;
 - teacher raw SHA-256 `28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7`.
 
-The frozen source-only v1.1 candidate `stage11-v2d-staff-multisystem-source.v1.1` is a material development improvement over v1:
+Before any fresh independent holdout access, the qualification policy was frozen at `evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json` with status `FROZEN_PRE_HOLDOUT`. The policy explicitly separates development readiness from qualification and explicitly states that satisfying development readiness does **not** automatically authorize fresh holdout access.
 
-| Diagnostic | v1 | v1.1 |
-|---|---:|---:|
-| predicted systems | 89 | 114 |
-| 0.5-spacing one-to-one matches | 71 | 91 |
-| teacher-system recall | 0.360406 | 0.461929 |
-| predicted-system precision | 0.797753 | 0.798246 |
-| staff-present page coverage | 15/18 | 18/18 |
-| staff-absent specificity | 2/2 | 2/2 |
+### Staff-line development progression
 
-V1.1 also preserves five-line count correctness 1.0, line-order correctness 1.0, byte-repeat determinism, source identity 20/20, and local regression tests 7/7 PASS. Its frozen raw artifact SHA-256 is `9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575`.
+All comparable diagnostics below are on the already-spent 20-page development corpus. They are development evidence, not qualification evidence.
 
-However, 106/197 teacher-confirmed systems remain unmatched at the same diagnostic. The same spent development corpus was used to develop and score v1.1. Therefore `sourceDetectorAdequacyEstablished=false`, `detectorQualified=false`, and `staff_line=REJECTED_CURRENT_DETECTOR` remain correct.
+| Diagnostic | baseline | v1 | v1.1 | v1.2 |
+|---|---:|---:|---:|---:|
+| predicted systems | 10 | 89 | 114 | 187 |
+| 0.5-spacing one-to-one matches | 10 | 71 | 91 | 141 |
+| teacher-system recall | 0.050761 | 0.360406 | 0.461929 | **0.715736** |
+| predicted-system precision | 1.000000 | 0.797753 | 0.798246 | **0.754011** |
+| staff-present page coverage | 10/18 | 15/18 | 18/18 | **18/18** |
+| staff-absent specificity | 2/2 | 2/2 | 2/2 | **2/2** |
 
-### Architectural gate after v1.1
+Frozen v1.2 additionally preserves five-line count correctness 1.0, line-order correctness 1.0, source identity 20/20 and byte-repeat determinism. Its synthetic six-line TAB-like regression control is rejected 1/1; that control is explicitly synthetic and is not independent holdout evidence. Local v1.2 regression tests are 8/8 PASS.
 
-ADR 0036 freezes the next boundary:
+The frozen v1.2 raw artifact SHA-256 is `b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76`. Teacher scoring was performed only after that freeze. The scoring implementation reproduced the frozen v1 compatibility anchor of 71/197 matches before scoring v1.2.
 
-1. detector development, teacher scoring, and qualification remain separate;
-2. no fresh independent holdout is opened until a qualification/acceptance policy is frozen;
-3. that policy must predeclare matching rules, metrics, thresholds, specificity, determinism and six-line TAB rejection expectations;
-4. restored-image topology comparison remains closed until source-detector adequacy is established under that policy;
-5. any v1.2 development work before qualification remains source-only and uses only already-spent development data;
-6. no development result may set production or Stage 12 authorization flags.
+V1.2 exceeds the predeclared development-readiness floors of recall >= 0.60, precision >= 0.75, present-page coverage 1.0, absent-page specificity 1.0 and exact five-line/order invariants. This supports `developmentReadinessForFutureHoldoutRequest=true`, but **does not** establish detector qualification or `staff_line=PASS`.
+
+### Source identity reconciliation
+
+The v1.2 freeze used the exact current v1.1 parent blob `deb988a359f2f2526c484b2cd49b57597c7733db`, whose current byte SHA-256 is `e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5`. The older immutable v1.1 development binding records a different historical SHA-256 (`cb6271d...`). That historical binding was not rewritten. The discrepancy is recorded separately in `evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json`; exact Git blob identity confirms the v1.2 freeze used current repository bytes.
+
+### Pre-holdout stop gate after v1.2
+
+The architecture boundary is now:
+
+1. source-only detector development — complete for frozen v1.2;
+2. freeze exact source output — complete;
+3. existing development teacher scoring — complete;
+4. frozen qualification policy — complete and frozen before holdout;
+5. future independent holdout — **closed / not automatically authorized**;
+6. restored-output staff-topology comparison — **closed**;
+7. detector qualification, semantic-preservation PASS, production and Stage 12 governance — **closed**.
+
+`sourceDetectorAdequacyEstablished=false` and `detectorQualified=false` remain conservative until independent qualification evidence exists. No development result can set production or Stage 12 authorization flags.
 
 ### Stage 11 safety truth
 
 The following remain false:
 
+- `freshIndependentHoldoutAuthorized`;
+- `restoredImageTopologyComparisonAuthorized`;
+- `detectorQualified`;
 - `semanticPreservationEstablished`;
 - `overallStage11PassAuthorized`;
 - `productionReady`;
@@ -152,4 +168,4 @@ PR #211 remains Draft/open/unmerged. Merge is a separate authorization decision.
 
 ## Consistency conclusion
 
-The architecture is consistent only when historical checkpoints, immutable evidence, source-only candidate development, independent teacher truth, qualification policy, independent holdout evidence, restored-output comparison and production authorization remain distinct layers. Development improvement is recorded without being promoted into qualification. The current smallest safe boundary is to freeze a staff-line qualification policy before any fresh holdout, while keeping restored-output comparison and production/Stage 12 gates closed.
+The architecture is consistent only when historical checkpoints, immutable evidence, source-only candidate development, independent teacher truth, qualification policy, independent holdout evidence, restored-output comparison and production authorization remain distinct layers. V1.2 is now frozen and development-ready for a *future holdout request*, but not qualified. The current smallest safe boundary is to stop before opening fresh holdout data or restored outputs and require a new explicit governance authorization for the next independent qualification step.
