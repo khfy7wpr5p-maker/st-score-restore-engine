@@ -4,7 +4,7 @@
   "generatedOn": "2026-09-13",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "STAFF_LINE_V1_1_DEVELOPMENT_IMPROVED_QUALIFICATION_POLICY_PENDING",
+  "state": "STAFF_LINE_V1_2_DEVELOPMENT_READY_PRE_HOLDOUT_STOP",
   "inputTruth": {
     "approvedDevelopmentSourceFamilyCount": 5,
     "approvedDevelopmentPageCount": 20,
@@ -116,37 +116,59 @@
     "rawSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
     "hashReconciliationPath": "evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json"
   },
+  "staffLineQualificationPolicy": {
+    "status": "FROZEN_PRE_HOLDOUT",
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "frozenBeforeFreshIndependentHoldoutAccess": true,
+    "freshHoldoutAutomaticallyAuthorized": false,
+    "restoredOutputComparisonAutomaticallyAuthorized": false
+  },
   "staffLineSourceDetector": {
-    "status": "V1_1_FROZEN_DEVELOPMENT_IMPROVEMENT_NOT_QUALIFIED",
-    "version": "stage11-v2d-staff-multisystem-source.v1.1",
-    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
-    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
-    "developmentResultBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json",
-    "rawArtifactSha256": "9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575",
+    "status": "V1_2_FROZEN_DEVELOPMENT_READY_NOT_QUALIFIED",
+    "version": "stage11-v2d-staff-multisystem-source.v1.2",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "developmentEvaluationPath": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json",
+    "developmentResultBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json",
+    "parentIdentityReconciliationPath": "evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json",
+    "rawArtifactDriveFileId": "1CqDjx7xKXeFW91TUU0GrBKJv48DM0A2U",
+    "rawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "evaluationDriveFileId": "1x8DtfnCGqSvjGR6m5sDaOCG4Rmtm8EId",
+    "evaluationSha256": "17a097ed27a3df81c459756947952f9f26c855f142df48dd45342d969ffbb6f5",
     "sourceIdentityMatchedPages": 20,
-    "predictedSystemCount": 114,
+    "predictedSystemCount": 187,
     "teacherSystemCount": 197,
-    "matchedSystemCountAtHalfSpacing": 91,
-    "teacherSystemRecallAtHalfSpacing": 0.4619289340101523,
-    "predictedSystemPrecisionAtHalfSpacing": 0.7982456140350878,
+    "matchedSystemCountAtHalfSpacing": 141,
+    "teacherSystemRecallAtHalfSpacing": 0.7157360406091371,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7540106951871658,
     "presentPageCoverage": 1.0,
     "absentPageSpecificity": 1.0,
     "fiveLineCountCorrectRate": 1.0,
     "lineOrderCorrectRate": 1.0,
+    "syntheticSixLineTabRejectionRate": 1.0,
+    "syntheticSixLineTabEvidenceScope": "synthetic regression control only, not teacher-labelled holdout evidence",
     "byteRepeatDeterminismVerified": true,
-    "localRegressionTests": "7/7 PASS",
+    "localRegressionTests": "8/8 PASS",
     "materialDevelopmentImprovementObserved": true,
+    "developmentReadinessForFutureHoldoutRequest": true,
     "sourceDetectorAdequacyEstablished": false,
     "detectorQualified": false,
-    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "staffLineDisposition": "DEVELOPMENT_READY_FOR_FUTURE_HOLDOUT_REQUEST_NOT_QUALIFIED",
     "restoredImageTopologyComparisonAuthorized": false,
     "freshIndependentHoldoutAuthorized": false
+  },
+  "staffLineDevelopmentComparison": {
+    "baseline": {"predictedSystems": 10, "matchedSystems": 10, "recall": 0.050761421319796954, "precision": 1.0, "presentPageCoverage": 0.5555555555555556, "absentPageSpecificity": 1.0},
+    "v1": {"predictedSystems": 89, "matchedSystems": 71, "recall": 0.3604060913705584, "precision": 0.797752808988764, "presentPageCoverage": 0.8333333333333334, "absentPageSpecificity": 1.0},
+    "v1_1": {"predictedSystems": 114, "matchedSystems": 91, "recall": 0.4619289340101523, "precision": 0.7982456140350878, "presentPageCoverage": 1.0, "absentPageSpecificity": 1.0},
+    "v1_2": {"predictedSystems": 187, "matchedSystems": 141, "recall": 0.7157360406091371, "precision": 0.7540106951871658, "presentPageCoverage": 1.0, "absentPageSpecificity": 1.0}
   },
   "classMatrix": {
     "PASS": ["notehead"],
     "REVIEW_ONLY": ["clef"],
     "REJECTED_CURRENT_DETECTOR": ["accidental", "barline", "beam_or_flag", "rest", "staff_line", "stem"],
-    "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"]
+    "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"],
+    "note": "staff_line remains non-PASS in the semantic class matrix until independent qualification; v1.2 development readiness does not change class-level qualification state"
   },
   "strategyPath": "evidence/stage11/v2d/v2d-next-semantic-class-strategy.v1.json",
   "spatialTeacherReview": {
@@ -166,8 +188,9 @@
     "architectureConsistencyAudit": "docs/architecture-consistency-audit.md",
     "architectureFlexibilityPrinciples": "docs/architecture-flexibility-principles.md",
     "detectorDevelopmentTeacherScoringAndQualificationSeparated": true,
-    "qualificationPolicyMustFreezeBeforeFreshHoldout": true,
-    "restoredTopologyComparisonClosedUntilSourceAdequacy": true
+    "qualificationPolicyFrozenBeforeFreshHoldout": true,
+    "developmentReadinessDoesNotAutoAuthorizeHoldout": true,
+    "restoredTopologyComparisonClosedUntilIndependentQualification": true
   },
   "validation": {
     "canonicalNoteheadBindingWorkflow": "Stage 11 V2d Canonical Notehead Evidence Validation",
@@ -175,7 +198,8 @@
     "staffLineTeacherTruthWorkflow": "Stage 11 V2d Staff-Line Teacher Truth Validation",
     "staffLineSourceDetectorWorkflow": "Stage 11 V2d Staff-Line Multi-System Source Detector Validation",
     "pythonMatrix": ["3.11", "3.12"],
-    "staffLineV1_1LocalRegressionTests": "7/7 PASS"
+    "staffLineV1_1LocalRegressionTests": "7/7 PASS",
+    "staffLineV1_2LocalRegressionTests": "8/8 PASS"
   },
   "safetyBoundaries": {
     "trainingAuthorized": false,
@@ -211,9 +235,12 @@
     "spatialTeacherReviewCompleted": true,
     "staffLineV1_1Frozen": true,
     "staffLineV1_1ScoredAfterFreeze": true,
+    "staffLineV1_2Frozen": true,
+    "staffLineV1_2ScoredAfterFreeze": true,
     "staffLineMaterialDevelopmentImprovementObserved": true,
+    "staffLineDevelopmentReadinessForFutureHoldoutRequest": true,
     "staffLineDetectorQualified": false,
-    "staffLineQualificationPolicyFrozen": false,
+    "staffLineQualificationPolicyFrozen": true,
     "freshStaffLineHoldoutAuthorized": false,
     "restoredStaffLineTopologyComparisonAuthorized": false,
     "semanticPreservationEstablished": false,
@@ -221,5 +248,5 @@
     "productionReady": false,
     "prReadyForMerge": false
   },
-  "nextSafeBoundary": "Freeze a separate staff_line qualification/acceptance policy before opening any fresh independent holdout. Keep restored-output topology comparison closed until source-detector adequacy is established under that policy. If v1.2 development is attempted first, keep it source-only on already-spent development data and do not retune acceptance thresholds after teacher or holdout observations."
+  "nextSafeBoundary": "Stop at the pre-holdout gate. V1.2 development evidence now justifies preparing a separate future independent-holdout request, but the holdout is not automatically authorized. Do not inspect fresh holdout data, do not compare restored-output staff topology, and do not merge PR #211 without new explicit governance authorization."
 }
