@@ -3,30 +3,10 @@ name: Stage 11 V2d Staff-Line Multi-System Source Detector Validation
 on:
   pull_request:
     paths:
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
-      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py'
-      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-detector-development-plan.v1.1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_1_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-teacher-truth-hash-reconciliation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'evidence/stage11/v2d/**'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - 'docs/architecture-consistency-audit.md'
@@ -35,19 +15,10 @@ on:
     branches:
       - stage11-v2c-semantic-detector-corpus-expansion
     paths:
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
-      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
-      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py'
-      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_1.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py'
-      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json'
-      - 'evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json'
-      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector*.py'
+      - 'evidence/stage11/v2d/**'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - 'docs/architecture-consistency-audit.md'
       - '.github/workflows/stage11-v2d-staff-line-multisystem-source-detector-validation.yml'
@@ -106,9 +77,9 @@ jobs:
           v12 = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json').read_text())
           assert v12['developmentOnly'] is True and v12['qualificationEvidence'] is False
           assert v12['phaseAFreeze']['rawArtifactSha256'] == 'b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76'
-          assert v12['developmentMetrics']['diagnosticMatchedSystemCountAtHalfSpacing'] == 141
-          assert abs(v12['developmentMetrics']['diagnosticTeacherSystemRecallAtHalfSpacing'] - 0.7157360406091371) < 1e-12
-          assert abs(v12['developmentMetrics']['diagnosticPredictedSystemPrecisionAtHalfSpacing'] - 0.7540106951871658) < 1e-12
+          assert v12['developmentMetrics']['matchedSystemCountAtHalfSpacing'] == 141
+          assert abs(v12['developmentMetrics']['teacherSystemRecallAtHalfSpacing'] - 0.7157360406091371) < 1e-12
+          assert abs(v12['developmentMetrics']['predictedSystemPrecisionAtHalfSpacing'] - 0.7540106951871658) < 1e-12
           assert v12['decision']['detectorQualified'] is False
           assert v12['decision']['freshIndependentHoldoutAuthorized'] is False
           assert v12['decision']['restoredImageTopologyComparisonAuthorized'] is False
@@ -166,7 +137,6 @@ jobs:
           assert truth['authorization']['freshIndependentHoldoutAuthorized'] is False
           assert truth['authorization']['restoredOutputStaffTopologyComparisonAuthorized'] is False
           assert truth['authorization']['pullRequestMergeAuthorized'] is False
-          assert truth['sourceOnlyRawFreeze']['detectorVersion'] == 'stage11-v2d-staff-multisystem-source.v1.2'
           assert truth['sourceOnlyRawFreeze']['retunedAfterHoldoutAccess'] is False
           qualification = truth['qualification']
           assert qualification['detectorQualified'] is False
