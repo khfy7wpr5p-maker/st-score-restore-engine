@@ -1,0 +1,38 @@
+{
+  "claimBoundary": {
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "currentRepositoryIdentity": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "gitBlobSha": "deb988a359f2f2526c484b2cd49b57597c7733db",
+    "headObservedBeforeReconciliation": "95ccd69082ddb0482d96beeda0dc9b65c1ed92c6",
+    "path": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "sha256": "e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5"
+  },
+  "developmentOnly": true,
+  "disposition": {
+    "detectorQualified": false,
+    "freshHoldoutAuthorized": false,
+    "modifyHistoricalV1_1Binding": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "treatHistoricalRecordedSha256AsCurrentByteIdentity": false,
+    "useCurrentGitBlobAndSha256ForV1_2EvidenceBinding": true,
+    "v1_2FreezeInvalidatedByThisDiscrepancy": false
+  },
+  "generatedOn": "2026-09-13",
+  "historicalBindingRecordedDetectorSourceSha256": "cb6271d667792275afb9c51e4f3a84fde0d426538b034223c8b0be6fc23fdc9a",
+  "immutableHistoricalBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_1-development-result-binding.v1.json",
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-v1_1-source-identity-reconciliation.v1",
+  "verification": {
+    "historicalRecordedSha256MatchesCurrentRepositoryBlobBytes": false,
+    "localFreezeParentBytesExactlyMatchCurrentRepositoryBlob": true,
+    "localFreezeParentGitBlobSha": "deb988a359f2f2526c484b2cd49b57597c7733db",
+    "localFreezeParentSha256": "e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5",
+    "v1_2FreezeParentIdentityValidAgainstCurrentRepositoryBlob": true
+  }
+}
