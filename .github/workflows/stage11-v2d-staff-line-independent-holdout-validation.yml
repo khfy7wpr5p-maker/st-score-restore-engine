@@ -7,6 +7,7 @@ on:
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
@@ -18,6 +19,7 @@ on:
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-teacher-work-package.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json'
       - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
       - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json'
       - '.github/workflows/stage11-v2d-staff-line-independent-holdout-validation.yml'
@@ -111,22 +113,61 @@ jobs:
           for forbidden in ('predictedsystemcount', 'perpagepredictedsystemcounts', 'f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb'):
               assert forbidden not in text
           PY
-      - name: Validate holdout live truth and stop gate
+      - name: Validate completed holdout qualification and stop gate
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json').read_text())
           freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json').read_text())
-          assert truth['state'] == 'INDEPENDENT_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_TRUTH_PENDING'
-          assert truth['authorization']['freshIndependentHoldoutAuthorized'] is True
+          result = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json').read_text())
+          policy = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json').read_text())
+
+          assert truth['state'] == 'INDEPENDENT_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR'
+          assert truth['authorization']['freshIndependentHoldoutAuthorized'] is False
           assert truth['authorization']['restoredOutputStaffTopologyComparisonAuthorized'] is False
           assert truth['sourceOnlyRawFreeze']['rawArtifactSha256'] == freeze['rawFreeze']['rawArtifactSha256']
           assert truth['sourceOnlyRawFreeze']['byteRepeatDeterminismVerified'] is True
-          assert truth['blindTeacherReview']['status'] == 'PENDING_HUMAN_REVIEW'
-          assert truth['blindTeacherReview']['completedPageCount'] == 0
-          assert truth['qualification']['scoringExecuted'] is False
+          assert truth['blindTeacherReview']['status'] == 'COMPLETE_AND_FROZEN'
+          assert truth['blindTeacherReview']['completedPageCount'] == 8
+          assert truth['blindTeacherReview']['teacherConfirmedSystemCount'] == 88
+          assert truth['qualification']['scoringExecuted'] is True
+          assert truth['qualification']['scoreExactlyOnceAgainstFrozenRaw'] is True
+          assert truth['qualification']['scorerCompatibilityReproducedFrozenV1MatchedCount71'] is True
+          assert truth['qualification']['teacherSystemCount'] == 88
+          assert truth['qualification']['predictedSystemCount'] == 128
+          assert truth['qualification']['matchedSystemCountAtHalfSpacing'] == 80
+          assert truth['qualification']['teacherSystemRecallAtHalfSpacing'] == 80 / 88
+          assert truth['qualification']['predictedSystemPrecisionAtHalfSpacing'] == 80 / 128
+          assert truth['qualification']['presentPageCoverage'] == 1.0
+          assert truth['qualification']['absentPageSpecificity'] == 0.0
+          assert truth['qualification']['failedCriteria'] == ['predictedSystemPrecisionAtHalfSpacing', 'absentPageSpecificity']
           assert truth['qualification']['detectorQualified'] is False
+          assert truth['qualification']['sourceDetectorAdequacyEstablished'] is False
+          assert truth['qualification']['staffLineDisposition'] == 'REJECTED_CURRENT_DETECTOR'
+          assert truth['qualification']['noRetuningAgainstConsumedHoldout'] is True
+
+          assert result['status'] == 'QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR'
+          assert result['scorer']['anchorCompatibilityPassed'] is True
+          assert result['scorer']['reproducedMatchedSystemCount'] == 71
+          assert result['scorer']['reproducedTeacherSystemCount'] == 197
+          assert result['teacherTruthFreeze']['completedPageCount'] == 8
+          assert result['teacherTruthFreeze']['confirmedSystemCount'] == 88
+          assert result['holdoutScoring']['matchedSystemCountAtHalfSpacing'] == 80
+          assert result['holdoutScoring']['teacherSystemRecallAtHalfSpacing'] == 80 / 88
+          assert result['holdoutScoring']['predictedSystemPrecisionAtHalfSpacing'] == 80 / 128
+          assert result['holdoutScoring']['absentPageSpecificity']['rate'] == 0.0
+          assert result['criteriaPassed']['teacherSystemRecallAtHalfSpacing'] is True
+          assert result['criteriaPassed']['predictedSystemPrecisionAtHalfSpacing'] is False
+          assert result['criteriaPassed']['absentPageSpecificity'] is False
+          assert result['decision']['detectorQualified'] is False
+          assert result['decision']['noRetuningAgainstConsumedHoldout'] is True
+
+          req = policy['futureIndependentHoldoutQualification']['requirements']
+          assert result['holdoutScoring']['teacherSystemRecallAtHalfSpacing'] >= req['teacherSystemRecallAtHalfSpacingMin']
+          assert result['holdoutScoring']['predictedSystemPrecisionAtHalfSpacing'] < req['predictedSystemPrecisionAtHalfSpacingMin']
+          assert result['holdoutScoring']['absentPageSpecificity']['rate'] < req['absentPageSpecificityMin']
+
           for key in ('staffLinePass','semanticPreservationEstablished','overallStage11PassAuthorized','restoredImageTopologyComparisonAuthorized','productionReady','productionPromotionAuthorized','stage12EntryAuthorized','prReadyForMerge'):
               assert truth['claimBoundary'][key] is False
           PY
