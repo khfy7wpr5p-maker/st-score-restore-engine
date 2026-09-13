@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-independent-holdout-qualification-result-binding.v1",
+  "generatedOn": "2026-09-13",
+  "status": "QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR",
+  "qualificationEvidence": true,
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeQualificationEvidenceWrites": "29a17573428c63e0080565a14c423b1ed6c8834b",
+    "pullRequest": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "policy": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "status": "FROZEN_PRE_HOLDOUT",
+    "thresholdMovementAfterHoldoutAccessAllowed": false,
+    "allCriteriaRequired": true
+  },
+  "sourceFreeze": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json",
+    "rawArtifactSha256": "f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb",
+    "rawArtifactDriveFileId": "1K8nFelAld8Q2AHPW9eXx5AmMvozzV5na",
+    "detectorVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "detectorSourceSha256": "0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95",
+    "configCanonicalSha256": "01da186f70bd511e978b61b343effa1ddf13e85e99fd7287d902e9d556b48cf7",
+    "sourceIdentityMatchedPages": 8,
+    "sourceIdentityMatchRate": 1.0,
+    "byteRepeatDeterminismVerified": true,
+    "repeatArtifactSha256": "f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb",
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "retunedAfterHoldoutAccess": false
+  },
+  "teacherTruthFreeze": {
+    "teacherTruthDriveFileId": "1Bmw_10OqQtDnBkBqJW336nNosrAKnHVr",
+    "teacherTruthFileName": "staff_line_independent_holdout_teacher_truth_chopin_op69.v1.json",
+    "teacherTruthSha256": "3b83642b162285eb9cb4b6f806ad82d657eac980003159366ca72b5cef47cfb3",
+    "freezeBindingDriveFileId": "1_F8CvxW0xYPDQRWSWGaTmivGRmOQql7H",
+    "freezeBindingSha256": "ee7f92ddae7721db4cbb0ba85688cd4da4f4ddd0a48a4253abcad21a9f144518",
+    "pageCount": 8,
+    "completedPageCount": 8,
+    "staffPresentPageCount": 7,
+    "staffAbsentPageCount": 1,
+    "confirmedSystemCount": 88,
+    "activeLineCount": 0,
+    "teacherTruthBytesFinalizedBeforeScoring": true,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "repairUsedDetectorOutput": false,
+    "repairAddedInferredStaffLines": false
+  },
+  "scorer": {
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "toleranceFraction": 0.5,
+    "implementationDriveFileId": "1W0yeFSH1sQ85S8x1dZfosvpKOQgzPmNp",
+    "implementationSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "coreOutputDriveFileId": "1YQIruDxpyjRMQ2DXR4CWJhpofW-XzuqQ",
+    "coreOutputSha256": "ded4505c77dde9c983030524b4aa1192c4afb5980954188b95f6fa0add13964f",
+    "frozenV1ExpectedMatchedSystemCount": 71,
+    "frozenV1ExpectedTeacherSystemCount": 197,
+    "reproducedMatchedSystemCount": 71,
+    "reproducedTeacherSystemCount": 197,
+    "anchorCompatibilityPassed": true
+  },
+  "holdoutScoring": {
+    "teacherSystemCount": 88,
+    "predictedSystemCount": 128,
+    "matchedSystemCountAtHalfSpacing": 80,
+    "teacherSystemRecallAtHalfSpacing": 0.9090909090909091,
+    "predictedSystemPrecisionAtHalfSpacing": 0.625,
+    "presentPageCoverage": {"detected": 7, "total": 7, "rate": 1.0},
+    "absentPageSpecificity": {"clean": 0, "total": 1, "rate": 0.0},
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "tabSixLineRejectionRate": 1.0,
+    "byteRepeatDeterminism": true,
+    "sourceIdentityMatchRate": 1.0,
+    "perPage": [
+      {"pageId":"chopin-op69-holdout-p1","staffPresent":false,"teacherSystems":0,"predictedSystems":5,"matchedSystems":0},
+      {"pageId":"chopin-op69-holdout-p2","staffPresent":true,"teacherSystems":14,"predictedSystems":13,"matchedSystems":10},
+      {"pageId":"chopin-op69-holdout-p3","staffPresent":true,"teacherSystems":14,"predictedSystems":18,"matchedSystems":14},
+      {"pageId":"chopin-op69-holdout-p4","staffPresent":true,"teacherSystems":12,"predictedSystems":18,"matchedSystems":12},
+      {"pageId":"chopin-op69-holdout-p5","staffPresent":true,"teacherSystems":10,"predictedSystems":23,"matchedSystems":10},
+      {"pageId":"chopin-op69-holdout-p6","staffPresent":true,"teacherSystems":14,"predictedSystems":17,"matchedSystems":12},
+      {"pageId":"chopin-op69-holdout-p7","staffPresent":true,"teacherSystems":12,"predictedSystems":18,"matchedSystems":12},
+      {"pageId":"chopin-op69-holdout-p8","staffPresent":true,"teacherSystems":12,"predictedSystems":16,"matchedSystems":10}
+    ]
+  },
+  "frozenQualificationThresholds": {
+    "teacherSystemRecallAtHalfSpacingMin": 0.65,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+    "presentPageCoverageMin": 0.95,
+    "absentPageSpecificityMin": 1.0,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "lineOrderCorrectRateMin": 1.0,
+    "tabSixLineRejectionRateMin": 1.0,
+    "byteRepeatDeterminismRequired": true,
+    "sourceIdentityMatchRateRequired": 1.0
+  },
+  "criteriaPassed": {
+    "teacherSystemRecallAtHalfSpacing": true,
+    "predictedSystemPrecisionAtHalfSpacing": false,
+    "presentPageCoverage": true,
+    "absentPageSpecificity": false,
+    "fiveLineCountCorrectRate": true,
+    "lineOrderCorrectRate": true,
+    "tabSixLineRejectionRate": true,
+    "byteRepeatDeterminism": true,
+    "sourceIdentityMatchRate": true
+  },
+  "supportingInvariantEvidence": {
+    "tabSixLineRejection": {
+      "developmentBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json",
+      "test": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py::test_rejects_six_line_tab_like_system",
+      "scope": "frozen synthetic regression control, not teacher-labelled holdout evidence"
+    }
+  },
+  "decision": {
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "failureReasons": ["predictedSystemPrecisionAtHalfSpacing", "absentPageSpecificity"],
+    "reason": "Independent holdout recall passed, but precision and staff-absent specificity failed the predeclared conjunctive qualification policy. The frozen detector is rejected for staff_line qualification.",
+    "noRetuningAgainstConsumedHoldout": true,
+    "nextSafeBoundary": "Do not retune v1.2 against this consumed holdout. Any future candidate must be separately versioned and developed without using this holdout for tuning; a new independent holdout requires a new explicit authorization after candidate freeze."
+  },
+  "fullQualificationResult": {
+    "driveFileId": "1mWQt1m9ooQOcqFxG5OH0j3cj1ddKPHlE",
+    "sha256": "ffe6bcb0d17597ef74b090ec0d5998e3acdab2afce5e84dbb39a8188c22e5714"
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}
