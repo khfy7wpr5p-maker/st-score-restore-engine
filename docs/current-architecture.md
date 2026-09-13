@@ -97,11 +97,11 @@ Current class disposition remains conservative:
 - `REJECTED_CURRENT_DETECTOR`: `accidental`, `barline`, `beam_or_flag`, `rest`, `staff_line`, `stem`;
 - `UNSUPPORTED`: `tab_digit`, `tab_line`, `tab_string`, `tie_or_slur`.
 
-No class-level result establishes overall semantic preservation by itself.
+No class-level result establishes overall semantic preservation by itself. The separately versioned staff-line v1.3 development successor described below does not change the official `staff_line` qualification disposition because it has not been evaluated on a newly authorized independent holdout.
 
 ## Staff-line development and independent holdout result
 
-The development progression on the already-spent 20-page development corpus was:
+The development progression on the already-spent 20-page development corpus is:
 
 | Version | Predicted systems | Matched @ 0.5 spacing | Recall | Precision | Present-page coverage | Absent specificity |
 |---|---:|---:|---:|---:|---:|---:|
@@ -109,6 +109,7 @@ The development progression on the already-spent 20-page development corpus was:
 | v1 | 89 | 71 | 0.360406 | 0.797753 | 15/18 | 2/2 |
 | v1.1 | 114 | 91 | 0.461929 | 0.798246 | 18/18 | 2/2 |
 | v1.2 | 187 | 141 | 0.715736 | 0.754011 | 18/18 | 2/2 |
+| v1.3 | 168 | 140 | 0.710660 | **0.833333** | 18/18 | 2/2 |
 
 V1.2 passed development-readiness floors but was not qualified by development data. A qualification policy was frozen before fresh holdout access, then exactly one independent holdout was authorized and consumed.
 
@@ -129,25 +130,57 @@ Independent Chopin Op.69 holdout result for frozen `stage11-v2d-staff-multisyste
 - byte-repeat determinism: PASS;
 - scorer compatibility anchor: historical v1 `71/197` reproduced exactly before holdout scoring.
 
-Because the qualification policy is conjunctive, the official disposition is:
+Because the qualification policy is conjunctive, the official disposition remains:
 
 `QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR`
 
-The failure mode is now primarily **false-positive control**, not insufficient source recall. The detector found most true staff systems but produced too many extra systems, including five predictions on the single teacher-confirmed staff-absent page.
+The consumed v1.2 holdout failure mode was primarily **false-positive control**, not insufficient source recall. The detector found most true staff systems but produced too many extra systems, including five predictions on the single teacher-confirmed staff-absent page.
 
-Authoritative evidence:
+Authoritative v1.2 qualification evidence:
 
 - `evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json`
 - `evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json`
 - `evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json`
 - `docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json`
 
+## V1.3 development successor — frozen / development-ready only
+
+`stage11-v2d-staff-multisystem-source.v1.3` is a separately versioned source-only successor. It does not modify frozen v1.2 and it was developed without using the consumed Chopin holdout geometry, masks, line coordinates or page-specific observations for tuning.
+
+V1.3 applies a deterministic page-local staff-spacing consensus check to weak v1.2 recovery channels while preserving strong anchor channels. The inference boundary remains source-only: teacher truth is not an inference feature; page identity, filenames, source-family exceptions, restored outputs and training/fine-tuning are not used.
+
+Frozen development identities:
+
+- detector source SHA-256: `e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5`;
+- frozen v1.2 parent development raw SHA-256: `b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76`;
+- frozen v1.3 development raw SHA-256: `eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b`;
+- source identity: 20/20;
+- byte-repeat determinism: verified;
+- scorer compatibility anchor: 71/197 reproduced exactly before development scoring.
+
+Relative to frozen v1.2 development evidence, v1.3 changes 187 predictions / 141 matches / 46 false positives to 168 predictions / 140 matches / 28 false positives. It therefore removes 18 false-positive systems while losing one development match. Precision rises from `0.754011` to `0.833333`; recall moves from `0.715736` to `0.710660`. Present-page coverage remains 18/18, staff-absent specificity remains 2/2, five-line/order correctness remains 1.0, and the synthetic six-line TAB negative control remains rejected.
+
+The v1.3 regression suite is 9/9 PASS under both Python 3.11 and 3.12 in workflow run `34782136756`; compilation, historical freeze checks, v1.3 development freeze/scoring boundary checks and the consumed-holdout firewall all passed.
+
+This establishes only:
+
+`DEVELOPMENT_READY_FOR_FRESH_HOLDOUT_REQUEST_NOT_QUALIFIED`
+
+It does **not** establish source-detector adequacy, `staff_line=PASS`, semantic preservation or production readiness, and it does not authorize a new holdout.
+
+V1.3 evidence:
+
+- `evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json`
+- `evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json`
+- `evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json`
+
 ## Current stop boundary
 
-The one authorized independent staff-line holdout is **consumed**. Frozen v1.2 must not be retuned against it. The holdout must not become an informal development set or source of page-specific rules.
+The one previously authorized independent staff-line holdout is **consumed**. Frozen v1.2 must not be retuned against it, and v1.3 was not tuned against it. The consumed holdout must not become an informal development set or source of page-specific rules.
 
 Still closed / false:
 
+- `freshIndependentHoldoutAuthorized`;
 - `detectorQualified`;
 - `sourceDetectorAdequacyEstablished`;
 - `staff_line=PASS`;
@@ -160,19 +193,19 @@ Still closed / false:
 
 ## Next engineering boundary
 
-If `staff_line` development continues, the next candidate must be separately versioned (for example v1.3) and developed using **non-holdout development evidence only**.
-
-The technical objective is to preserve the strong holdout recall regime while improving general false-positive suppression and staff-absent rejection. Appropriate research directions include source-derived negative evidence, stronger text/decorative-line rejection, bounded support/spacing consistency checks, and generic confidence/routing logic. The consumed Chopin holdout must not be used to select thresholds, hard-code page rules or tune candidate behavior.
+The separately versioned v1.3 candidate has reached development readiness on authorized non-holdout evidence. The next safe action is governance preparation, not further tuning against the consumed holdout.
 
 Before another independent qualification:
 
-1. create a separately versioned candidate;
-2. use only authorized development data for candidate construction/tuning;
-3. freeze code, configuration and raw development evidence;
-4. establish development readiness without consulting the consumed holdout for tuning;
-5. define/freeze any new qualification policy changes before new holdout access;
-6. obtain a new explicit authorization for a genuinely independent holdout;
+1. preserve the frozen v1.3 code/configuration/development evidence;
+2. prepare a proposal for a genuinely fresh independent staff-line holdout without opening or consuming it;
+3. freeze any changed qualification policy before new holdout access;
+4. obtain **new explicit authorization** for the fresh independent holdout;
+5. only after authorization, freeze source-only v1.3 output on that fresh holdout before independent teacher scoring;
+6. qualify or reject v1.3 against the frozen policy without post-result retuning;
 7. only after source-detector qualification may restored-output staff-topology comparison be considered under a separate authorization.
+
+Until step 4 is explicitly authorized, no new holdout may be selected/opened/consumed for qualification and no restored-output topology comparison may run.
 
 ## Governance principle
 
