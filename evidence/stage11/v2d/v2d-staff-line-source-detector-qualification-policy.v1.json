@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-source-detector-qualification-policy.v1",
+  "artifactType": "stage11_v2d_staff_line_source_detector_qualification_policy",
+  "generatedOn": "2026-09-13",
+  "status": "FROZEN_PRE_HOLDOUT",
+  "scope": {
+    "class": "staff_line",
+    "detectorFamily": "stage11-v2d-staff-multisystem-source",
+    "purpose": "Predeclare development-readiness and future independent-holdout qualification semantics before any fresh holdout access.",
+    "developmentTargetsAreQualificationThresholds": false
+  },
+  "freezeBoundary": {
+    "policyFrozenBeforeFreshIndependentHoldoutAccess": true,
+    "freshIndependentHoldoutAccessed": false,
+    "restoredOutputsAccessedForStaffTopology": false,
+    "teacherCoordinatesAllowedAsInferenceInput": false,
+    "pageSpecificRulesAllowed": false,
+    "trainingOrFineTuningAllowed": false,
+    "thresholdMovementAfterFreshHoldoutAccessAllowed": false
+  },
+  "matchingRule": {
+    "name": "one_to_one_ordered_five_line_half_spacing",
+    "toleranceFractionOfLocalTeacherMedianStaffSpacing": 0.5,
+    "horizontalOverlapRequired": true,
+    "assignment": "Greedy one-to-one minimum normalized mean line-Y error among eligible pairs. All five ordered predicted line centers must lie within the tolerance and the predicted/teacher horizontal bboxes must overlap.",
+    "compatibilityRequirement": "The scoring implementation used for qualification must reproduce the frozen v1 development diagnostic of 71/197 matches before it is permitted to score a fresh holdout."
+  },
+  "metricSemantics": {
+    "teacherSystemRecallAtHalfSpacing": "matched teacher systems divided by all unambiguous teacher-confirmed standard five-line systems",
+    "predictedSystemPrecisionAtHalfSpacing": "matched predicted systems divided by all predicted systems",
+    "presentPageCoverage": "staff-present pages with at least one source-supported standard five-line prediction divided by staff-present pages",
+    "absentPageSpecificity": "staff-absent pages with zero predicted staff systems divided by staff-absent pages",
+    "fiveLineCountCorrectRate": "accepted predicted staff systems containing exactly five ordered line records divided by accepted predicted staff systems",
+    "lineOrderCorrectRate": "accepted predicted staff systems whose five center-Y values are strictly increasing divided by accepted predicted staff systems",
+    "tabSixLineRejectionRate": "designated six-line/TAB-like negative controls not promoted to a standard five-line staff system divided by such controls",
+    "byteRepeatDeterminism": "two executions on identical source bytes, config and detector source produce byte-identical canonical raw JSON"
+  },
+  "developmentReadinessForFutureHoldoutRequest": {
+    "qualificationClaim": false,
+    "freshHoldoutAutomaticallyAuthorized": false,
+    "requirements": {
+      "teacherSystemRecallAtHalfSpacingMin": 0.60,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.75,
+      "presentPageCoverageMin": 1.0,
+      "absentPageSpecificityMin": 1.0,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0,
+      "tabSixLineRejectionRateMin": 1.0,
+      "byteRepeatDeterminismRequired": true,
+      "sourceIdentityMatchRateRequired": 1.0
+    },
+    "rationale": "These are readiness floors for deciding whether spending a new independent holdout is defensible. They intentionally mirror the predeclared development objectives but do not qualify staff_line and do not authorize holdout access by themselves."
+  },
+  "futureIndependentHoldoutQualification": {
+    "allCriteriaRequired": true,
+    "requirements": {
+      "teacherSystemRecallAtHalfSpacingMin": 0.65,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+      "presentPageCoverageMin": 0.95,
+      "absentPageSpecificityMin": 1.0,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0,
+      "tabSixLineRejectionRateMin": 1.0,
+      "byteRepeatDeterminismRequired": true,
+      "sourceIdentityMatchRateRequired": 1.0
+    },
+    "rationale": {
+      "recall": "The independent holdout must demonstrate materially broader source coverage than the development-readiness floor rather than merely repeat it.",
+      "precision": "A preservation reference must keep false staff topology low; 0.80 is stricter than the development readiness floor and approximately preserves the precision regime already observed in v1/v1.1.",
+      "presentPageCoverage": "Qualification may tolerate an isolated safe abstention but not systematic page-level collapse.",
+      "absentPageSpecificity": "Hallucinating staff topology on staff-absent material is a safety failure, so the required rate is exact.",
+      "fiveLineAndOrder": "A prediction cannot count as a standard staff system unless its topology is exactly five ordered lines.",
+      "tabRejection": "Promoting six-line/TAB-like lanes into five-line staff topology is a semantic category error and is therefore an exact rejection gate.",
+      "determinismAndIdentity": "Qualification evidence must be reproducible and bound to exact source bytes."
+    }
+  },
+  "failureAndAbstentionPolicy": {
+    "unsafeOrInsufficientSourceEvidence": "ABSTAIN_WITH_NO_STANDARD_FIVE_LINE_STAFF_SYSTEM",
+    "identityMismatch": "FAIL_EVIDENCE_BINDING",
+    "nonDeterministicRepeat": "FAIL_QUALIFICATION",
+    "staffAbsentFalsePositive": "FAIL_QUALIFICATION",
+    "tabSixLinePromotion": "FAIL_QUALIFICATION",
+    "lineCountOrOrderViolation": "FAIL_QUALIFICATION",
+    "thresholdFailure": "REJECTED_CURRENT_DETECTOR",
+    "noRetuningAgainstConsumedIndependentHoldout": true
+  },
+  "evidenceBindingRequired": [
+    "exact repository commit SHA",
+    "detector module path and detector source SHA-256",
+    "canonical detector config and config SHA-256",
+    "exact source inventory with per-page SHA-256",
+    "canonical raw source-only output and SHA-256 sidecar",
+    "teacher/holdout truth artifact identity and SHA-256",
+    "scoring implementation identity",
+    "per-page and aggregate metric output",
+    "byte-repeat determinism evidence"
+  ],
+  "claimBoundary": {
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
