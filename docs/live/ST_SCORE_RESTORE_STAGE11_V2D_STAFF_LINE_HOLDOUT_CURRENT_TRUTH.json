@@ -5,9 +5,9 @@
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
   "state": "INDEPENDENT_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR",
   "authority": {
-    "scope": "staff_line independent-holdout state only",
+    "scope": "staff_line independent-holdout state plus later development-successor state",
     "baseAggregateTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_CURRENT_TRUTH.json",
-    "specificOverlayPrecedence": "For staff-line independent-holdout authorization/freeze/human-review/qualification state only, this later overlay supersedes the older pre-holdout staffLineSourceDetector, safety, decision and next-boundary fields in the aggregate current-truth file. Unrelated aggregate fields remain authoritative and unchanged.",
+    "specificOverlayPrecedence": "For staff-line independent-holdout authorization/freeze/human-review/qualification state and the later separately versioned development successor only, this later overlay supersedes the older pre-holdout staffLineSourceDetector, safety, decision and next-boundary fields in the aggregate current-truth file. Unrelated aggregate fields remain authoritative and unchanged.",
     "historicalEvidenceRewritten": false
   },
   "qualificationPolicy": {
@@ -105,6 +105,50 @@
     "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
     "noRetuningAgainstConsumedHoldout": true
   },
+  "developmentSuccessor": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.3",
+    "status": "DEVELOPMENT_READY_FOR_FRESH_HOLDOUT_REQUEST_NOT_QUALIFIED",
+    "separatelyVersionedFromRejectedV1_2": true,
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "moduleSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "rawArtifactBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json",
+    "developmentEvaluationPath": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json",
+    "developmentResultBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json",
+    "frozenDevelopmentRawSha256": "eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b",
+    "developmentPageCount": 20,
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 168,
+    "matchedSystemCountAtHalfSpacing": 140,
+    "teacherSystemRecallAtHalfSpacing": 0.7106598984771574,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+    "falsePositiveSystemCount": 28,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "tabSixLineRejectionRate": 1.0,
+    "sourceIdentityMatchRate": 1.0,
+    "byteRepeatDeterminism": true,
+    "falsePositiveReductionVersusFrozenV1_2Development": 18,
+    "matchedSystemDeltaVersusFrozenV1_2Development": -1,
+    "consumedChopinHoldoutUsedForTuning": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "pageSpecificRulesUsed": false,
+    "newIndependentHoldoutAccessed": false,
+    "developmentValidation": {
+      "workflowRunId": 34782136756,
+      "python311": "SUCCESS",
+      "python312": "SUCCESS",
+      "regressionTestsPerPython": "9/9 PASS",
+      "consumedHoldoutFirewall": "PASS"
+    },
+    "freshIndependentHoldoutAuthorized": false,
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "doesNotSupersedeV1_2IndependentQualificationResult": true
+  },
   "claimBoundary": {
     "staffLinePass": false,
     "semanticPreservationEstablished": false,
@@ -120,5 +164,5 @@
     "mustRemainDraft": true,
     "mergeAuthorized": false
   },
-  "nextSafeBoundary": "The one authorized independent holdout is consumed. Do not retune v1.2 against it. If staff_line work continues, create a separately versioned candidate using non-holdout development evidence only; freeze it before any new holdout and obtain a new explicit authorization before consuming another independent holdout. Restored-output staff-topology comparison remains closed."
+  "nextSafeBoundary": "The separately versioned v1.3 candidate is development-ready on authorized non-holdout evidence only. Preserve its frozen code/config/development evidence. A genuinely fresh independent holdout may be proposed but must not be selected/opened/consumed for qualification without a new explicit authorization. The consumed Chopin holdout remains forbidden for tuning. Restored-output staff-topology comparison remains closed until source-detector qualification and a separate authorization."
 }
