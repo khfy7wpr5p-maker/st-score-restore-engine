@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_1-current-truth.v1",
+  "generatedOn": "2026-09-15",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "state": "DEVELOPMENT_IMPROVED_NOT_QUALIFIED",
+  "candidate": {
+    "version": "stage11-v2d-restored-topology-successor.v1.5.1",
+    "developmentOnly": true,
+    "qualified": false,
+    "codeFrozenForQualification": false,
+    "configurationFrozenForQualification": false
+  },
+  "developmentValidation": {
+    "workflowRunId": 34900675667,
+    "conclusion": "success",
+    "inputIdentity": "20/20 PASS",
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 160,
+    "recall": 0.8121827411167513,
+    "precision": 0.8421052631578947,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "rawAsha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "rawBsha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "byteRepeatDeterminism": true,
+    "stableControlsPassed": true,
+    "v1_5RegressionFloorsPassed": true
+  },
+  "governance": {
+    "v1_4Immutable": true,
+    "v1_4RetuningAllowed": false,
+    "consumedFreshHoldoutMayBeUsedForTuning": false,
+    "developmentCorpusMayBeUsedForQualification": false,
+    "teacherCoordinatesAtInference": false,
+    "pageIdentityRules": false,
+    "familySpecificRules": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  },
+  "remainingDevelopmentRisk": {
+    "carulliP2": "severe alignment mismatch remains despite full predicted count",
+    "carulliP7": "partial recovery remains",
+    "carulliP8": "severe under-recovery/alignment mismatch remains",
+    "carulliP9": "severe under-recovery/alignment mismatch remains"
+  },
+  "claimBoundary": {
+    "successorQualified": false,
+    "restoredStaffTopologyPreservationEstablishedForStage11Closure": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  },
+  "evidencePath": "evidence/stage11/v2d/v2d-restored-topology-successor-v1_5_1-development-result-binding.v1.json",
+  "nextSafeBoundary": "Either continue development on remaining hard pages using development-only evidence, or freeze the candidate code/config before any new independent qualification baseline is selected or inspected."
+}
