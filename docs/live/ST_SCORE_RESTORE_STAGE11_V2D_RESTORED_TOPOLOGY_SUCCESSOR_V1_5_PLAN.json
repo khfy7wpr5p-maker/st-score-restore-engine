@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5-plan.v1",
+  "generatedOn": "2026-09-15",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "parentEvidenceHead": "86b43c7c7645d7b13de68ed99f149454a5fb626b",
+  "state": "SUCCESSOR_DEVELOPMENT_AUTHORIZED_AND_STARTED",
+  "purpose": "Develop a separately versioned restore-output topology successor after baseline-v2 FAIL without mutating frozen v1.4 or moving frozen thresholds.",
+  "frozenFacts": {
+    "v1_4SourceDetectorQualified": true,
+    "baselineV2Disposition": "FAIL_RESTORED_TOPOLOGY_BASELINE_V2",
+    "baselineV2Recall": 0.6243654822335025,
+    "baselineV2Precision": 0.7884615384615384,
+    "baselineV2AbsentPageSpecificity": 0.5,
+    "falseNegativeSystemCount": 74,
+    "falsePositiveSystemCount": 33,
+    "historicalCanonicalRecoveryState": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY"
+  },
+  "nonNegotiableBoundaries": {
+    "mutateV1_4": false,
+    "retuneV1_4": false,
+    "moveFrozenV1_4Thresholds": false,
+    "reuseConsumedFreshHoldoutForTuning": false,
+    "claimStage11PassFromDevelopmentCorpus": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "mergePr211Authorized": false
+  },
+  "developmentTargets": [
+    {
+      "id": "T1_RESTORE_OUTPUT_GEOMETRY_NORMALIZATION",
+      "goal": "Estimate staff-line topology on restore outputs in a way robust to local blur, thinning, line fragmentation and mild vertical displacement without teacher coordinates at inference."
+    },
+    {
+      "id": "T2_MULTI_SYSTEM_RECOVERY",
+      "goal": "Recover missing systems on Carulli p2/p6/p7/p8/p9 while preserving already-correct Beethoven p2/p3, Carulli p4 and Bach p24/p40 behavior."
+    },
+    {
+      "id": "T3_ALIGNMENT_ROBUSTNESS",
+      "goal": "Fix Barley pages where predicted systems exist but fail frozen half-spacing geometry matching, using source-derived/restored-pixel geometry only."
+    },
+    {
+      "id": "T4_NEGATIVE_PAGE_REJECTION",
+      "goal": "Remove the Beethoven p1 false staff without harming present-page coverage."
+    }
+  ],
+  "recommendedArchitecture": {
+    "successorVersion": "stage11-v2d-restored-topology-successor.v1.5",
+    "input": "restored grayscale page pixels",
+    "teacherCoordinatesAtInference": false,
+    "pageIdentityRules": false,
+    "familySpecificRules": false,
+    "components": [
+      "restored-pixel line-likelihood extraction",
+      "local staff-spacing hypothesis generation",
+      "five-line periodicity grouping",
+      "bounded fragmented-line bridging",
+      "cross-system vertical ordering and overlap checks",
+      "negative-page evidence gate",
+      "deterministic confidence/provenance diagnostics"
+    ]
+  },
+  "developmentEvaluation": {
+    "corpus": "existing 20-page development corpus only",
+    "teacherSystems": 197,
+    "teacherLines": 985,
+    "mayUseForDevelopmentDiagnostics": true,
+    "mayUseForFinalSuccessorQualification": false,
+    "stableControlPagesMustNotRegress": [
+      "beethoven-op48-no3-p2",
+      "beethoven-op48-no3-p3",
+      "beethoven-op48-no3-p4",
+      "carulli-morceaux-faciles-p4",
+      "bach-anna-magdalena-p24",
+      "bach-anna-magdalena-p40"
+    ]
+  },
+  "exitSequence": [
+    "implement and test successor only on development data",
+    "freeze successor code/config before any new qualification set is inspected",
+    "define a new pre-measurement validation policy before metrics are seen",
+    "use a genuinely separate validation set/baseline for successor closure",
+    "require determinism, topology thresholds and negative-page specificity under the frozen policy",
+    "only after PASS aggregate semantic-preservation evidence and reconsider Stage 11 closure"
+  ],
+  "nextConcreteTask": "Implement the first development-only successor prototype focused on restore-output geometry normalization and multi-system recovery, with explicit stable-control regression tests."
+}
