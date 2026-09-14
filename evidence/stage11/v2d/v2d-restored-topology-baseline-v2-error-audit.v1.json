@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-baseline-v2-error-audit.v1",
+  "generatedOn": "2026-09-15",
+  "sourceResult": {
+    "workflowRunId": 34897005035,
+    "baselineId": "stage11.v2d.restored-output-validation-baseline.v2",
+    "policyFreezeCommit": "ac2238d84c4140d9732d0c938671bbcdfcc09888",
+    "resultDisposition": "FAIL_RESTORED_TOPOLOGY_BASELINE_V2",
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 156,
+    "matchedSystemCount": 123,
+    "falseNegativeSystemCount": 74,
+    "falsePositiveSystemCount": 33,
+    "teacherSystemRecallAtHalfSpacing": 0.6243654822335025,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7884615384615384,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 0.5
+  },
+  "diagnosticBoundary": {
+    "developmentCorpusOnly": true,
+    "freshHeldOutDataUsed": false,
+    "v1_4RetuningAllowed": false,
+    "frozenThresholdMovementAllowed": false,
+    "thisAuditMayInformSeparatelyVersionedSuccessorDevelopment": true,
+    "thisAuditMayNotServeAsSuccessorClosureEvidence": true
+  },
+  "pageRows": [
+    {"pageId":"beethoven-op48-no3-p1","teacher":0,"predicted":1,"matched":0,"falseNegative":0,"falsePositive":1},
+    {"pageId":"beethoven-op48-no3-p2","teacher":9,"predicted":9,"matched":9,"falseNegative":0,"falsePositive":0},
+    {"pageId":"beethoven-op48-no3-p3","teacher":12,"predicted":12,"matched":12,"falseNegative":0,"falsePositive":0},
+    {"pageId":"beethoven-op48-no3-p4","teacher":0,"predicted":0,"matched":0,"falseNegative":0,"falsePositive":0},
+    {"pageId":"wikimedia-guitar-technical-exercise-no1-p1","teacher":3,"predicted":4,"matched":3,"falseNegative":0,"falsePositive":1},
+    {"pageId":"barley-your-face-your-tongue-your-wit-p1","teacher":4,"predicted":4,"matched":0,"falseNegative":4,"falsePositive":4},
+    {"pageId":"barley-your-face-your-tongue-your-wit-p2","teacher":5,"predicted":6,"matched":0,"falseNegative":5,"falsePositive":6},
+    {"pageId":"carulli-morceaux-faciles-p2","teacher":12,"predicted":8,"matched":1,"falseNegative":11,"falsePositive":7},
+    {"pageId":"carulli-morceaux-faciles-p3","teacher":12,"predicted":9,"matched":9,"falseNegative":3,"falsePositive":0},
+    {"pageId":"carulli-morceaux-faciles-p4","teacher":15,"predicted":15,"matched":15,"falseNegative":0,"falsePositive":0},
+    {"pageId":"carulli-morceaux-faciles-p5","teacher":15,"predicted":12,"matched":10,"falseNegative":5,"falsePositive":2},
+    {"pageId":"carulli-morceaux-faciles-p6","teacher":12,"predicted":1,"matched":0,"falseNegative":12,"falsePositive":1},
+    {"pageId":"carulli-morceaux-faciles-p7","teacher":12,"predicted":6,"matched":4,"falseNegative":8,"falsePositive":2},
+    {"pageId":"carulli-morceaux-faciles-p8","teacher":12,"predicted":6,"matched":1,"falseNegative":11,"falsePositive":5},
+    {"pageId":"carulli-morceaux-faciles-p9","teacher":12,"predicted":1,"matched":0,"falseNegative":12,"falsePositive":1},
+    {"pageId":"carulli-morceaux-faciles-p10","teacher":12,"predicted":11,"matched":11,"falseNegative":1,"falsePositive":0},
+    {"pageId":"bach-anna-magdalena-p4","teacher":12,"predicted":12,"matched":11,"falseNegative":1,"falsePositive":1},
+    {"pageId":"bach-anna-magdalena-p10","teacher":12,"predicted":13,"matched":11,"falseNegative":1,"falsePositive":2},
+    {"pageId":"bach-anna-magdalena-p24","teacher":14,"predicted":14,"matched":14,"falseNegative":0,"falsePositive":0},
+    {"pageId":"bach-anna-magdalena-p40","teacher":12,"predicted":12,"matched":12,"falseNegative":0,"falsePositive":0}
+  ],
+  "primaryFailureClusters": [
+    {
+      "cluster": "CARULLI_RESTORED_GEOMETRY_COLLAPSE",
+      "pages": ["carulli-morceaux-faciles-p2","carulli-morceaux-faciles-p6","carulli-morceaux-faciles-p7","carulli-morceaux-faciles-p8","carulli-morceaux-faciles-p9"],
+      "observation": "Large concentrated false-negative loss with several unmatched predicted systems; global threshold relaxation is not justified because other Carulli and Beethoven/Bach pages already pass cleanly."
+    },
+    {
+      "cluster": "BARLEY_SYSTEM_ALIGNMENT_FAILURE",
+      "pages": ["barley-your-face-your-tongue-your-wit-p1","barley-your-face-your-tongue-your-wit-p2"],
+      "observation": "Detector emits systems but none match teacher geometry under the frozen half-spacing rule, indicating geometry/alignment failure rather than simple page-level abstention."
+    },
+    {
+      "cluster": "NEGATIVE_PAGE_FALSE_POSITIVE",
+      "pages": ["beethoven-op48-no3-p1"],
+      "observation": "One of two teacher-negative pages emits one false system, causing absent-page specificity 0.5."
+    }
+  ],
+  "stableControls": [
+    "beethoven-op48-no3-p2",
+    "beethoven-op48-no3-p3",
+    "beethoven-op48-no3-p4",
+    "carulli-morceaux-faciles-p4",
+    "bach-anna-magdalena-p24",
+    "bach-anna-magdalena-p40"
+  ],
+  "conclusion": "Successor development should target restore-output geometry normalization and multi-system recovery while preserving stable-control behavior and negative-page rejection; do not retune frozen v1.4 against this measured result."
+}
