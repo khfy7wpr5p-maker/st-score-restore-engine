@@ -3,21 +3,23 @@
   "generatedOn": "2026-09-14",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "V1_4_FRESH_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_REVIEW_PENDING",
+  "state": "V1_4_FRESH_HOLDOUT_QUALIFICATION_COMPLETE_PASS",
   "candidate": {
     "version": "stage11-v2d-staff-multisystem-source.v1.4",
     "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
     "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
     "developmentFrozenBeforeHoldoutAuthorization": true,
-    "detectorQualified": false,
-    "sourceDetectorAdequacyEstablished": false,
-    "staffLinePass": false
+    "detectorQualified": true,
+    "sourceDetectorAdequacyEstablished": true,
+    "staffLinePass": true
   },
   "freshHoldout": {
     "authorizationPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-authorization.v1.json",
     "registryPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-registry-entry.v1.json",
     "sourceFreezePath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-source-freeze.v1.json",
     "teacherWorkPackagePath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-work-package.v1.json",
+    "teacherTruthFreezePath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1.json",
+    "qualificationResultPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-qualification-result-binding.v1.json",
     "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
     "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
     "sourceSha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47",
@@ -26,29 +28,52 @@
     "rawArtifactSha256": "bcf96e175ee10bdb7a906da3990e12902ac6d9e6906cd08c041e8ca4c70804d5",
     "byteRepeatDeterminismVerified": true,
     "teacherTruthAccessedBeforeRawFreeze": false,
-    "teacherTruthFrozen": false,
-    "qualificationScoringPerformed": false,
-    "holdoutConsumedForScoring": false
+    "teacherTruthFrozen": true,
+    "teacherTruthFreezeCommit": "0432491d9cdd93aff9c48bcbf6d666961f43d396",
+    "submittedTeacherJsonSha256": "8dc2f86a82b7160626d431f668acef211ed71b8cca3621469656500007854532",
+    "canonicalTeacherTruthSha256": "54e688755abdef9a9ff94c077269cc64e34791b428e94d78a84563c76a3dafd0",
+    "teacherConfirmedSystemCount": 4,
+    "teacherConfirmedStaffLineCount": 20,
+    "qualificationScoringPerformed": true,
+    "qualificationScoringExecutionCount": 1,
+    "holdoutConsumedForScoring": true
   },
-  "blindTeacherReview": {
-    "status": "WORK_PACKAGE_READY_HUMAN_REVIEW_PENDING",
-    "offlineHtmlFileName": "stage11_v2d_staff_line_v1_4_tchaikovsky_blind_teacher_annotation_OFFLINE.html",
-    "offlineHtmlSha256": "7fde78488cea8ef346fe793cade1e4067692bbedb0b525d7a516f8a7a4d712da",
-    "detectorOutputShown": false,
-    "predictedCountShown": false,
-    "detectorGeometryShown": false,
-    "restoredOutputShown": false,
-    "rawArtifactShown": false,
-    "networkRequestsUsedByHtml": false
+  "qualification": {
+    "status": "PASS",
+    "disposition": "QUALIFIED_FROZEN_V1_4_SOURCE_DETECTOR",
+    "teacherSystemCount": 4,
+    "predictedSystemCount": 5,
+    "matchedSystemCountAtHalfSpacing": 4,
+    "teacherSystemRecallAtHalfSpacing": 1.0,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8,
+    "precisionEqualsMinimumThreshold": true,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificityByFrozenScorerConvention": 1.0,
+    "absentPageCount": 0,
+    "absentPageSpecificityEmpiricallyMeasured": false,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "tabSixLineRejectionRate": 1.0,
+    "byteRepeatDeterminism": true,
+    "sourceIdentityMatchRate": 1.0,
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "scoreArtifactSha256": "c90342b879bdcc2c667bad381326d86a28bd570da6454d7555273b0228db6d67",
+    "scoringWillNotBeRepeated": true
   },
   "qualificationPolicy": {
     "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
     "frozenBeforeHoldout": true,
     "allCriteriaRequired": true,
+    "teacherSystemRecallAtHalfSpacingMin": 0.65,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+    "presentPageCoverageMin": 0.95,
+    "absentPageSpecificityMin": 1.0,
     "retuningAfterHoldoutObservationAllowed": false,
     "thresholdMovementAfterHoldoutObservationAllowed": false
   },
   "holdoutFirewall": {
+    "currentFreshHoldoutConsumed": true,
+    "currentFreshHoldoutMayBeUsedForTuning": false,
     "consumedChopinHoldoutMayBeUsedForTuning": false,
     "consumedV1_3FreshHoldoutMayBeUsedForTuning": false,
     "consumedHoldoutGeometryMayBeUsedForThresholdSelection": false,
@@ -56,9 +81,9 @@
     "restoredOutputTopologyComparisonAuthorized": false
   },
   "claimBoundary": {
-    "staffLinePass": false,
-    "sourceDetectorAdequacyEstablished": false,
-    "detectorQualified": false,
+    "staffLinePass": true,
+    "sourceDetectorAdequacyEstablished": true,
+    "detectorQualified": true,
     "restoredImageTopologyComparisonAuthorized": false,
     "semanticPreservationEstablished": false,
     "overallStage11PassAuthorized": false,
@@ -72,5 +97,5 @@
     "mustRemainDraft": true,
     "mergeAuthorized": false
   },
-  "nextSafeBoundary": "Human music-teacher review of the blind offline package. Do not expose detector raw or score the holdout until the teacher final JSON is independently completed, validated and frozen."
+  "nextSafeBoundary": "Frozen v1.4 staff-line source detector is qualified under the predeclared policy. Do not retune against the now-consumed holdout. Restored-output staff-topology comparison, semantic-preservation PASS, overall Stage 11 PASS, production promotion, Stage 12 entry and PR merge remain separately unauthorized."
 }
