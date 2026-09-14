@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-validation-policy.v1",
+  "generatedOn": "2026-09-14",
+  "status": "FROZEN_PRE_MEASUREMENT",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforePolicyFreeze": "81a9309993bddd0605086d27e14f508b83da607b",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "authorization": {
+    "restoredOutputStaffTopologyComparisonAuthorized": true,
+    "authorizedByHumanTeacherInConversation": true,
+    "authorizationDate": "2026-09-14",
+    "scopeOnly": "staff-line topology preservation on the existing 20-page non-held-out development corpus",
+    "productionPromotionAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "predeclaredPlan": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-human-mask-topology-plan.v1.json",
+    "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+    "requiredSequence": [
+      "freeze independent human source topology",
+      "establish source-detector adequacy",
+      "compare source versus restored staff-line topology with the same frozen validator"
+    ],
+    "sourceDetectorAdequacySatisfiedBy": "stage11-v2d-staff-multisystem-source.v1.4"
+  },
+  "corpus": {
+    "developmentOnly": true,
+    "heldOutAccessed": false,
+    "pageCount": 20,
+    "sourceFamilyCount": 5,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2,
+    "teacherConfirmedSystemCount": 197,
+    "teacherConfirmedLineCount": 985,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "teacherTruthAlreadyFrozen": true
+  },
+  "detector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "qualifiedOnIndependentHoldout": true,
+    "detectorMutationAllowed": false,
+    "thresholdMovementAllowed": false
+  },
+  "restoreCandidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "weightsFrozen": true,
+    "full20ExecutionEvidencePath": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
+    "canonicalCpuProfile": {
+      "device": "CPU",
+      "torch": "2.10.0+cpu",
+      "python": "3.13.5",
+      "intraopThreads": 5,
+      "interopThreads": 1,
+      "deterministicAlgorithms": false,
+      "applyBeforePackageLoad": true
+    },
+    "inferenceAdapter": {
+      "patchSize": 512,
+      "overlap": 64,
+      "stride": 448,
+      "overlapCombine": "arithmetic mean",
+      "quantization": "round(output*255) to uint8",
+      "pngCompression": 3
+    }
+  },
+  "validator": {
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "toleranceFractionOfLocalTeacherMedianStaffSpacing": 0.5,
+    "horizontalOverlapRequired": true,
+    "sameFrozenValidatorAsSourceQualification": true
+  },
+  "passPolicy": {
+    "policySource": "reuse the already-frozen futureIndependentHoldoutQualification requirements from v2d-staff-line-source-detector-qualification-policy.v1.json without relaxation",
+    "allCriteriaRequired": true,
+    "requirements": {
+      "teacherSystemRecallAtHalfSpacingMin": 0.65,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+      "presentPageCoverageMin": 0.95,
+      "absentPageSpecificityMin": 1.0,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0,
+      "byteRepeatDeterminismRequired": true,
+      "sourceIdentityMatchRateRequired": 1.0
+    },
+    "note": "No post-measurement threshold selection or relaxation is permitted. TAB six-line rejection remains a detector invariant already frozen by v1.4 qualification and is not re-estimated from the restored development pages unless a designated six-line negative control exists in this corpus."
+  },
+  "comparisonOutputs": {
+    "required": [
+      "per-page restored detector output identity",
+      "aggregate restored-vs-teacher topology metrics",
+      "source baseline metrics from frozen v1.4 development evidence",
+      "restored minus source metric deltas",
+      "PASS/FAIL under the frozen criteria",
+      "claim boundary"
+    ]
+  },
+  "claimBoundary": {
+    "restoredImageTopologyComparisonAuthorized": true,
+    "staffLineSourceDetectorQualified": true,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}
