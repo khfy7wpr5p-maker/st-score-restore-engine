@@ -1,0 +1,166 @@
+name: Stage 11 V2d Staff-Line V1.4 Development Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'evidence/stage11/v2d/*v1_4*'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_CURRENT_TRUTH.json'
+      - '.github/workflows/stage11-v2d-staff-line-v1_4-development-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'evidence/stage11/v2d/*v1_4*'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_CURRENT_TRUTH.json'
+      - '.github/workflows/stage11-v2d-staff-line-v1_4-development-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository
+        run: python -m pip install -e .
+      - name: Run v1.3 parent and v1.4 successor tests
+        run: |
+          python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_3 -v
+          python -m unittest tests.test_stage11_v2d_staff_line_multisystem_source_detector_v1_4 -v
+      - name: Compile v1.4 source and tests
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py \
+            tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py
+      - name: Validate immutable code identities
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py': '7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960',
+              'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py': '1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb',
+              'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py': 'e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5',
+              'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py': '0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95',
+          }
+          for path, sha in expected.items():
+              actual = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+              assert actual == sha, (path, actual, sha)
+          PY
+      - name: Validate v1.4 source-only raw freeze
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          raw = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_4-raw-artifact-binding.v1.json').read_text())
+          assert raw['developmentOnly'] is True and raw['qualificationEvidence'] is False
+          c = raw['candidate']
+          assert c['version'] == 'stage11-v2d-staff-multisystem-source.v1.4'
+          assert c['parentVersion'] == 'stage11-v2d-staff-multisystem-source.v1.3'
+          assert c['parentSourceSha256'] == 'e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5'
+          assert c['grandparentRawArtifactSha256'] == 'b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76'
+          assert c['config']['sourceEvidence'] == {
+              'fail_open_if_parent_nonempty': True,
+              'weak_confidence_min': 0.91,
+              'weak_page_width_fraction_min': 0.75,
+          }
+          a = raw['rawArtifact']
+          assert a['sha256'] == '50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d'
+          assert a['repeatArtifactSha256'] == a['sha256']
+          assert a['byteSize'] == 171771
+          assert a['pageCount'] == 20
+          assert a['sourceIdentityExpectedCount'] == 20
+          assert a['sourceIdentityMatchedCount'] == 20
+          assert a['predictedSystemCount'] == 152
+          assert a['spacingConsensusSuppressedWeakSystemCount'] == 19
+          assert a['sourceEvidenceSuppressedWeakSystemCount'] == 16
+          assert a['failOpenRestoredSystemCount'] == 1
+          assert a['byteRepeatDeterminismVerified'] is True
+          for key in ('teacherArtifactLoadedDuringInference','teacherCoordinatesUsedDuringInference','restoredOutputsLoadedDuringInference','heldOutAccessed','trainingOrFineTuningPerformed','pageIdentityUsed','pageSpecificRulesUsed','consumedChopinHoldoutUsedForTuning','consumedV1_3FreshHoldoutUsedForTuning'):
+              assert raw['inferenceBoundary'][key] is False
+          assert all(value is False for value in raw['claimBoundary'].values())
+          PY
+      - name: Validate v1.4 development scoring and frozen anchor
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          path = Path('evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_4_evaluation.v1.json')
+          assert hashlib.sha256(path.read_bytes()).hexdigest() == 'f875f81c32be70512fb85564d8c1e11429c89617c9e0210b59f2f11ff853dd97'
+          e = json.loads(path.read_text())
+          assert e['developmentOnly'] is True and e['qualificationEvidence'] is False
+          assert e['freezeBoundary']['rawArtifactSha256'] == '50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d'
+          assert e['freezeBoundary']['teacherTruthAccessedBeforeRawFreeze'] is False
+          compat = e['scorerCompatibility']
+          assert compat['passed'] is True
+          assert compat['reproducedMatchedSystemCountAtHalfSpacing'] == 71
+          assert compat['reproducedTeacherSystemCount'] == 197
+          s = e['scoring']
+          assert s['teacherSystemCount'] == 197
+          assert s['predictedSystemCount'] == 152
+          assert s['matchedSystemCount'] == 136
+          assert abs(s['teacherSystemRecallAtHalfSpacing'] - 0.6903553299492385) < 1e-12
+          assert abs(s['predictedSystemPrecisionAtHalfSpacing'] - 0.8947368421052632) < 1e-12
+          assert s['falsePositiveSystemCount'] == 16
+          assert s['presentPageCoverage']['rate'] == 1.0
+          assert s['absentPageSpecificity']['rate'] == 1.0
+          assert s['fiveLineCountCorrectRate'] == 1.0
+          assert s['lineOrderCorrectRate'] == 1.0
+          d = e['comparisonToFrozenV1_3Development']['delta']
+          assert d['falsePositiveSystems'] == -12
+          assert d['matchedSystems'] == -4
+          assert e['developmentReadinessAssessment']['observedMeetsFrozenDevelopmentReadinessFloors'] is True
+          assert e['developmentReadinessAssessment']['qualificationClaim'] is False
+          assert e['developmentReadinessAssessment']['freshIndependentHoldoutAuthorized'] is False
+          assert all(value is False for value in e['claimBoundary'].values())
+          PY
+      - name: Validate v1.4 result binding and holdout firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_4-development-result-binding.v1.json').read_text())
+          assert b['developmentOnly'] is True and b['qualificationEvidence'] is False
+          assert b['phaseAFreeze']['rawArtifactSha256'] == '50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d'
+          assert b['phaseBDevelopmentScoring']['scorerCompatibilityPassed'] is True
+          assert b['developmentMetrics']['matchedSystemCountAtHalfSpacing'] == 136
+          assert b['developmentMetrics']['falsePositiveSystemCount'] == 16
+          assert b['decision']['developmentReadinessForFutureHoldoutRequest'] is True
+          assert b['decision']['detectorQualified'] is False
+          assert b['decision']['freshIndependentHoldoutAuthorized'] is False
+          assert b['decision']['restoredImageTopologyComparisonAuthorized'] is False
+          assert b['repositoryState']['prMustRemainDraft'] is True
+          assert b['repositoryState']['mergeAuthorized'] is False
+          assert all(value is False for value in b['claimBoundary'].values())
+          firewall = b['holdoutFirewall']
+          assert all(value is False for value in firewall.values())
+          source = Path('src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py').read_text(encoding='utf-8').lower()
+          forbidden = (
+              'dataset.item.imslp82860',
+              'source.family.wikimedia-nearer-my-god-to-thee',
+              'abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5',
+              'nearer-my-god-to-thee-phone-photo-p1',
+              'chopin-op69-holdout',
+          )
+          assert all(token not in source for token in forbidden)
+          fresh = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_3_HOLDOUT_CURRENT_TRUTH.json').read_text())
+          assert fresh['state'] == 'V1_3_FRESH_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED'
+          assert fresh['authorization']['anotherIndependentHoldoutAuthorized'] is False
+          assert fresh['claimBoundary']['staffLinePass'] is False
+          assert fresh['claimBoundary']['restoredImageTopologyComparisonAuthorized'] is False
+          assert fresh['pullRequest']['mustRemainDraft'] is True
+          assert fresh['pullRequest']['mergeAuthorized'] is False
+          PY

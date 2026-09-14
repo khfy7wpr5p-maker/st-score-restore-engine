@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "stage11.v2c.teacher-review-resolution.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "sourceReviewPdfSha256": "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
+  "reviewerName": "Önder Özüdoğru",
+  "confirmationChannel": "chat_followup",
+  "confirmedOn": "2026-09-08",
+  "resolutions": [
+    {
+      "pageId": "carulli-morceaux-faciles-p3",
+      "classId": "tab_string",
+      "originalSubmittedState": "present",
+      "previousEffectiveState": "unknown_review_required",
+      "resolvedState": "absent",
+      "teacherConfirmed": true,
+      "reason": "reviewer follow-up confirmed that no TAB string notation is present on this page"
+    },
+    {
+      "pageId": "bach-anna-magdalena-p24",
+      "classId": "notehead",
+      "originalSubmittedState": "not_applicable",
+      "previousEffectiveState": "unknown_review_required",
+      "resolvedState": "present",
+      "teacherConfirmed": true,
+      "reason": "reviewer follow-up confirmed that noteheads are present on this page"
+    }
+  ],
+  "summary": {
+    "originalConflictCount": 2,
+    "resolvedConflictCount": 2,
+    "remainingConflictCount": 0,
+    "allTeacherLabelsConflictFree": true
+  },
+  "claimBoundary": {
+    "teacherGroundTruthResolutionComplete": true,
+    "semanticPreservationEstablished": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_4-diagnostic-plan.v1",
+  "generatedOn": "2026-09-10",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "status": "FROZEN_DIAGNOSTIC_PLAN",
+  "purpose": "Determine whether P4.3 C1 misses and excessive false positives originate in the upstream EOMER clefs_keys mask or in the downstream geometric staff-anchor adapter, without rerunning the full 29-page corpus.",
+  "qualificationBoundary": {
+    "developmentDiagnosticOnly": true,
+    "heldOutAccessAuthorized": false,
+    "qualificationDecisionAuthorized": false,
+    "postMeasurementThresholdRetuningOfP4_3": false,
+    "newDetectorVersionRequiredForAnySubsequentDesignChange": true
+  },
+  "p4_3Reference": {
+    "adapterId": "oemer-c-clef-staff-anchor.p4_3.v1",
+    "measurementSha256": "bf360e69f8a146ab58cd613fafcf15649219218d37798d9f21d6acedad8501ec",
+    "pooledTp": 44,
+    "pooledFp": 182,
+    "pooledFn": 27,
+    "c1Tp": 0,
+    "c1Fn": 20,
+    "c3Tp": 29,
+    "c3Fn": 7,
+    "c4Tp": 15,
+    "c4Fn": 0
+  },
+  "selectedPages": [
+    {
+      "pageId": "c1_c4_mixed-538f501cc852-p0001",
+      "reason": "Mixed C1/C3/C4 page with 2 C1 teacher boxes, 17 false positives and 3 false negatives; high-yield C1 plus overgeneration diagnostic."
+    },
+    {
+      "pageId": "c3_alto-aa0ed21211f2-p0001",
+      "reason": "C3 development page with 0 true positives, 3 false positives and 1 false negative; distinguishes upstream miss from adapter admission failure."
+    },
+    {
+      "pageId": "c4_tenor-decfc1164a18-p0001",
+      "reason": "C4 development page with 1 true positive and 18 false positives; strong overgeneration control while C4 localization itself succeeds."
+    }
+  ],
+  "captureContract": {
+    "runFullOemerInference": true,
+    "pageCount": 3,
+    "executionProvider": "HYBRID_UNET_CPU_SEGNET_CUDA_WHOLE_SESSION_FALLBACK_DISABLED",
+    "onnxruntimeVersion": "1.20.2",
+    "oemerVersion": "0.1.8",
+    "persistStaffMask": true,
+    "persistClefsKeysMask": true,
+    "persistRawConnectedComponents": true,
+    "persistTeacherBoxMaskCoverageForDiagnostics": true,
+    "teacherTruthConsumedAtInference": false,
+    "teacherTruthUsedOnlyAfterInference": true,
+    "persistProviderRouteEvidence": true,
+    "persistSourceImageSha256": true
+  },
+  "diagnosticQuestions": [
+    "Does each C1 teacher box contain any upstream clefs_keys positive pixels?",
+    "What fraction of each teacher box is covered by the upstream clefs_keys mask?",
+    "Does any raw connected component overlap each missed teacher box before adapter filtering?",
+    "How many raw components occur in the staff-start region on high-FP pages?",
+    "Are false positives already present as upstream mask components or mainly introduced by adapter component merging/admission?"
+  ],
+  "stopConditions": [
+    "Source image SHA mismatch",
+    "Teacher/manifest identity mismatch",
+    "ONNX Runtime version is not 1.20.2",
+    "Hybrid provider router is not active",
+    "seg_net CUDA whole-session fallback is not disabled",
+    "Unexpected page id or missing source PNG"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_3-fresh-holdout-raw-artifact-recovery-resolution.v1",
+  "generatedOn": "2026-09-14",
+  "status": "FROZEN_RAW_BYTE_IDENTITY_RECOVERED",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "priorBlockerPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-block.v1.json",
+  "originalFreeze": {
+    "bindingPath": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json",
+    "freezeCommit": "ea7e451b3c94cc5aba752871be8ed4b261208e60",
+    "rawArtifactFileName": "stage11_v2d_staff_line_holdout_nearer_phone_raw.v1_3.json",
+    "rawArtifactSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "predictedSystemCount": 3,
+    "byteRepeatDeterminismVerified": true
+  },
+  "reconstruction": {
+    "method": "reexecute the original canonical raw construction recovered from the pre-teacher freeze execution record using the exact registered source identity and frozen detector identities",
+    "sourceSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "sourceByteSize": 647003,
+    "sourceWidth": 2048,
+    "sourceHeight": 1536,
+    "detectorVersion": "stage11-v2d-staff-multisystem-source.v1.3",
+    "detectorSourceSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "parentDetectorVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "parentDetectorSourceSha256": "0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95",
+    "teacherTruthLoadedDuringReconstruction": false,
+    "teacherCoordinatesUsedDuringReconstruction": false,
+    "restoredOutputsUsedDuringReconstruction": false,
+    "thresholdsChanged": false,
+    "detectorRetuned": false,
+    "pageSpecificRuleAdded": false,
+    "predictedSystemCount": 3,
+    "preFreezeGeometryFingerprintMatched": true,
+    "preFreezeDiagnosticsFingerprintMatched": true,
+    "canonicalByteSize": 8130,
+    "reconstructedSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "matchesOriginalFrozenSha256": true
+  },
+  "storage": {
+    "managedRestrictedRawRestored": true,
+    "providerSpecificArtifactIdentifiersCommittedToGit": false
+  },
+  "decision": {
+    "rawRecoveryBlockerResolved": true,
+    "sameFrozenRawIdentityEstablished": true,
+    "freshHoldoutMayNowBeScoredExactlyOnceAgainstAlreadyFrozenTeacherTruth": true,
+    "secondHoldoutAuthorized": false,
+    "retuningAuthorized": false,
+    "thresholdMovementAuthorized": false
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

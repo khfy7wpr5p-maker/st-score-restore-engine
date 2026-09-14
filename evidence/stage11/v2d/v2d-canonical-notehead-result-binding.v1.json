@@ -1,0 +1,379 @@
+{
+  "claimBoundary": {
+    "gpuDetectorAdmittedOnlyAfterCpuCanaryEquivalence": true,
+    "noteheadCanonicalCpuSemanticRerunCompleted": true,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "classOutcome": {
+    "basis": "18/18 teacher-present pages evaluated; every page source recall is at least 0.80 on hash-bound canonical CPU Restore outputs",
+    "classId": "notehead",
+    "decision": "PASS_CANONICAL_CLASS_EVIDENCE"
+  },
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "pages": [
+    {
+      "canonicalRestoredFileSha256": "298413f97f7247494f383adfde7ea2dc2d9f9d6edeb29f5024e4398fd4179dc1",
+      "canonicalRestoredPixelSha256": "1aae64563513bc096f4d4a8caec4a72b95176a4582fb66054e18e096a0678ed3",
+      "metric": {
+        "candidateCount": 145,
+        "candidateOnlyCount": 15,
+        "classId": "notehead",
+        "matchedCount": 130,
+        "recallAtLeast0_80": true,
+        "sourceCount": 148,
+        "sourceRecall": 0.8783783783783784
+      },
+      "pageId": "beethoven-op48-no3-p2",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "28754c2f34242e148c38cb4ac72c5a849d03fe04059dd21e5e632bdfd983ff7a",
+      "canonicalRestoredPixelSha256": "983aea9bcd54d6cd9192b0e14b03e757bce1d836784ccc545294b50ee490d74a",
+      "metric": {
+        "candidateCount": 203,
+        "candidateOnlyCount": 32,
+        "classId": "notehead",
+        "matchedCount": 171,
+        "recallAtLeast0_80": true,
+        "sourceCount": 196,
+        "sourceRecall": 0.8724489795918368
+      },
+      "pageId": "beethoven-op48-no3-p3",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "cc3fcdaca59bb268a1f5fdd30478a6b465f8ed04a99c707a3df4ce9c1d4b5a28",
+      "canonicalRestoredPixelSha256": "91927d2b25891267d77502e9a93b86a20eacc42b924f4bf996e6106c9fe3e3d7",
+      "metric": {
+        "candidateCount": 108,
+        "candidateOnlyCount": 35,
+        "classId": "notehead",
+        "matchedCount": 73,
+        "recallAtLeast0_80": true,
+        "sourceCount": 77,
+        "sourceRecall": 0.948051948051948
+      },
+      "pageId": "wikimedia-guitar-technical-exercise-no1-p1",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "b4d313023150dd0646fdd8a290d5db71eae74061aa8550c22ea3737b9fe3fcda",
+      "canonicalRestoredPixelSha256": "7522667e2b7c150bf7ed5d3087e70dbd3f5a7866b53df51185558c28c50a20ee",
+      "metric": {
+        "candidateCount": 120,
+        "candidateOnlyCount": 47,
+        "classId": "notehead",
+        "matchedCount": 73,
+        "recallAtLeast0_80": true,
+        "sourceCount": 74,
+        "sourceRecall": 0.9864864864864865
+      },
+      "pageId": "barley-your-face-your-tongue-your-wit-p1",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "1b70cf4f8a8d691f4004a4ad7037f73b8c08e060def55949163ebbd349294577",
+      "canonicalRestoredPixelSha256": "bd7e55ae998cbd89487da3ac333063f5a89fb96bbb7fb12bdeb740ca089341c2",
+      "metric": {
+        "candidateCount": 144,
+        "candidateOnlyCount": 56,
+        "classId": "notehead",
+        "matchedCount": 88,
+        "recallAtLeast0_80": true,
+        "sourceCount": 88,
+        "sourceRecall": 1.0
+      },
+      "pageId": "barley-your-face-your-tongue-your-wit-p2",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "05d48559173959f7fd8d11910b1ff48d50edee99e23f7cd5caac222cfaae4779",
+      "canonicalRestoredPixelSha256": "166eec4a925c1045573c759c46df6eb38c272826a2d479b75123b55e6c7c7243",
+      "metric": {
+        "candidateCount": 567,
+        "candidateOnlyCount": 82,
+        "classId": "notehead",
+        "matchedCount": 485,
+        "recallAtLeast0_80": true,
+        "sourceCount": 548,
+        "sourceRecall": 0.885036496350365
+      },
+      "pageId": "carulli-morceaux-faciles-p2",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "96ed51704ab95d0e25330dc72d014c3244b1714e3e0039f9685d6bff6ad9fd22",
+      "canonicalRestoredPixelSha256": "371f9e50766ae10299d3f804634140f1a8242896792564e6c42c7467e3bd54c7",
+      "metric": {
+        "candidateCount": 627,
+        "candidateOnlyCount": 75,
+        "classId": "notehead",
+        "matchedCount": 552,
+        "recallAtLeast0_80": true,
+        "sourceCount": 586,
+        "sourceRecall": 0.9419795221843004
+      },
+      "pageId": "carulli-morceaux-faciles-p3",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "e6743797cadf1821d219c34aebce068f183970b0a2ea0af4c9f2acd6aea6636e",
+      "canonicalRestoredPixelSha256": "a22a8a4c29229688bd4469edbc1ffed69ff95768ea49e4d59ea09cb09deff1ff",
+      "metric": {
+        "candidateCount": 821,
+        "candidateOnlyCount": 75,
+        "classId": "notehead",
+        "matchedCount": 746,
+        "recallAtLeast0_80": true,
+        "sourceCount": 809,
+        "sourceRecall": 0.9221260815822002
+      },
+      "pageId": "carulli-morceaux-faciles-p4",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "9fe83f5094269e3fc39dc99b79baa513b73da14be7c3f4775bcfcb50aa9da60c",
+      "canonicalRestoredPixelSha256": "d7f13e8388818146a38317d8cd3056762cf84b7203b3a8bcd3d7f06543ece509",
+      "metric": {
+        "candidateCount": 988,
+        "candidateOnlyCount": 86,
+        "classId": "notehead",
+        "matchedCount": 902,
+        "recallAtLeast0_80": true,
+        "sourceCount": 948,
+        "sourceRecall": 0.9514767932489452
+      },
+      "pageId": "carulli-morceaux-faciles-p5",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "74d6df0522e9d0cd047fb526cec78efc79a1bb5645668c324d8fee8fe78bfafa",
+      "canonicalRestoredPixelSha256": "8ec90070da0782e908127a7c91061e323ad2b0bb96c2893dac92d356ed8baf59",
+      "metric": {
+        "candidateCount": 661,
+        "candidateOnlyCount": 119,
+        "classId": "notehead",
+        "matchedCount": 542,
+        "recallAtLeast0_80": true,
+        "sourceCount": 586,
+        "sourceRecall": 0.9249146757679181
+      },
+      "pageId": "carulli-morceaux-faciles-p6",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "bfacd45d394db10a469119176afa598246fb514ccee3a8dc7f80ce53e168b924",
+      "canonicalRestoredPixelSha256": "99d4b383289c40fdbd350a4923949624c4f0867bb0e1893f171a88b6a33d35b1",
+      "metric": {
+        "candidateCount": 704,
+        "candidateOnlyCount": 102,
+        "classId": "notehead",
+        "matchedCount": 602,
+        "recallAtLeast0_80": true,
+        "sourceCount": 648,
+        "sourceRecall": 0.9290123456790124
+      },
+      "pageId": "carulli-morceaux-faciles-p7",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "af53566549a4f9549e7d08466c892594df94c3dc43a5caf89d61de4b2c96360b",
+      "canonicalRestoredPixelSha256": "73594ef92f22e27e93957bdf1aaa235c939994c5cbeb791ff4653fd7ad06ec22",
+      "metric": {
+        "candidateCount": 582,
+        "candidateOnlyCount": 131,
+        "classId": "notehead",
+        "matchedCount": 451,
+        "recallAtLeast0_80": true,
+        "sourceCount": 525,
+        "sourceRecall": 0.8590476190476191
+      },
+      "pageId": "carulli-morceaux-faciles-p8",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "c5c1db4f482ac73c834e3da160c55362b5607eea22fe94296045e2b06d71766e",
+      "canonicalRestoredPixelSha256": "a0c90ac2cf4c6eb4b0a93a47de0ec7dd5830a98cf1eeefc3413a8b438a0e2765",
+      "metric": {
+        "candidateCount": 656,
+        "candidateOnlyCount": 196,
+        "classId": "notehead",
+        "matchedCount": 460,
+        "recallAtLeast0_80": true,
+        "sourceCount": 485,
+        "sourceRecall": 0.9484536082474226
+      },
+      "pageId": "carulli-morceaux-faciles-p9",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "5ad2d316415107b1ae9192a4daa211af6c3e7257a0ed41d7a21d6f25851a3878",
+      "canonicalRestoredPixelSha256": "e40636c7509fec8438facc505aa97d3861b4d06cbb16df0e557331d452f907c2",
+      "metric": {
+        "candidateCount": 704,
+        "candidateOnlyCount": 181,
+        "classId": "notehead",
+        "matchedCount": 523,
+        "recallAtLeast0_80": true,
+        "sourceCount": 594,
+        "sourceRecall": 0.8804713804713805
+      },
+      "pageId": "carulli-morceaux-faciles-p10",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "da7539f9d409e044ae24717408f8da92bbc9087ed1bdc8d3b17bc09421e2a4fa",
+      "canonicalRestoredPixelSha256": "406033f86215379f684c17a8432aa67874a384f0a81c63b8e1b37177f2323080",
+      "metric": {
+        "candidateCount": 455,
+        "candidateOnlyCount": 32,
+        "classId": "notehead",
+        "matchedCount": 423,
+        "recallAtLeast0_80": true,
+        "sourceCount": 431,
+        "sourceRecall": 0.9814385150812065
+      },
+      "pageId": "bach-anna-magdalena-p4",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "d522ab787819554a772c6f81dc442324084024cafda638e8b730af9213d01422",
+      "canonicalRestoredPixelSha256": "e3c7fa0df798b35605e30d82478b59302d3eedb0cbf5b0c9950fa8a3386496b9",
+      "metric": {
+        "candidateCount": 558,
+        "candidateOnlyCount": 66,
+        "classId": "notehead",
+        "matchedCount": 492,
+        "recallAtLeast0_80": true,
+        "sourceCount": 518,
+        "sourceRecall": 0.9498069498069498
+      },
+      "pageId": "bach-anna-magdalena-p10",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "27b732dc98abcac874b45ffcfcbf45c8e40d2f24a29c0b9f2ced6227c4912ace",
+      "canonicalRestoredPixelSha256": "3f3cd479022458615ca773cf527b1a73f2df9a1136a179c5fb124d2739b8fb85",
+      "metric": {
+        "candidateCount": 555,
+        "candidateOnlyCount": 32,
+        "classId": "notehead",
+        "matchedCount": 523,
+        "recallAtLeast0_80": true,
+        "sourceCount": 525,
+        "sourceRecall": 0.9961904761904762
+      },
+      "pageId": "bach-anna-magdalena-p24",
+      "teacherState": "present"
+    },
+    {
+      "canonicalRestoredFileSha256": "1fbeb3c9209664f07976e3a3bcbbeb449b9020bdc57f7c0b30360fe17519207e",
+      "canonicalRestoredPixelSha256": "a6a945cdcfb01f2c756d2c059855c0c038c665ad787cfba6299183aad1ab9185",
+      "metric": {
+        "candidateCount": 233,
+        "candidateOnlyCount": 19,
+        "classId": "notehead",
+        "matchedCount": 214,
+        "recallAtLeast0_80": true,
+        "sourceCount": 215,
+        "sourceRecall": 0.9953488372093023
+      },
+      "pageId": "bach-anna-magdalena-p40",
+      "teacherState": "present"
+    }
+  ],
+  "recomputedAggregate": {
+    "candidateCountTotal": 8831,
+    "candidateOnlyCountTotal": 1381,
+    "evaluatedPageCount": 18,
+    "matchedCountTotal": 7450,
+    "maximumSourceRecall": 1.0,
+    "meanSourceRecall": 0.9361482829653194,
+    "minimumSourceRecall": 0.8590476190476191,
+    "pagesAtRecallGte0_80": 18,
+    "rateAtRecallGte0_80": 1.0,
+    "sourceCountTotal": 8001
+  },
+  "reportedAggregateMatchesRecomputed": true,
+  "runtimeEvidence": {
+    "detector": {
+      "batch": 16,
+      "candidateId": "oemer-segnet-notehead-fast-dbe2a933",
+      "checkpointSha256": "ed2e1a86ea75712ee6cdc740e96f7a36753543cf9bb980227c071c9256d9d82e",
+      "cpuReference": {
+        "canaryPageId": "beethoven-op48-no3-p2",
+        "onnxruntime": "1.20.1",
+        "provider": "CPUExecutionProvider",
+        "restoredBoxesExact": true,
+        "sourceBoxesExact": true
+      },
+      "cudaProviderOptions": {
+        "cudnn_conv_algo_search": "DEFAULT",
+        "cudnn_conv_use_max_workspace": "0",
+        "device_id": "0",
+        "do_copy_in_default_stream": "1",
+        "use_tf32": "0"
+      },
+      "exploratoryBenchmarkSha256": "63fdb35ed102c45544a1a97591f1b7b7269d8c2f13f87b4c858558ec5ce52568",
+      "fullOemerPipelineExecuted": false,
+      "gpuAdmittedAfterExactCpuCanaryBoxEquivalence": true,
+      "logicVersion": "oemer-dbe2a933-segnet-notehead-fast-step256-gpu-equivalence-nofallback.v2-batch16",
+      "matchIoUThreshold": 0.2,
+      "onnxruntime": "1.20.2",
+      "provider": "CUDAExecutionProvider",
+      "segNetOnly": true,
+      "selectedBatch": 16,
+      "sourceRecallMarker": 0.8,
+      "step": 256,
+      "unetBigExecuted": false,
+      "upstreamRole": "measurement_only",
+      "wholeSessionFallbackDisabled": true
+    },
+    "restore": {
+      "actualCpuOutputsPersistedAndHashBound": true,
+      "crossHostPixelIdentityToEarlierV2cAssumed": false,
+      "device": "CPU",
+      "firstPageSameRuntimeRepeatPixelIdentityRequired": true,
+      "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234"
+    },
+    "runtime": {
+      "availableProviders": [
+        "TensorrtExecutionProvider",
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "cpuModel": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+      "cudaProviderOptions": {
+        "cudnn_conv_algo_search": "DEFAULT",
+        "cudnn_conv_use_max_workspace": "0",
+        "device_id": "0",
+        "do_copy_in_default_stream": "1",
+        "use_tf32": "0"
+      },
+      "detectorBatch": 16,
+      "detectorOnnxruntime": "1.20.2",
+      "detectorProvider": "CUDAExecutionProvider",
+      "gpuProbeSeconds": 7.130629477000014,
+      "python": "3.13.5",
+      "restoreDevice": "CPU",
+      "restoreInteropThreads": 1,
+      "restoreIntraopThreads": 5,
+      "torch": "2.10.0+cpu",
+      "wholeSessionFallbackDisabled": true
+    }
+  },
+  "schemaVersion": "stage11.v2d.canonical-notehead-result-binding.v1",
+  "sourceResult": {
+    "byteSize": 23228,
+    "driveFileId": "15ZspsDK3jAAtfqmmebBebopEpo3a1Xpn",
+    "drivePath": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/V2D_RESULTS/v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun_result.json",
+    "schemaVersion": "stage11.v2d.canonical-cpu-restore-gpu-notehead-semantic-rerun.v1",
+    "sha256": "ab6197bcf0dd58407ffd4401d61aefc195e5c8dd63cb68e5a05deee261dd2e54",
+    "status": "COMPLETE"
+  }
+}

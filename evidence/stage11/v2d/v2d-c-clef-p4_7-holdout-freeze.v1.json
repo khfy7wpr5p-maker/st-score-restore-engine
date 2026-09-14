@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_7-holdout-freeze.v1",
+  "status": "FROZEN_BEFORE_FIRST_HOLDOUT_RUN",
+  "phase": "Stage 11 v2d / P4.7 independent C-clef holdout",
+  "sourceOnly": true,
+  "heldOutDetectorRunCompleted": false,
+  "postFreezeRetuningAllowed": false,
+  "holdout": {
+    "root": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_C_CLEF_HOLDOUT",
+    "manifestFile": "_PREPARED/c_clef_holdout_source_page_manifest.v1.json",
+    "manifestSha256": "4a9d525c467961e4fe6c7e1720a5bc6ec619946093bbb5ca8da337aac40dca25",
+    "teacherTruthFile": "_ANNOTATIONS/c_clef_holdout_teacher_boxes.v1.json",
+    "teacherTruthSha256": "309bdd3858e71b5770d97f2f9f150075a9694ce4c75590fb22958ff2be24e4c0",
+    "pageCount": 15,
+    "teacherBoxCount": 25,
+    "labelCounts": {
+      "C1": 10,
+      "C3": 10,
+      "C4": 5,
+      "AMBIGUOUS": 0
+    },
+    "annotationCompletedBeforeDetectorAccess": true,
+    "detectorOutputShownDuringAnnotation": false
+  },
+  "frozenImplementation": {
+    "p4_5LocalizerCommit": "7130bdf94bcf9247a0b33e9342db22746b46f289",
+    "p4_5LocalizerPath": "src/st_score_restore/stage11_v2d_c_clef_p4_5_source_image_localizer.py",
+    "p4_6FilterCommit": "76caac8a7c76606bf09051ae5cd1704e32ef29dd",
+    "p4_6FilterPath": "src/st_score_restore/stage11_v2d_c_clef_p4_6_offline_filter.py",
+    "filterId": "source-image-c-clef-geometric-filter.p4_6.v1",
+    "filterThresholds": {
+      "minimumAreaInStaffSpacesSquared": 4.15,
+      "maximumAreaInStaffSpacesSquared": 9.8,
+      "minimumWidthInStaffSpaces": 2.0,
+      "maximumHeightInStaffSpaces": 6.1,
+      "lowStaffSpacingThreshold": 12.0,
+      "minimumHeightWhenLowStaffSpacing": 5.0
+    },
+    "primaryIoU": 0.5
+  },
+  "predeclaredHoldoutTargets": {
+    "pooledPrecisionMinimum": 0.8,
+    "pooledRecallMinimum": 0.9,
+    "eachTeacherSubtypeRecallMinimum": 0.8,
+    "eachManifestGroupPrecisionMinimum": 0.8,
+    "eachManifestGroupRecallMinimum": 0.8
+  },
+  "governance": {
+    "teacherTruthMayBeReadOnlyAfterCandidateGenerationAndFilteringAreFrozen": true,
+    "noThresholdTuningAfterHoldoutAccess": true,
+    "holdoutFailureRequiresNewVersion": true,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

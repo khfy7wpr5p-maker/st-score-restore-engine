@@ -1,0 +1,67 @@
+name: Stage 11 V2d C-clef P4.12 Semantic Sieve Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'tests/test_stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-development-result-binding.v1.json'
+      - '.github/workflows/stage11-v2d-c-clef-p4_12-semantic-sieve-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'tests/test_stage11_v2d_c_clef_p4_12_semantic_sieve.py'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-development-result-binding.v1.json'
+      - '.github/workflows/stage11-v2d-c-clef-p4_12-semantic-sieve-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository and test runner
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest
+      - name: Run P4.12 focused tests
+        run: python -m pytest tests/test_stage11_v2d_c_clef_p4_12_semantic_sieve.py -q
+      - name: Compile runner and tests
+        run: |
+          python -m py_compile \
+            src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py \
+            tests/test_stage11_v2d_c_clef_p4_12_semantic_sieve.py
+      - name: Validate development plan and optional result binding
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          plan_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-plan.v1.json')
+          plan = json.loads(plan_path.read_text(encoding='utf-8'))
+          assert plan['developmentOnly'] is True
+          assert plan['qualificationEvidence'] is False
+          assert plan['safety']['newIndependentHoldoutAccess'] is False
+          assert plan['safety']['detectorQualified'] is False
+          binding_path = Path('evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-development-result-binding.v1.json')
+          if binding_path.is_file():
+              binding = json.loads(binding_path.read_text(encoding='utf-8'))
+              assert binding['developmentOnly'] is True
+              assert binding['qualificationEvidence'] is False
+              assert binding['decisionBoundary']['detectorQualified'] is False
+              assert binding['decisionBoundary']['newIndependentHoldoutMustRemainClosed'] is True
+          print('valid:', plan_path)
+          PY

@@ -1,0 +1,313 @@
+{
+  "schema_version": "1.0.0",
+  "document_type": "AUTONOMOUS_DEVELOPER_COORDINATOR_HANDOFF",
+  "project": {
+    "name": "ST Score Restore Engine",
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "base_branch": "main",
+    "pull_request": 211,
+    "prepared_from_head": "47a715dfc39c5d4020b1975f1770a13d14c7ea13",
+    "date": "2026-09-13",
+    "task_id": "STAGE11_V2D_STAFF_LINE_POST_HOLDOUT_FALSE_POSITIVE_RECOVERY",
+    "execution_mode": "AUTONOMOUS_SAFE_CONTINUATION_WITH_COORDINATOR_GATES"
+  },
+  "project_purpose": {
+    "summary": "ST Score Restore Engine is a safety-first visual restoration and validation system for music scores and guitar TAB supplied as PDF, JPG/JPEG, PNG or phone-captured images. Its purpose is to improve legibility and restoration quality without silently damaging musically meaningful visual information.",
+    "not_an_omr_engine": true,
+    "core_architecture_values": [
+      "immutable source identity and provenance",
+      "no silent overwrite of the original",
+      "deterministic and auditable evidence where practical",
+      "semantic-preservation evidence independent from the restorer being judged",
+      "human teacher truth separated from detector inference",
+      "development data separated from independent holdout qualification",
+      "safe abstention/review instead of unsupported automatic claims",
+      "production and Stage 12 activation separately governed"
+    ],
+    "high_level_pipeline": [
+      "input PDF/image/phone capture",
+      "immutable ingestion and SHA-256 source identity",
+      "page preparation and quality analysis",
+      "restoration candidate generation",
+      "deterministic safety diagnostics",
+      "Stage 9A / Stage 11 semantic-preservation evidence",
+      "comparator / selector / conservative routing",
+      "teacher review and evidence binding",
+      "API and future music-application integrations"
+    ]
+  },
+  "architecture_documents_updated": {
+    "current_architecture": {
+      "path": "docs/current-architecture.md",
+      "commit": "b4752f40922aff035593c7c44a8ab2e4a0f51aa2",
+      "purpose": "Adds a current high-level architecture map, current Stage 11 class state, completed holdout result, stop boundary and next engineering boundary."
+    },
+    "staff_line_holdout_boundary": {
+      "path": "docs/stage11-v2d-staff-line-independent-holdout-boundary.md",
+      "commit": "a5a3d603adf4ab1d7a7dec1d7e9666aa23c776ae",
+      "purpose": "Changes the staff-line boundary from pending human review to completed/failed qualification and records the consumed-holdout rule."
+    },
+    "architecture_flexibility_principles": {
+      "path": "docs/architecture-flexibility-principles.md",
+      "commit": "75ce77c447753e62512fb284afb56802f0a7dd3b",
+      "purpose": "Adds the normative rule that a consumed independent holdout is evidence, not future tuning data."
+    },
+    "adr_0036": {
+      "path": "docs/adr/0036-stage11-v2d-staff-line-source-detector-qualification-boundary.md",
+      "commit": "4f466b0b7ca79c97d151c137241d12335faea526",
+      "purpose": "Appends the post-decision v1.2 independent qualification evidence without rewriting the original ADR history."
+    },
+    "architecture_consistency_audit": {
+      "path": "docs/architecture-consistency-audit.md",
+      "commit": "47a715dfc39c5d4020b1975f1770a13d14c7ea13",
+      "purpose": "Replaces the pre-holdout stop description with the completed qualification outcome and next safe boundary while preserving historical evidence."
+    },
+    "authoritative_live_holdout_truth": {
+      "path": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
+      "state": "INDEPENDENT_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR"
+    }
+  },
+  "current_repository_truth": {
+    "pr_state": "open",
+    "pr_draft": true,
+    "pr_merged": false,
+    "merge_authorized": false,
+    "frozen_restore_package_sha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "stage11_class_matrix": {
+      "PASS": ["notehead"],
+      "REVIEW_ONLY": ["clef"],
+      "REJECTED_CURRENT_DETECTOR": ["accidental", "barline", "beam_or_flag", "rest", "staff_line", "stem"],
+      "UNSUPPORTED": ["tab_digit", "tab_line", "tab_string", "tie_or_slur"]
+    },
+    "global_flags": {
+      "staffLinePass": false,
+      "sourceDetectorAdequacyEstablished": false,
+      "detectorQualified": false,
+      "restoredImageTopologyComparisonAuthorized": false,
+      "semanticPreservationEstablished": false,
+      "overallStage11PassAuthorized": false,
+      "productionReady": false,
+      "productionPromotionAuthorized": false,
+      "stage12EntryAuthorized": false,
+      "prReadyForMerge": false
+    }
+  },
+  "where_the_project_stopped": {
+    "stage": "Stage 11 V2c/V2d semantic-preservation evidence",
+    "class_focus": "staff_line",
+    "detector_version": "stage11-v2d-staff-multisystem-source.v1.2",
+    "state": "INDEPENDENT_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR",
+    "meaning": "The source detector now has strong independent recall but insufficient false-positive control. Source adequacy is not established, so restored-output staff topology comparison remains closed.",
+    "one_authorized_holdout_consumed": true,
+    "retune_v1_2_against_consumed_holdout_allowed": false
+  },
+  "latest_staff_line_results": {
+    "development_corpus": {
+      "page_count": 20,
+      "staff_present_pages": 18,
+      "staff_absent_pages": 2,
+      "teacher_systems": 197,
+      "teacher_lines": 985,
+      "v1_2_predicted_systems": 187,
+      "v1_2_matched_systems_at_half_spacing": 141,
+      "v1_2_recall": 0.7157360406091371,
+      "v1_2_precision": 0.7540106951871658,
+      "present_page_coverage": 1.0,
+      "absent_page_specificity": 1.0,
+      "five_line_correctness": 1.0,
+      "line_order_correctness": 1.0,
+      "byte_repeat_determinism": true,
+      "status": "DEVELOPMENT_READY_ONLY"
+    },
+    "independent_holdout": {
+      "dataset_item": "dataset.item.imslp82860-chopin-op69.v2",
+      "page_count": 8,
+      "teacher_completed_pages": 8,
+      "teacher_staff_present_pages": 7,
+      "teacher_staff_absent_pages": 1,
+      "teacher_systems": 88,
+      "predicted_systems": 128,
+      "matched_systems": 80,
+      "recall": 0.9090909090909091,
+      "precision": 0.625,
+      "present_page_coverage": 1.0,
+      "absent_page_specificity": 0.0,
+      "five_line_correctness": 1.0,
+      "line_order_correctness": 1.0,
+      "tab_six_line_rejection_rate": 1.0,
+      "source_identity_match_rate": 1.0,
+      "byte_repeat_determinism": true,
+      "scorer_anchor_expected": "71/197",
+      "scorer_anchor_reproduced": "71/197",
+      "failed_criteria": [
+        "predictedSystemPrecisionAtHalfSpacing",
+        "absentPageSpecificity"
+      ],
+      "official_disposition": "REJECTED_CURRENT_DETECTOR",
+      "qualification_status": "QUALIFICATION_COMPLETE_REJECTED_CURRENT_DETECTOR"
+    },
+    "root_cause_summary": "The dominant bottleneck moved from missed staff systems to false positives. V1.2 finds most true systems, but its predicted-system precision is too low and it does not abstain correctly on staff-absent material."
+  },
+  "evidence_anchors": {
+    "qualification_policy": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "holdout_source_freeze": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json",
+    "qualification_result_binding": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json",
+    "holdout_live_truth": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
+    "architecture_overview": "docs/current-architecture.md",
+    "architecture_boundary": "docs/stage11-v2d-staff-line-independent-holdout-boundary.md",
+    "adr": "docs/adr/0036-stage11-v2d-staff-line-source-detector-qualification-boundary.md"
+  },
+  "next_primary_goal": {
+    "candidate_name": "stage11-v2d-staff-multisystem-source.v1.3 or another separately versioned successor",
+    "goal": "Develop a generic false-positive suppression improvement on authorized non-holdout development evidence while preserving the strong source-recall regime, exact five-line/order invariants, TAB rejection, absent-page safety and determinism.",
+    "important_interpretation": "The holdout revealed the failure category, but the consumed holdout must not become a tuning set. Design and threshold selection must be supported by development data or new non-holdout development evidence."
+  },
+  "developer_work_plan": {
+    "D0_refresh_and_lock": [
+      "Refresh PR #211 and branch HEAD before any write.",
+      "Confirm PR remains Draft/Open/Unmerged and merge is not authorized.",
+      "Read the required architecture and evidence files listed below.",
+      "Do not modify v1.2 or its frozen evidence."
+    ],
+    "D1_failure_mode_research_on_development_only": [
+      "Use the already-spent 20-page development corpus and synthetic regression fixtures only.",
+      "Characterize generic false-positive families such as text baselines, decorative horizontal structures, page furniture, fragmented non-staff lines, cross-system interference and unsupported spacing groupings.",
+      "Teacher development truth may be used for evaluation and diagnosis on the spent development set, but must never become detector inference input.",
+      "Do not inspect or use consumed Chopin holdout masks, line coordinates or per-system geometry to choose rules or thresholds."
+    ],
+    "D2_design_separate_candidate": [
+      "Create a new versioned detector; do not edit frozen v1.2 in place.",
+      "Prefer generic source-derived negative evidence and bounded confidence checks rather than page/source-specific exceptions.",
+      "Candidate techniques may include stronger horizontal support consistency, staff-spacing regularity, vertical coherence, text/decorative suppression, local context checks, parent/recovery agreement, or a pluggable learned negative classifier if separately justified.",
+      "Keep implementation replaceable; classical CV, learned or hybrid methods are permitted within governance boundaries."
+    ],
+    "D3_regression_and_invariants": [
+      "Add deterministic tests for true five-line systems, faint/broken lines, skew tolerance, blank pages, decorative/text negatives, six-line TAB rejection, source-identity mismatch and byte-repeat determinism.",
+      "Preserve exactly five ordered lines for every accepted standard-staff system.",
+      "No page identity, filename, source-family exception or hard-coded holdout geometry may affect inference."
+    ],
+    "D4_development_evaluation": [
+      "Run the candidate on all 20 frozen development pages.",
+      "Freeze each candidate output before teacher scoring used for a formal candidate claim.",
+      "Compare against frozen v1.2 development metrics on identical scoring semantics.",
+      "If a scored candidate is retuned, create a new candidate version/freeze rather than rewriting the scored one."
+    ],
+    "D5_development_readiness_decision": [
+      "Require a material precision/false-positive improvement without material recall collapse.",
+      "Keep staff-present page coverage and staff-absent specificity at safe levels.",
+      "Keep five-line/order correctness, TAB rejection, source identity and determinism exact.",
+      "Do not call the detector qualified from development evidence."
+    ],
+    "D6_policy_and_new_holdout_preparation": [
+      "Only after a candidate is development-ready, prepare a new independent holdout proposal without opening the holdout.",
+      "Freeze any changed qualification policy before new holdout access.",
+      "Obtain a new explicit authorization before selecting/opening/consuming a fresh independent holdout.",
+      "Never reuse the consumed Chopin holdout as the new independent qualification set."
+    ],
+    "D7_docs_ci_and_stop": [
+      "Run relevant Python 3.11 and 3.12 validation on the exact candidate HEAD.",
+      "Update architecture/current-truth/evidence with observed facts only.",
+      "Keep PR #211 Draft and unmerged.",
+      "STOP before restored-output staff-topology comparison unless separately authorized after source-detector qualification."
+    ]
+  },
+  "development_targets_non_binding": {
+    "purpose": "Engineering guidance only; these are not future holdout qualification thresholds and must not be silently promoted into policy.",
+    "teacher_system_recall_at_half_spacing": ">= 0.70 and preferably not below frozen v1.2 development recall",
+    "predicted_system_precision_at_half_spacing": "> frozen v1.2 development precision 0.7540; target >= 0.82 if achievable without safety regression",
+    "present_page_coverage": "18/18",
+    "absent_page_specificity": "2/2 = 1.0",
+    "five_line_count_correct_rate": "1.0",
+    "line_order_correct_rate": "1.0",
+    "tab_six_line_rejection_rate": "1.0",
+    "source_identity_match_rate": "1.0",
+    "byte_repeat_determinism": true
+  },
+  "coordinator_responsibilities": {
+    "must_enforce": [
+      "consumed-holdout firewall",
+      "separate candidate versioning",
+      "source-only inference boundary",
+      "teacher truth not used as inference features",
+      "no threshold movement based on consumed holdout",
+      "no restored-output topology comparison before qualification",
+      "no merge or ready-for-review transition without explicit authorization"
+    ],
+    "checkpoint_reports_required": [
+      "candidate design and exact version/commit",
+      "development-only data inventory",
+      "source-only regression results",
+      "frozen candidate SHA/config/raw artifact identity",
+      "development score comparison versus v1.2",
+      "CI status on exact HEAD",
+      "clear next-gate recommendation without auto-opening a holdout"
+    ],
+    "decision_rule": "If the candidate cannot materially improve false-positive control without unacceptable recall/safety regression, record the failed development attempt and stop. Do not weaken the qualification policy or consume a new holdout merely to obtain a PASS."
+  },
+  "required_files_to_read_first": [
+    "docs/current-architecture.md",
+    "docs/architecture-consistency-audit.md",
+    "docs/architecture-flexibility-principles.md",
+    "docs/adr/0036-stage11-v2d-staff-line-source-detector-qualification-boundary.md",
+    "docs/stage11-v2d-staff-line-independent-holdout-boundary.md",
+    "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
+    "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze.v1.json",
+    "evidence/stage11/v2d/v2d-staff-line-independent-holdout-qualification-result-binding.v1.json",
+    "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_2-development-result-binding.v1.json",
+    "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py"
+  ],
+  "allowed_autonomous_actions": [
+    "read repository architecture, evidence, source detector and tests",
+    "create a separately versioned development-only successor candidate",
+    "use the already-spent development corpus and synthetic fixtures",
+    "add generic detector diagnostics and regression tests",
+    "freeze candidate code/config/raw development output",
+    "score frozen candidate on existing development teacher truth",
+    "run CI and fix defects without weakening governance/safety boundaries",
+    "update architecture/current-truth/evidence/PR documentation with observed facts"
+  ],
+  "prohibited_without_new_explicit_authorization": [
+    "merge PR #211",
+    "mark PR #211 ready for review",
+    "reuse or retune against the consumed Chopin independent holdout",
+    "inspect holdout line coordinates/masks/raw geometry for candidate tuning",
+    "open or consume another independent holdout",
+    "move qualification thresholds after seeing a future holdout",
+    "run restored-output staff-topology comparison",
+    "set detectorQualified=true or staffLinePass=true from development data",
+    "set semanticPreservationEstablished=true",
+    "set overallStage11PassAuthorized=true",
+    "set productionReady=true or productionPromotionAuthorized=true",
+    "set stage12EntryAuthorized=true",
+    "modify the frozen V2a Restore package",
+    "modify shared production validators, HTTP API, OpenAPI or normal job-service behavior unless separately scoped",
+    "admit private/user/student data into training or tuning"
+  ],
+  "stop_conditions": [
+    "candidate development becomes dependent on consumed holdout observations beyond high-level failure category",
+    "staff-absent specificity regresses on development data",
+    "six-line TAB rejection or five-line/order invariants regress",
+    "candidate becomes page/source-family specific",
+    "source identity or determinism cannot be reproduced",
+    "a new holdout would be required to continue — stop and request explicit authorization",
+    "restored-output comparison would be required — stop and request separate explicit authorization",
+    "merge would be required — stop and request explicit authorization"
+  ],
+  "expected_next_handoff": {
+    "when": "After a separately versioned successor candidate has either achieved development readiness or has been rejected on development evidence.",
+    "must_include": [
+      "exact branch HEAD",
+      "candidate version and source SHA-256",
+      "development corpus identity",
+      "frozen raw artifact SHA-256",
+      "development metrics versus v1.2",
+      "regression/CI results",
+      "whether a fresh independent holdout request is justified",
+      "confirmation that the consumed Chopin holdout was not used for tuning",
+      "confirmation that PR #211 remains unmerged unless separately authorized"
+    ]
+  }
+}

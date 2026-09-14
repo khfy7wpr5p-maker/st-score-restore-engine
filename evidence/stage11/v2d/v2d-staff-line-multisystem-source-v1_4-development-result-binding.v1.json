@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_4-development-result-binding.v1",
+  "generatedOn": "2026-09-14",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "repositoryState": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeBindingCommit": "709d3235bd5eef0d9a328f8c6a14c66899c677ad",
+    "prNumber": 211,
+    "prMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "candidate": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "moduleBlobSha": "1233bc090cb68057a8e6f9b5b8b950638e2c661f",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "testBlobSha": "25e59696aa980e41c51be3626a3619cb79d5c765",
+    "testSha256": "1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb",
+    "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.3",
+    "parentSourceSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "grandparentVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "grandparentRawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "sourceOnly": true,
+    "teacherArtifactLoadedDuringInference": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "heldOutAccessed": false,
+    "trainingOrFineTuningPerformed": false,
+    "pageIdentityUsed": false,
+    "pageSpecificRulesUsed": false
+  },
+  "phaseAFreeze": {
+    "rawArtifactBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_4-raw-artifact-binding.v1.json",
+    "rawArtifactBindingBlobSha": "d189a5b8635938264ffd5b4799261e022055571e",
+    "rawArtifactSha256": "50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d",
+    "rawArtifactByteSize": 171771,
+    "pageCount": 20,
+    "sourceIdentityMatchedPages": 20,
+    "predictedSystemCount": 152,
+    "spacingConsensusSuppressedWeakSystemCount": 19,
+    "sourceEvidenceSuppressedWeakSystemCount": 16,
+    "failOpenRestoredSystemCount": 1,
+    "byteRepeatDeterminismVerified": true,
+    "teacherTruthAccessedBeforeFreeze": false,
+    "teacherCoordinatesUsedBeforeFreeze": false,
+    "restoredOutputsLoadedBeforeFreeze": false,
+    "consumedChopinHoldoutAccessedBeforeFreeze": false,
+    "consumedV1_3FreshHoldoutAccessedBeforeFreeze": false
+  },
+  "phaseBDevelopmentScoring": {
+    "evaluationPath": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_4_evaluation.v1.json",
+    "evaluationBlobSha": "3949752643f8118f1bee043ad64f5990da499e1f",
+    "evaluationFileSha256": "f875f81c32be70512fb85564d8c1e11429c89617c9e0210b59f2f11ff853dd97",
+    "teacherRawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "teacherPageCount": 20,
+    "teacherConfirmedSystemCount": 197,
+    "teacherConfirmedLineCount": 985,
+    "teacherAmbiguousSystemCount": 0,
+    "teacherTruthUsedOnlyAfterCandidateRawFreeze": true,
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "scorerCompatibilityExpectedMatchedCount": 71,
+    "scorerCompatibilityReproducedMatchedCount": 71,
+    "scorerCompatibilityPassed": true
+  },
+  "developmentMetrics": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 152,
+    "matchedSystemCountAtHalfSpacing": 136,
+    "teacherSystemRecallAtHalfSpacing": 0.6903553299492385,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8947368421052632,
+    "falsePositiveSystemCount": 16,
+    "presentPageCoverage": {"detected": 18, "total": 18, "rate": 1.0},
+    "absentPageSpecificity": {"clean": 2, "total": 2, "rate": 1.0},
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "sourceIdentityMatchRate": 1.0,
+    "byteRepeatDeterminism": true
+  },
+  "comparisonToFrozenV1_3Development": {
+    "v1_3": {
+      "predictedSystemCount": 168,
+      "matchedSystemCountAtHalfSpacing": 140,
+      "teacherSystemRecallAtHalfSpacing": 0.7106598984771574,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+      "falsePositiveSystemCount": 28,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "v1_4": {
+      "predictedSystemCount": 152,
+      "matchedSystemCountAtHalfSpacing": 136,
+      "teacherSystemRecallAtHalfSpacing": 0.6903553299492385,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8947368421052632,
+      "falsePositiveSystemCount": 16,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "delta": {
+      "predictedSystems": -16,
+      "matchedSystems": -4,
+      "falsePositiveSystems": -12,
+      "teacherSystemRecall": -0.020304568527918936,
+      "predictedSystemPrecision": 0.06140350877192979
+    }
+  },
+  "holdoutFirewall": {
+    "consumedChopinHoldoutUsedForCandidateTuning": false,
+    "consumedChopinHoldoutGeometryUsedForCandidateThresholdSelection": false,
+    "consumedV1_3FreshHoldoutUsedForCandidateTuning": false,
+    "consumedV1_3FreshHoldoutGeometryUsedForCandidateThresholdSelection": false,
+    "newIndependentHoldoutAccessed": false,
+    "qualificationThresholdMovementAfterHoldoutObservation": false
+  },
+  "decision": {
+    "materialFalsePositiveImprovementObserved": true,
+    "developmentReadinessFloorsMet": true,
+    "developmentReadinessForFutureHoldoutRequest": true,
+    "staffLineDisposition": "DEVELOPMENT_READY_FOR_FUTURE_HOLDOUT_REQUEST_NOT_QUALIFIED",
+    "sourceDetectorAdequacyEstablished": false,
+    "detectorQualified": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "reason": "On the already-spent 20-page development corpus, the separately versioned source-only v1.4 successor reduces false-positive systems from 28 to 16 versus v1.3 while retaining exact present-page coverage, absent-page specificity, five-line/order invariants, source identity and determinism. Recall remains above the frozen development-readiness floor and precision rises to 0.8947. This is development evidence only and does not qualify staff_line or authorize a new holdout.",
+    "nextSmallestSafeAction": "Freeze v1.4 as the current development successor and stop. A genuinely new independent holdout may be proposed only after separate explicit authorization. Do not access either consumed holdout, retune against them, run restored-output staff-topology comparison, or merge PR #211."
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "detectorQualified": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "stage11.v2c.line-semantic-evidence.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "inputs": {
+    "candidatePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "candidatePackageSizeBytes": 7817857,
+    "full20RepeatEvidence": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
+    "teacherReviewOverlay": "evidence/stage11/v2c/v2c-teacher-review-overlay.v1.json",
+    "teacherReviewResolution": "evidence/stage11/v2c/v2c-teacher-review-resolution.v1.json",
+    "teacherReviewPdfSha256": "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
+    "developmentPageCount": 20,
+    "heldOutAccessed": false,
+    "trainingPerformed": false,
+    "weightsMutated": false
+  },
+  "detector": {
+    "id": "stage11-v2c-line-system.v1",
+    "classes": ["staff_line", "tab_line"],
+    "mode": "conservative_rule_geometry",
+    "sourceOccupancyThreshold": 0.35,
+    "staffLineCount": 5,
+    "tabLineCount": 6,
+    "matchIoUThreshold": 0.3,
+    "confidenceThreshold": 0.5,
+    "knownLimitations": [
+      "returns the first qualifying 5-line or 6-line horizontal system only",
+      "does not infer pitch, rhythm, note identity or TAB-digit identity",
+      "staff/TAB discrimination is weak on degraded scans and dense notation",
+      "zero detections are abstentions rather than proof of absence"
+    ]
+  },
+  "execution": {
+    "all20CandidateOutputsReproducedAndHashMatchedFull20Evidence": true,
+    "sourceRenderHashesBoundByFull20Evidence": true,
+    "modelOutputShownToTeacherDuringAnnotation": false
+  },
+  "teacherGroundTruth": {
+    "effectivePresentCount": 171,
+    "effectiveAbsentCount": 51,
+    "effectiveNotApplicableCount": 18,
+    "effectiveUnknownReviewRequiredCount": 0,
+    "independentlyAnnotatedPresentOrAbsentClassCount": 222,
+    "annotationCoverage": 1.0,
+    "followupConflictResolutionComplete": true
+  },
+  "classResults": {
+    "staff_line": {
+      "expectedPresentPages": 18,
+      "expectedAbsentPages": 2,
+      "sourceConfidentlyEvaluatedPresentPages": 10,
+      "sourcePresentPageCoverage": 0.5555555555555556,
+      "sourceDetectionCount": 50,
+      "candidateDetectionCountOnEvaluatedPresent": 50,
+      "matchedCount": 30,
+      "sourceRecallOnDetectorEvaluatedPresent": 0.6,
+      "candidateOnlyCountOnEvaluatedPresent": 20,
+      "candidateOnlyRateOnEvaluatedPresent": 0.4,
+      "interpretation": "Weak geometry-detector evidence only. Four evaluated pages have zero IoU matches after restoration, but this is not sufficient to claim music-symbol deletion."
+    },
+    "tab_line": {
+      "expectedPresentPages": 3,
+      "expectedAbsentPages": 11,
+      "notApplicablePages": 6,
+      "sourceConfidentlyEvaluatedPresentPages": 0,
+      "sourcePresentPageCoverage": 0.0,
+      "sourceDetectionCountOnExpectedPresent": 0,
+      "candidateDetectionCountOnExpectedPresent": 0,
+      "sourceRecallOnDetectorEvaluatedPresent": null,
+      "candidateDetectionsOnExpectedAbsentPages": [
+        {"pageId": "carulli-morceaux-faciles-p2", "count": 6, "maxConfidence": 0.873173828125},
+        {"pageId": "carulli-morceaux-faciles-p7", "count": 6, "maxConfidence": 0.872587890625}
+      ],
+      "interpretation": "Detector cannot evaluate teacher-confirmed TAB-present pages and produces two likely staff-as-TAB false-positive cases on Carulli. This is evidence of detector insufficiency, not confident symbol invention."
+    }
+  },
+  "coverage": {
+    "eligibleExpectedPresentClassPageCount": 171,
+    "confidentlyEvaluatedExpectedPresentClassPageCount": 10,
+    "applicableClassDetectorCoverage": 0.05847953216374269,
+    "automaticSemanticPassEvidenceAvailable": false,
+    "reason": "trusted automatic detection is limited to line geometry and confidently evaluates only 10 of 171 teacher-confirmed present class-page pairs"
+  },
+  "safetyAssessment": {
+    "confidentSystematicDeletionEvidenced": false,
+    "confidentSystematicInventionEvidenced": false,
+    "hardBlocker": false,
+    "detectorCoverageSufficientForSemanticPreservationClaim": false,
+    "disposition": "blocked",
+    "blocker": "trusted_multi_class_semantic_detector_coverage_insufficient"
+  },
+  "pageResults": [
+    ["beethoven-op48-no3-p1","absent","absent","abstain","abstain",0,0,0,0,0,0,"e6cb0ea1045b52503937000e74d318793daf728d02c39f9cd48e588e1c9ab0ff"],
+    ["beethoven-op48-no3-p2","present","not_applicable","abstain","staff_line",0,5,0,0,0,0,"023a36aa907e4f715e19d2f14286b585639f33ea6e7bfd194f91d8d5f99b3c16"],
+    ["beethoven-op48-no3-p3","present","not_applicable","staff_line","staff_line",5,5,0,0,0,0,"2444dea60b68b4fe119cbdde929701b4df72969c8da8e9b6bb1faec6919fd77f"],
+    ["beethoven-op48-no3-p4","absent","absent","abstain","abstain",0,0,0,0,0,0,"70857b666e5a25d093461f0896dc702ddd000ee5d6228c3629ff25ececab02b2"],
+    ["wikimedia-guitar-technical-exercise-no1-p1","present","present","staff_line","staff_line",5,5,5,0,0,0,"0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3"],
+    ["barley-your-face-your-tongue-your-wit-p1","present","present","staff_line","staff_line",5,5,5,0,0,0,"455c6111bf1eea896cd71e6be7e6517813543b087375ef3c9b3b9ac568732b16"],
+    ["barley-your-face-your-tongue-your-wit-p2","present","present","staff_line","staff_line",5,5,5,0,0,0,"d3b6d721fb24af2eb056a1825c46b310fd30df9151fca92c0fd824ff1ad4ed76"],
+    ["carulli-morceaux-faciles-p2","present","absent","abstain","tab_line",0,0,0,0,6,0,"0bb98cda849259c9ce4192ad1e1683c466e36e348722f07de0faea796bf9d42c"],
+    ["carulli-morceaux-faciles-p3","present","absent","abstain","staff_line",0,5,0,0,0,0,"e7b52913e42d9e69d0f24a7a6506aeaeddfc8955b70d37649e0bc792cfd56f92"],
+    ["carulli-morceaux-faciles-p4","present","absent","abstain","staff_line",0,5,0,0,0,0,"bf45ac972c51591e9f232fbd739267c41d8432ef1f53149a3048f7c037e5f9b6"],
+    ["carulli-morceaux-faciles-p5","present","absent","abstain","staff_line",0,5,0,0,0,0,"02bd2cb0aa2811a043c2a3898b645f30bda55d6e2ba07bf1fc8fd74f67e96af2"],
+    ["carulli-morceaux-faciles-p6","present","absent","staff_line","staff_line",5,5,0,0,0,0,"a2a6342dcd91dab42d9bc021f8f0d8d26c7b6f33b7644b7434289ca7e30bcd63"],
+    ["carulli-morceaux-faciles-p7","present","absent","abstain","tab_line",0,0,0,0,6,0,"3d0d9fdc3e862726ea919ab350ef38c4fb99cc8a039e2b78d09e00b09e762342"],
+    ["carulli-morceaux-faciles-p8","present","absent","abstain","staff_line",0,5,0,0,0,0,"52e20bf3da9443d11823e5e16bb65a3f075b530ba339143b12cdc21d117a70a8"],
+    ["carulli-morceaux-faciles-p9","present","absent","abstain","staff_line",0,5,0,0,0,0,"dc29a659d0ffae785b6973afdba2ab2c1280dad2a3276476572a5463b7ea8be8"],
+    ["carulli-morceaux-faciles-p10","present","absent","staff_line","staff_line",5,5,0,0,0,0,"9131b8e786e8ec2e0f6e031297a0d74cceeadb16b097bd264f156becd925ded3"],
+    ["bach-anna-magdalena-p4","present","not_applicable","staff_line","staff_line",5,5,0,0,0,0,"ca85bea603a4f1ea29ab9417c75534f05d086b8962737340d535d82a17e385bd"],
+    ["bach-anna-magdalena-p10","present","not_applicable","staff_line","staff_line",5,5,5,0,0,0,"79a6c4933c74e4cb7c3703f8bb88ca3292c87eb9cd3699c67986aaa764140ae7"],
+    ["bach-anna-magdalena-p24","present","not_applicable","staff_line","staff_line",5,5,5,0,0,0,"286d7cdc9d3818c4995b86085e42b2a3a51278bb051087cbacbb57486ff5d155"],
+    ["bach-anna-magdalena-p40","present","not_applicable","staff_line","staff_line",5,5,5,0,0,0,"7f6d54818dfa6ccffd5b91803c80f1f3f9d85098146c7b67119a540b0133b090"]
+  ],
+  "pageResultColumns": ["pageId","expectedStaff","expectedTab","sourceClass","candidateClass","staffSourceCount","staffCandidateCount","staffMatchedCount","tabSourceCount","tabCandidateCount","tabMatchedCount","candidateOutputSha256"],
+  "claimBoundary": {
+    "determinismEstablished": true,
+    "teacherGroundTruthComplete": true,
+    "semanticPreservationEstablished": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

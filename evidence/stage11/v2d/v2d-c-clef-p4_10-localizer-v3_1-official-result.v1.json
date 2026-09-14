@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-localizer-v3_1-official-result-binding.v1",
+  "status": "COMPLETE_TARGET_NOT_MET",
+  "developmentOnly": true,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "resultSha256": "6d72f795ed16e718d12d458ce666d512d3c0aeb8d0f6680c8edaf76701c848c7",
+  "candidateArtifactSha256": "0d724d6958684e7f5616f035eaeffeacfaedf6e9fc5491f29d287bbdfb85254b",
+  "pageCount": 11,
+  "teacherBoxCount": 38,
+  "candidateCountTotal": 92844,
+  "pooled": {
+    "tp": 34,
+    "fn": 4,
+    "recall": 0.8947368421052632
+  },
+  "perSubtypeRecall": {
+    "C1": 0.9166666666666666,
+    "C3": 0.9047619047619048,
+    "C4": 0.8
+  },
+  "target": {
+    "pooledRecallAtLeast": 0.9,
+    "eachSubtypeRecallAtLeast": 0.8
+  },
+  "targetMet": false,
+  "failureLocalization": {
+    "missedPageId": "p4_9-02-dies-irae-p0001",
+    "missedTeacherBoxes": 4,
+    "otherPagesCandidateRecall": "10/10 pages at 1.0",
+    "staffDiagnostics": {
+      "p45Sane": 0,
+      "spacingHint": null,
+      "latticeFallback": 1,
+      "merged": 1,
+      "selectedStaffSpacing": 13.7675
+    },
+    "sourceOnlyDiagnosis": "When no sane P4.5 staff is available, v3.1 falls back to a fixed 6-14 px search range. On this high-resolution page the dominant horizontal five-line spacing inferred from source-only projection is approximately 62.5 px, so the fallback selects a false small-spacing staff and misses all four C-clefs.",
+    "next": "Version localizer-v3.2 so the no-primary-staff path derives a source-only spacing prior from long horizontal-line projection gaps before lattice scoring; keep all existing v3.1 behavior otherwise."
+  },
+  "decisionBoundary": {
+    "detectorQualified": false,
+    "qualificationEvidence": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutRequiredAfterDevelopmentFreeze": true
+  }
+}

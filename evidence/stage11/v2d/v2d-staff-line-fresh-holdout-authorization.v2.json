@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-fresh-holdout-authorization.v2",
+  "generatedOn": "2026-09-14",
+  "status": "AUTHORIZED_FOR_ONE_FRESH_INDEPENDENT_HOLDOUT_QUALIFICATION",
+  "scope": {
+    "semanticClass": "staff_line",
+    "detectorVersion": "stage11-v2d-staff-multisystem-source.v1.3",
+    "purpose": "Execute one fresh independent source-only holdout qualification against the separately versioned frozen v1.3 candidate and the unchanged frozen qualification policy.",
+    "userExplicitlyApprovedContinuationInConversation": true
+  },
+  "preconditions": {
+    "headBeforeAuthorizationCommit": "a981f5664167d15f61094a0590ca44f48f349393",
+    "qualificationPolicyPath": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "qualificationPolicyGitBlobSha": "84bd3deeb5078a75fa49a40609db2c3b0e99eb74",
+    "qualificationPolicyStatus": "FROZEN_PRE_HOLDOUT",
+    "qualificationThresholdsChangedForV1_3": false,
+    "developmentReadinessForFreshHoldoutRequest": true,
+    "v1_3FrozenDevelopmentBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json",
+    "v1_3FrozenDevelopmentRawSha256": "eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b",
+    "v1_3DetectorSourceSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "consumedChopinHoldoutForbiddenForTuning": true
+  },
+  "selectedFreshHoldout": {
+    "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+    "catalogPath": "evidence/stage1c/nearer-my-god-to-thee-c17d/catalog.v1.json",
+    "catalogGitBlobSha": "93fd184537cbcb6f6ca7b8ada1ff6e8c35c7ddfa",
+    "artifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "artifactByteSize": 647003,
+    "mediaType": "image/jpeg",
+    "inputKind": "phone_photo",
+    "notationKind": "staff",
+    "pageCount": 1,
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "eligibilityClass": "restricted_corpus",
+    "storageClass": "managed_restricted",
+    "rightsStatus": "approved",
+    "privacyClass": "deidentified",
+    "heldOutPermissionGranted": true,
+    "externalExportAllowed": false,
+    "independentFromConsumedChopinSourceFamily": true
+  },
+  "authorizedActions": {
+    "readSelectedFreshHoldoutSourceBytes": true,
+    "verifyExactSourceIdentityBeforeInference": true,
+    "runFrozenV1_3SourceOnlyDetectorWithoutRetuning": true,
+    "freezeHoldoutRawOutputBeforeOpeningOrCreatingTeacherCoordinates": true,
+    "createBlindTeacherTruthWorkPackageOnlyAfterRawFreeze": true,
+    "scoreAgainstFrozenQualificationPolicyOnlyAfterIndependentTeacherTruthFreeze": true,
+    "writeQualificationEvidence": true
+  },
+  "stillForbidden": {
+    "useConsumedChopinHoldoutForTuning": true,
+    "detectorRetuningAfterFreshHoldoutAccess": true,
+    "thresholdMovementAfterFreshHoldoutAccess": true,
+    "teacherCoordinatesAsInferenceInput": true,
+    "pageSpecificRules": true,
+    "trainingOrFineTuning": true,
+    "restoredOutputStaffTopologyComparison": true,
+    "productionPromotion": true,
+    "overallStage11Pass": true,
+    "stage12Entry": true,
+    "pullRequestReadyForReview": true,
+    "pullRequestMerge": true
+  },
+  "qualificationRequirements": {
+    "teacherSystemRecallAtHalfSpacingMin": 0.65,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+    "presentPageCoverageMin": 0.95,
+    "absentPageSpecificityMin": 1.0,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "lineOrderCorrectRateMin": 1.0,
+    "tabSixLineRejectionRateMin": 1.0,
+    "byteRepeatDeterminismRequired": true,
+    "sourceIdentityMatchRateRequired": 1.0,
+    "allCriteriaRequired": true
+  },
+  "claimBoundaryBeforeExecution": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

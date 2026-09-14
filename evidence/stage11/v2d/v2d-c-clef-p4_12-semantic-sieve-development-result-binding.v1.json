@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_12-semantic-sieve-development-result-binding.v1",
+  "status": "DEVELOPMENT_SIEVE_TARGET_MET_LOCAL_EXACT_REMEASUREMENT",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "runner": {
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_12_semantic_sieve.py",
+    "planPath": "evidence/stage11/v2d/v2d-c-clef-p4_12-semantic-sieve-plan.v1.json",
+    "sourceCommit": "7c106f1b9ccf6c2ba93da3c4ac9125ac805069ea",
+    "testsCommit": "8f9f04b70f0fd444546d6144632af817a6834867"
+  },
+  "exactInputIdentity": {
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "v32SourceOnlyCandidateArtifactSha256": "ec2e855a044d009b895dc02ea2e8d5132a58359e5d880abd7cfb11a6bf9c0897",
+    "p4_11ProposalArtifactSha256": "70cfb4189520360a6f03d5a87d077c54f1ceef33d3ca32e9f5e36d4e5ce6eb04",
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "v32RawCandidateCount": 95778,
+    "p4_11ProposalCount": 26732
+  },
+  "measurementMethod": {
+    "name": "LOCAL_EXACT_BYTES_REMEASUREMENT_OF_P4_12_SOURCE_ONLY_SIEVE",
+    "teacherTruthReadDuringFeatureExtraction": false,
+    "sourcePixelsUsed": true,
+    "p4_11FrozenProposalPolicyRegenerated": true,
+    "newIndependentHoldoutAccessed": false,
+    "description": "The exact frozen P4.9 source PNG bytes, manifest, teacher truth, v3.2 source-only candidate artifact, and exact P4.11 proposal policy were mirrored locally. Phase A extracted and froze P4.12 source-only semantic features and the broad sieve decision before Phase B opened the already-spent P4.9 teacher truth for development-only IoU 0.50 evaluation.",
+    "notClaimed": "This is not independent qualification evidence, does not establish final precision, and does not authorize Stage 11 PASS, production, or Stage 12."
+  },
+  "policy": {
+    "maxComponentGroupXFraction": 0.40,
+    "minRawInkDensity": 0.22,
+    "minLeftVerticalRunP90": 0.08,
+    "allConditionsRequired": true,
+    "teacherCoordinatesOrSubtypeUsedAtInference": false,
+    "destructiveNmsBeforeSemanticConfidence": false
+  },
+  "artifacts": {
+    "featureArtifact": {
+      "fileName": "p4_12_semantic_features_before_teacher.v1.json",
+      "sha256": "e6710dce987df3841ad20d85edc9f4ffb383a9c8b56fd5aa0e2a9a4cc137b72f",
+      "driveFileId": null
+    },
+    "resultArtifact": {
+      "fileName": "p4_12_semantic_sieve_result.v1.json",
+      "sha256": "41beebfbc1fca35980fcfe83ac2ba104619a9c7c70fa245f64447b17a79fb2a5",
+      "driveFileId": null
+    }
+  },
+  "result": {
+    "retainedProposalCount": 7204,
+    "reductionFromP4_11": 0.7305102498877749,
+    "reductionFromV32": 0.9247843972519785,
+    "pooled": {
+      "tp": 38,
+      "fp": 7166,
+      "fn": 0,
+      "precision": 0.005274847307051638,
+      "recall": 1.0,
+      "f1": 0.010494338580502622
+    },
+    "perSubtypeRecall": {
+      "C1": 1.0,
+      "C3": 1.0,
+      "C4": 1.0
+    },
+    "developmentSieveTarget": {
+      "pooledRecallAtLeast": 0.95,
+      "eachSubtypeRecallAtLeast": 0.80,
+      "retainedProposalsAtMost": 8000,
+      "met": true
+    }
+  },
+  "interpretation": {
+    "localizationRecallPreserved": true,
+    "semanticHypothesisSurfaceReduced": true,
+    "precisionSolved": false,
+    "importantBoundary": "The retained 7,204 proposals are hypotheses, not final detections. Their proposal-level FP count must not be interpreted as final detector precision before score-based group localization/refinement.",
+    "nextSafeAction": "Develop P4.13 score-based component-group localization/refinement on the 7,204 retained proposals. Use source-only confidence before any deduplication; do not use arbitrary first-wins NMS."
+  },
+  "decisionBoundary": {
+    "semanticSieveDevelopmentCandidateAccepted": true,
+    "precisionGateFrozen": false,
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutMustRemainClosed": true
+  }
+}

@@ -1,0 +1,51 @@
+name: Stage 11 V2d Canonical GPU Notehead Rerun Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/st_score_restore/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py'
+      - 'notebooks/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.ipynb'
+      - 'tests/test_stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py'
+      - '.github/workflows/stage11-v2d-canonical-gpu-notehead-rerun-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'src/st_score_restore/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py'
+      - 'notebooks/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.ipynb'
+      - 'tests/test_stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py'
+      - '.github/workflows/stage11-v2d-canonical-gpu-notehead-rerun-validation.yml'
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e .
+      - name: Focused tests
+        run: python -m unittest tests.test_stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun
+      - name: Compile runner and test
+        run: python -m py_compile src/st_score_restore/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py tests/test_stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.py
+      - name: Validate notebook JSON and Python syntax
+        run: |
+          python - <<'PY'
+          import ast, json
+          from pathlib import Path
+          path = Path('notebooks/stage11_v2d_canonical_cpu_restore_gpu_notehead_semantic_rerun.ipynb')
+          nb = json.loads(path.read_text(encoding='utf-8'))
+          assert nb['nbformat'] == 4
+          for cell in nb['cells']:
+              if cell.get('cell_type') != 'code':
+                  continue
+              source = ''.join(cell.get('source') or [])
+              if source.strip():
+                  ast.parse(source)
+          print('notebook syntax PASS')
+          PY

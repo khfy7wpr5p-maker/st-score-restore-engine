@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "stage11.v2c.barley-repeat-execution.v1",
+  "sourceDatasetItemId": "dataset.item.barley-your-face-your-tongue-your-wit-guitar-tab.v1",
+  "sourceFamilyId": "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+  "sourcePdfSha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e",
+  "sourcePdfByteSize": 84689,
+  "renderDpi": 72,
+  "renderer": "pdftoppm-via-render_pdf.py",
+  "runtime": {
+    "device": "CPU",
+    "torch": "2.10.0+cpu",
+    "intraopThreads": 5,
+    "interopThreads": 1,
+    "deterministicAlgorithms": false,
+    "python": "3.13.5",
+    "opencv": "4.13.0",
+    "numpy": "2.3.5"
+  },
+  "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+  "packageSizeBytes": 7817857,
+  "repeatCount": 2,
+  "pages": [
+    {
+      "pageIndex": 0,
+      "renderedSourceSha256": "ded7dcd743788adea0d97f561680392ae04acf5e30541161a0d0c06cd15556c9",
+      "shape": [792, 612],
+      "sourceDecodedPixelSha256": "909d18b2ab219e36b6f4ff79ea6e9afd1e96a494a96c8a4c853fd38d7f09f7db",
+      "repeats": [
+        {
+          "repeat": 1,
+          "outputSha256": "455c6111bf1eea896cd71e6be7e6517813543b087375ef3c9b3b9ac568732b16",
+          "decodedPixelSha256": "62b0e82d4c665f95eb894c0c8c834a6b04329d631d0cc884e169eca1491ecfba",
+          "outputBytes": 90492,
+          "tileCount": 4,
+          "outputMin": 0.0,
+          "outputMax": 1.0,
+          "outputMean": 0.8865837454795837
+        },
+        {
+          "repeat": 2,
+          "outputSha256": "455c6111bf1eea896cd71e6be7e6517813543b087375ef3c9b3b9ac568732b16",
+          "decodedPixelSha256": "62b0e82d4c665f95eb894c0c8c834a6b04329d631d0cc884e169eca1491ecfba",
+          "outputBytes": 90492,
+          "tileCount": 4,
+          "outputMin": 0.0,
+          "outputMax": 1.0,
+          "outputMean": 0.8865837454795837
+        }
+      ],
+      "repeatability": {
+        "outputBytesStable": true,
+        "decodedPixelsStable": true,
+        "changedPixelsAcrossRepeats": 0,
+        "maxAbsDiffAcrossRepeats": 0
+      },
+      "sourceToCandidateRaw": {
+        "meanAbsDiffU8": 9.011004654387007,
+        "maxAbsDiffU8": 127,
+        "changedPixelCount": 82877,
+        "changedPixelFraction": 0.17098476596025616
+      }
+    },
+    {
+      "pageIndex": 1,
+      "renderedSourceSha256": "de259e9eaa4ac47e21b1105d58c9ce2718ccad8d81c27632f942c98ae7af5f35",
+      "shape": [792, 612],
+      "sourceDecodedPixelSha256": "d7b92fc4f45c8b562ce8f917d67bb7e2533ea69569e4b35d03bb7d2d55a885e6",
+      "repeats": [
+        {
+          "repeat": 1,
+          "outputSha256": "d3b6d721fb24af2eb056a1825c46b310fd30df9151fca92c0fd824ff1ad4ed76",
+          "decodedPixelSha256": "4a421ea49c6e4757df54de1a19e59e27534bd658f9a0accf7047dc8049cb27e5",
+          "outputBytes": 86081,
+          "tileCount": 4,
+          "outputMin": 0.0,
+          "outputMax": 1.0,
+          "outputMean": 0.8740509748458862
+        },
+        {
+          "repeat": 2,
+          "outputSha256": "d3b6d721fb24af2eb056a1825c46b310fd30df9151fca92c0fd824ff1ad4ed76",
+          "decodedPixelSha256": "4a421ea49c6e4757df54de1a19e59e27534bd658f9a0accf7047dc8049cb27e5",
+          "outputBytes": 86081,
+          "tileCount": 4,
+          "outputMin": 0.0,
+          "outputMax": 1.0,
+          "outputMean": 0.8740509748458862
+        }
+      ],
+      "repeatability": {
+        "outputBytesStable": true,
+        "decodedPixelsStable": true,
+        "changedPixelsAcrossRepeats": 0,
+        "maxAbsDiffAcrossRepeats": 0
+      },
+      "sourceToCandidateRaw": {
+        "meanAbsDiffU8": 9.720786294315706,
+        "maxAbsDiffU8": 127,
+        "changedPixelCount": 87987,
+        "changedPixelFraction": 0.1815272826302238
+      }
+    }
+  ],
+  "aggregate": {
+    "pageCount": 2,
+    "allOutputBytesStable": true,
+    "allDecodedPixelsStable": true,
+    "changedPixelsAcrossRepeats": 0,
+    "maxAbsDiffAcrossRepeats": 0
+  },
+  "semanticDisposition": "BLOCKED_INDEPENDENT_EXPECTED_CLASS_ANNOTATION_AND_TRUSTED_CLASS_COVERAGE_INSUFFICIENT",
+  "heldoutAccessed": false,
+  "trainingPerformed": false,
+  "weightsMutated": false,
+  "productionInferenceAuthorized": false,
+  "productionPromotionAuthorized": false,
+  "stage12EntryAuthorized": false,
+  "executionMethod": {
+    "input": "exact admitted digital PDF rendered at 72 DPI with pdftoppm via render_pdf.py",
+    "normalization": "8-bit grayscale -> float32 [0,1]",
+    "tiling": {
+      "patchSize": 512,
+      "overlap": 64,
+      "stride": 448,
+      "paddingValue": 1.0,
+      "overlapMerge": "arithmetic-mean"
+    },
+    "outputEncoding": "8-bit grayscale PNG, round(output*255), OpenCV compression=3",
+    "profileAppliedBeforePackageLoad": true
+  },
+  "provenanceCorrection": {
+    "correctedOn": "2026-09-08",
+    "previousRendererLabel": "pdfium-via-render_pdf.py",
+    "correctRendererLabel": "pdftoppm-via-render_pdf.py",
+    "basis": "The committed renderedSourceSha256 and sourceDecodedPixelSha256 values reproduce exactly with pdftoppm at 72 DPI and do not reproduce with pdfium at 72 DPI.",
+    "modelOutputHashesChanged": false
+  },
+  "claimBoundary": {
+    "determinism": "PASS_FOR_BARLEY_CANONICAL_RUNTIME_AND_TWO_PAGE_SOURCE",
+    "semanticPreservation": "NOT_ESTABLISHED",
+    "reason": "independent expected-class annotation and sufficient trusted multi-class detector coverage are not yet available",
+    "rawPixelDriftIsNotMusicalTruth": true
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "artifactType": "C_CLEF_P4_9_INDEPENDENT_HOLDOUT_SOURCE_FREEZE",
+  "schemaVersion": "1.0.0",
+  "phase": "Stage 11 v2d / P4.9 independent C-clef holdout",
+  "status": "SOURCE_POOL_FROZEN_PENDING_TEACHER_ANNOTATION",
+  "driveRootFolderId": "1H-aKH14ohAi6iITOlQT09ZMjNqTK3tTH",
+  "incomingFolderId": "1fh4J5oKno8CZCxaSjRPSiymG7YCBOCCn",
+  "sourcePolicy": {
+    "detectorOutputsAccessed": false,
+    "teacherTruthComplete": false,
+    "qualificationRunAuthorized": false,
+    "previousP4_7HoldoutReused": false,
+    "duplicatePhysicalPagesCountedOnce": true,
+    "samePhysicalPageMayContainMultipleCclefSubtypes": true,
+    "syntheticPages": false
+  },
+  "selection": {
+    "uniquePdfSources": 10,
+    "uniquePhysicalPages": 11,
+    "minimumSubtypePageCoverage": {
+      "C1": 5,
+      "C3": 5,
+      "C4": 5
+    },
+    "observedSubtypeCoverageBeforeTeacherAnnotation": {
+      "C1": 5,
+      "C3": 10,
+      "C4": 5
+    },
+    "note": "Coverage counts are source-selection hints only; final teacher truth is determined by blinded human annotation of all C-clef boxes on each unique page."
+  },
+  "selectedSources": [
+    {"name":"01_Bach_Matthaeuspassion_BWV244_excerpt.pdf","driveFileId":"1UrxL9_NisQRkKjz9xgGULoazv3jP1kv3","sourcePdfSha256":"c960952dbab6323c7ec366030629a5f87f36353551bf418ce68dc814bed90c52","pages":[1,2],"coverageHints":["C3"]},
+    {"name":"02_mixed_old_score_dies_irae.pdf","driveFileId":"1gHfAOS-g5aQ7STpispKixiAfW01ijeRE","sourcePdfSha256":"4d5ea958bc397fe9664514ca435b0c91b19ffb5436c56ca447ea8894191c15d2","pages":[1],"coverageHints":["C1","C3","C4"]},
+    {"name":"03_mixed_old_score_kyrie_a.pdf","driveFileId":"1Khfrxg1ML20I7lcJhAIxJTKBWV6VUC87","sourcePdfSha256":"ea382f190adb605598946ffdbf196d5268a5893ec99a2219ff555e367e8e44d0","pages":[1],"coverageHints":["C1","C3","C4"]},
+    {"name":"04_mixed_old_score_kyrie_b.pdf","driveFileId":"1BG7CoCL7tF65AXAXK1y7XYdlZg5DBCVe","sourcePdfSha256":"3e540a80222f2103689d7159b851b99c26672cc204c960552c0a172c96d60ecd","pages":[1],"coverageHints":["C1","C3","C4"]},
+    {"name":"05_Haydn_Creation_orchestral_page.pdf","driveFileId":"1XR6i3CmWjR2GHYg0f8baaV52CU98Bzky","sourcePdfSha256":"e5e2450011908eb89b56b8e3f497d2544a3e0bd6f2a4ef1d7b43a781b3e60f1d","pages":[1],"coverageHints":["C3","C4"]},
+    {"name":"06_Agnus_Dei_orchestral_choral_page.pdf","driveFileId":"1xP-lZqaQPv3IyOwGkxDSj2yx3ePKw0-z","sourcePdfSha256":"64de53d35865cc8bc7a179c72be322619deb3d3a459c1ad7626f31e8be9b50b2","pages":[1],"coverageHints":["C3"]},
+    {"name":"07_Mendelssohn_Elijah_orchestral_page.pdf","driveFileId":"1NVnaELYfPEI65QKKfBfSvfIWxH-7d60U","sourcePdfSha256":"e125ef1f05553a87af6b8c94ad580941b61b985f11a823b7d2962208d5a94823","pages":[1],"coverageHints":["C3","C4"],"note":"complex historical Alto/Tenore trombone notation; final subtype labels require teacher annotation"},
+    {"name":"08_Mozart_Mass_C_minor_page_A.pdf","driveFileId":"1R4d7tDSXrvWKutQtKRY5dj5p2EV2YIlo","sourcePdfSha256":"9d10079705ea3b3c40131360100da79b751cd57368f82a40b4db0330430c109a","pages":[1],"coverageHints":["C1","C3","C4"]},
+    {"name":"10_orchestral_page_viola.pdf","driveFileId":"12dkd5KExPsJH5C7pO6S5uSmcDTK1KaTK","sourcePdfSha256":"2faa289ac0a75575df7605a9b0a9411416633b4fb6135cd573b6f43a9633e507","pages":[1],"coverageHints":["C3"]},
+    {"name":"11_Telemann_TWV52e3_C1_C3_source.pdf","driveFileId":"1pQHwdJSn0FDk7gCQ9tKiOz1Xx15TlhSu","sourcePdfSha256":"bcbda0a9dcf2e9a678f59fdfc36b4b400bcddaa44d1bf6f8aa6c71f125784908","pages":[1],"coverageHints":["C1","C3"]}
+  ],
+  "excludedDuplicates": [
+    {
+      "name":"09_Mozart_Mass_C_minor_page_B_duplicate_candidate.pdf",
+      "driveFileId":"1jYEAjz4ZRgq5feiidxfSU30OD-w4dF5b",
+      "sourcePdfSha256":"06a08101e436c78cb855eac15c08851f6263358004a8a5e9f1b5a984ce51080d",
+      "duplicateOf":"08_Mozart_Mass_C_minor_page_A.pdf",
+      "verification":"200-DPI rendered pages are pixel-identical"
+    }
+  ],
+  "renderPreparation": {
+    "referencePriorHoldout": "P4.7",
+    "referenceDpi": 200,
+    "policy": "Use 200-DPI page preparation while avoiding duplicate physical pages; any pathological page-size normalization must be frozen before detector access."
+  },
+  "safetyBoundaries": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeAction": "Prepare the 11 unique physical pages, complete blinded teacher box annotation for every C1/C3/C4 clef on every page, freeze teacher truth, then run P4.8 exactly once with no retuning after teacher/holdout access."
+}

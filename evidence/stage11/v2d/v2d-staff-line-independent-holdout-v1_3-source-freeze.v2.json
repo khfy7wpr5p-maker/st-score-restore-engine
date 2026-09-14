@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-independent-holdout-source-freeze.v2",
+  "generatedOn": "2026-09-14",
+  "status": "SOURCE_ONLY_RAW_FROZEN_TEACHER_TRUTH_PENDING",
+  "authorizationPath": "evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json",
+  "qualificationPolicyPath": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+  "repository": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeBindingCommit": "ac88e9a51a19f8036dfead500f37a51f628793de",
+    "detectorCodeUnchangedAfterHoldoutAuthorization": true,
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "holdoutSource": {
+    "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "purposeGrantStatus": "granted",
+    "eligibilityClass": "restricted_corpus",
+    "storageClass": "managed_restricted",
+    "catalogPath": "evidence/stage1c/nearer-my-god-to-thee-c17d/catalog.v1.json",
+    "artifactFileName": "ST_STAGE1_PHONEPHOTO_NEARER_MY_GOD_TO_THEE_DERIVATIVE_2048x1536.jpg",
+    "artifactByteSize": 647003,
+    "artifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "mediaType": "image/jpeg",
+    "width": 2048,
+    "height": 1536,
+    "pageCount": 1,
+    "allPagesUsed": true,
+    "pageCherryPickingPerformed": false,
+    "providerSpecificIdentifiersCommittedToGit": false
+  },
+  "sourcePreparation": {
+    "rasterizationRequired": false,
+    "crop": false,
+    "deskew": false,
+    "preDetectorEnhancement": false,
+    "detectorReadMode": "cv2.IMREAD_GRAYSCALE",
+    "sourceBytesUsedDirectly": true
+  },
+  "detector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.3",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "moduleSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "parentModuleSha256": "0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95",
+    "configCanonicalSha256": "36a41ff17396791e18dec7ab464f2fb12683b97c4c62bb7df7ddc0f7667d4815",
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "retunedAfterHoldoutAccess": false,
+    "pageSpecificRulesUsed": false,
+    "trainingOrFineTuningPerformed": false
+  },
+  "rawFreeze": {
+    "pageCount": 1,
+    "sourceIdentityMatchedPages": 1,
+    "sourceIdentityMatchRate": 1.0,
+    "predictedSystemCount": 3,
+    "rawArtifactFileName": "stage11_v2d_staff_line_holdout_nearer_phone_raw.v1_3.json",
+    "rawArtifactSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "sourceManifestFileName": "stage11_v2d_staff_line_holdout_nearer_phone_source_manifest.v1.json",
+    "sourceManifestSha256": "4dd873e0aa99d04b293f2fa74209ffcd7237b20b2bfc6c9c9b4285cd864673e7",
+    "storageProfile": "managed_restricted",
+    "providerSpecificArtifactIdentifiersCommittedToGit": false,
+    "byteRepeatDeterminismVerified": true,
+    "repeatPredictedSystemCount": 3,
+    "repeatArtifactGeometryAndDiagnosticsIdentical": true
+  },
+  "blindTeacherBoundary": {
+    "teacherTruthExistedAtRawFreeze": false,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "teacherAnnotationStatus": "PENDING_HUMAN_REVIEW"
+  },
+  "qualification": {
+    "scoringExecuted": false,
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "reason": "The v1.3 source-only raw holdout output is frozen before any teacher truth exists or is accessed. Independent human topology must now be completed blind to detector geometry before scoring."
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}
