@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5-current-truth.v1",
+  "generatedOn": "2026-09-15",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "state": "DEVELOPMENT_PROTOTYPE_VALIDATED_NOT_QUALIFIED",
+  "parentState": {
+    "v1_4SourceDetectorQualified": true,
+    "v1_4Frozen": true,
+    "baselineV2Disposition": "FAIL_RESTORED_TOPOLOGY_BASELINE_V2"
+  },
+  "successor": {
+    "version": "stage11-v2d-restored-topology-successor.v1.5",
+    "implementationCommit": "80a1a524bced1ba17575ac1d8898e536e2e10196",
+    "developmentResultEvidencePath": "evidence/stage11/v2d/v2d-restored-topology-successor-v1_5-development-result-binding.v1.json",
+    "workflowRunId": 34898647677,
+    "deterministic": true,
+    "developmentCorpusIdentity": "20/20 PASS",
+    "syntheticRegressionsPassed": true
+  },
+  "developmentMetrics": {
+    "teacherSystems": 197,
+    "matchedSystems": 151,
+    "predictedSystems": 180,
+    "recall": 0.766497461928934,
+    "precision": 0.8388888888888889,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "stableControlRegressionPassed": true
+  },
+  "improvementVersusBaselineV2": {
+    "recall": "0.6243654822335025 -> 0.766497461928934",
+    "precision": "0.7884615384615384 -> 0.8388888888888889",
+    "absentPageSpecificity": "0.5 -> 1.0"
+  },
+  "governance": {
+    "developmentOnly": true,
+    "qualificationEvidence": false,
+    "consumedFreshHoldoutUsedForTuning": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "pageIdentityRulesUsed": false,
+    "familySpecificRulesUsed": false,
+    "successorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  },
+  "nextTask": "Refine generic restored-output alignment/recovery for remaining Carulli p2/p6/p7/p8/p9 development failures without regressing the six stable control pages; then freeze successor code/config before a new independent qualification boundary."
+}
