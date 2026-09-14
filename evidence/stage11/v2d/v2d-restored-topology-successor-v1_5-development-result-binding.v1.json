@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5-development-result-binding.v1",
+  "generatedOn": "2026-09-15",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "state": "DEVELOPMENT_PROTOTYPE_VALIDATED",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "implementation": {
+    "version": "stage11-v2d-restored-topology-successor.v1.5",
+    "modulePath": "src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5.py",
+    "moduleBlobSha": "af88cde69f37cc356de3a3f4b3aa2383c20953c9",
+    "implementationCommit": "80a1a524bced1ba17575ac1d8898e536e2e10196",
+    "testCommit": "37c64f2135b442c2461e3fc7d3a0e72b723b6775",
+    "workflowCommit": "13c6eaba67f7c738e9c75a54df27cfb6e8f1f52e",
+    "parentV1_4Mutated": false
+  },
+  "execution": {
+    "workflow": "Stage 11 V2d Restored Topology Successor V1.5 Development",
+    "workflowRunId": 34898647677,
+    "conclusion": "success",
+    "artifactId": 10370145960,
+    "artifactSha256": "f81ed88b18752e652a1cb2ca5075f0191f4200bd9af00d583148ccd0ff5ba835",
+    "rawAAndBByteIdentical": true,
+    "rawArtifactSha256": "d0c88eaea1a454d00a81c3b2d59dbc6352f701bd8456bd5769adeb3bbab56b7",
+    "inputIdentity": "20/20 PASS",
+    "syntheticRegressionTests": "PASS"
+  },
+  "developmentCorpus": {
+    "pageCount": 20,
+    "teacherSystemCount": 197,
+    "teacherLineCount": 985,
+    "heldOutUsed": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "pageIdentityRulesUsed": false,
+    "familySpecificRulesUsed": false
+  },
+  "baselineV2": {
+    "recall": 0.6243654822335025,
+    "precision": 0.7884615384615384,
+    "absentPageSpecificity": 0.5
+  },
+  "v1_5DevelopmentResult": {
+    "matchedSystems": 151,
+    "predictedSystems": 180,
+    "recall": 0.766497461928934,
+    "precision": 0.8388888888888889,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "stableControlsPassed": true,
+    "baselineImproved": true
+  },
+  "stableControls": {
+    "beethoven-op48-no3-p2": "9/9 matched",
+    "beethoven-op48-no3-p3": "12/12 matched",
+    "beethoven-op48-no3-p4": "0 predictions on negative page",
+    "carulli-morceaux-faciles-p4": "15/15 matched",
+    "bach-anna-magdalena-p24": "14/14 matched",
+    "bach-anna-magdalena-p40": "12/12 matched"
+  },
+  "remainingDevelopmentWeaknesses": {
+    "carulli-morceaux-faciles-p2": "2/12 matched; 11 predicted",
+    "carulli-morceaux-faciles-p6": "9/12 matched; 9 predicted",
+    "carulli-morceaux-faciles-p7": "7/12 matched; 10 predicted",
+    "carulli-morceaux-faciles-p8": "2/12 matched; 9 predicted",
+    "carulli-morceaux-faciles-p9": "2/12 matched; 5 predicted"
+  },
+  "claimBoundary": {
+    "successorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  },
+  "nextSafeTask": "Continue development-only generic geometry/alignment refinement on the existing 20-page corpus, especially remaining Carulli failures, while preserving stable controls. Freeze code/config before any genuinely separate successor qualification set is inspected."
+}
