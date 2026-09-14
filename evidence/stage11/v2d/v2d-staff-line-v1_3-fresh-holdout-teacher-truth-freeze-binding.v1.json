@@ -1,0 +1,62 @@
+{
+  "blindAudit": {
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false
+  },
+  "canonicalTeacherTruth": {
+    "confirmedSystemsModified": false,
+    "fileName": "staff_line_nearer_phone_teacher_topology.v1.CANONICAL.json",
+    "humanGeometryChanged": false,
+    "maskModified": false,
+    "schemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-topology.v1",
+    "sha256": "6fee7b44a8304acfdcfd1a42e2683c50e9c84ad70b76527fd510d647840a36c0"
+  },
+  "date": "2026-09-14",
+  "project": "ST Score Restore Engine",
+  "schemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-truth-freeze-binding.v1",
+  "scoringGovernance": {
+    "productionPromotionAuthorized": false,
+    "pullRequestReadyOrMergeAuthorized": false,
+    "restoredOutputTopologyComparisonAuthorized": false,
+    "retuningAfterHoldoutForbidden": true,
+    "scoringMayRunExactlyOnce": true,
+    "scoringPerformed": false,
+    "secondFreshHoldoutAuthorized": false,
+    "stage12PromotionAuthorized": false,
+    "teacherTruthFrozen": true,
+    "thresholdMovementAfterHoldoutForbidden": true
+  },
+  "source": {
+    "datasetItemId": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "height": 1536,
+    "pageId": "nearer-my-god-to-thee-phone-photo-p1",
+    "sourceArtifactSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "sourceFamilyId": "source.family.wikimedia-nearer-my-god-to-thee.v1",
+    "width": 2048
+  },
+  "staffLineMask": {
+    "binaryValues": [
+      0,
+      255
+    ],
+    "fileName": "nearer-my-god-to-thee-phone-photo-p1.staff-line-mask.png",
+    "height": 1536,
+    "sha256": "07f914e49c6c07a97d2e70f6c5d0200f360996ba504bb9263429f2750c7e56bf",
+    "width": 2048
+  },
+  "stage": "stage11_v2d_staff_line_v1_3_fresh_holdout",
+  "state": "TEACHER_TRUTH_FROZEN_READY_FOR_SINGLE_SCORING",
+  "teacherSubmission": {
+    "completedPageCount": 1,
+    "confirmedStaffLineCount": 30,
+    "confirmedSystemCount": 6,
+    "excludedUnfinishedDraftLineCount": 2,
+    "explicitTeacherDecision": "EXCLUDE_UNFINISHED_BOTTOM_DRAFT_LINES",
+    "fileName": "staff_line_nearer_phone_teacher_topology.v1.single.FINAL.json",
+    "sha256": "2f3652a834e6503744aba088807fe57385aa647b603b53f38da4b792176fd1fe",
+    "status": "ANNOTATION_COMPLETE",
+    "teacherAnnotationIndependent": true
+  }
+}
