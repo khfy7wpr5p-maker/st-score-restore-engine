@@ -1,0 +1,58 @@
+{
+  "blindReview": {
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "teacherAnnotationIndependent": true
+  },
+  "canonicalTeacherTruth": {
+    "byteSize": 8431,
+    "completedPageCount": 1,
+    "confirmedStaffLineCount": 20,
+    "confirmedSystemCount": 4,
+    "pageCount": 1,
+    "sha256": "54e688755abdef9a9ff94c077269cc64e34791b428e94d78a84563c76a3dafd0",
+    "staffAbsentPageCount": 0,
+    "staffPresentPageCount": 1
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "prReadyForMerge": false,
+    "productionPromotionAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "staffLinePass": false,
+    "stage12EntryAuthorized": false
+  },
+  "generatedOn": "2026-09-14",
+  "mask": {
+    "byteSize": 26233,
+    "height": 846,
+    "sha256": "635660ee59c01fc9e903ac8576483d85b419e7151f5b0c236ade74cf8b7417cc",
+    "width": 1304
+  },
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1",
+  "scoringBoundary": {
+    "qualificationScoringExecuted": false,
+    "retuningAllowed": false,
+    "scoringMayRunExactlyOnceAfterThisFreeze": true,
+    "teacherTruthFrozenBeforeScoring": true,
+    "thresholdMovementAllowed": false
+  },
+  "source": {
+    "artifactByteSize": 309341,
+    "artifactSha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47",
+    "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "height": 846,
+    "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "width": 1304
+  },
+  "status": "TEACHER_TRUTH_FROZEN_PRE_SCORING",
+  "submittedSingleJson": {
+    "byteSize": 43833,
+    "sha256": "8dc2f86a82b7160626d431f668acef211ed71b8cca3621469656500007854532",
+    "status": "ANNOTATION_COMPLETE"
+  }
+}
