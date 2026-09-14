@@ -1,0 +1,188 @@
+name: Stage 11 Close Baseline V2 Execution
+
+on:
+  push:
+    branches:
+      - stage11-close-baseline-run-20260914
+
+permissions:
+  contents: read
+
+jobs:
+  topology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact project dependencies
+        run: python -m pip install -e .
+
+      - name: Fetch sealed execution bundle
+        env:
+          BUNDLE_URL: "https://sdmntprnortheu.oaiusercontent.com/files/00000000-86bc-81f4-a560-9a7084592bcf/raw?se=2026-09-14T20%3A48%3A14Z&sp=r&sv=2026-02-06&sr=b&scid=e0aec626-edf0-5f5d-8bb9-c0b1a95bbd95&skoid=7b771594-2b4f-4e93-93be-fdeeeb59aaf9&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-14T20%3A04%3A48Z&ske=2026-09-15T20%3A04%3A48Z&sks=b&skv=2026-02-06&sig=3YzTtrZYTy4hQWf2PPQDAFKL7pe7Gim4FlsMVwBjMyE%3D"
+          EXPECTED_ZIP_SHA: "f2d4c757ef431aaa4fc5f40a531055cc935221bf7096590178b909b6795b4207"
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 "$BUNDLE_URL" -o /tmp/bundle.zip
+          echo "$EXPECTED_ZIP_SHA  /tmp/bundle.zip" | sha256sum -c -
+          mkdir -p /tmp/bundle
+          unzip -q /tmp/bundle.zip -d /tmp/bundle
+
+      - name: Verify frozen identities before inference
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          import cv2
+          root=Path('/tmp/bundle')
+          manifest=json.loads(Path('evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json').read_text())
+          pages={p['fileName']:p for p in manifest['pages']}
+          assert len(pages)==20
+          for name,p in sorted(pages.items()):
+              path=root/'restored_pages'/name
+              data=path.read_bytes()
+              assert len(data)==p['byteSize'], (name,len(data),p['byteSize'])
+              assert hashlib.sha256(data).hexdigest()==p['sha256'], name
+              img=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+              assert img is not None, name
+              assert list(img.shape)==[p['height'],p['width']], (name,img.shape)
+              assert hashlib.sha256(img.tobytes()).hexdigest()==p['decodedPixelSha256'], name
+          teacher=root/'staff_line_teacher_mask_topology.v1.json'
+          scorer=root/'stage11_v2d_staff_line_holdout_scorer.v1.py'
+          assert hashlib.sha256(teacher.read_bytes()).hexdigest()=='28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7'
+          assert hashlib.sha256(scorer.read_bytes()).hexdigest()=='db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8'
+          import st_score_restore.stage11_v2d_staff_line_multisystem_source_detector_v1_4 as det
+          assert det.sha256_file(Path(det.__file__))=='7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960'
+          print('PRE_INFERENCE_IDENTITY_20_OF_20_PASS')
+          PY
+
+      - name: Write deterministic detector runner
+        run: |
+          cat > /tmp/run_detector.py <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          import cv2
+          import st_score_restore.stage11_v2d_staff_line_multisystem_source_detector_v1_4 as det
+
+          inp=Path('/tmp/bundle/restored_pages')
+          manifest=json.loads(Path('evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json').read_text())
+          expected={p['fileName']:p for p in manifest['pages']}
+          out=Path(sys.argv[1])
+          pages=[]
+          for path in sorted(inp.glob('*.png'), key=lambda p:p.name):
+              p=expected[path.name]
+              sha=hashlib.sha256(path.read_bytes()).hexdigest()
+              if sha!=p['sha256']:
+                  raise SystemExit(f'baseline identity mismatch: {path.name}')
+              image=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+              systems,diagnostics=det.detect_staff_systems_with_diagnostics(image)
+              pages.append({
+                  'pageId':path.stem,
+                  'baselineInputFileName':path.name,
+                  'baselineInputSha256':sha,
+                  'sourceSha256':sha,
+                  'width':int(image.shape[1]),
+                  'height':int(image.shape[0]),
+                  'systemCount':len(systems),
+                  'systems':[s.as_dict() for s in systems],
+                  'detectorDiagnostics':diagnostics,
+              })
+          payload={
+              'schemaVersion':'stage11.v2d.staff-line-restored-output-baseline-v2-raw.v1',
+              'baselineId':'stage11.v2d.restored-output-validation-baseline.v2',
+              'policyFreezeCommit':'ac2238d84c4140d9732d0c938671bbcdfcc09888',
+              'detectorVersion':det.DETECTOR_VERSION,
+              'detectorSourceSha256':det.sha256_file(Path(det.__file__)),
+              'developmentOnly':True,
+              'heldOutAccessed':False,
+              'teacherArtifactLoadedDuringInference':False,
+              'teacherCoordinatesUsedDuringInference':False,
+              'restoredOutputsLoadedDuringInference':True,
+              'pageSpecificRulesUsed':False,
+              'trainingOrFineTuningPerformed':False,
+              'baselineInputIdentityExpectedCount':20,
+              'baselineInputIdentityMatchedCount':20,
+              'pageCount':len(pages),
+              'pages':pages,
+              'claimBoundary':{
+                  'restoredStaffTopologyPreservationEstablished':False,
+                  'semanticPreservationEstablished':False,
+                  'overallStage11Pass':False,
+                  'productionReady':False,
+                  'stage12EntryAuthorized':False,
+                  'prReadyForMerge':False,
+              },
+          }
+          out.write_bytes((json.dumps(payload,sort_keys=True,separators=(',',':'),ensure_ascii=False)+'\n').encode())
+          print(hashlib.sha256(out.read_bytes()).hexdigest())
+          PY
+
+      - name: Run frozen detector twice
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python /tmp/run_detector.py out/raw-a.json | tee out/raw-a.sha256
+          python /tmp/run_detector.py out/raw-b.json | tee out/raw-b.sha256
+          cmp out/raw-a.json out/raw-b.json
+          test "$(cat out/raw-a.sha256)" = "$(cat out/raw-b.sha256)"
+          echo DETECTOR_BYTE_REPEAT_DETERMINISM_PASS
+
+      - name: Score once and adjudicate frozen policy
+        run: |
+          set -euo pipefail
+          python /tmp/bundle/stage11_v2d_staff_line_holdout_scorer.v1.py \
+            --teacher /tmp/bundle/staff_line_teacher_mask_topology.v1.json \
+            --raw out/raw-a.json \
+            --output out/score.json > out/scorer.stdout.txt
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          policy=json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-baseline-v2-policy.v1.json').read_text())
+          score=json.loads(Path('out/score.json').read_text())
+          s=score['scoring']; req=policy['passPolicy']['requirements']
+          checks={
+            'baselineInputIdentity': 1.0 >= req['baselineInputIdentityMatchRateRequired'],
+            'detectorByteRepeatDeterminism': Path('out/raw-a.json').read_bytes()==Path('out/raw-b.json').read_bytes(),
+            'teacherSystemRecallAtHalfSpacing': s['teacherSystemRecallAtHalfSpacing'] >= req['teacherSystemRecallAtHalfSpacingMin'],
+            'predictedSystemPrecisionAtHalfSpacing': s['predictedSystemPrecisionAtHalfSpacing'] >= req['predictedSystemPrecisionAtHalfSpacingMin'],
+            'presentPageCoverage': s['presentPageCoverage']['rate'] >= req['presentPageCoverageMin'],
+            'absentPageSpecificity': s['absentPageSpecificity']['rate'] >= req['absentPageSpecificityMin'],
+            'fiveLineCountCorrectRate': s['fiveLineCountCorrectRate'] >= req['fiveLineCountCorrectRateMin'],
+            'lineOrderCorrectRate': s['lineOrderCorrectRate'] >= req['lineOrderCorrectRateMin'],
+          }
+          result={
+            'schemaVersion':'stage11.v2d.staff-line-restored-output-baseline-v2-qualification-result.v1',
+            'baselineId':'stage11.v2d.restored-output-validation-baseline.v2',
+            'policyFreezeCommit':'ac2238d84c4140d9732d0c938671bbcdfcc09888',
+            'rawArtifactSha256':hashlib.sha256(Path('out/raw-a.json').read_bytes()).hexdigest(),
+            'rawRepeatSha256':hashlib.sha256(Path('out/raw-b.json').read_bytes()).hexdigest(),
+            'detectorByteRepeatDeterminism':checks['detectorByteRepeatDeterminism'],
+            'scorerSha256':score['scorerSha256'],
+            'teacherTruthSha256':score['teacherTruthSha256'],
+            'scoring':s,
+            'checks':checks,
+            'restoredStaffTopologyPass':all(checks.values()),
+            'historicalCanonicalRecoveryState':'BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY',
+            'claimBoundary':{
+              'semanticPreservationEstablished':False,
+              'overallStage11Pass':False,
+              'productionReady':False,
+              'stage12EntryAuthorized':False,
+              'prReadyForMerge':False,
+            },
+          }
+          Path('out/result.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(result,indent=2,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage11-close-baseline-v2-result
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
