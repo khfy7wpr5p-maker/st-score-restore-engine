@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-authorization.v1",
+  "generatedOn": "2026-09-14",
+  "status": "AUTHORIZED_SELECTED_PRE_SOURCE_ACCESS",
+  "authorizationScope": "Exactly one fresh independent v1.4 staff-line holdout qualification",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "registrySelectionCommit": "865adee94246a20627e54f6fe23fe8d47a2027f7",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "candidate": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
+    "developmentRawSha256": "50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d",
+    "developmentFrozenBeforeAuthorization": true
+  },
+  "selectedHoldout": {
+    "registryPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-registry-entry.v1.json",
+    "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "sourceBytesAccessedBeforeSelectionFreeze": false,
+    "teacherTruthAccessedBeforeSelectionFreeze": false,
+    "detectorRunBeforeSelectionFreeze": false,
+    "exactArtifactSha256KnownBeforeSelectionFreeze": false
+  },
+  "qualificationPolicy": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "status": "FROZEN_PRE_HOLDOUT",
+    "allCriteriaRequired": true,
+    "teacherSystemRecallAtHalfSpacingMin": 0.65,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+    "presentPageCoverageMin": 0.95,
+    "absentPageSpecificityMin": 1.0,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "lineOrderCorrectRateMin": 1.0,
+    "tabSixLineRejectionRateMin": 1.0,
+    "byteRepeatDeterminismRequired": true,
+    "sourceIdentityMatchRateRequired": 1.0,
+    "thresholdMovementAfterSourceAccessAllowed": false
+  },
+  "executionRules": {
+    "exactlyOneFreshHoldoutAuthorized": true,
+    "secondFreshHoldoutAuthorized": false,
+    "runFrozenV1_4ExactlyTwiceBeforeTeacherTruth": true,
+    "requireByteIdenticalRaw": true,
+    "teacherCoordinatesAllowedAsInferenceInput": false,
+    "teacherTruthMayBeShownDetectorOutputBeforeFreeze": false,
+    "retuningAgainstSelectedHoldoutAllowed": false,
+    "pageSpecificRulesAllowed": false,
+    "trainingOrFineTuningAllowed": false,
+    "restoredOutputTopologyComparisonAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestReadyForReviewAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "consumedHoldoutFirewall": {
+    "chopinDatasetItem": "dataset.item.imslp82860-chopin-op69.v2",
+    "v1_3DatasetItem": "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1",
+    "reuseAllowed": false,
+    "geometryMayInformV1_4QualificationRun": false,
+    "thresholdsMayMoveFromConsumedResults": false
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "nextAction": "After this authorization commit only: fetch exact selected source bytes, verify identity, run frozen v1.4 twice source-only, freeze raw and prepare a detector-blind teacher work package. Do not score until teacher truth is independently finalized and frozen."
+}
