@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - stage11-v2c-semantic-detector-corpus-expansion
+      - stage11-v1-4-holdout-sealed-run
     paths:
       - '.github/workflows/stage11-v2d-staff-line-v1_4-fresh-holdout-freeze.yml'
       - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-registry-entry.v1.json'
