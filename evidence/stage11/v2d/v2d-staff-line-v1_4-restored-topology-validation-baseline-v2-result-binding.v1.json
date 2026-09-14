@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-validation-baseline-v2-result-binding.v1",
+  "generatedOn": "2026-09-14",
+  "status": "MEASUREMENT_COMPLETE_FAIL",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "baseline": {
+    "id": "stage11.v2d.restored-output-validation-baseline.v2",
+    "manifestPath": "evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json",
+    "manifestSha256": "491be22654521f2f384f889bd0379d4f10dcddba215ca8c1623f5aef2134b739",
+    "pageCount": 20,
+    "teacherSystemCount": 197,
+    "teacherLineCount": 985,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "heldOutAccessed": false,
+    "historicalCanonicalBaselineState": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+    "historicalCanonicalEvidenceRewritten": false
+  },
+  "frozenPolicy": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-baseline-v2-policy.v1.json",
+    "freezeCommit": "ac2238d84c4140d9732d0c938671bbcdfcc09888",
+    "allCriteriaRequired": true,
+    "postMeasurementThresholdSelectionAllowed": false,
+    "thresholdsChangedAfterMeasurement": false,
+    "requirements": {
+      "baselineInputIdentityMatchRateRequired": 1.0,
+      "detectorByteRepeatDeterminismRequired": true,
+      "teacherSystemRecallAtHalfSpacingMin": 0.65,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.8,
+      "presentPageCoverageMin": 0.95,
+      "absentPageSpecificityMin": 1.0,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0
+    }
+  },
+  "detector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "sourceSideQualificationRemainsPass": true,
+    "retunedForThisMeasurement": false,
+    "thresholdMovementPerformed": false
+  },
+  "execution": {
+    "isolatedExecutionBranch": "stage11-close-baseline-run-20260914",
+    "executionCommit": "d348e0480b605a4f97783f4a97f14e57f702bfa8",
+    "workflowRunId": 34897005035,
+    "workflowConclusion": "success",
+    "artifactId": 10369580250,
+    "artifactDigest": "sha256:733001b4592d5330e7f707112d934233668dae4cbadb9255aee21e46d210058d",
+    "detectorExecutionCount": 2,
+    "detectorByteRepeatDeterminism": true,
+    "rawAArtifactSha256": "1ca65cdbd0e49b48bc81235443cef24f51dc174341695e4e8cfdfc474686da29",
+    "rawBArtifactSha256": "1ca65cdbd0e49b48bc81235443cef24f51dc174341695e4e8cfdfc474686da29",
+    "scoreArtifactSha256": "264040b5ddc0637ca01d25bb52954320a1967b4fcae373e20971780ef430a9eb",
+    "resultArtifactSha256": "6652c0a2dde3091bdf98c040d6c71931ecd2b4a5343f3757cb34045d9dcf659b",
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "scoringExecutionCount": 1,
+    "scoringWillNotBeRepeatedForThisFrozenBaselineDecision": true
+  },
+  "measurement": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 156,
+    "matchedSystemCount": 123,
+    "teacherSystemRecallAtHalfSpacing": 0.6243654822335025,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7884615384615384,
+    "presentPageCoverage": {
+      "detected": 18,
+      "total": 18,
+      "rate": 1.0
+    },
+    "absentPageSpecificity": {
+      "clean": 1,
+      "total": 2,
+      "rate": 0.5
+    },
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "negativePageObservation": {
+      "beethoven-op48-no3-p1": "FALSE_POSITIVE_ONE_SYSTEM",
+      "beethoven-op48-no3-p4": "CLEAN_NO_SYSTEM"
+    }
+  },
+  "checks": {
+    "baselineInputIdentity": "PASS_20_OF_20",
+    "detectorByteRepeatDeterminism": "PASS",
+    "teacherSystemRecallAtHalfSpacing": "FAIL",
+    "predictedSystemPrecisionAtHalfSpacing": "FAIL",
+    "presentPageCoverage": "PASS",
+    "absentPageSpecificity": "FAIL",
+    "fiveLineCountCorrectRate": "PASS",
+    "lineOrderCorrectRate": "PASS"
+  },
+  "decision": {
+    "restoredStaffTopologyPass": false,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "stage11ClosureDisposition": "FAIL_RESTORED_TOPOLOGY_BASELINE_V2",
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "governance": {
+    "doNotRetuneAgainstThisMeasuredBaseline": true,
+    "doNotMoveFrozenThresholds": true,
+    "doNotReclassifyHistoricalCanonicalBaseline": true,
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  }
+}
