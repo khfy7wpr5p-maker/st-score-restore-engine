@@ -24,7 +24,7 @@ jobs:
 
       - name: Fetch sealed execution bundle
         env:
-          BUNDLE_URL: "https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-d204-8210-937e-1e4b4e0b1099/raw?se=2026-09-14T20%3A50%3A50Z&sp=r&sv=2026-02-06&sr=b&scid=e0cb551d-b486-5551-a6bb-194113082f84&skoid=7b771594-2b4f-4e93-93be-fdeeeb59aaf9&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-14T20%3A04%3A57Z&ske=2026-09-15T20%3A04%3A57Z&sks=b&skv=2026-02-06&sig=9arRLTeqaRiM0wjA5AVlglNsmD4TjtOMA1eGzCZRAVs%3D"
+          BUNDLE_URL: "https://sdmntprnortheu.oaiusercontent.com/files/00000000-fe78-81f4-887d-f8e82fd41465/raw?se=2026-09-14T21%3A10%3A43Z&sp=r&sv=2026-02-06&sr=b&scid=698a4e93-c356-5662-b24a-dffddd302589&skoid=e5e3659d-4463-4dbf-b2ce-ee32bc0a0a8d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-14T20%3A20%3A36Z&ske=2026-09-15T20%3A20%3A36Z&sks=b&skv=2026-02-06&sig=wDvxrsnPTeeZJAIE0MQPZt8Pc/7yFncJmR4Fjp8sAE4%3D"
           EXPECTED_ZIP_SHA: "f2d4c757ef431aaa4fc5f40a531055cc935221bf7096590178b909b6795b4207"
         run: |
           set -euo pipefail
