@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_1-development-result-binding.v1",
+  "generatedOn": "2026-09-15",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "state": "DEVELOPMENT_IMPROVED_NOT_QUALIFIED",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "implementation": {
+    "version": "stage11-v2d-restored-topology-successor.v1.5.1",
+    "modulePath": "src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5_1.py",
+    "implementationCommit": "dd97f6e29694bce602c9e6c2617418aecea9b867",
+    "testPath": "tests/test_stage11_v2d_restored_topology_successor_v1_5_1.py",
+    "testCommit": "6db2c87383d269b3e218a92347c5034766f9b358",
+    "workflowPath": ".github/workflows/stage11_v2d_restored_topology_successor_v1_5_1_development.yml",
+    "workflowCommit": "279c7504c20c977ceb3ddb9e242ea7aa0c3831e7"
+  },
+  "execution": {
+    "workflowRunId": 34900675667,
+    "workflowConclusion": "success",
+    "workflowHeadSha": "279c7504c20c977ceb3ddb9e242ea7aa0c3831e7",
+    "artifactId": 10370961107,
+    "artifactName": "stage11-v1_5_1-development-result",
+    "artifactDigestSha256": "d4ad1a565700267ed37cc653ae9a523e46615781dbfa20d45cafe3ddf5d5ff1b",
+    "inputIdentity": "20/20 PASS",
+    "rawAsha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "rawBsha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "byteRepeatDeterminism": true,
+    "syntheticRegressionTestsPassed": true,
+    "stableControlRegressionPassed": true
+  },
+  "developmentMetrics": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 160,
+    "teacherSystemRecallAtHalfSpacing": 0.8121827411167513,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8421052631578947,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0
+  },
+  "comparisonToV1_5": {
+    "v1_5Recall": 0.766497461928934,
+    "v1_5Precision": 0.8388888888888889,
+    "v1_5AbsentPageSpecificity": 1.0,
+    "recallImproved": true,
+    "precisionNonRegressed": true,
+    "specificityPreserved": true,
+    "coveragePreserved": true
+  },
+  "pageLevelDevelopmentObservations": {
+    "newlyExactOrImproved": {
+      "carulli-morceaux-faciles-p3": "12 predicted / 12 matched / 12 teacher",
+      "carulli-morceaux-faciles-p5": "15 predicted / 12 matched / 15 teacher",
+      "carulli-morceaux-faciles-p6": "12 predicted / 12 matched / 12 teacher",
+      "carulli-morceaux-faciles-p10": "12 predicted / 12 matched / 12 teacher"
+    },
+    "remainingHardDevelopmentPages": {
+      "carulli-morceaux-faciles-p2": "12 predicted / 2 matched / 12 teacher",
+      "carulli-morceaux-faciles-p7": "11 predicted / 8 matched / 12 teacher",
+      "carulli-morceaux-faciles-p8": "9 predicted / 2 matched / 12 teacher",
+      "carulli-morceaux-faciles-p9": "5 predicted / 2 matched / 12 teacher"
+    }
+  },
+  "inferenceBoundaries": {
+    "teacherCoordinatesUsed": false,
+    "heldOutAccessed": false,
+    "pageIdentityUsed": false,
+    "pageSpecificRulesUsed": false,
+    "familySpecificRulesUsed": false,
+    "edgeExtrapolationUsed": false,
+    "trainingOrFineTuningPerformed": false
+  },
+  "claimBoundary": {
+    "successorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  },
+  "nextSafeBoundary": "Continue development only on the existing development corpus or freeze a successor candidate before any genuinely separate qualification set is inspected. This development result must not be used as qualification evidence."
+}
