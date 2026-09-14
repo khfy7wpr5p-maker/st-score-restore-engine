@@ -72,11 +72,12 @@
     "driveCurrentCacheMatchesFrozenFull20": false,
     "driveRevisionContainingFrozenFull20Recovered": false,
     "otherCanonicalNamedDriveRunsMatchFrozenFull20": false,
-    "historicalAdapterEvidenceRecovered": true,
-    "historicalAdapterIncludesPerTileUint8QuantizationBeforeOverlapAverage": true,
+    "recordedAdapterContractRecovered": true,
+    "historicalFull20ExecutionScriptRecovered": false,
+    "currentRunnerUsesPerTileUint8QuantizationBeforeOverlapAverage": true,
     "currentRuntimeMatchesRecordedPythonAndTorchVersions": true,
     "currentRuntimeExactPixelReproductionAchieved": false,
-    "rootCauseEvidenceAlreadyEstablishesCpuProfileSensitivity": true,
+    "rootCauseEvidenceAlreadyEstablishesCpuIntraopProfileCanChangeDecodedPixels": true,
     "approximateOrNonCanonicalRestoredPixelsAcceptedForScoring": false
   },
   "identityProbes": [
@@ -93,8 +94,7 @@
     {
       "pageId": "wikimedia-guitar-technical-exercise-no1-p1",
       "expectedOutputSha256": "0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3",
-      "expectedDecodedPixelSha256": "bdbc948d3042e7e0177396abecf28ea6169120b7e7c80a8cce88ce",
-      "expectedDecodedPixelSha256Correction": "bdbc948d3042e7e0177396abecf28ea6169120b7e7b01f691bfdd97658914032",
+      "expectedDecodedPixelSha256": "bdbc948d3042e7e0177396abecf28ea6169120b7e7b01f691bfdd97658914032",
       "expectedByteSize": 195245,
       "recoveryOutputSha256": "cc3fcdaca59bb268a1f5fdd30478a6b465f8ed04a99c707a3df4ce9c1d4b5a28",
       "recoveryDecodedPixelSha256": "91927d2b25891267d77502e9a93b86a20eacc42b924f4bf996e6106c9fe3e3d7",
@@ -107,7 +107,7 @@
     "restoredDetectorRunAcceptedAsCanonical": false,
     "teacherMetricsInspectedAgainstNonCanonicalPixels": false,
     "passFailVerdictIssued": false,
-    "reason": "The frozen full20 execution records exact canonical restored PNG and decoded-pixel identities, but those exact image bytes are no longer recoverable from managed storage or Actions artifacts and the current CPU runtime does not reproduce the frozen decoded pixels despite exact source bytes, exact model bytes, matching recorded Python/Torch/thread settings, and recovery of the historical tiling/quantization adapter. Noncanonical reruns are intentionally excluded from topology scoring."
+    "reason": "The frozen full20 execution records exact canonical restored PNG and decoded-pixel identities, but those exact image bytes are no longer recoverable from managed storage or Actions artifacts and the current CPU runtime does not reproduce the frozen decoded pixels despite exact source bytes, exact model bytes, matching recorded Python/Torch/thread settings, and the recorded tiling/overlap/quantization contract. The exact historical full20 execution script was not archived. Noncanonical reruns are intentionally excluded from topology scoring."
   },
   "decision": {
     "restoredStaffTopologyPreservationEstablished": false,
