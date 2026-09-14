@@ -1,0 +1,173 @@
+name: Stage 11 V2d Restored Topology Successor V1.5.1 Development
+
+on:
+  push:
+    branches:
+      - stage11-v2d-restored-topology-successor-v1_5
+
+permissions:
+  contents: read
+
+jobs:
+  development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install project
+        run: python -m pip install -e . pytest
+
+      - name: Run synthetic v1.5 and v1.5.1 regressions
+        run: |
+          pytest -q \
+            tests/test_stage11_v2d_restored_topology_successor_v1_5.py \
+            tests/test_stage11_v2d_restored_topology_successor_v1_5_1.py
+
+      - name: Fetch development corpus bundle
+        env:
+          BUNDLE_URL: "https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-df84-8210-8eca-9520c6e37863/raw?se=2026-09-14T21%3A51%3A22Z&sp=r&sv=2026-02-06&sr=b&scid=373ad48d-9d02-5824-beec-443abe13ba93&skoid=e5e3659d-4463-4dbf-b2ce-ee32bc0a0a8d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-14T20%3A15%3A22Z&ske=2026-09-15T20%3A15%3A22Z&sks=b&skv=2026-02-06&sig=GikXpXQGE5PYCU8iKRwxetb0kcBeETbJR0sofxVyRHQ%3D"
+          EXPECTED_ZIP_SHA: "f2d4c757ef431aaa4fc5f40a531055cc935221bf7096590178b909b6795b4207"
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 "$BUNDLE_URL" -o /tmp/bundle.zip
+          echo "$EXPECTED_ZIP_SHA  /tmp/bundle.zip" | sha256sum -c -
+          mkdir -p /tmp/bundle
+          unzip -q /tmp/bundle.zip -d /tmp/bundle
+
+      - name: Verify exact development inputs
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          manifest=json.loads(Path('evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json').read_text())
+          pages={p['fileName']:p for p in manifest['pages']}
+          assert len(pages)==20
+          for name,p in sorted(pages.items()):
+              data=(Path('/tmp/bundle/restored_pages')/name).read_bytes()
+              assert len(data)==p['byteSize'], name
+              assert hashlib.sha256(data).hexdigest()==p['sha256'], name
+          print('DEVELOPMENT_INPUT_IDENTITY_20_OF_20_PASS')
+          PY
+
+      - name: Run v1.5.1 twice deterministically
+        run: |
+          cat > /tmp/run_v151.py <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          import cv2
+          from st_score_restore import stage11_v2d_restored_topology_successor_v1_5_1 as det
+          root=Path('/tmp/bundle/restored_pages')
+          out=Path(sys.argv[1])
+          pages=[]
+          for path in sorted(root.glob('*.png'), key=lambda p:p.name):
+              image=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+              assert image is not None
+              systems,diagnostics=det.detect_staff_systems_with_diagnostics(image)
+              assert diagnostics['teacherCoordinatesUsed'] is False
+              assert diagnostics['heldOutAccessed'] is False
+              assert diagnostics['pageIdentityUsed'] is False
+              assert diagnostics['pageSpecificRulesUsed'] is False
+              assert diagnostics['familySpecificRulesUsed'] is False
+              assert diagnostics['edgeExtrapolationUsed'] is False
+              pages.append({
+                  'pageId':path.stem,
+                  'sourceSha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                  'width':int(image.shape[1]),
+                  'height':int(image.shape[0]),
+                  'systemCount':len(systems),
+                  'systems':[item.as_dict() for item in systems],
+                  'diagnostics':diagnostics,
+              })
+          payload={
+              'schemaVersion':'stage11.v2d.restored-topology-successor-v1_5_1-development-raw.v1',
+              'detectorVersion':det.DETECTOR_VERSION,
+              'developmentOnly':True,
+              'qualificationEvidence':False,
+              'teacherArtifactLoadedDuringInference':False,
+              'teacherCoordinatesUsedDuringInference':False,
+              'heldOutAccessed':False,
+              'pageIdentityUsed':False,
+              'pageSpecificRulesUsed':False,
+              'trainingOrFineTuningPerformed':False,
+              'pageCount':len(pages),
+              'pages':pages,
+          }
+          out.write_bytes((json.dumps(payload,sort_keys=True,separators=(',',':'))+'\n').encode())
+          print(hashlib.sha256(out.read_bytes()).hexdigest())
+          PY
+          mkdir -p out
+          python /tmp/run_v151.py out/raw-a.json | tee out/raw-a.sha256
+          python /tmp/run_v151.py out/raw-b.json | tee out/raw-b.sha256
+          cmp out/raw-a.json out/raw-b.json
+          test "$(cat out/raw-a.sha256)" = "$(cat out/raw-b.sha256)"
+          echo V151_BYTE_REPEAT_DETERMINISM_PASS
+
+      - name: Score development corpus and enforce v1.5 regression floors
+        run: |
+          python /tmp/bundle/stage11_v2d_staff_line_holdout_scorer.v1.py \
+            --teacher /tmp/bundle/staff_line_teacher_mask_topology.v1.json \
+            --raw out/raw-a.json \
+            --output out/score.json > out/scorer.stdout.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('out/score.json').read_text())['scoring']
+          v15={
+              'recall':0.766497461928934,
+              'precision':0.8388888888888889,
+              'specificity':1.0,
+          }
+          assert s['teacherSystemRecallAtHalfSpacing'] > v15['recall']
+          assert s['predictedSystemPrecisionAtHalfSpacing'] >= v15['precision']
+          assert s['absentPageSpecificity']['rate'] == v15['specificity']
+          assert s['presentPageCoverage']['rate'] == 1.0
+          controls={
+              'beethoven-op48-no3-p2':9,
+              'beethoven-op48-no3-p3':12,
+              'beethoven-op48-no3-p4':0,
+              'carulli-morceaux-faciles-p4':15,
+              'bach-anna-magdalena-p24':14,
+              'bach-anna-magdalena-p40':12,
+          }
+          by={p['teacherPageId']:p for p in s['pages']}
+          for pid,count in controls.items():
+              p=by[pid]
+              assert p['teacherSystemCount']==count
+              assert p['predictedSystemCount']==count, (pid,p['predictedSystemCount'],count)
+              assert p['matchedSystemCount']==count, (pid,p['matchedSystemCount'],count)
+          summary={
+              'schemaVersion':'stage11.v2d.restored-topology-successor-v1_5_1-development-result.v1',
+              'developmentOnly':True,
+              'qualificationEvidence':False,
+              'recall':s['teacherSystemRecallAtHalfSpacing'],
+              'precision':s['predictedSystemPrecisionAtHalfSpacing'],
+              'presentPageCoverage':s['presentPageCoverage']['rate'],
+              'absentPageSpecificity':s['absentPageSpecificity']['rate'],
+              'teacherSystems':s['teacherSystemCount'],
+              'predictedSystems':s['predictedSystemCount'],
+              'matchedSystems':s['matchedSystemCount'],
+              'stableControlsPassed':True,
+              'v15RegressionFloorsPassed':True,
+              'claimBoundary':{
+                  'successorQualified':False,
+                  'semanticPreservationEstablished':False,
+                  'overallStage11Pass':False,
+                  'productionReady':False,
+                  'stage12EntryAuthorized':False,
+              },
+          }
+          Path('out/development-result.json').write_text(json.dumps(summary,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(summary,indent=2,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage11-v1_5_1-development-result
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
