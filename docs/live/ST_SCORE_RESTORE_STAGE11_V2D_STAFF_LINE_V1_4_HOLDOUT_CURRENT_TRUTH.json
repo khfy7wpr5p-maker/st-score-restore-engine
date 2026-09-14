@@ -58,7 +58,11 @@
     "sourceIdentityMatchRate": 1.0,
     "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
     "scoreArtifactSha256": "c90342b879bdcc2c667bad381326d86a28bd570da6454d7555273b0228db6d67",
-    "scoringWillNotBeRepeated": true
+    "scoringWillNotBeRepeated": true,
+    "qualificationValidationWorkflowRunId": 34885460738,
+    "qualificationValidationWorkflowConclusion": "success",
+    "qualificationValidationPython311": "success",
+    "qualificationValidationPython312": "success"
   },
   "qualificationPolicy": {
     "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
