@@ -97,4 +97,5 @@ jobs:
           name: stage11-v2d-v14-fresh-holdout-sealed
           path: .sealed/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30
