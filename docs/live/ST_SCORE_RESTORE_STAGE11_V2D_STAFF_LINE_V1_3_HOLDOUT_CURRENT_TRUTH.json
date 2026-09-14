@@ -3,7 +3,7 @@
   "generatedOn": "2026-09-14",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
-  "state": "BLOCKED_ON_FROZEN_RAW_ARTIFACT_RECOVERY",
+  "state": "V1_3_FRESH_HOLDOUT_QUALIFICATION_COMPLETE_REJECTED",
   "authority": {
     "scope": "v1.3 fresh independent staff-line holdout qualification only",
     "historicalV1_2HoldoutTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
@@ -33,7 +33,7 @@
   },
   "authorization": {
     "path": "evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json",
-    "status": "CONSUMED_BY_V1_3_RAW_FREEZE",
+    "status": "CONSUMED_BY_COMPLETED_V1_3_QUALIFICATION",
     "anotherIndependentHoldoutAuthorized": false,
     "restoredOutputStaffTopologyComparisonAuthorized": false,
     "pullRequestMergeAuthorized": false
@@ -61,7 +61,7 @@
     "rawArtifactSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
     "sourceManifestSha256": "4dd873e0aa99d04b293f2fa74209ffcd7237b20b2bfc6c9c9b4285cd864673e7",
     "byteRepeatDeterminismVerified": true,
-    "exactRawBytesCurrentlyAccessible": false,
+    "exactRawBytesCurrentlyAccessible": true,
     "retunedAfterHoldoutAccess": false,
     "pageSpecificRulesUsed": false
   },
@@ -83,27 +83,47 @@
     "restoredOutputsShownToTeacher": false
   },
   "rawArtifactRecovery": {
-    "bindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-block.v1.json",
-    "bindingCommit": "c99c052144a2e59963803c367186609b4cb54490",
-    "driveExactRawFileFound": false,
-    "shaSidecarFound": true,
-    "shaSidecarHasPriorRawRevision": false,
-    "freezeWorkflowArtifactContainingRawFound": false,
-    "fileLibraryExactRawFound": false,
-    "byteIdenticalReconstructionCompleted": false
+    "blockerPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-block.v1.json",
+    "resolutionPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-resolution.v1.json",
+    "resolutionCommit": "ded45f5dc636b7dd692d5595b4099a8893a5ab61",
+    "byteIdenticalReconstructionCompleted": true,
+    "reconstructedByteSize": 8130,
+    "reconstructedSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "matchesOriginalFrozenSha256": true,
+    "managedRestrictedRawRestored": true
   },
   "scorer": {
     "sha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "coreOutputSha256": "822dfbbce63da3ed994e523707e7af7b9714c4091aba852ba500370163b6cedc",
     "developmentCompatibilityAnchorExpected": "71/197",
-    "developmentCompatibilityAnchorPassed": true
+    "developmentCompatibilityAnchorPassed": true,
+    "freshHoldoutScoringExecutionCount": 1,
+    "freshHoldoutScoringMayBeRepeated": false
   },
   "qualification": {
-    "scoringExecuted": false,
-    "scoreExactlyOnceAgainstFrozenRaw": false,
+    "resultBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-qualification-result-binding.v1.json",
+    "resultBindingCommit": "b5c7135e50aa7624e60557043a5d9804a1542934",
+    "scoringExecuted": true,
+    "scoreExactlyOnceAgainstFrozenRaw": true,
+    "teacherSystemCount": 6,
+    "predictedSystemCount": 3,
+    "matchedSystemCountAtHalfSpacing": 0,
+    "teacherSystemRecallAtHalfSpacing": 0.0,
+    "predictedSystemPrecisionAtHalfSpacing": 0.0,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificityByFrozenScorerConvention": 1.0,
+    "absentPageCount": 0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "tabSixLineRejectionRate": 1.0,
+    "byteRepeatDeterminism": true,
+    "sourceIdentityMatchRate": 1.0,
+    "failureReasons": ["teacherSystemRecallAtHalfSpacing", "predictedSystemPrecisionAtHalfSpacing"],
     "detectorQualified": false,
     "sourceDetectorAdequacyEstablished": false,
     "staffLinePass": false,
-    "reason": "Teacher truth is frozen, but the exact frozen v1.3 holdout raw JSON bytes are not currently recoverable. Scoring remains blocked until the recovered or deterministically reconstructed artifact matches SHA-256 662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52 exactly."
+    "disposition": "REJECTED_CURRENT_DETECTOR",
+    "reason": "Fresh independent holdout scoring is complete. Under the frozen one-to-one ordered five-line half-spacing rule, 0 of 6 teacher systems matched 3 detector predictions, so recall and precision fail the predeclared conjunctive qualification policy."
   },
   "claimBoundary": {
     "staffLinePass": false,
@@ -120,5 +140,5 @@
     "mustRemainDraft": true,
     "mergeAuthorized": false
   },
-  "nextSafeBoundary": "Recover the exact frozen raw artifact bytes, or deterministically reconstruct the exact canonical raw artifact and require the frozen SHA-256 match. Only then execute the scorer exactly once. Do not retune v1.3, move thresholds, open a second holdout, run restored-output topology comparison, or merge PR #211."
+  "nextSafeBoundary": "V1.3 is rejected on the consumed fresh holdout and must not be retuned against it. Any successor must be separately versioned and developed only on authorized non-holdout development evidence. A new independent holdout requires a new explicit authorization after successor freeze. Restored-output staff-topology comparison and PR merge remain unauthorized."
 }
