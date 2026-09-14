@@ -5,7 +5,6 @@
   "repository": {
     "repository": "khfy7wpr5p-maker/st-score-restore-engine",
     "branch": "stage11-v2c-semantic-detector-corpus-expansion",
-    "headBeforeBlockerWrite": "8abd2ebb7f1e45caf9e070f46fa0011d746b8f6e",
     "pullRequestNumber": 211,
     "pullRequestMustRemainDraft": true,
     "mergeAuthorized": false
@@ -78,7 +77,21 @@
     "currentRuntimeMatchesRecordedPythonAndTorchVersions": true,
     "currentRuntimeExactPixelReproductionAchieved": false,
     "rootCauseEvidenceAlreadyEstablishesCpuIntraopProfileCanChangeDecodedPixels": true,
-    "approximateOrNonCanonicalRestoredPixelsAcceptedForScoring": false
+    "approximateOrNonCanonicalRestoredPixelsAcceptedForScoring": false,
+    "driveRestoredPagesFolderCandidatesFound": 2,
+    "primaryRestoredPagesFolderFileCount": 20,
+    "secondaryRestoredPagesFolderFileCount": 18,
+    "secondaryFolderIsLaterRerun": true,
+    "cacheManifestRevisionCount": 22,
+    "cacheManifestRevisionTimelineStarts": "2026-09-08T20:51:41.895Z",
+    "cacheManifestFirstFull20EraRevision": "2026-09-08T21:15:50.418Z",
+    "currentCacheManifestMatchesCurrentRestoredPages": true,
+    "canonicalBeethovenP1ExpectedByteSize": 223968,
+    "currentCacheBeethovenP1ByteSize": 223896,
+    "currentCacheBeethovenP1Sha256": "5765bf1c4257e21580222cd9d7698b9183d27853a78f32854404421065310a40",
+    "canonicalBeethovenP1VisibleCopyRecovered": false,
+    "canonicalBeethovenP1TrashCopyRecovered": false,
+    "decisiveMissingCanonicalFileEstablished": true
   },
   "identityProbes": [
     {
@@ -86,6 +99,8 @@
       "expectedOutputSha256": "e6cb0ea1045b52503937000e74d318793daf728d02c39f9cd48e588e1c9ab0ff",
       "expectedDecodedPixelSha256": "441b7c4bc113c6fe22dc7da6928b6c2642a30df5e24813f17ed5ab3b7c4ccadf",
       "expectedByteSize": 223968,
+      "currentDriveCacheSha256": "5765bf1c4257e21580222cd9d7698b9183d27853a78f32854404421065310a40",
+      "currentDriveCacheByteSize": 223896,
       "recoveryOutputSha256": "b544166a1ea66c54a8ccb8636792cd2a75bbbd69c5d9151a33178255afefe6e6",
       "recoveryDecodedPixelSha256": "769ef82e72e01ae09205f88a6556307b7e7cf0728ae4b6c5be456c01a757848e",
       "recoveryByteSize": 223898,
@@ -107,7 +122,7 @@
     "restoredDetectorRunAcceptedAsCanonical": false,
     "teacherMetricsInspectedAgainstNonCanonicalPixels": false,
     "passFailVerdictIssued": false,
-    "reason": "The frozen full20 execution records exact canonical restored PNG and decoded-pixel identities, but those exact image bytes are no longer recoverable from managed storage or Actions artifacts and the current CPU runtime does not reproduce the frozen decoded pixels despite exact source bytes, exact model bytes, matching recorded Python/Torch/thread settings, and the recorded tiling/overlap/quantization contract. The exact historical full20 execution script was not archived. Noncanonical reruns are intentionally excluded from topology scoring."
+    "reason": "The original source pages and frozen Restore package are intact, but at least one required canonical restored PNG (beethoven-op48-no3-p1) is conclusively absent from visible Drive copies and Trash and has no preserved Drive revision containing the expected bytes. A second restored_pages folder is a later 18-page rerun, not the frozen full20 set. The current 20-page cache manifest describes later noncanonical restored outputs. Current CPU reproduction also fails the frozen decoded-pixel identities despite matching recorded Python/Torch/thread settings. Therefore the 20/20 canonical set cannot be reconstructed from currently accessible storage and noncanonical reruns remain excluded from topology scoring."
   },
   "decision": {
     "restoredStaffTopologyPreservationEstablished": false,
@@ -115,7 +130,7 @@
     "staffLineSourceDetectorQualified": true,
     "semanticPreservationEstablished": false,
     "overallStage11PassAuthorized": false,
-    "nextSafeBoundary": "Recover any one authoritative archive containing all 20 frozen restored PNGs whose decoded pixel hashes match v2c-full20-repeat-execution.v1.json, or reproduce those exact decoded pixels in a verified execution environment. Only then run the frozen v1.4 detector and frozen scorer. Do not substitute current cache or approximate reruns, and do not move the predeclared thresholds."
+    "nextSafeBoundary": "Either recover an external authoritative archive containing all 20 frozen restored PNGs whose decoded pixel hashes match v2c-full20-repeat-execution.v1.json, or separately authorize a new restored-output validation baseline that freezes a newly reproducible execution environment before measuring topology. Do not silently substitute the current cache, later reruns, or approximate outputs for the historical canonical set."
   },
   "claimBoundary": {
     "staffLineSourceDetectorQualified": true,
