@@ -1,0 +1,155 @@
+{
+  "candidate": {
+    "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "version": "stage11-v2d-staff-multisystem-source.v1.4"
+  },
+  "claimBoundary": {
+    "detectorQualified": true,
+    "overallStage11PassAuthorized": false,
+    "prReadyForMerge": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "sourceDetectorAdequacyEstablished": true,
+    "staffLinePass": true,
+    "stage12EntryAuthorized": false
+  },
+  "criteriaPassed": {
+    "absentPageSpecificityByFrozenScorerConvention": true,
+    "byteRepeatDeterminism": true,
+    "fiveLineCountCorrectRate": true,
+    "lineOrderCorrectRate": true,
+    "predictedSystemPrecisionAtHalfSpacing": true,
+    "presentPageCoverage": true,
+    "sourceIdentityMatchRate": true,
+    "tabSixLineRejectionRate": true,
+    "teacherSystemRecallAtHalfSpacing": true
+  },
+  "decision": {
+    "anotherFreshHoldoutAuthorized": false,
+    "caveat": "The fresh holdout contains no staff-absent page, so absent-page specificity is not empirical negative-page evidence; it passes only by the scorer convention frozen before holdout scoring.",
+    "detectorQualified": true,
+    "nextSafeBoundary": "Staff-line source-detector qualification may be marked PASS for frozen v1.4 only. Do not infer restored-output topology preservation, semantic-preservation PASS, overall Stage 11 PASS, production readiness, Stage 12 entry, or PR merge. Restored-output staff-topology comparison remains separately unauthorized.",
+    "noRetuningAgainstConsumedFreshHoldout": true,
+    "noThresholdMovement": true,
+    "precisionEqualsMinimumThreshold": true,
+    "qualificationPassedUnderFrozenPolicy": true,
+    "reason": "The independently frozen v1.4 source-only raw artifact was scored exactly once against independently frozen blind teacher truth. All formal frozen qualification criteria pass: recall 1.0, precision 0.80, present-page coverage 1.0, absent-page specificity 1.0 under the predeclared zero-negative-page scorer convention, five-line/order invariants 1.0, six-line TAB rejection 1.0, byte-repeat determinism true, and source identity 1.0.",
+    "sourceDetectorAdequacyEstablished": true,
+    "staffLineDisposition": "QUALIFIED_FROZEN_V1_4_SOURCE_DETECTOR",
+    "staffLinePass": true
+  },
+  "frozenQualificationThresholds": {
+    "absentPageSpecificityMin": 1.0,
+    "allCriteriaRequired": true,
+    "byteRepeatDeterminismRequired": true,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "lineOrderCorrectRateMin": 1.0,
+    "predictedSystemPrecisionAtHalfSpacingMin": 0.8,
+    "presentPageCoverageMin": 0.95,
+    "sourceIdentityMatchRateRequired": 1.0,
+    "tabSixLineRejectionRateMin": 1.0,
+    "teacherSystemRecallAtHalfSpacingMin": 0.65
+  },
+  "generatedOn": "2026-09-14",
+  "holdoutScoring": {
+    "absentPageSpecificity": {
+      "clean": 0,
+      "interpretation": "Frozen scorer convention for a holdout containing no staff-absent pages; formal policy value only, not empirical negative-page evidence.",
+      "rate": 1.0,
+      "total": 0
+    },
+    "byteRepeatDeterminism": true,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "matchedSystemCountAtHalfSpacing": 4,
+    "perPage": [
+      {
+        "matchedSystems": 4,
+        "pageId": "tchaikovsky-piano-concerto-no1-score-p1",
+        "predictedSystems": 5,
+        "staffPresent": true,
+        "teacherSystems": 4
+      }
+    ],
+    "predictedSystemCount": 5,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8,
+    "presentPageCoverage": {
+      "detected": 1,
+      "rate": 1.0,
+      "total": 1
+    },
+    "sourceIdentityMatchRate": 1.0,
+    "tabSixLineRejectionRate": 1.0,
+    "teacherSystemCount": 4,
+    "teacherSystemRecallAtHalfSpacing": 1.0
+  },
+  "qualificationEvidence": true,
+  "repository": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "mergeAuthorized": false,
+    "pullRequestMustRemainDraft": true,
+    "pullRequestNumber": 211,
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine"
+  },
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-qualification-result-binding.v1",
+  "scorer": {
+    "developmentCompatibilityExpectedMatchedSystemCount": 71,
+    "developmentCompatibilityExpectedTeacherSystemCount": 197,
+    "developmentCompatibilityPreviouslyReproduced": true,
+    "implementationSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "scoreArtifactByteSize": 2012,
+    "scoreArtifactSha256": "c90342b879bdcc2c667bad381326d86a28bd570da6454d7555273b0228db6d67",
+    "scoringCoreSha256": "6c859cf08c7a8fe4c1778c0aded8e0c4fd7062b9df822e3760f91d135557c0f7",
+    "scoringExecutionCount": 1,
+    "scoringWillNotBeRepeated": true,
+    "toleranceFraction": 0.5
+  },
+  "sourceFreeze": {
+    "byteRepeatDeterminismVerified": true,
+    "path": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-source-freeze.v1.json",
+    "rawArtifactByteSize": 9955,
+    "rawArtifactSha256": "bcf96e175ee10bdb7a906da3990e12902ac6d9e6906cd08c041e8ca4c70804d5",
+    "restoredOutputsUsedDuringInference": false,
+    "retunedAfterHoldoutAccess": false,
+    "sourceByteSize": 309341,
+    "sourceIdentityMatchRate": 1.0,
+    "sourceSha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47",
+    "teacherCoordinatesUsedDuringInference": false,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "thresholdMovementAfterHoldoutAccess": false
+  },
+  "status": "QUALIFICATION_COMPLETE_PASS",
+  "supportingInvariantEvidence": {
+    "tabSixLineRejection": {
+      "rejectionRate": 1.0,
+      "scope": "Frozen synthetic regression control, not teacher-labelled fresh holdout evidence.",
+      "sixLineSyntheticControlRejected": true,
+      "testName": "test_true_multisystem_and_negative_controls_remain_bounded",
+      "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+      "testSha256": "1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb"
+    }
+  },
+  "teacherTruthFreeze": {
+    "binaryMaskSha256": "635660ee59c01fc9e903ac8576483d85b419e7151f5b0c236ade74cf8b7417cc",
+    "canonicalTeacherTruthSha256": "54e688755abdef9a9ff94c077269cc64e34791b428e94d78a84563c76a3dafd0",
+    "completedPageCount": 1,
+    "confirmedStaffLineCount": 20,
+    "confirmedSystemCount": 4,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "freezeCommit": "0432491d9cdd93aff9c48bcbf6d666961f43d396",
+    "lineDetectorGeometryShownToTeacher": false,
+    "pageCount": 1,
+    "path": "evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1.json",
+    "restoredOutputsShownToTeacher": false,
+    "staffAbsentPageCount": 0,
+    "staffPresentPageCount": 1,
+    "submittedSingleJsonSha256": "8dc2f86a82b7160626d431f668acef211ed71b8cca3621469656500007854532",
+    "teacherAnnotationIndependent": true,
+    "teacherTruthFrozenBeforeScoring": true
+  }
+}
