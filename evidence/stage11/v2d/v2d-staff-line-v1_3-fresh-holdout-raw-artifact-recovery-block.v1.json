@@ -1,10 +1,11 @@
 {
   "schemaVersion": "stage11.v2d.staff-line-v1_3-fresh-holdout-raw-artifact-recovery-block.v1",
   "generatedOn": "2026-09-14",
-  "state": "BLOCKED_ON_FROZEN_RAW_ARTIFACT_RECOVERY",
+  "state": "RESOLVED_BY_BYTE_IDENTICAL_RECONSTRUCTION",
   "repository": "khfy7wpr5p-maker/st-score-restore-engine",
   "branch": "stage11-v2c-semantic-detector-corpus-expansion",
   "pullRequestNumber": 211,
+  "resolutionPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-resolution.v1.json",
   "teacherTruth": {
     "frozen": true,
     "freezeBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-truth-freeze-binding.v1.json",
@@ -23,30 +24,36 @@
     "expectedSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
     "expectedPredictedSystemCount": 3,
     "byteRepeatDeterminismVerifiedAtFreeze": true,
-    "exactBytesRecovered": false
+    "exactBytesRecovered": true,
+    "recoveredByteSize": 8130,
+    "recoveredSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52"
   },
   "recoveryAudit": {
-    "driveExactRawFileFound": false,
+    "originalManagedRawWasMissing": true,
     "driveShaSidecarFound": true,
-    "shaSidecarByteSize": 65,
-    "shaSidecarHasPriorRawRevision": false,
-    "previouslyRecordedRawObjectAccessible": false,
-    "freezeWorkflowArtifactContainingRawFound": false,
-    "fileLibraryExactRawFound": false,
-    "sourceImageBytesStillAvailableAndIdentityVerified": true,
+    "preTeacherCanonicalConstructionRecordRecovered": true,
+    "sourceImageBytesAvailableAndIdentityVerified": true,
     "sourceImageSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
-    "byteIdenticalReconstructionCompleted": false,
-    "approximateOrRememberedPredictionGeometryUsedForScoring": false
+    "byteIdenticalReconstructionCompleted": true,
+    "approximateOrRememberedPredictionGeometryUsedForScoring": false,
+    "managedRestrictedRawRestored": true
   },
   "scorer": {
     "fileName": "stage11_v2d_staff_line_holdout_scorer.v1.py",
     "sha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
     "frozenDevelopmentCompatibilityAnchor": "71/197",
     "compatibilityAnchorPassedBeforeHoldoutScoring": true,
-    "holdoutScoringExecuted": false
+    "holdoutScoringExecuted": true,
+    "holdoutScoringExecutionCount": 1,
+    "coreOutputSha256": "822dfbbce63da3ed994e523707e7af7b9714c4091aba852ba500370163b6cedc"
+  },
+  "qualification": {
+    "resultBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-qualification-result-binding.v1.json",
+    "disposition": "REJECTED_CURRENT_DETECTOR",
+    "detectorQualified": false,
+    "staffLinePass": false
   },
   "governance": {
-    "scoringMayRunOnlyAfterExactRawShaMatch": true,
     "retuningAllowed": false,
     "thresholdMovementAllowed": false,
     "secondFreshHoldoutAuthorized": false,
@@ -57,6 +64,6 @@
     "pullRequestReadyForReviewAuthorized": false,
     "pullRequestMergeAuthorized": false
   },
-  "reason": "The independent teacher truth is frozen, but the exact frozen raw JSON bytes are no longer accessible in managed storage. Only the expected SHA-256 sidecar and repository freeze binding remain. Scoring is intentionally blocked rather than substituting remembered geometry or a non-byte-identical reconstruction.",
-  "nextSafeAction": "Recover the exact frozen raw artifact bytes or deterministically reconstruct them and require SHA-256 662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52 before executing the holdout scorer exactly once."
+  "reason": "The original managed raw object became inaccessible, but the exact pre-teacher canonical construction record, registered source identity, frozen detector identities, pre-freeze geometry/diagnostics fingerprints, and expected SHA-256 allowed deterministic byte-identical reconstruction. The recovered 8130-byte artifact matches the original frozen SHA-256 exactly and was then scored exactly once.",
+  "nextSafeAction": "Do not retune v1.3 against the consumed fresh holdout. Any successor must be separately versioned and developed only on authorized non-holdout development evidence."
 }
