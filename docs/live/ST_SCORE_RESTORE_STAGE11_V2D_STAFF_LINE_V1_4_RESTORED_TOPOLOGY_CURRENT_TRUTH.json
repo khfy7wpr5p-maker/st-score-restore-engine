@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-current-truth.v1",
+  "generatedOn": "2026-09-14",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+  "authorization": {
+    "restoredOutputStaffTopologyComparisonAuthorized": true,
+    "authorizationConsumedIntoPolicyFreeze": true,
+    "policyPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-policy.v1.json",
+    "policyFreezeCommit": "8abd2ebb7f1e45caf9e070f46fa0011d746b8f6e",
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "sourceDetector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "qualified": true,
+    "staffLinePass": true,
+    "qualificationTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_HOLDOUT_CURRENT_TRUTH.json"
+  },
+  "developmentTopologyTruth": {
+    "pageCount": 20,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2,
+    "teacherSystemCount": 197,
+    "teacherLineCount": 985,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "heldOutUsedForRestoredComparison": false
+  },
+  "restoreCandidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "full20CanonicalExecutionEvidencePath": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
+    "full20CanonicalExecutionCommit": "f587fb2f591a5dc36749f39a3a93559162a506f2",
+    "canonicalOutputIdentityRecordedForAllPages": true
+  },
+  "recovery": {
+    "blockerEvidencePath": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-canonical-output-recovery-block.v1.json",
+    "exactSourceRenderIdentity": "20/20 PASS",
+    "exactRestorePackageIdentity": true,
+    "exactCanonicalRestoredPngArchiveRecovered": false,
+    "currentRuntimePixelExactReproduction": false,
+    "nonCanonicalRerunAcceptedForScoring": false
+  },
+  "measurement": {
+    "restoredTopologyDetectorExecutedOnAcceptedCanonicalSet": false,
+    "restoredTopologyScoringExecuted": false,
+    "passFailVerdictAvailable": false,
+    "restoredStaffTopologyPreservationEstablished": false
+  },
+  "claimBoundary": {
+    "staffLineSourceDetectorQualified": true,
+    "staffLineSourcePass": true,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "pullRequest": {
+    "number": 211,
+    "mustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "nextSafeBoundary": "Recover or reproduce the exact 20 canonical restored decoded-pixel identities frozen in v2c-full20-repeat-execution.v1.json. Only after 20/20 canonical identity may the already-frozen v1.4 detector and scorer be run."
+}
