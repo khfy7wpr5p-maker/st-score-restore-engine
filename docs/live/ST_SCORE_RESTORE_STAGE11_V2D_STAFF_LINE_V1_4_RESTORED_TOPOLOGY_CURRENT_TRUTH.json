@@ -41,9 +41,17 @@
     "blockerEvidencePath": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-canonical-output-recovery-block.v1.json",
     "exactSourceRenderIdentity": "20/20 PASS",
     "exactRestorePackageIdentity": true,
+    "driveRestoredPagesFolderCandidatesFound": 2,
+    "primaryFolderFileCount": 20,
+    "secondaryFolderFileCount": 18,
+    "cacheManifestRevisionCount": 22,
     "exactCanonicalRestoredPngArchiveRecovered": false,
+    "canonicalBeethovenP1ExpectedByteSize": 223968,
+    "currentCacheBeethovenP1ByteSize": 223896,
+    "canonicalBeethovenP1VisibleOrTrashCopyRecovered": false,
     "currentRuntimePixelExactReproduction": false,
-    "nonCanonicalRerunAcceptedForScoring": false
+    "nonCanonicalRerunAcceptedForScoring": false,
+    "recoverySearchExhaustedAcrossAccessibleDriveAndHistoricalActions": true
   },
   "measurement": {
     "restoredTopologyDetectorExecutedOnAcceptedCanonicalSet": false,
@@ -67,5 +75,5 @@
     "mustRemainDraft": true,
     "mergeAuthorized": false
   },
-  "nextSafeBoundary": "Recover or reproduce the exact 20 canonical restored decoded-pixel identities frozen in v2c-full20-repeat-execution.v1.json. Only after 20/20 canonical identity may the already-frozen v1.4 detector and scorer be run."
+  "nextSafeBoundary": "Historical canonical-output recovery is exhausted in currently accessible Drive/Actions storage. The remaining choices are: recover an external archive containing the exact 20 frozen PNGs, or obtain separate authorization to define and freeze a new reproducible restored-output validation baseline. The historical canonical set must not be silently replaced."
 }
