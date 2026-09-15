@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_3-prequalification-freeze.v1",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeCommitSha": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "parentDetectorVersion": "stage11-v2d-restored-topology-successor.v1.5.1",
+    "pixelEvidenceDetectorVersion": "stage11-v2d-restored-topology-successor.v1.5"
+  },
+  "frozenConfig": {
+    "restoredTopologyConfig": {
+      "horizontal_kernel_fraction": 0.06,
+      "min_horizontal_support_fraction": 0.15,
+      "min_candidate_width_fraction": 0.35,
+      "min_staff_spacing_px": 3.0,
+      "max_staff_spacing_px": 18.0,
+      "regularity_tolerance_fraction": 0.38,
+      "six_line_tolerance_fraction": 0.35,
+      "x_overlap_min": 0.35,
+      "peak_window_size": 7,
+      "parent_min_spacing_px": 3.0,
+      "parent_max_spacing_px": 18.0,
+      "duplicate_center_tolerance_factor": 1.30,
+      "duplicate_line_mean_error_factor": 0.75
+    },
+    "cadenceRecoveryConfig": {
+      "min_system_count": 4,
+      "min_gap_px": 35.0,
+      "max_gap_px": 180.0,
+      "max_gap_multiple": 4,
+      "gap_tolerance_fraction": 0.12,
+      "min_direct_gap_count": 3,
+      "min_explained_gap_fraction": 0.80,
+      "max_phase_residual_fraction": 0.04,
+      "duplicate_center_fraction": 0.30
+    },
+    "replacementEligibilityPolicy": "skew-or-cadence-only",
+    "horizontalTemplateReplacementAllowed": false
+  },
+  "qualificationPolicy": {
+    "independentSetMustBeUnconsumed": true,
+    "noRetuningAfterInspection": true,
+    "noPageOrFamilySpecificRules": true,
+    "teacherDataUnavailableDuringInference": true,
+    "runCandidateTwiceForByteDeterminism": true,
+    "allClosureGatesConjunctive": true,
+    "thresholds": {
+      "teacherSystemRecallAtHalfSpacingMin": 0.65,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+      "presentPageCoverageMin": 0.95,
+      "absentPageSpecificityRequired": 1.0,
+      "fiveLineCorrectnessRequired": 1.0,
+      "lineOrderCorrectnessRequired": 1.0,
+      "determinismRequired": true
+    }
+  },
+  "developmentEvidenceOnly": {
+    "teacherSystems": 197,
+    "predictedSystems": 190,
+    "matchedSystems": 161,
+    "recall": 0.817258883248731,
+    "precision": 0.8473684210526315,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "stableControlsPassed": "6/6"
+  },
+  "claimBoundaryBeforeQualification": {
+    "successorQualified": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  }
+}
