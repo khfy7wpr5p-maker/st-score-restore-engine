@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_3-new-independent-holdout-protocol.v1",
+  "generatedOn": "2026-09-15",
+  "status": "FROZEN_BEFORE_NEW_HOLDOUT_ACQUISITION",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "prequalificationFreezePolicyCommit": "ff2781a556d3bfd643c62de83d5fe250e3c5f322"
+  },
+  "setEligibility": {
+    "mustBeDisjointFromTwentyPageDevelopmentCorpus": true,
+    "mustBeDisjointFromConsumedChopinSourceHoldout": true,
+    "mustBeDisjointFromConsumedTchaikovskySourceHoldout": true,
+    "mustNotReuseAnyPreviouslyScoredStaffTopologyQualificationPage": true,
+    "newScoreOrSourceFamiliesPreferred": true,
+    "staffPresentPagesRequired": true,
+    "atLeastOneStaffAbsentNegativePageRequired": true,
+    "minimumNegativePageCount": 1
+  },
+  "restoredOutputFreeze": {
+    "restorePipelineAndRuntimeMustBeFrozenBeforeTopologyInference": true,
+    "eachRestoredPngSha256MustBeRecordedBeforeScoring": true,
+    "eachRestoredPngByteSizeMustBeRecordedBeforeScoring": true,
+    "restoredPixelIdentityMustRemainImmutableThroughQualification": true,
+    "approximateOrReplacementRerunsAccepted": false
+  },
+  "blindTeacherTruth": {
+    "teacherMustNotSeeV1_5_3DetectorOutputs": true,
+    "teacherMustNotSeePredictedSystemCounts": true,
+    "teacherMustNotSeeDetectorGeometryOrOverlays": true,
+    "teacherTruthMustBeFrozenBeforeScoring": true,
+    "teacherTruthSha256MustBeRecorded": true,
+    "teacherMustAnnotateFiveLineSystemTopologyAndStaffAbsentPages": true
+  },
+  "inferenceAndDeterminism": {
+    "teacherTruthUnavailableDuringInference": true,
+    "pageIdentityRulesForbidden": true,
+    "sourceFamilyRulesForbidden": true,
+    "teacherCoordinatesForbidden": true,
+    "candidateMustRunTwice": true,
+    "rawArtifactsMustBeByteIdentical": true,
+    "candidateCodeOrConfigChangeAfterAnyQualificationAccessForbidden": true
+  },
+  "scoring": {
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "toleranceFraction": 0.5,
+    "thresholds": {
+      "teacherSystemRecallAtHalfSpacingMin": 0.65,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.80,
+      "presentPageCoverageMin": 0.95,
+      "absentPageSpecificityRequired": 1.0,
+      "fiveLineCorrectnessRequired": 1.0,
+      "lineOrderCorrectnessRequired": 1.0,
+      "determinismRequired": true
+    },
+    "allCriteriaConjunctive": true,
+    "postResultThresholdMovementForbidden": true,
+    "postResultRetuningForbidden": true,
+    "qualificationResultMustBeOneShotPassOrFail": true
+  },
+  "claimBoundary": {
+    "blockedOrNotRunCannotCloseStage11": true,
+    "qualificationPassDoesNotAutoMergePr211": true,
+    "qualificationPassDoesNotAutoAuthorizeProduction": true,
+    "qualificationPassDoesNotAutoAuthorizeStage12": true,
+    "pr211MustRemainDraftUntilSeparateClosureDecision": true
+  }
+}
