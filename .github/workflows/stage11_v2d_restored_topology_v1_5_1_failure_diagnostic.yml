@@ -1,0 +1,143 @@
+name: Stage 11 V2d Restored Topology V1.5.1 Failure Diagnostic
+
+on:
+  push:
+    branches:
+      - stage11-v2d-restored-topology-successor-v1_5
+    paths:
+      - scripts/stage11_v1_5_1_failure_diagnostic.py
+      - .github/workflows/stage11_v2d_restored_topology_v1_5_1_failure_diagnostic.yml
+
+permissions:
+  contents: write
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install project
+        run: python -m pip install -e . pytest
+
+      - name: Resolve already-approved development bundle reference
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          source=Path('.github/workflows/stage11_v2d_restored_topology_successor_v1_5_1_development.yml').read_text()
+          values={}
+          for key in ('BUNDLE_URL','EXPECTED_ZIP_SHA'):
+              match=re.search(rf'{key}:\s*"([^"]+)"', source)
+              if not match:
+                  raise SystemExit(f'missing {key} in approved development workflow')
+              values[key]=match.group(1)
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as handle:
+              for key,value in values.items():
+                  handle.write(f'{key}={value}\n')
+          print('DEVELOPMENT_BUNDLE_REFERENCE_RESOLVED_FROM_EXISTING_WORKFLOW')
+          PY
+
+      - name: Fetch exact development corpus bundle
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 "$BUNDLE_URL" -o /tmp/bundle.zip
+          echo "$EXPECTED_ZIP_SHA  /tmp/bundle.zip" | sha256sum -c -
+          mkdir -p /tmp/bundle
+          unzip -q /tmp/bundle.zip -d /tmp/bundle
+
+      - name: Verify exact 20-page development input identity
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          manifest=json.loads(Path('evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json').read_text())
+          pages={p['fileName']:p for p in manifest['pages']}
+          assert len(pages)==20
+          for name,p in sorted(pages.items()):
+              data=(Path('/tmp/bundle/restored_pages')/name).read_bytes()
+              assert len(data)==p['byteSize'], name
+              assert hashlib.sha256(data).hexdigest()==p['sha256'], name
+          print('DEVELOPMENT_INPUT_IDENTITY_20_OF_20_PASS')
+          PY
+
+      - name: Run v1.5.1 inference without teacher access
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          import cv2
+          from st_score_restore import stage11_v2d_restored_topology_successor_v1_5_1 as det
+          root=Path('/tmp/bundle/restored_pages')
+          pages=[]
+          for path in sorted(root.glob('*.png'), key=lambda p:p.name):
+              image=cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+              assert image is not None
+              systems,diagnostics=det.detect_staff_systems_with_diagnostics(image)
+              assert diagnostics['teacherCoordinatesUsed'] is False
+              assert diagnostics['heldOutAccessed'] is False
+              assert diagnostics['pageIdentityUsed'] is False
+              assert diagnostics['pageSpecificRulesUsed'] is False
+              assert diagnostics['familySpecificRulesUsed'] is False
+              pages.append({
+                  'pageId':path.stem,
+                  'sourceSha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                  'systemCount':len(systems),
+                  'systems':[item.as_dict() for item in systems],
+                  'diagnostics':diagnostics,
+              })
+          payload={
+              'schemaVersion':'stage11.v2d.restored-topology-v1_5_1-failure-diagnostic-raw.v1',
+              'detectorVersion':det.DETECTOR_VERSION,
+              'developmentOnly':True,
+              'qualificationEvidence':False,
+              'teacherArtifactLoadedDuringInference':False,
+              'heldOutAccessed':False,
+              'pages':pages,
+          }
+          Path('out/raw.json').write_text(json.dumps(payload,sort_keys=True,separators=(',',':'))+'\n')
+          print('V1_5_1_INFERENCE_COMPLETE_WITHOUT_TEACHER_ACCESS')
+          PY
+
+      - name: Score development output after inference
+        run: |
+          python /tmp/bundle/stage11_v2d_staff_line_holdout_scorer.v1.py \
+            --teacher /tmp/bundle/staff_line_teacher_mask_topology.v1.json \
+            --raw out/raw.json \
+            --output out/score.json > out/scorer.stdout.txt
+
+      - name: Build generic failure taxonomy after inference
+        run: |
+          python scripts/stage11_v1_5_1_failure_diagnostic.py \
+            --raw out/raw.json \
+            --score out/score.json \
+            --teacher /tmp/bundle/staff_line_teacher_mask_topology.v1.json \
+            --output evidence/stage11/v2d/v2d-restored-topology-v1_5_1-failure-taxonomy.v1.json
+
+      - name: Bind diagnostic evidence to branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evidence/stage11/v2d/v2d-restored-topology-v1_5_1-failure-taxonomy.v1.json
+          if git diff --cached --quiet; then
+            echo DIAGNOSTIC_EVIDENCE_ALREADY_CURRENT
+          else
+            git commit -m "stage11: bind v1.5.1 failure taxonomy"
+            git push
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage11-v1_5_1-failure-taxonomy
+          path: |
+            out/
+            evidence/stage11/v2d/v2d-restored-topology-v1_5_1-failure-taxonomy.v1.json
+          if-no-files-found: error
+          retention-days: 30
