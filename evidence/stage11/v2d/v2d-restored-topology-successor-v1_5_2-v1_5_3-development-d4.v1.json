@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_2-v1_5_3-development-d4.v1",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "heldOutAccessed": false,
+  "qualificationDataAccessed": false,
+  "teacherUsedDuringInference": false,
+  "pageSpecificRulesUsed": false,
+  "familySpecificRulesUsed": false,
+  "trainingOrFineTuningPerformed": false,
+  "developmentCorpus": {
+    "pageCount": 20,
+    "identitySource": "V2D_CACHE_V1/restored_pages + cache_manifest.json",
+    "parentRawCorpusIdentityMatchedCount": 20,
+    "parentRawCorpusIdentityExpectedCount": 20,
+    "replacementEligibleImageShaMatchedCount": 16,
+    "replacementEligibleImageShaExpectedCount": 16
+  },
+  "scorerCompatibility": {
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "toleranceFraction": 0.5,
+    "officialScorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "officialV1_5_1MatchedSystemCount": 160,
+    "replayedV1_5_1MatchedSystemCount": 160,
+    "officialV1_5_1Recall": 0.8121827411167513,
+    "replayedV1_5_1Recall": 0.8121827411167513,
+    "officialV1_5_1Precision": 0.8421052631578947,
+    "replayedV1_5_1Precision": 0.8421052631578947,
+    "status": "EXACT_COMPATIBILITY_PASS"
+  },
+  "parentV1_5_1": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 160,
+    "teacherSystemRecallAtHalfSpacing": 0.8121827411167513,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8421052631578947,
+    "absentPageSpecificity": 1.0,
+    "presentPageCoverage": 1.0
+  },
+  "candidateV1_5_2": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.2",
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 160,
+    "teacherSystemRecallAtHalfSpacing": 0.8121827411167513,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8421052631578947,
+    "absentPageSpecificity": 1.0,
+    "presentPageCoverage": 1.0,
+    "stableControlsPassed": false,
+    "stableControlRegression": {
+      "pageId": "bach-anna-magdalena-p40",
+      "parentMatchedSystemCount": 12,
+      "candidateMatchedSystemCount": 11
+    },
+    "developmentDecision": "FAIL_DO_NOT_FREEZE",
+    "replayRawSha256": "48504265c4d6c73878af0d1936da09ebfcdbef18e2e4553ee8a697a23a059eab"
+  },
+  "candidateV1_5_3": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "eligibilityPolicy": "skew-or-cadence-only",
+    "horizontalTemplateReplacementAllowed": false,
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 161,
+    "teacherSystemRecallAtHalfSpacing": 0.817258883248731,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8473684210526315,
+    "absentPageSpecificity": 1.0,
+    "presentPageCoverage": 1.0,
+    "matchedSystemDeltaVsV1_5_1": 1,
+    "recallDeltaVsV1_5_1": 0.005076142131979711,
+    "precisionDeltaVsV1_5_1": 0.0052631578947368585,
+    "stableControlsPassed": true,
+    "pageLevelImprovement": {
+      "pageId": "carulli-morceaux-faciles-p7",
+      "parentMatchedSystemCount": 8,
+      "candidateMatchedSystemCount": 9,
+      "predictedSystemCount": 11
+    },
+    "otherPageMatchedCountRegressions": 0,
+    "byteRepeatDeterminism": true,
+    "replayRawSha256": "736f952948de1abbefb996f00b0c6419dcb3a0091ffa6bcaa9cfba7c527bdb46",
+    "replayDiagnosticsSha256": "fc4dda3465f6fa016b62105ebc56f26145dfc1d6ca00e09a2f81df2c87599a2a",
+    "contractWorkflowRunId": 34943423022,
+    "contractWorkflowConclusion": "success",
+    "developmentDecision": "PASS_AS_DEVELOPMENT_FREEZE_CANDIDATE_NOT_QUALIFIED"
+  },
+  "replayBoundary": {
+    "method": "byte-frozen v1.5.1 parent raw plus exact v1.5 periodic-pixel channel and candidate replacement logic",
+    "fullParentDetectorWasNotReexecuted": true,
+    "reason": "legacy development bundle transport URL expired; permanent Drive cache supplied exact page bytes",
+    "claim": "development replay only; not independent qualification"
+  },
+  "claimBoundary": {
+    "successorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "mergeAuthorized": false
+  }
+}
