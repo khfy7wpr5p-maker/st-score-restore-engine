@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-independent-holdout-blind-teacher-package-binding.v1",
+  "generatedOn": "2026-09-15",
+  "status": "BLIND_TEACHER_OFFLINE_PACKAGE_READY_ANNOTATION_PENDING",
+  "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "sourceAcquisition": {
+    "workflowRunId": 34945981346,
+    "workflowConclusion": "success",
+    "workflowHeadSha": "912df20a105c2c2cdf52dd03eb118e9034892d42",
+    "artifactId": 10386922032,
+    "artifactName": "stage11-v1_5_3-independent-holdout-source-freeze",
+    "artifactSizeBytes": 4825122,
+    "artifactSha256": "0c468f34e1b37194edcd9b476f6718f2e423feed10bab86c20f7d15260f6bc34",
+    "sourceFreezeManifestSha256": "8013a1c9bec17ecb74280468ec2f58f35dda53cb24c3adb88f513e2688bf3705",
+    "pageCount": 10,
+    "sourceFamilyCount": 2
+  },
+  "teacherPackage": {
+    "offlineHtmlFileName": "st_score_restore_v1_5_3_blind_teacher_annotation_OFFLINE.html",
+    "offlineHtmlByteSize": 6470381,
+    "offlineHtmlSha256": "b324810ff5010059b2a12adf15db7a91c42beb432d1870357fdbb7021c96d200",
+    "packageZipFileName": "st_score_restore_v1_5_3_blind_teacher_package.zip",
+    "packageZipByteSize": 4874233,
+    "packageZipSha256": "8cf7bc28382c613654fa40da674e65be010db88844cd118b7981d0070096a05b",
+    "embeddedSourceImageCount": 10,
+    "allSourceImagesEmbedded": true,
+    "networkRequiredDuringAnnotation": false,
+    "browserAutosave": true,
+    "singleFinalJson": true,
+    "embeddedBinaryMaskPerPage": true,
+    "compatibleTopologySchemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-topology.v1",
+    "singleJsonSchemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-topology.single-json.v1"
+  },
+  "verification": {
+    "javascriptSyntaxCheck": "PASS",
+    "zipIntegrityCheck": "PASS",
+    "exactEmbeddedSourceImageCountCheck": "PASS",
+    "sourceFreezeShaBoundInHtml": true,
+    "detectorOutputEmbedded": false,
+    "predictedCountsEmbedded": false,
+    "detectorGeometryEmbedded": false,
+    "restoredOutputsEmbedded": false
+  },
+  "teacherEligibilityGate": {
+    "atLeastOneStaffPresentPageRequired": true,
+    "atLeastOneStaffAbsentPageRequired": true,
+    "pageReplacementWithinFrozenSetAllowed": false,
+    "ifGateFails": "Mark this set INELIGIBLE and pre-freeze a separately versioned source set; do not replace a page after inspection."
+  },
+  "qualificationBoundary": {
+    "teacherTruthFrozen": false,
+    "exactRestorePackageAvailableInCurrentConnectedStorage": false,
+    "restoredOutputsFrozen": false,
+    "v1_5_3InferenceExecuted": false,
+    "qualificationScoringExecuted": false,
+    "qualificationResult": "NOT_RUN",
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  }
+}
