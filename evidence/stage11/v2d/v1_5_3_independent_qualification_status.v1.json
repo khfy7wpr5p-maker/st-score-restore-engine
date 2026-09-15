@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_3-independent-qualification-status.v1",
+  "generatedOn": "2026-09-15",
+  "status": "BLOCKED_NO_UNCONSUMED_INDEPENDENT_RESTORED_TOPOLOGY_SET",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "prequalificationFreezePolicyCommit": "ff2781a556d3bfd643c62de83d5fe250e3c5f322",
+    "prequalificationPolicyPath": "evidence/stage11/v2d/v1_5_3_prequalification_freeze_policy.v1.json"
+  },
+  "qualificationRun": {
+    "performed": false,
+    "rawInferenceExecuted": false,
+    "teacherScoringExecuted": false,
+    "qualificationMetricsIssued": false,
+    "retuningAfterFreeze": false,
+    "thresholdMovementAfterFreeze": false
+  },
+  "availabilityAudit": {
+    "repositoryEvidenceDirectoryInspected": true,
+    "connectedDriveSearched": true,
+    "rejectedConsumedOrNonqualifyingSets": [
+      {
+        "name": "v1.2 Chopin eight-page independent source holdout",
+        "disposition": "REJECTED_FOR_V1_5_3_QUALIFICATION",
+        "reason": "Already consumed for source-detector qualification; source-only inference; governance forbids reuse as fresh restored-output qualification evidence."
+      },
+      {
+        "name": "v1.4 Tchaikovsky one-page fresh source holdout",
+        "disposition": "REJECTED_FOR_V1_5_3_QUALIFICATION",
+        "reason": "Already consumed for frozen v1.4 source-detector qualification; source-only inference; not an unconsumed restored-output topology set."
+      },
+      {
+        "name": "twenty-page restored-output topology corpus",
+        "disposition": "DEVELOPMENT_ONLY",
+        "reason": "Used for baseline-v2 and v1.5 through v1.5.3 development, diagnostics, scoring, and regression selection; cannot be promoted to independent qualification evidence."
+      },
+      {
+        "name": "other Stage 11 semantic-class holdouts",
+        "disposition": "OUT_OF_SCOPE",
+        "reason": "Clef and other semantic-class holdouts do not constitute teacher-labelled restored-output staff-topology qualification data and must not be repurposed."
+      }
+    ],
+    "usableUnconsumedIndependentRestoredTopologySetsFound": 0
+  },
+  "governance": {
+    "consumedHoldoutReuse": false,
+    "developmentCorpusReclassifiedAsHoldout": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "pageOrFamilySpecificRetuning": false,
+    "candidateCodeChangedAfterFreeze": false,
+    "candidateConfigChangedAfterFreeze": false
+  },
+  "decision": {
+    "successorQualified": false,
+    "qualificationDisposition": "NOT_RUN_BLOCKED_ON_NEW_INDEPENDENT_SET",
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false,
+    "reason": "No genuinely separate, unconsumed, teacher-annotated restored-output staff-topology qualification set is currently available. Reusing consumed source holdouts or the twenty-page development corpus would invalidate qualification independence.",
+    "nextSafeBoundary": "Acquire and freeze a new disjoint restored-output staff-topology holdout under a predeclared protocol, obtain blind teacher truth independently, then run the already frozen v1.5.3 candidate exactly as specified without retuning."
+  }
+}
