@@ -1,0 +1,219 @@
+name: Stage 11 V2d V1.5.3 Independent Holdout Source Acquisition
+
+on:
+  push:
+    branches:
+      - stage11-v2d-restored-topology-successor-v1_5
+    paths:
+      - '.github/workflows/stage11_v2d_v1_5_3_independent_holdout_source_acquisition.yml'
+      - 'evidence/stage11/v2d/v1_5_3_independent_holdout_source_selection.v1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire-and-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic acquisition dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          python -m pip install --quiet pillow
+
+      - name: Verify frozen candidate identity and source-selection policy
+        run: |
+          set -euo pipefail
+          CANDIDATE_COMMIT='542810b3a9ffd5ac49b076ad13b23a5441c6e834'
+          EXPECTED_BLOB='4b44065d5af4bbeb73d18ac1901ada8eac763d62'
+          MODULE='src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5_3.py'
+          test "$(git rev-parse "${CANDIDATE_COMMIT}:${MODULE}")" = "$EXPECTED_BLOB"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('evidence/stage11/v2d/v1_5_3_independent_holdout_source_selection.v1.json').read_text())
+          assert p['status']=='SOURCE_SELECTION_FROZEN_BEFORE_ACQUISITION_OR_INFERENCE'
+          assert p['candidate']['detectorRunOnSelectedSources'] is False
+          assert p['plannedCorpus']['selectedPageCount']==10
+          assert p['plannedCorpus']['sourceFamilyCount']==2
+          assert p['plannedCorpus']['minimumStaffAbsentNegativePages']==1
+          assert p['selectionMethod']['pageSelectionWillNotBeChangedAfterAcquisition'] is True
+          print('FROZEN_SOURCE_SELECTION_POLICY_PASS')
+          PY
+
+      - name: Download exact public-domain source PDFs
+        run: |
+          set -euo pipefail
+          mkdir -p out/source_pdfs out/source_pages
+          curl --fail --location --retry 4 --retry-all-errors \
+            'https://upload.wikimedia.org/wikipedia/commons/6/6c/Liederkreis%2C_Op.39_%28IA_imslp-op39-schumann-robert%29.pdf' \
+            -o out/source_pdfs/schumann-liederkreis-op39.pdf
+          curl --fail --location --retry 4 --retry-all-errors \
+            'https://upload.wikimedia.org/wikipedia/commons/d/d4/IMSLP387481-PMLP626889--It.IV.201-_30_Sonate.pdf' \
+            -o out/source_pdfs/scarlatti-1752-30-sonate-vol1.pdf
+          test "$(pdfinfo out/source_pdfs/schumann-liederkreis-op39.pdf | awk '/^Pages:/ {print $2}')" = '28'
+          test "$(pdfinfo out/source_pdfs/scarlatti-1752-30-sonate-vol1.pdf | awk '/^Pages:/ {print $2}')" = '142'
+          sha256sum out/source_pdfs/*.pdf | tee out/source-pdf-sha256.txt
+
+      - name: Render the predeclared pages only
+        run: |
+          set -euo pipefail
+          for p in 1 2 5 9 13; do
+            pdftoppm -f "$p" -l "$p" -singlefile -r 72 -gray -png \
+              out/source_pdfs/schumann-liederkreis-op39.pdf \
+              "out/source_pages/schumann-liederkreis-op39-p${p}"
+          done
+          for p in 1 2 16 32 48; do
+            pdftoppm -f "$p" -l "$p" -singlefile -r 72 -gray -png \
+              out/source_pdfs/scarlatti-1752-30-sonate-vol1.pdf \
+              "out/source_pages/scarlatti-1752-30-sonate-vol1-p${p}"
+          done
+          test "$(find out/source_pages -maxdepth 1 -type f -name '*.png' | wc -l)" = '10'
+
+      - name: Freeze source PDF and raster identities
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from PIL import Image
+
+          def sha(path):
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+          root=Path('out')
+          selection=json.loads(Path('evidence/stage11/v2d/v1_5_3_independent_holdout_source_selection.v1.json').read_text())
+          pdfs={
+              'source.family.wikimedia-schumann-liederkreis-op39-scan.v1': root/'source_pdfs/schumann-liederkreis-op39.pdf',
+              'source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1': root/'source_pdfs/scarlatti-1752-30-sonate-vol1.pdf',
+          }
+          pages=[]
+          for src in selection['sources']:
+              family=src['sourceFamilyId']
+              prefix='schumann-liederkreis-op39' if 'schumann' in family else 'scarlatti-1752-30-sonate-vol1'
+              for page_number in src['selectedPdfPagesOneBased']:
+                  path=root/'source_pages'/f'{prefix}-p{page_number}.png'
+                  with Image.open(path) as im:
+                      gray=im.convert('L')
+                      pixels=gray.tobytes()
+                      width,height=gray.size
+                  pages.append({
+                      'pageId':f'{prefix}-p{page_number}',
+                      'sourceFamilyId':family,
+                      'sourcePdfPageOneBased':page_number,
+                      'fileName':path.name,
+                      'mediaType':'image/png',
+                      'width':width,
+                      'height':height,
+                      'byteSize':path.stat().st_size,
+                      'sha256':sha(path),
+                      'decodedGrayscalePixelSha256':hashlib.sha256(pixels).hexdigest(),
+                      'staffPresence':'UNKNOWN_PENDING_BLIND_TEACHER',
+                  })
+          manifest={
+              'schemaVersion':'stage11.v2d.v1_5_3-independent-holdout-source-freeze-manifest.v1',
+              'status':'SOURCE_BYTES_AND_RASTERS_FROZEN_TEACHER_TRUTH_PENDING',
+              'qualificationSetId':selection['qualificationSetId'],
+              'selectionPolicyPath':'evidence/stage11/v2d/v1_5_3_independent_holdout_source_selection.v1.json',
+              'candidate':selection['candidate'],
+              'render':{'engine':'pdftoppm','dpi':72,'mode':'grayscale','pageNumbersFrozenBeforeAcquisition':True},
+              'sourcePdfs':[
+                  {
+                      'sourceFamilyId':src['sourceFamilyId'],
+                      'downloadUrl':src['downloadUrl'],
+                      'declaredPageCount':src['declaredPageCount'],
+                      'pdfFileName':pdfs[src['sourceFamilyId']].name,
+                      'byteSize':pdfs[src['sourceFamilyId']].stat().st_size,
+                      'sha256':sha(pdfs[src['sourceFamilyId']]),
+                      'licensing':src['licensing'],
+                  } for src in selection['sources']
+              ],
+              'pageCount':len(pages),
+              'pages':pages,
+              'blindBoundary':{
+                  'teacherTruthLoaded':False,
+                  'detectorExecuted':False,
+                  'detectorOutputShown':False,
+                  'predictedCountsShown':False,
+                  'restoredOutputGenerated':False,
+                  'qualificationScoringPerformed':False,
+              },
+              'eligibilityPending':{
+                  'staffPresentPagesRequired':True,
+                  'minimumStaffAbsentNegativePages':1,
+                  'mustBeConfirmedByBlindTeacherTruth':True,
+              },
+          }
+          payload=json.dumps(manifest,indent=2,sort_keys=True)+'\n'
+          (root/'source-freeze-manifest.v1.json').write_text(payload)
+          print(hashlib.sha256(payload.encode()).hexdigest())
+          PY
+
+      - name: Prepare blind teacher work package metadata
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          m=json.loads(Path('out/source-freeze-manifest.v1.json').read_text())
+          work={
+              'schemaVersion':'stage11.v2d.v1_5_3-independent-holdout-blind-teacher-work-package.v1',
+              'status':'BLIND_TEACHER_SOURCE_PACKAGE_READY_ANNOTATION_PENDING',
+              'qualificationSetId':m['qualificationSetId'],
+              'sourceFreezeManifestSha256':hashlib.sha256(Path('out/source-freeze-manifest.v1.json').read_bytes()).hexdigest(),
+              'pageCount':m['pageCount'],
+              'pages':m['pages'],
+              'teacherInstructions':[
+                  'Work only from the frozen source-page PNGs in source_pages/.',
+                  'Do not inspect detector output, predicted counts, restored output, or prior holdout truth.',
+                  'For each genuine standard five-line staff system, record exactly five ordered staff-line y coordinates or line segments using the existing Stage 11 teacher-topology schema.',
+                  'Use CONFIRMED for unambiguous systems and AMBIGUOUS only when source evidence is genuinely uncertain.',
+                  'For pages with no standard five-line staff, mark staffAbsent=true and record zero systems.',
+                  'Return one finalized teacher-truth JSON covering all ten frozen page IDs.'
+              ],
+              'eligibilityGate':{
+                  'atLeastOneStaffPresentPageRequired':True,
+                  'atLeastOneStaffAbsentPageRequired':True,
+                  'ifGateFails':'Do not replace pages in this set. Mark set ineligible and pre-freeze a separately versioned source selection.'
+              },
+              'blindBoundary':m['blindBoundary'],
+              'claimBoundary':{
+                  'teacherTruthFrozen':False,
+                  'restoredOutputsFrozen':False,
+                  'v1_5_3InferenceExecuted':False,
+                  'qualificationScoringExecuted':False,
+                  'overallStage11PassAuthorized':False,
+                  'productionPromotionAuthorized':False,
+                  'stage12EntryAuthorized':False,
+              },
+          }
+          Path('out/blind-teacher-work-package.v1.json').write_text(json.dumps(work,indent=2,sort_keys=True)+'\n')
+          PY
+
+      - name: Prove acquisition repeat identity
+        run: |
+          set -euo pipefail
+          sha256sum out/source_pages/*.png | sort > out/source-page-sha256-a.txt
+          sha256sum out/source_pages/*.png | sort > out/source-page-sha256-b.txt
+          cmp out/source-page-sha256-a.txt out/source-page-sha256-b.txt
+          echo SOURCE_ACQUISITION_IDENTITY_PASS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage11-v1_5_3-independent-holdout-source-freeze
+          path: |
+            out/source_pages/
+            out/source-pdf-sha256.txt
+            out/source-page-sha256-a.txt
+            out/source-freeze-manifest.v1.json
+            out/blind-teacher-work-package.v1.json
+          if-no-files-found: error
+          retention-days: 90
