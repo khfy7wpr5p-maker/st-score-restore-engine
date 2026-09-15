@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-v1_5_1-failure-taxonomy.v1",
+  "generatedOn": "2026-09-15",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.1",
+  "sourceEvidence": {
+    "workflowRunId": 34900675667,
+    "workflowConclusion": "success",
+    "artifactId": 10370961107,
+    "artifactName": "stage11-v1_5_1-development-result",
+    "artifactSha256": "d4ad1a565700267ed37cc653ae9a523e46615781dbfa20d45cafe3ddf5d5ff1b",
+    "rawASha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "rawBSha256": "1e5bdd59ab52c4225a09899e3981d70bf772abebb399103ed232ad7aea757087",
+    "scoreSha256": "827aa3f302927b2e804b727d0993479474c550b0aa2d932f2ba1cd319a2ac0d7",
+    "developmentResultSha256": "94fd84253c2b92742214c1c646cf60a6efc8d60970541ff29b783c385f65a1b9",
+    "abByteIdentical": true
+  },
+  "aggregate": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 190,
+    "matchedSystemCount": 160,
+    "falseNegativeSystemCount": 37,
+    "falsePositiveSystemCount": 30,
+    "teacherSystemRecallAtHalfSpacing": 0.8121827411167513,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8421052631578947,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCorrectness": 1.0,
+    "lineOrderCorrectness": 1.0
+  },
+  "failureMechanismCounts": {
+    "EXACT": 12,
+    "OVERDETECTION_ONLY": 3,
+    "COUNT_BALANCED_ALIGNMENT_OR_PATTERN_SELECTION": 2,
+    "HYBRID_UNDERCOUNT_AND_ALIGNMENT_OR_PATTERN_SELECTION": 3
+  },
+  "genericFindings": [
+    "The dominant remaining loss is not a pure missing-system problem: 30 false positives coexist with 37 false negatives.",
+    "Two pages have teacher-count-equal-to-predicted-count but still lose matches, proving that adding more systems alone cannot solve the remaining error.",
+    "Three pages combine undercount with wrong alignment/pattern selection and therefore require bounded recovery plus stronger replacement/deduplication rather than unconstrained addition.",
+    "Three pages have recall-complete over-detection only; any successor must preserve precision guards while improving the hard pages.",
+    "v1.5.1 cadence recovery itself accounts for only one current false positive; the larger false-positive burden is inherited from source-template/source-skew candidates and v1.5 periodicity candidates.",
+    "A safe next revision should prefer restored-pixel-backed alignment/replacement of an existing nearby hypothesis before increasing system count. This is especially important because absent-page specificity is already 1.0."
+  ],
+  "falsePositiveProvenanceCounts": {
+    "SOURCE_TEMPLATE": 13,
+    "V1_5_PERIODICITY": 8,
+    "SOURCE_SKEW": 7,
+    "V1_5_1_CADENCE": 1,
+    "SOURCE_TOPOLOGY": 1
+  },
+  "affectedPages": [
+    {
+      "pageId": "carulli-morceaux-faciles-p2",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 12,
+      "matchedSystemCount": 2,
+      "falseNegativeCount": 10,
+      "falsePositiveCount": 10,
+      "mechanism": "COUNT_BALANCED_ALIGNMENT_OR_PATTERN_SELECTION",
+      "matchedIndexMap": [[1, 1], [12, 12]],
+      "observation": "First and last systems match while all ten interior predictions fail the frozen half-spacing matcher. Count is already correct; generic alignment/pattern replacement is higher priority than adding systems."
+    },
+    {
+      "pageId": "carulli-morceaux-faciles-p5",
+      "teacherSystemCount": 15,
+      "predictedSystemCount": 15,
+      "matchedSystemCount": 12,
+      "falseNegativeCount": 3,
+      "falsePositiveCount": 3,
+      "mechanism": "COUNT_BALANCED_ALIGNMENT_OR_PATTERN_SELECTION",
+      "observation": "Most topology is correct; three wrong hypotheses remain despite correct total count."
+    },
+    {
+      "pageId": "carulli-morceaux-faciles-p7",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 11,
+      "matchedSystemCount": 8,
+      "falseNegativeCount": 4,
+      "falsePositiveCount": 3,
+      "mechanism": "HYBRID_UNDERCOUNT_AND_ALIGNMENT_OR_PATTERN_SELECTION",
+      "matchedIndexMap": [[2, 4], [3, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [11, 12]],
+      "observation": "Matched index offset shows missing early/interior systems plus three wrong hypotheses."
+    },
+    {
+      "pageId": "carulli-morceaux-faciles-p8",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 9,
+      "matchedSystemCount": 2,
+      "falseNegativeCount": 10,
+      "falsePositiveCount": 7,
+      "mechanism": "HYBRID_UNDERCOUNT_AND_ALIGNMENT_OR_PATTERN_SELECTION",
+      "matchedIndexMap": [[4, 7], [7, 11]],
+      "observation": "Severe mixed failure: both missing topology and wrong local hypotheses."
+    },
+    {
+      "pageId": "carulli-morceaux-faciles-p9",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 5,
+      "matchedSystemCount": 2,
+      "falseNegativeCount": 10,
+      "falsePositiveCount": 3,
+      "mechanism": "HYBRID_UNDERCOUNT_AND_ALIGNMENT_OR_PATTERN_SELECTION",
+      "matchedIndexMap": [[1, 2], [3, 8]],
+      "observation": "Sparse recovery dominates, but three of five hypotheses still fail matching; recovery must remain evidence-bounded."
+    },
+    {
+      "pageId": "wikimedia-guitar-technical-exercise-no1-p1",
+      "teacherSystemCount": 3,
+      "predictedSystemCount": 4,
+      "matchedSystemCount": 3,
+      "falseNegativeCount": 0,
+      "falsePositiveCount": 1,
+      "mechanism": "OVERDETECTION_ONLY"
+    },
+    {
+      "pageId": "bach-anna-magdalena-p4",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 13,
+      "matchedSystemCount": 12,
+      "falseNegativeCount": 0,
+      "falsePositiveCount": 1,
+      "mechanism": "OVERDETECTION_ONLY"
+    },
+    {
+      "pageId": "bach-anna-magdalena-p10",
+      "teacherSystemCount": 12,
+      "predictedSystemCount": 14,
+      "matchedSystemCount": 12,
+      "falseNegativeCount": 0,
+      "falsePositiveCount": 2,
+      "mechanism": "OVERDETECTION_ONLY"
+    }
+  ],
+  "inferenceGovernance": {
+    "teacherCoordinatesUsedDuringInference": false,
+    "heldOutAccessed": false,
+    "pageIdentityUsedDuringInference": false,
+    "pageSpecificRulesUsedDuringInference": false,
+    "familySpecificRulesUsedDuringInference": false,
+    "trainingUsed": false
+  },
+  "transportNote": {
+    "diagnosticWorkflowRunId": 34940845658,
+    "diagnosticWorkflowConclusion": "failure",
+    "failureStage": "development bundle download",
+    "interpretation": "Transport failure only. The previously committed signed development-bundle URL had expired before the diagnostic rerun; no detector inference or scoring step executed in that failed run.",
+    "detectorRegressionImplied": false
+  },
+  "claimBoundary": {
+    "successorQualified": false,
+    "overallStage11Pass": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pr211MergeAuthorized": false
+  }
+}
