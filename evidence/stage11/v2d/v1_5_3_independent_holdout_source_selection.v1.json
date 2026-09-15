@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "stage11.v2d.restored-topology-successor-v1_5_3-independent-holdout-source-selection.v1",
+  "generatedOn": "2026-09-15",
+  "status": "SOURCE_SELECTION_FROZEN_BEFORE_ACQUISITION_OR_INFERENCE",
+  "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "prequalificationFreezePolicyCommit": "ff2781a556d3bfd643c62de83d5fe250e3c5f322",
+    "detectorRunOnSelectedSources": false
+  },
+  "selectionMethod": {
+    "selectedBeforeDetectorInference": true,
+    "selectedWithoutTeacherTruth": true,
+    "selectedWithoutPredictedCounts": true,
+    "selectedWithoutDetectorGeometry": true,
+    "pageSpecificPerformanceInformationUsed": false,
+    "selectionRule": "Two public-domain score families outside every known Stage 11 restored-topology development/source-holdout family; fixed page numbers declared before download, restore execution, detector inference, or teacher scoring.",
+    "pageSelectionWillNotBeChangedAfterAcquisition": true,
+    "ifNegativePageRequirementFails": "Mark this qualification set INELIGIBLE; do not swap pages after inspection. Freeze a separately versioned new source set before any replacement acquisition."
+  },
+  "excludedKnownFamilies": [
+    "source.family.imslp799143-beethoven-op48-no3.v1",
+    "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+    "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1",
+    "source.family.imslp675596-carulli-recueil-morceaux-faciles.v1",
+    "source.family.bach-anna-magdalena.v1",
+    "consumed Chopin Op.69 staff-line independent holdout family",
+    "consumed Tchaikovsky Piano Concerto No.1 v1.4 fresh source holdout family"
+  ],
+  "sources": [
+    {
+      "sourceFamilyId": "source.family.wikimedia-schumann-liederkreis-op39-scan.v1",
+      "title": "Liederkreis, Op.39",
+      "author": "Robert Schumann",
+      "publicationDate": "1840",
+      "sourceKind": "scanned-score-pdf",
+      "commonsDescriptionUrl": "https://commons.wikimedia.org/wiki/File:Liederkreis,_Op.39_(IA_imslp-op39-schumann-robert).pdf",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Liederkreis%2C_Op.39_%28IA_imslp-op39-schumann-robert%29.pdf",
+      "declaredPageCount": 28,
+      "licensing": "Wikimedia Commons Public Domain Mark; public-domain work and file identified as free of known copyright restrictions.",
+      "selectedPdfPagesOneBased": [1, 2, 5, 9, 13]
+    },
+    {
+      "sourceFamilyId": "source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1",
+      "title": "30 Sonate — Venice manuscript volume, 1752",
+      "author": "Domenico Scarlatti",
+      "publicationDate": "1752",
+      "sourceKind": "scanned-manuscript-score-pdf",
+      "commonsDescriptionUrl": "https://commons.wikimedia.org/wiki/File:IMSLP387481-PMLP626889--It.IV.201-_30_Sonate.pdf",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d4/IMSLP387481-PMLP626889--It.IV.201-_30_Sonate.pdf",
+      "declaredPageCount": 142,
+      "licensing": "Wikimedia Commons Public Domain Mark; public-domain manuscript/file identified as free of known copyright restrictions.",
+      "selectedPdfPagesOneBased": [1, 2, 16, 32, 48]
+    }
+  ],
+  "plannedCorpus": {
+    "sourceFamilyCount": 2,
+    "selectedPageCount": 10,
+    "staffPresenceBeforeBlindTeacherTruth": "UNKNOWN",
+    "staffPresentPagesRequired": true,
+    "minimumStaffAbsentNegativePages": 1,
+    "negativePageRequirementMustBeConfirmedByBlindTeacherTruth": true,
+    "render": {
+      "engine": "pdftoppm",
+      "dpi": 72,
+      "mode": "grayscale",
+      "pageNumbersFrozen": true
+    }
+  },
+  "acquisitionBoundary": {
+    "sourcePdfBytesFrozen": false,
+    "sourcePageRasterBytesFrozen": false,
+    "restoredPngBytesFrozen": false,
+    "teacherTruthFrozen": false,
+    "v1_5_3InferenceExecuted": false,
+    "qualificationScoringExecuted": false,
+    "qualificationResult": "NOT_RUN"
+  },
+  "governance": {
+    "noRetuning": true,
+    "noThresholdMovement": true,
+    "pr211MustRemainDraftOpenUnmerged": true,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "overallStage11PassAuthorized": false
+  }
+}
