@@ -1,0 +1,44 @@
+{
+  "blindBoundary": {
+    "detectorExecuted": false,
+    "detectorOutputShown": false,
+    "predictedCountsShown": false,
+    "qualificationScoringPerformed": false,
+    "restoredOutputGenerated": false,
+    "teacherTruthLoaded": false
+  },
+  "candidate": {
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "detectorRunOnSelectedSources": false,
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "prequalificationFreezePolicyCommit": "ff2781a556d3bfd643c62de83d5fe250e3c5f322"
+  },
+  "eligibilityPending": {
+    "minimumStaffAbsentNegativePages": 1,
+    "mustBeConfirmedByBlindTeacherTruth": true,
+    "staffPresentPagesRequired": true
+  },
+  "pageCount": 10,
+  "pages": [
+    {"byteSize":307664,"decodedGrayscalePixelSha256":"ebf776f58fe9d73d8ca4e90797ee319832efdf671b849cd7b45da8298d24011c","fileName":"schumann-liederkreis-op39-p1.png","height":1043,"mediaType":"image/png","pageId":"schumann-liederkreis-op39-p1","sha256":"5fac730a350992bfe2a3027d3d53f24f5b8db858623daee60d5c8931e3042ecb","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1","sourcePdfPageOneBased":1,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":828},
+    {"byteSize":145364,"decodedGrayscalePixelSha256":"75662cbaeda63e77f6a80212688abc7178dd9fdff7f7f4b90c5a66ddb27c0c8f","fileName":"schumann-liederkreis-op39-p2.png","height":1043,"mediaType":"image/png","pageId":"schumann-liederkreis-op39-p2","sha256":"8fff712c92fbed386a0b3d89f5f630bd9cad9532cf949373b6acb82fdb6b1927","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1","sourcePdfPageOneBased":2,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":828},
+    {"byteSize":660849,"decodedGrayscalePixelSha256":"d03a45d7e0a2aba7dcc501aebc864e27d2b79a08526cff6c30c999b7172cbfb3","fileName":"schumann-liederkreis-op39-p5.png","height":1043,"mediaType":"image/png","pageId":"schumann-liederkreis-op39-p5","sha256":"82038471dc3339e9fc2506520d9a7dc0cf91a39c68752236622d64f557c9fb9f","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1","sourcePdfPageOneBased":5,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":828},
+    {"byteSize":587844,"decodedGrayscalePixelSha256":"e7d7022478f5edff956a499908ad6eecee62596a2351955cf79d98c3199c47ee","fileName":"schumann-liederkreis-op39-p9.png","height":1043,"mediaType":"image/png","pageId":"schumann-liederkreis-op39-p9","sha256":"65fff7975b057780810267f856575b5bc0c2d3edee26eedd1a36c277a243c368","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1","sourcePdfPageOneBased":9,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":828},
+    {"byteSize":662861,"decodedGrayscalePixelSha256":"726dfdffd63c96407d6b98bcc1b3a4a55cd5efc7a4eb6d91d9352b9cc0942179","fileName":"schumann-liederkreis-op39-p13.png","height":1043,"mediaType":"image/png","pageId":"schumann-liederkreis-op39-p13","sha256":"d990c1b4e7c6d35186db612f28449a60153f629d30eb6af8db8c0238fe4f31ef","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1","sourcePdfPageOneBased":13,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":828},
+    {"byteSize":674629,"decodedGrayscalePixelSha256":"ac8859a818d2f5b657e81213312dd87be1b4c47fd5238c89575aeb13ad6f8ffe","fileName":"scarlatti-1752-30-sonate-vol1-p1.png","height":869,"mediaType":"image/png","pageId":"scarlatti-1752-30-sonate-vol1-p1","sha256":"c5a1b49e2cb9bb726fe6fefdd2bb8e5998763fa1a0daea30f223a966473a3849","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1","sourcePdfPageOneBased":1,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":1152},
+    {"byteSize":69538,"decodedGrayscalePixelSha256":"dad0507aad7f4a72bc8355ee0a7a59fe10ad09580b8f310178d626a4a5607b8b","fileName":"scarlatti-1752-30-sonate-vol1-p2.png","height":134,"mediaType":"image/png","pageId":"scarlatti-1752-30-sonate-vol1-p2","sha256":"d388cbb47b2b35adfae3e8a0e859cd3496537c2b2395368fd42ae1234e69d2f4","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1","sourcePdfPageOneBased":2,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":823},
+    {"byteSize":582023,"decodedGrayscalePixelSha256":"93e84487020bffb5255b5aab8ec3cdf7e0222816052be01a12886edc55f513cb","fileName":"scarlatti-1752-30-sonate-vol1-p16.png","height":852,"mediaType":"image/png","pageId":"scarlatti-1752-30-sonate-vol1-p16","sha256":"758618451d19397f8d27b36fae0f8faa3b34ec2201ca8e7ef0319b29b033a983","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1","sourcePdfPageOneBased":16,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":1164},
+    {"byteSize":556758,"decodedGrayscalePixelSha256":"d5d41a859c6b32b76cb7e9f6352990dcb3e9d79cbda1358b6d274153e0b318c6","fileName":"scarlatti-1752-30-sonate-vol1-p32.png","height":852,"mediaType":"image/png","pageId":"scarlatti-1752-30-sonate-vol1-p32","sha256":"94205a609dca0f121e19fb963320ba3130b0fc91479ca2e9b67c8c26e6dc042b","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1","sourcePdfPageOneBased":32,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":1164},
+    {"byteSize":586807,"decodedGrayscalePixelSha256":"1e2fc5fc0af611c12c067aa3078cb9929bfa3f8ade8cc99f940964593c8d2501","fileName":"scarlatti-1752-30-sonate-vol1-p48.png","height":861,"mediaType":"image/png","pageId":"scarlatti-1752-30-sonate-vol1-p48","sha256":"a15d445df1fe3e0c12566b589efdcca7d75815f7ecba49cf69295578b756f8fe","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1","sourcePdfPageOneBased":48,"staffPresence":"UNKNOWN_PENDING_BLIND_TEACHER","width":1164}
+  ],
+  "qualificationSetId":"stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "render":{"dpi":72,"engine":"pdftoppm","mode":"grayscale","pageNumbersFrozenBeforeAcquisition":true},
+  "schemaVersion":"stage11.v2d.v1_5_3-independent-holdout-source-freeze-manifest.v1",
+  "selectionPolicyPath":"evidence/stage11/v2d/v1_5_3_independent_holdout_source_selection.v1.json",
+  "sourcePdfs":[
+    {"byteSize":6372287,"declaredPageCount":28,"downloadUrl":"https://upload.wikimedia.org/wikipedia/commons/6/6c/Liederkreis%2C_Op.39_%28IA_imslp-op39-schumann-robert%29.pdf","licensing":"Wikimedia Commons Public Domain Mark; public-domain work and file identified as free of known copyright restrictions.","pdfFileName":"schumann-liederkreis-op39.pdf","sha256":"afd8bb4f9af77f3c2cb50dc5b75a8b392f60aa5915c6bdbcd5e30da20f40f8ff","sourceFamilyId":"source.family.wikimedia-schumann-liederkreis-op39-scan.v1"},
+    {"byteSize":21843661,"declaredPageCount":142,"downloadUrl":"https://upload.wikimedia.org/wikipedia/commons/d/d4/IMSLP387481-PMLP626889--It.IV.201-_30_Sonate.pdf","licensing":"Wikimedia Commons Public Domain Mark; public-domain manuscript/file identified as free of known copyright restrictions.","pdfFileName":"scarlatti-1752-30-sonate-vol1.pdf","sha256":"26bcba7609a1668f6a1d30397c7f0f92f9f32bc2cb17e11066830e8f11af9262","sourceFamilyId":"source.family.wikimedia-scarlatti-1752-venice-manuscript-vol1.v1"}
+  ],
+  "status":"SOURCE_BYTES_AND_RASTERS_FROZEN_TEACHER_TRUTH_PENDING"
+}
