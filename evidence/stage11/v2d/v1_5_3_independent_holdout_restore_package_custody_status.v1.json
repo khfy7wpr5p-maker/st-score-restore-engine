@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-independent-holdout-restore-package-custody-status.v1",
+  "generatedOn": "2026-09-15",
+  "status": "SOURCE_FROZEN_RESTORE_EXECUTION_BLOCKED_EXACT_PACKAGE_UNAVAILABLE",
+  "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "sourceFreeze": {
+    "complete": true,
+    "pageCount": 10,
+    "sourceFamilyCount": 2,
+    "manifestSha256": "8013a1c9bec17ecb74280468ec2f58f35dda53cb24c3adb88f513e2688bf3705",
+    "workflowRunId": 34945981346,
+    "artifactId": 10386922032,
+    "artifactSha256": "0c468f34e1b37194edcd9b476f6718f2e423feed10bab86c20f7d15260f6bc34"
+  },
+  "requiredRestorePackage": {
+    "format": "torchscript-trace",
+    "sha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "sizeBytes": 7817857,
+    "consumerAdapterPath": "src/st_score_restore/stage11_v2a_consumer_adapter.py",
+    "consumerAdapterRequiresExactShaAndSizeBeforeTorchJitLoad": true
+  },
+  "connectedStorageAudit": {
+    "googleDriveExactPackageShaSearchFoundDirectPackageFile": false,
+    "googleDriveSourceCheckpointShaSearchFoundDirectCheckpointFile": false,
+    "pipelineLogFound": true,
+    "pipelineLogIsNotAcceptedAsPackageBytes": true,
+    "repositoryContainsPrivatePackageBytes": false,
+    "substitutionWithAnotherCheckpointOrModelAllowed": false
+  },
+  "executionBoundary": {
+    "restoreExecutionAttemptedOnNewHoldout": false,
+    "restoredPngGenerated": false,
+    "v1_5_3DetectorExecuted": false,
+    "teacherTruthLoadedIntoInference": false,
+    "qualificationScoringExecuted": false,
+    "qualificationResult": "NOT_RUN"
+  },
+  "decision": {
+    "restoreExecutionBlocked": true,
+    "reason": "The new independent source set is frozen, but the exact frozen Stage 11 V2a TorchScript package required by the accepted consumer adapter is not currently available as accessible package bytes in connected storage. A log or alternate checkpoint is not an identity-equivalent substitute.",
+    "teacherBlindAnnotationMayProceed": true,
+    "nextSafeInferenceBoundary": "Recover the exact TorchScript package with SHA-256 7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234 and size 7,817,857 bytes. Verify identity before generating any restored holdout PNG. Do not change candidate v1.5.3, thresholds, page selection, or teacher truth based on package recovery."
+  },
+  "governance": {
+    "candidateStillFrozenAtCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "noRetuning": true,
+    "noThresholdMovement": true,
+    "pr211MustRemainDraftOpenUnmerged": true,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
