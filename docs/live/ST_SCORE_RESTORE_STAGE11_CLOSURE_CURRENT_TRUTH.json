@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "stage11.closure-current-truth.v1",
+  "generatedOn": "2026-09-25",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2d-restored-topology-successor-v1_5",
+  "state": "STAGE11_OPEN_SEMANTIC_CLOSURE_PENDING",
+  "authoritativeReconciliation": {
+    "notehead": "PASS",
+    "staff_line_source": "QUALIFIED_PASS",
+    "staff_line_restored_topology": "QUALIFIED_PASS",
+    "clef": "REVIEW_ONLY_NOT_QUALIFIED",
+    "broaderSemanticCoverage": "INCOMPLETE"
+  },
+  "v1_5_3Qualification": {
+    "result": "PASS",
+    "resultBindingCommit": "d75ea6ded4a27f986524a5a2ffeb0c9127490b37",
+    "currentTruthCommit": "76de1783dddfe8aae60f9ccf38e60fd3fca5664d",
+    "teacherSystems": 60,
+    "predictedSystems": 58,
+    "matchedSystems": 58,
+    "recall": 0.9666666666666667,
+    "precision": 1
+  },
+  "d8Recommendation": {
+    "disposition": "KEEP_STAGE11_OPEN",
+    "reason": "Restored staff topology is now qualified, but the broader Stage 11 semantic-preservation contract is not fully supported by accepted PASS evidence across its applicable semantic classes.",
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false
+  },
+  "authorization": {
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  },
+  "holdoutFirewall": {
+    "v1_5_3IndependentSetConsumed": true,
+    "retuningForbidden": true,
+    "repeatUseForCandidateSelectionForbidden": true
+  },
+  "nextSafeBoundary": "Create a scoped plan for unresolved semantic classes or obtain a separate explicit governance decision that changes the Stage 11 closure contract. Until then, keep PR #211 unmerged and Stage 12 closed."
+}
