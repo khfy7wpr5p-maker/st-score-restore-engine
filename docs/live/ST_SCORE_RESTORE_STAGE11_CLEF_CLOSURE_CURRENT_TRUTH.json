@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "stage11.v2d.clef-closure-current-truth.v1",
+  "generatedOn": "2026-09-26",
+  "state": "C_CLEF_P4_14_FROZEN_GENERAL_CLEF_SUCCESSOR_REQUIRED",
+  "cClef": {
+    "candidate": "stage11-v2d-c-clef-precision.p4_14.v1",
+    "developmentDisposition": "CANDIDATE_AND_PREQUALIFICATION_POLICY_FROZEN",
+    "qualified": false,
+    "independentHoldoutOpened": false,
+    "frozenThresholds": {
+      "pooledPrecisionMinimum": 0.8,
+      "pooledRecallMinimum": 0.85,
+      "eachRepresentedSubtypeRecallMinimum": 0.8
+    }
+  },
+  "generalClef": {
+    "existingCandidate": "oemer-onnx-segmentation-dbe2a933",
+    "disposition": "REJECTED_CURRENT_GENERAL_CLEF_PATH",
+    "successorRequired": true,
+    "coveredTeacherTypes": [
+      "treble",
+      "bass",
+      "tab",
+      "soprano"
+    ]
+  },
+  "ses19": {
+    "state": "IN_PROGRESS",
+    "closureAllowed": false,
+    "reason": "C-clef P4.14 is frozen but no accepted general-clef successor exists for the 213-box treble/bass/TAB/soprano scope."
+  },
+  "authorization": {
+    "freshCClefHoldoutOpened": false,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "Brainstorm and approve a separately versioned general-clef successor candidate before implementation. Do not open the C-clef holdout merely to bypass the unresolved general-clef path."
+}
