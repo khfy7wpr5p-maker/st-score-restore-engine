@@ -3,7 +3,11 @@ from __future__ import annotations
 from copy import deepcopy
 
 from st_score_restore.stage11_v2d_c_clef_p4_14_precision_policy import (
+    P45_MIN_AREA_SPACES2,
+    P45_MIN_HEIGHT_SPACES,
+    P45_MIN_WIDTH_SPACES,
     candidate_score,
+    select_p45_precision_candidates,
     select_precision_candidates,
 )
 
@@ -102,3 +106,50 @@ def test_low_confidence_candidate_abstains():
     weak["anchorRank"] = 3
 
     assert select_precision_candidates([weak], minimum_score=0.45) == []
+
+
+def _p45_candidate(*, area: float = 6.5, height: float = 4.1, width: float = 2.8, staff_index: int = 0, x1: float = 20.0):
+    return {
+        "bbox": [x1, 30.0, x1 + width * 10.0, 30.0 + height * 10.0],
+        "staffIndex": staff_index,
+        "staffSpacing": 10.0,
+        "areaInStaffSpacesSquared": area,
+        "heightInStaffSpaces": height,
+        "widthInStaffSpaces": width,
+        "barlineEndX": x1 - 5.0,
+    }
+
+
+def test_p45_precision_plateau_constants_are_frozen():
+    assert P45_MIN_AREA_SPACES2 == 4.25
+    assert P45_MIN_HEIGHT_SPACES == 3.20
+    assert P45_MIN_WIDTH_SPACES == 2.00
+
+
+def test_p45_precision_gate_accepts_clef_like_geometry_and_rejects_small_components():
+    clef_like = _p45_candidate()
+    too_small_area = _p45_candidate(area=3.9)
+    too_narrow = _p45_candidate(width=1.8)
+    too_short = _p45_candidate(height=3.0)
+
+    selected = select_p45_precision_candidates([too_small_area, clef_like, too_narrow, too_short])
+
+    assert len(selected) == 1
+    assert selected[0]["bbox"] == clef_like["bbox"]
+
+
+def test_p45_precision_gate_is_teacher_independent_and_deterministic():
+    first = _p45_candidate(staff_index=1, x1=80.0)
+    second = _p45_candidate(staff_index=0, x1=20.0)
+    contaminated = deepcopy(second)
+    contaminated["teacherLabel"] = "C3"
+    contaminated["teacherBox"] = [1, 2, 3, 4]
+    contaminated["isTeacherMatch"] = True
+
+    clean = select_p45_precision_candidates([first, second])
+    dirty = select_p45_precision_candidates([contaminated, first])
+    reverse = select_p45_precision_candidates([second, first])
+
+    assert clean == dirty == reverse
+    assert [item["staffIndex"] for item in clean] == [0, 1]
+    assert all("teacherLabel" not in item for item in clean)
