@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-independent-qualification-score-binding.v1",
+  "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "status": "PASS",
+  "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+  "toleranceFraction": 0.5,
+  "fullScoreArtifactSha256": "0b00e2f9d6ae6ce925deae2ac31c77e0083e216e0c9ac68fa809c9873e4595cb",
+  "teacherTruthSha256": "55c9fa19c012015e5e405170ecad3d1f6f955e20da9144c18c80a9287a4326c7",
+  "rawArtifactSha256": "6a1a77924ad3e99582df6c72b3f1c7c81d1e362073a9a1b47e7ca197ea3add78",
+  "scorerCompatibility": {
+    "referenceHistoricalScorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "referenceV1_5_1OfficialMatchedSystems": 160,
+    "reproducedV1_5_1MatchedSystems": 160,
+    "pageLevelMatchPairsIdentical": true,
+    "matchingRuleIdentical": true
+  },
+  "aggregate": {
+    "teacherSystems": 60,
+    "predictedSystems": 58,
+    "matchedSystems": 58,
+    "teacherSystemRecallAtHalfSpacing": 0.9666666666666667,
+    "predictedSystemPrecisionAtHalfSpacing": 1,
+    "presentPageCoverage": 1,
+    "absentPageSpecificity": 1,
+    "fiveLineCorrectness": 1,
+    "lineOrderCorrectness": 1,
+    "determinism": true
+  },
+  "pages": [
+    {
+      "pageId": "schumann-liederkreis-op39-p1",
+      "teacherSystems": 0,
+      "predictedSystems": 0,
+      "matchedSystems": 0
+    },
+    {
+      "pageId": "schumann-liederkreis-op39-p2",
+      "teacherSystems": 0,
+      "predictedSystems": 0,
+      "matchedSystems": 0
+    },
+    {
+      "pageId": "schumann-liederkreis-op39-p5",
+      "teacherSystems": 12,
+      "predictedSystems": 12,
+      "matchedSystems": 12
+    },
+    {
+      "pageId": "schumann-liederkreis-op39-p9",
+      "teacherSystems": 12,
+      "predictedSystems": 12,
+      "matchedSystems": 12
+    },
+    {
+      "pageId": "schumann-liederkreis-op39-p13",
+      "teacherSystems": 12,
+      "predictedSystems": 10,
+      "matchedSystems": 10
+    },
+    {
+      "pageId": "scarlatti-1752-30-sonate-vol1-p1",
+      "teacherSystems": 0,
+      "predictedSystems": 0,
+      "matchedSystems": 0
+    },
+    {
+      "pageId": "scarlatti-1752-30-sonate-vol1-p2",
+      "teacherSystems": 0,
+      "predictedSystems": 0,
+      "matchedSystems": 0
+    },
+    {
+      "pageId": "scarlatti-1752-30-sonate-vol1-p16",
+      "teacherSystems": 8,
+      "predictedSystems": 8,
+      "matchedSystems": 8
+    },
+    {
+      "pageId": "scarlatti-1752-30-sonate-vol1-p32",
+      "teacherSystems": 8,
+      "predictedSystems": 8,
+      "matchedSystems": 8
+    },
+    {
+      "pageId": "scarlatti-1752-30-sonate-vol1-p48",
+      "teacherSystems": 8,
+      "predictedSystems": 8,
+      "matchedSystems": 8
+    }
+  ],
+  "frozenThresholdChecks": {
+    "teacherSystemRecallAtHalfSpacing": true,
+    "predictedSystemPrecisionAtHalfSpacing": true,
+    "presentPageCoverage": true,
+    "absentPageSpecificity": true,
+    "fiveLineCorrectness": true,
+    "lineOrderCorrectness": true,
+    "determinism": true
+  }
+}
