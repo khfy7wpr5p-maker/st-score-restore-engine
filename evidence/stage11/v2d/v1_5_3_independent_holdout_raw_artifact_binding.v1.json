@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-independent-qualification-raw-artifact-binding.v1",
+  "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+  "status": "FROZEN_AB_BYTE_IDENTICAL",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62"
+  },
+  "identity": {
+    "sourceFreezeManifestSha256": "8013a1c9bec17ecb74280468ec2f58f35dda53cb24c3adb88f513e2688bf3705",
+    "restorePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "restoredPngManifestSha256": "91838a1a2f072389c1b0e26ed206397efbc5557c9f7b36ab6f3013ff6515a3c4",
+    "rawASha256": "6a1a77924ad3e99582df6c72b3f1c7c81d1e362073a9a1b47e7ca197ea3add78",
+    "rawBSha256": "6a1a77924ad3e99582df6c72b3f1c7c81d1e362073a9a1b47e7ca197ea3add78",
+    "rawArtifactByteSize": 126089,
+    "rawAByteIdenticalToB": true,
+    "restoredOutputsABByteIdentical": true,
+    "sourcePageIdentityVerified": "10/10"
+  },
+  "inferenceBoundary": {
+    "teacherArtifactLoadedDuringInference": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "pageIdentityRulesUsedDuringInference": false,
+    "sourceFamilyRulesUsedDuringInference": false,
+    "trainingOrFineTuningPerformed": false,
+    "retuningAfterFreeze": false,
+    "qualificationScoringPerformedDuringInference": false
+  },
+  "predictedSystems": 58,
+  "pagePredictedSystemCounts": {
+    "schumann-liederkreis-op39-p1": 0,
+    "schumann-liederkreis-op39-p2": 0,
+    "schumann-liederkreis-op39-p5": 12,
+    "schumann-liederkreis-op39-p9": 12,
+    "schumann-liederkreis-op39-p13": 10,
+    "scarlatti-1752-30-sonate-vol1-p1": 0,
+    "scarlatti-1752-30-sonate-vol1-p2": 0,
+    "scarlatti-1752-30-sonate-vol1-p16": 8,
+    "scarlatti-1752-30-sonate-vol1-p32": 8,
+    "scarlatti-1752-30-sonate-vol1-p48": 8
+  }
+}
