@@ -33,6 +33,23 @@ OUTPUT_KEYS = (
     "features",
 )
 
+# P4.5 source-image localizer development plateau selected on the frozen
+# 29-page / 71-box development corpus. These are development-candidate
+# thresholds, not qualification thresholds.
+P45_MIN_AREA_SPACES2 = 4.25
+P45_MIN_HEIGHT_SPACES = 3.20
+P45_MIN_WIDTH_SPACES = 2.00
+
+P45_OUTPUT_KEYS = (
+    "bbox",
+    "staffIndex",
+    "staffSpacing",
+    "areaInStaffSpacesSquared",
+    "heightInStaffSpaces",
+    "widthInStaffSpaces",
+    "barlineEndX",
+)
+
 
 def _bbox_iou(a: Sequence[float], b: Sequence[float]) -> float:
     ax1, ay1, ax2, ay2 = map(float, a)
@@ -134,6 +151,42 @@ def select_precision_candidates(
             float(item["bbox"][0]),
             float(item["bbox"][1]),
             int(item["proposalIndex"]),
+        )
+    )
+    return selected
+
+
+def select_p45_precision_candidates(
+    records: Iterable[Mapping[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Filter P4.5 source-image candidates using the frozen development plateau.
+
+    The gate uses only source-derived geometry already emitted by P4.5. Teacher
+    labels, teacher boxes, page identity, and source-family identity are not
+    consulted. P4.5 emits at most one candidate per detected staff, so this
+    function performs no extra cross-staff or same-staff suppression.
+    """
+    selected: List[Dict[str, Any]] = []
+    for record in records:
+        area = float(record["areaInStaffSpacesSquared"])
+        height = float(record["heightInStaffSpaces"])
+        width = float(record["widthInStaffSpaces"])
+        if area < P45_MIN_AREA_SPACES2:
+            continue
+        if height < P45_MIN_HEIGHT_SPACES:
+            continue
+        if width < P45_MIN_WIDTH_SPACES:
+            continue
+        missing = [key for key in P45_OUTPUT_KEYS if key not in record]
+        if missing:
+            raise ValueError("P4.5 record missing required keys: " + ", ".join(missing))
+        selected.append({key: record[key] for key in P45_OUTPUT_KEYS})
+
+    selected.sort(
+        key=lambda item: (
+            int(item["staffIndex"]),
+            float(item["bbox"][0]),
+            float(item["bbox"][1]),
         )
     )
     return selected
