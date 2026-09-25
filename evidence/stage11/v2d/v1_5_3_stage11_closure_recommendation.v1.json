@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-stage11-closure-recommendation.v1",
+  "generatedOn": "2026-09-25",
+  "recommendation": "KEEP_STAGE11_OPEN",
+  "recommendationBasis": "FROZEN_EVIDENCE_ONLY",
+  "noNewMeasurementPerformed": true,
+  "noRetuningPerformed": true,
+  "noThresholdMovementPerformed": true,
+  "noHoldoutRerunPerformed": true,
+  "evidenceReconciliation": {
+    "restorePackage": {
+      "sha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+      "frozen": true
+    },
+    "notehead": {
+      "state": "PASS_CANONICAL_CLASS_EVIDENCE",
+      "basis": "Canonical notehead evidence records 18/18 teacher-present pages at source recall >= 0.80."
+    },
+    "staffLineSource": {
+      "state": "QUALIFIED",
+      "detectorVersion": "stage11-v2d-staff-multisystem-source.v1.4",
+      "qualificationDisposition": "QUALIFIED_FROZEN_V1_4_SOURCE_DETECTOR",
+      "recall": 1,
+      "precision": 0.8
+    },
+    "staffLineRestoredTopology": {
+      "state": "QUALIFIED",
+      "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+      "qualificationDisposition": "QUALIFIED_FROZEN_V1_5_3_RESTORED_TOPOLOGY_SUCCESSOR",
+      "teacherSystems": 60,
+      "predictedSystems": 58,
+      "matchedSystems": 58,
+      "recall": 0.9666666666666667,
+      "precision": 1,
+      "presentPageCoverage": 1,
+      "absentPageSpecificity": 1,
+      "fiveLineCorrectness": 1,
+      "lineOrderCorrectness": 1,
+      "determinism": true
+    },
+    "clef": {
+      "state": "REVIEW_ONLY",
+      "detectorQualified": false,
+      "latestDevelopmentDisposition": "DEVELOPMENT_GROUP_LOCALIZER_REJECTED_FOR_FINAL_POLICY"
+    },
+    "remainingSemanticClasses": {
+      "withoutAcceptedPassEvidenceInCurrentStage11ClassMatrix": [
+        "accidental",
+        "barline",
+        "beam_or_flag",
+        "rest",
+        "stem",
+        "tab_digit",
+        "tab_line",
+        "tab_string",
+        "tie_or_slur"
+      ],
+      "note": "Historical V2C/V2D current truth records these classes as rejected-current-detector or unsupported; no later accepted PASS binding for them is used by this recommendation."
+    }
+  },
+  "semanticPreservationAssessment": {
+    "staffLineScopeResolved": true,
+    "noteheadScopeResolved": true,
+    "clefScopeResolvedAsPass": false,
+    "allApplicableSemanticClassesCoveredByAcceptedPassEvidence": false,
+    "semanticPreservationEstablished": false,
+    "reason": "The new v1.5.3 qualification closes the restored staff-topology successor gate, but Stage 11's broader semantic-preservation contract still lacks accepted PASS evidence for clef and multiple other semantic classes."
+  },
+  "closureDecision": {
+    "successorV1_5_3Qualified": true,
+    "overallStage11PassRecommended": false,
+    "stage11ClosureRecommended": false,
+    "pr211ReadyForMergeRecommended": false,
+    "productionPromotionRecommended": false,
+    "stage12EntryRecommended": false
+  },
+  "governance": {
+    "consumedIndependentHoldoutMayBeRetunedAgainst": false,
+    "repeatQualificationForCandidateSelectionAllowed": false,
+    "historicalFailedBaselinesRemainHistoricalEvidence": true,
+    "narrowingStage11SemanticScopeRequiresSeparateExplicitGovernanceDecision": true
+  },
+  "nextSafeBoundary": "Keep Stage 11 open. Define a separately scoped closure plan for unresolved semantic classes, or make an explicit governance decision to narrow the Stage 11 semantic contract. Do not infer overall PASS from the staff-line successor qualification alone."
+}
