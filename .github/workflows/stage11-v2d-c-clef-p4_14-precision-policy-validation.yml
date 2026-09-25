@@ -1,0 +1,38 @@
+name: Stage 11 V2d C-clef P4.14 Precision Policy Validation
+
+on:
+  push:
+    branches:
+      - ses-19-clef-precision-p4_14
+    paths:
+      - 'src/st_score_restore/stage11_v2d_c_clef_p4_14_precision_policy.py'
+      - 'tests/test_stage11_v2d_c_clef_p4_14_precision_policy.py'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_14-precision-policy-plan.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_14-precision-policy-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-c-clef-p4_14-prequalification-policy.v1.json'
+      - '.github/workflows/stage11-v2d-c-clef-p4_14-precision-policy-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install repository and test runner
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest
+      - name: Run P4.14 focused tests
+        run: python -m pytest tests/test_stage11_v2d_c_clef_p4_14_precision_policy.py -q
+      - name: Compile P4.14
+        run: python -m py_compile src/st_score_restore/stage11_v2d_c_clef_p4_14_precision_policy.py tests/test_stage11_v2d_c_clef_p4_14_precision_policy.py
