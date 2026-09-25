@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "stage11.v2d.v1_5_3-independent-qualification-current-truth.v1",
+  "generatedOn": "2026-09-25",
+  "status": "SUCCESSOR_QUALIFIED_STAGE11_CLOSURE_DECISION_PENDING",
+  "candidate": {
+    "detectorVersion": "stage11-v2d-restored-topology-successor.v1.5.3",
+    "frozenCodeConfigCommit": "542810b3a9ffd5ac49b076ad13b23a5441c6e834",
+    "detectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62",
+    "prequalificationFreezePolicyCommit": "ff2781a556d3bfd643c62de83d5fe250e3c5f322"
+  },
+  "qualification": {
+    "result": "PASS",
+    "resultBindingCommit": "d75ea6ded4a27f986524a5a2ffeb0c9127490b37",
+    "qualificationSetId": "stage11.v2d.v1_5_3.independent-restored-topology-holdout.v1",
+    "teacherTruthSha256": "55c9fa19c012015e5e405170ecad3d1f6f955e20da9144c18c80a9287a4326c7",
+    "sourceFreezeManifestSha256": "8013a1c9bec17ecb74280468ec2f58f35dda53cb24c3adb88f513e2688bf3705",
+    "restorePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "rawArtifactSha256": "6a1a77924ad3e99582df6c72b3f1c7c81d1e362073a9a1b47e7ca197ea3add78",
+    "restoredPngManifestSha256": "91838a1a2f072389c1b0e26ed206397efbc5557c9f7b36ab6f3013ff6515a3c4",
+    "teacherSystems": 60,
+    "predictedSystems": 58,
+    "matchedSystems": 58,
+    "recall": 0.9666666666666667,
+    "precision": 1,
+    "presentPageCoverage": 1,
+    "absentPageSpecificity": 1,
+    "fiveLineCorrectness": 1,
+    "lineOrderCorrectness": 1,
+    "determinism": true,
+    "allFrozenThresholdsPassed": true
+  },
+  "holdoutConsumption": {
+    "independentSetNowConsumed": true,
+    "retuningForbidden": true,
+    "repeatUseForCandidateSelectionForbidden": true
+  },
+  "claimBoundary": {
+    "successorQualified": true,
+    "overallStage11Pass": false,
+    "stage11ClosureRecommendationEligible": true,
+    "stage11ClosureDecisionPending": true,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeBoundary": "Prepare a Stage 11 closure recommendation from already-frozen evidence only. Do not retune, rerun for selection, merge PR #211, promote production, or enter Stage 12 without a separate closure decision."
+}
