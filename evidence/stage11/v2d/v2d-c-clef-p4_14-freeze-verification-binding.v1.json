@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_14-freeze-verification-binding.v1",
+  "generatedOn": "2026-09-26",
+  "status": "P4_14_C_CLEF_CANDIDATE_AND_PREQUALIFICATION_POLICY_FROZEN",
+  "branch": "ses-19-clef-precision-p4_14",
+  "verifiedHead": "dc69b80541c858e090312cdcd059b57683f18722",
+  "candidate": {
+    "implementationCommit": "ce74902e5d3acedf8381d73b69676673f0789248",
+    "sourceBlobSha": "0f87614dabb724dcda24be03ba7fd63cd77d516e",
+    "testBlobSha": "705f62ca791fb2b3f8520c2a37675a8c3894d099",
+    "workflowBlobSha": "383277f5aba463a0967d9205b68590cdae9803b7",
+    "prequalificationPolicyCommit": "13399bf7e4b526ae9bbd56a463a9836ffe070fdc"
+  },
+  "freshVerification": {
+    "workflowRunId": 36195355301,
+    "conclusion": "success",
+    "python311": {
+      "focused": "8 passed in 0.14s",
+      "evidencePolicyIntegrity": "PASS",
+      "fullRepository": "Ran 1300 tests in 25.468s; OK"
+    },
+    "python312": {
+      "focused": "8 passed in 0.21s",
+      "evidencePolicyIntegrity": "PASS",
+      "fullRepository": "Ran 1300 tests in 34.349s; OK"
+    }
+  },
+  "tddTrace": {
+    "moduleMissingRedRun": 36193874755,
+    "initialGreenRun": 36193996854,
+    "plateauApiMissingRedRun": 36194575608,
+    "plateauGreenRun": 36194642180
+  },
+  "developmentResult": {
+    "cClef": {
+      "teacherBoxes": 71,
+      "selectedCandidates": 76,
+      "tp": 64,
+      "fp": 12,
+      "fn": 7,
+      "precision": 0.8421052631578947,
+      "recall": 0.9014084507042254,
+      "f1": 0.8707482993197279,
+      "subtypeRecall": {
+        "C1": 1,
+        "C3": 0.8611111111111112,
+        "C4": 0.8666666666666667
+      },
+      "rawCandidateSha256": "0c1c921d0c0f19849a9eb36efabe4f1dc658ca4d7a3d3aa904f1c42d97157832",
+      "rawABByteIdentical": true
+    },
+    "generalClefExistingPath": {
+      "teacherBoxes": 213,
+      "tp": 3,
+      "fp": 582,
+      "fn": 210,
+      "precision": 0.005128205128205128,
+      "recall": 0.014084507042253521,
+      "resultArtifactSha256": "bfb1e99b779453ee272c6679b29ac884a10183d841ca45bdcab6dbc394d10e1a",
+      "disposition": "BLOCKS_OVERALL_SES19_CLOSURE"
+    }
+  },
+  "governance": {
+    "newIndependentHoldoutAccessed": false,
+    "freshHoldoutAuthorizedByThisBinding": false,
+    "cClefCandidateFrozen": true,
+    "cClefQualified": false,
+    "generalClefQualified": false,
+    "overallClefQualified": false,
+    "ses19Complete": false,
+    "overallStage11PassAuthorized": false,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "selfReview": {
+    "independentCodexEnvironmentAvailable": false,
+    "reviewMode": "coordinator self-review plus fresh CI",
+    "materialP4_14CodeFindings": [],
+    "residualBlocker": "A separately designed general-clef successor is required for treble/bass/TAB/soprano before SES-19 can close."
+  }
+}
