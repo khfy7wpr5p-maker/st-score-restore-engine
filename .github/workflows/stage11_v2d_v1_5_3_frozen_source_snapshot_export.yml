@@ -1,0 +1,32 @@
+name: Stage 11 v1.5.3 Frozen Source Snapshot Export
+
+on:
+  push:
+    branches:
+      - stage11-v2d-restored-topology-successor-v1_5
+    paths:
+      - .github/workflows/stage11_v2d_v1_5_3_frozen_source_snapshot_export.yml
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record frozen source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p source-snapshot
+          cp -R src/st_score_restore source-snapshot/
+          cp pyproject.toml source-snapshot/ 2>/dev/null || true
+          git rev-parse HEAD > source-snapshot/branch-head.txt
+          sha256sum             src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5_3.py             src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5_1.py             src/st_score_restore/stage11_v2d_restored_topology_successor_v1_5.py             src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py             src/st_score_restore/stage11_v2a_consumer_adapter.py             > source-snapshot/frozen-source-sha256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage11-v1_5_3-frozen-source-snapshot
+          path: source-snapshot
+          if-no-files-found: error
+          retention-days: 14
