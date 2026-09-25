@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "stage11.semantic-closure-plan.v1",
+  "generatedOn": "2026-09-25",
+  "status": "PLANNED_NOT_EXECUTED",
+  "basis": {
+    "closureCurrentTruthCommit": "190dc3617f781cf09c5f1deed9ba533e8d23895a",
+    "d8RecommendationCommit": "aa26a17c0731640cf58a9bf643dfd74f022191de",
+    "currentBranchHeadBeforePlan": "190dc3617f781cf09c5f1deed9ba533e8d23895a",
+    "frozenRestorePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "frozenV1_5_3DetectorBlobSha": "4b44065d5af4bbeb73d18ac1901ada8eac763d62"
+  },
+  "objective": "Close the remaining Stage 11 semantic-preservation evidence gaps without reusing consumed holdouts, weakening thresholds, changing already-qualified evidence, or silently narrowing the twelve-class semantic contract.",
+  "alreadyResolved": {
+    "notehead": {
+      "state": "PASS",
+      "action": "PRESERVE_FROZEN_EVIDENCE_ONLY"
+    },
+    "staff_line": {
+      "sourceDetector": "QUALIFIED_PASS",
+      "restoredTopology": "QUALIFIED_PASS",
+      "action": "PRESERVE_FROZEN_EVIDENCE_ONLY"
+    }
+  },
+  "unresolvedClasses": [
+    "clef",
+    "accidental",
+    "barline",
+    "beam_or_flag",
+    "rest",
+    "stem",
+    "tie_or_slur",
+    "tab_line",
+    "tab_digit",
+    "tab_string"
+  ],
+  "globalRules": [
+    "Teacher truth and detector inference remain separated.",
+    "Use development evidence for design and threshold selection; independent holdouts are one-shot qualification evidence only.",
+    "Freeze code/config/policy before independent holdout access.",
+    "A scored candidate is immutable; any retune requires a new version.",
+    "No page, filename, source-family, teacher-coordinate, or holdout-specific inference rules.",
+    "Each class must establish source-detector adequacy before source-versus-restored preservation claims.",
+    "A class failure may remain REVIEW_ONLY/REJECTED without invalidating frozen PASS evidence for other classes.",
+    "Overall Stage 11 closure requires accepted PASS evidence for every applicable class in the current contract, unless a separate explicit governance decision changes contract scope.",
+    "PR #211, production promotion and Stage 12 remain unauthorized until a separate final closure decision."
+  ],
+  "workPackages": [
+    {
+      "id": "S11-C1",
+      "title": "Clef qualification closure",
+      "classes": [
+        "clef"
+      ],
+      "priority": "P1",
+      "dependencies": [],
+      "existingTruth": {
+        "teacherClefBoxCount": 213,
+        "teacherTruthStatus": "ACCEPTED_CLEF_BOX_TRUTH",
+        "currentDisposition": "REVIEW_ONLY",
+        "latestNoTrainingTrack": "CONCLUDED_REVIEW_ONLY"
+      },
+      "developmentGoal": "Admit or build a source-only clef detector that materially improves precision/recall over the rejected deterministic C-clef line without using teacher truth as inference input.",
+      "requiredDevelopmentEvidence": [
+        "page/source-family/pooled TP/FP/FN, precision, recall and F1 against existing 213 teacher boxes",
+        "negative-page/false-positive controls",
+        "subtype classification kept separate unless independently validated",
+        "deterministic frozen raw output and runtime identity"
+      ],
+      "qualificationGate": [
+        "predeclare class-specific qualification thresholds and matching semantics before holdout access",
+        "use a fresh disjoint independent holdout if development-ready",
+        "freeze source-only detector output before teacher truth is opened",
+        "one-shot PASS/FAIL binding; no post-result retuning"
+      ],
+      "exit": "clef=PASS or remain REVIEW_ONLY/REJECTED with evidence; do not weaken Stage 11 closure contract"
+    },
+    {
+      "id": "S11-C2",
+      "title": "Core notation object and attachment evidence",
+      "classes": [
+        "accidental",
+        "rest",
+        "barline",
+        "stem"
+      ],
+      "priority": "P1",
+      "dependencies": [
+        "notehead PASS"
+      ],
+      "classRequirements": {
+        "accidental": "teacher-reviewed accidental boxes; family-stratified box precision/recall; detector/cross-check must distinguish accidentals from clefs/key signatures",
+        "rest": "teacher-reviewed rest boxes and rest-type labels; staff-relative validation",
+        "barline": "teacher-reviewed line endpoints and barline-type labels; staff-system-aware continuity and repeat-bar checks",
+        "stem": "teacher-reviewed stem-to-notehead graph edges; vertical strokes must be linked to noteheads rather than geometry-only classification"
+      },
+      "executionRule": "Treat each class as a separately versioned candidate and separately frozen qualification claim even if a shared detector backbone is used.",
+      "exit": "Each class independently PASS or remains unresolved; no pooled score may hide a failed class."
+    },
+    {
+      "id": "S11-C3",
+      "title": "Rhythmic/curvilinear relationship evidence",
+      "classes": [
+        "beam_or_flag",
+        "tie_or_slur"
+      ],
+      "priority": "P2",
+      "dependencies": [
+        "notehead PASS",
+        "stem source adequacy established"
+      ],
+      "classRequirements": {
+        "beam_or_flag": "teacher-reviewed beam groups and flag attachments; notehead/stem graph adjacency plus oriented-stroke topology",
+        "tie_or_slur": "teacher-reviewed curve masks plus relationship labels; endpoint proximity/arc continuity; tie-vs-slur distinction may abstain if subtype classification is not yet reliable"
+      },
+      "exit": "Relationship-level source adequacy and restored-preservation PASS per class, or explicit unresolved disposition."
+    },
+    {
+      "id": "S11-C4",
+      "title": "TAB semantic chain",
+      "classes": [
+        "tab_line",
+        "tab_digit",
+        "tab_string"
+      ],
+      "priority": "P2",
+      "dependencies": [],
+      "order": [
+        "tab_line",
+        "tab_digit",
+        "tab_string"
+      ],
+      "classRequirements": {
+        "tab_line": "teacher-reviewed TAB system polygons and individual line masks; distinguish six-line TAB from standard staff before applying six-line prior",
+        "tab_digit": "teacher-reviewed digit boxes, digit values and string-line assignment; detector restricted to validated TAB regions",
+        "tab_string": "teacher-reviewed digit-to-string relationships; derive string identity only from ordered validated TAB lines with ambiguity abstention"
+      },
+      "executionRule": "Do not attempt tab_digit/tab_string qualification before tab_line region/topology adequacy is established.",
+      "exit": "All three TAB classes PASS independently or remain unresolved."
+    },
+    {
+      "id": "S11-C5",
+      "title": "Aggregate Stage 11 semantic closure",
+      "classes": [
+        "notehead",
+        "staff_line",
+        "clef",
+        "accidental",
+        "barline",
+        "beam_or_flag",
+        "rest",
+        "stem",
+        "tie_or_slur",
+        "tab_line",
+        "tab_digit",
+        "tab_string"
+      ],
+      "priority": "FINAL",
+      "dependencies": [
+        "S11-C1",
+        "S11-C2",
+        "S11-C3",
+        "S11-C4"
+      ],
+      "prerequisites": [
+        "class matrix reconciled from immutable result bindings",
+        "all applicable classes have accepted PASS evidence, or a separately approved governance decision explicitly changes scope",
+        "no consumed holdout reused for tuning",
+        "frozen Restore package identity unchanged",
+        "determinism/source identity/provenance checks current",
+        "no production/API behavior changed as part of qualification"
+      ],
+      "finalDecisionOptions": [
+        "CLOSE_STAGE11_PASS",
+        "KEEP_STAGE11_OPEN",
+        "EXPLICITLY_CHANGE_STAGE11_CONTRACT_SCOPE_THEN_REASSESS"
+      ],
+      "automaticActionsForbidden": [
+        "merge PR #211",
+        "production promotion",
+        "Stage 12 entry"
+      ]
+    }
+  ],
+  "recommendedExecutionOrder": [
+    "S11-C1",
+    "S11-C2",
+    "S11-C3",
+    "S11-C4",
+    "S11-C5"
+  ],
+  "smallestNextSafeAction": "Start S11-C1 with a clef development/qualification design audit using the existing 213 blind teacher boxes and existing frozen development evidence only. Do not open a new holdout until a separately versioned clef candidate and prequalification policy are frozen.",
+  "claimBoundary": {
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}
