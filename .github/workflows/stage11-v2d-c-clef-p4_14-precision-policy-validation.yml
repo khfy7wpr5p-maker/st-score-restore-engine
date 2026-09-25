@@ -36,3 +36,33 @@ jobs:
         run: python -m pytest tests/test_stage11_v2d_c_clef_p4_14_precision_policy.py -q
       - name: Compile P4.14
         run: python -m py_compile src/st_score_restore/stage11_v2d_c_clef_p4_14_precision_policy.py tests/test_stage11_v2d_c_clef_p4_14_precision_policy.py
+      - name: Validate frozen P4.14 evidence and policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("evidence/stage11/v2d")
+          plan = json.loads((root / "v2d-c-clef-p4_14-precision-policy-plan.v1.json").read_text())
+          result = json.loads((root / "v2d-c-clef-p4_14-precision-policy-development-result-binding.v1.json").read_text())
+          policy = json.loads((root / "v2d-c-clef-p4_14-prequalification-policy.v1.json").read_text())
+
+          assert plan["approvedDesign"]["trainingAllowed"] is False
+          assert plan["approvedDesign"]["newIndependentHoldoutAccessed"] is False
+          assert result["developmentOnly"] is True
+          assert result["qualificationEvidence"] is False
+          assert result["cClefDevelopment"]["p414PrecisionGate"]["tp"] == 64
+          assert result["cClefDevelopment"]["p414PrecisionGate"]["fp"] == 12
+          assert result["cClefDevelopment"]["p414PrecisionGate"]["fn"] == 7
+          assert result["generalClefDevelopment"]["disposition"] == "REJECTED_AS_GENERAL_CLEF_SUCCESSOR"
+          assert policy["status"] == "FROZEN_BEFORE_NEW_INDEPENDENT_HOLDOUT_ACCESS"
+          assert policy["frozenThresholds"]["pooledPrecisionMinimum"] == 0.80
+          assert policy["frozenThresholds"]["pooledRecallMinimum"] == 0.85
+          assert policy["frozenThresholds"]["eachRepresentedSubtypeRecallMinimum"] == 0.80
+          assert policy["holdoutFirewall"]["newIndependentHoldoutOpenedByThisArtifact"] is False
+          assert policy["claimBoundary"]["cClefDetectorQualified"] is False
+          assert policy["claimBoundary"]["overallStage11PassAuthorized"] is False
+          print("P4.14 evidence/policy integrity: PASS")
+          PY
+      - name: Run full repository test suite
+        run: python -m pytest -q
