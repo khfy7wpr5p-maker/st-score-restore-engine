@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_14-prequalification-policy.v1",
+  "generatedOn": "2026-09-26",
+  "status": "FROZEN_BEFORE_NEW_INDEPENDENT_HOLDOUT_ACCESS",
+  "candidate": {
+    "candidateId": "stage11-v2d-c-clef-precision.p4_14.v1",
+    "implementationCommit": "ce74902e5d3acedf8381d73b69676673f0789248",
+    "sourceBlobSha": "0f87614dabb724dcda24be03ba7fd63cd77d516e",
+    "p45RawDevelopmentCandidateSha256": "0c1c921d0c0f19849a9eb36efabe4f1dc658ca4d7a3d3aa904f1c42d97157832",
+    "precisionGate": {
+      "minAreaInStaffSpacesSquared": 4.25,
+      "minHeightInStaffSpaces": 3.2,
+      "minWidthInStaffSpaces": 2
+    }
+  },
+  "qualificationScope": "C-clef presence/box localization only; subtype prediction is diagnostic unless separately qualified.",
+  "matching": {
+    "method": "greedy_one_to_one_descending_iou",
+    "primaryIouThreshold": 0.5,
+    "thresholdMayChangeAfterHoldout": false
+  },
+  "frozenThresholds": {
+    "pooledPrecisionMinimum": 0.8,
+    "pooledRecallMinimum": 0.85,
+    "eachRepresentedSubtypeRecallMinimum": 0.8,
+    "determinismRequired": true,
+    "allCriteriaConjunctive": true
+  },
+  "independentHoldoutRequirements": {
+    "disjointFrom": [
+      "29-page/71-box C-clef development corpus",
+      "P4.7 spent holdout",
+      "P4.9 spent holdout"
+    ],
+    "newSourceFamiliesPreferred": true,
+    "includeC1": true,
+    "includeC3": true,
+    "includeC4": true,
+    "includeStaffPresentPositivePages": true,
+    "includeAtLeastOneNoCClefNegativePage": true,
+    "sourceBytesAndManifestFrozenBeforeInference": true,
+    "teacherTruthFrozenBlindToPredictions": true,
+    "teacherTruthOpenedOnlyAfterSourceOnlyCandidateArtifactFrozen": true,
+    "candidateABDeterminismRequired": true,
+    "noPostAccessCodeOrThresholdChanges": true,
+    "oneShotPassFail": true
+  },
+  "thresholdRationale": {
+    "pooledPrecisionMinimum": "0.80 is materially above the rejected historical adapter precision and below the frozen development candidate's 0.8421, leaving a small but non-zero generalization margin.",
+    "pooledRecallMinimum": "0.85 preserves the safety emphasis on recall while remaining below the frozen development candidate's 0.9014.",
+    "eachRepresentedSubtypeRecallMinimum": "0.80 matches the previously used development recall marker and prevents pooled metrics from hiding a failed C1/C3/C4 subtype."
+  },
+  "holdoutFirewall": {
+    "newIndependentHoldoutOpenedByThisArtifact": false,
+    "retuningAfterHoldoutAccessAllowed": false,
+    "repeatQualificationForCandidateSelectionAllowed": false
+  },
+  "claimBoundary": {
+    "cClefCandidateFrozen": true,
+    "cClefDetectorQualified": false,
+    "generalClefQualified": false,
+    "overallClefQualified": false,
+    "overallStage11PassAuthorized": false,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeAction": "Do not open a C-clef holdout until this policy and candidate identity are repository-bound and fresh verification remains green. Separately design a general-clef successor for treble/bass/TAB/soprano before SES-19 can close."
+}
