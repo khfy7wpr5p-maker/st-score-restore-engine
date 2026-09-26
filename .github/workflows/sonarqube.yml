@@ -14,7 +14,7 @@ permissions:
 jobs:
   sonarqube:
     name: SonarQube Cloud analysis
-    if: ${{ vars.SONAR_CI_ENABLED == 'true' }}
+    if: ${{ vars.SONAR_CI_ENABLED == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +31,174 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+
+      - name: Export Quality Gate and open issues
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+          SONAR_API_BASE_URL: https://sonarcloud.io/api
+          SONAR_PR_NUMBER: ${{ github.event.pull_request.number }}
+          SONAR_BRANCH: ${{ github.head_ref || github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          import time
+          from pathlib import Path
+          from urllib.parse import urlencode
+          from urllib.request import Request, urlopen
+
+          base_url = os.environ["SONAR_API_BASE_URL"].rstrip("/")
+          token = os.environ["SONAR_TOKEN"]
+          project_key = os.environ["SONAR_PROJECT_KEY"]
+          pr_number = (os.environ.get("SONAR_PR_NUMBER") or "").strip()
+          branch = (os.environ.get("SONAR_BRANCH") or "main").strip()
+
+          if not token:
+              raise SystemExit("SONAR_TOKEN is missing")
+          if not project_key:
+              raise SystemExit("SONAR_PROJECT_KEY is missing")
+
+          task_file = Path(".scannerwork/report-task.txt")
+          if not task_file.is_file():
+              raise SystemExit("Sonar report-task.txt was not produced")
+
+          task_info: dict[str, str] = {}
+          for raw_line in task_file.read_text(encoding="utf-8").splitlines():
+              if "=" in raw_line:
+                  key, value = raw_line.split("=", 1)
+                  task_info[key.strip()] = value.strip()
+
+          ce_task_url = task_info.get("ceTaskUrl")
+          ce_task_id = task_info.get("ceTaskId")
+          if not ce_task_url:
+              raise SystemExit("Sonar compute-engine task URL is missing")
+
+          def get_json(url: str) -> dict:
+              request = Request(
+                  url,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/json",
+                      "User-Agent": "st-score-restore-sonarqube-report",
+                  },
+              )
+              with urlopen(request, timeout=60) as response:
+                  return json.load(response)
+
+          def api_get(path: str, params: dict[str, object]) -> dict:
+              query = urlencode(params, doseq=True)
+              return get_json(f"{base_url}/{path}?{query}")
+
+          analysis_id = ""
+          for _ in range(90):
+              task_payload = get_json(ce_task_url)
+              task = task_payload.get("task") or {}
+              status = str(task.get("status") or "")
+              if status == "SUCCESS":
+                  analysis_id = str(task.get("analysisId") or "")
+                  break
+              if status in {"FAILED", "CANCELED"}:
+                  raise SystemExit(f"Sonar compute-engine task ended with status {status}")
+              time.sleep(2)
+          else:
+              raise SystemExit("Timed out waiting for Sonar compute-engine task")
+
+          if not analysis_id:
+              raise SystemExit("Sonar analysisId is missing after successful processing")
+
+          gate = api_get(
+              "qualitygates/project_status",
+              {"analysisId": analysis_id},
+          )
+
+          scope = {"pullRequest": pr_number} if pr_number else {"branch": branch}
+          issues: list[dict] = []
+          page = 1
+          page_size = 500
+
+          while True:
+              payload = api_get(
+                  "issues/search",
+                  {
+                      "componentKeys": project_key,
+                      "resolved": "false",
+                      "p": page,
+                      "ps": page_size,
+                      **scope,
+                  },
+              )
+              batch = payload.get("issues") or []
+              issues.extend(batch)
+
+              paging = payload.get("paging") or {}
+              total = int(paging.get("total", len(issues)))
+              if len(issues) >= total or not batch:
+                  break
+              page += 1
+
+          report = {
+              "schemaVersion": "st-score-restore.sonarqube-report.v2",
+              "projectKey": project_key,
+              "scope": scope,
+              "analysisId": analysis_id,
+              "computeEngineTaskId": ce_task_id,
+              "workflowRun": {
+                  "id": os.environ.get("GITHUB_RUN_ID"),
+                  "attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+                  "sha": os.environ.get("GITHUB_SHA"),
+              },
+              "qualityGate": gate.get("projectStatus", gate),
+              "openIssueCount": len(issues),
+              "issues": issues,
+          }
+
+          Path("sonar-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          gate_status = str((report.get("qualityGate") or {}).get("status", "UNKNOWN"))
+          counts: dict[str, int] = {}
+          for issue in issues:
+              severity = str(issue.get("severity") or "UNKNOWN")
+              counts[severity] = counts.get(severity, 0) + 1
+
+          summary = [
+              "# SonarQube report",
+              "",
+              f"- Quality Gate: **{gate_status}**",
+              f"- Open issues: **{len(issues)}**",
+              f"- Analysis ID: `{analysis_id}`",
+              f"- Scope: `{scope}`",
+          ]
+          if counts:
+              summary.append(
+                  "- Severities: "
+                  + ", ".join(f"{key}={value}" for key, value in sorted(counts.items()))
+              )
+
+          Path("sonar-summary.md").write_text(
+              "\n".join(summary) + "\n",
+              encoding="utf-8",
+          )
+
+          github_step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if github_step_summary:
+              with open(github_step_summary, "a", encoding="utf-8") as handle:
+                  handle.write(Path("sonar-summary.md").read_text(encoding="utf-8"))
+          PY
+
+      - name: Upload SonarQube report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-report-${{ github.run_id }}
+          path: |
+            sonar-report.json
+            sonar-summary.md
+          if-no-files-found: error
+          retention-days: 30
