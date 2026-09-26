@@ -1,0 +1,139 @@
+name: Stage 5 assistive display probe
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  assistive-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install assistive technology probe runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends orca xdotool xvfb dbus-x11 at-spi2-core openbox
+
+      - name: Probe Orca against production review UI assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="src:."
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          echo "Chrome: $($CHROME --version)"
+          echo "Orca: $(orca --version)"
+
+          python - <<'PY' >/tmp/stage5-review-fixture.log 2>&1 &
+          from http.server import ThreadingHTTPServer
+          from tools.run_stage5_review_ui_browser_qa import FixtureHandler
+          ThreadingHTTPServer(("127.0.0.1", 8765), FixtureHandler).serve_forever()
+          PY
+          SERVER_PID=$!
+          for _ in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8765/review >/dev/null; then break; fi
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:8765/review | grep -q 'Teacher review'
+
+          Xvfb :99 -screen 0 1280x900x24 >/tmp/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          export DISPLAY=:99
+          openbox >/tmp/openbox.log 2>&1 &
+          OPENBOX_PID=$!
+          trap 'kill $OPENBOX_PID $XVFB_PID $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 2
+
+          set +e
+          dbus-run-session -- bash -lc '
+            set -u
+            export DISPLAY=:99
+            export NO_AT_BRIDGE=0
+            gsettings set org.gnome.desktop.interface toolkit-accessibility true || true
+            orca --replace --debug --debug-file=/tmp/orca.log >/tmp/orca.stdout 2>/tmp/orca.stderr &
+            ORCA_PID=$!
+            sleep 3
+            CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+            "$CHROME" --force-renderer-accessibility --no-sandbox --disable-gpu --disable-dev-shm-usage --no-first-run --user-data-dir=/tmp/stage5-orca-review http://127.0.0.1:8765/review >/tmp/chrome.log 2>&1 &
+            CHROME_PID=$!
+            sleep 6
+
+            WINDOW_ID="$(xdotool search --onlyvisible --name "ST Score Restore.*Teacher Review.*Google Chrome" 2>/dev/null | head -n1 || true)"
+            if [ -z "$WINDOW_ID" ]; then
+              WINDOW_ID="$(xdotool search --onlyvisible --class "google-chrome" 2>/dev/null | head -n1 || true)"
+            fi
+            if [ -z "$WINDOW_ID" ]; then
+              WINDOW_ID="$(xdotool search --onlyvisible --class "Google-chrome" 2>/dev/null | head -n1 || true)"
+            fi
+            {
+              echo "window=$WINDOW_ID"
+              echo "visible_windows:"
+              xdotool search --onlyvisible --name ".*" 2>/dev/null | while read -r wid; do
+                printf "%s " "$wid"
+                xdotool getwindowname "$wid" 2>/dev/null || true
+              done
+            } >/tmp/interaction.log
+            test -n "$WINDOW_ID"
+            xdotool windowfocus --sync "$WINDOW_ID" >>/tmp/interaction.log 2>&1
+            sleep 1
+
+            # Keyboard-only connection flow: skip link, Job ID, Reviewer ID, key, submit.
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            sleep 1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            sleep 1
+            xdotool type --window "$WINDOW_ID" --delay 15 "job-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            xdotool type --window "$WINDOW_ID" --delay 15 "teacher-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            xdotool type --window "$WINDOW_ID" --delay 15 "reviewer-key-stage5-browser-qa" >>/tmp/interaction.log 2>&1
+            xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+            sleep 1
+            xdotool key --window "$WINDOW_ID" Return >>/tmp/interaction.log 2>&1
+            sleep 7
+
+            # loadReview() focuses the real workspace heading. Walk the real review controls.
+            for _ in $(seq 1 12); do
+              xdotool key --window "$WINDOW_ID" Tab >>/tmp/interaction.log 2>&1
+              sleep 0.8
+            done
+            sleep 2
+
+            kill "$ORCA_PID" 2>/dev/null || true
+            kill "$CHROME_PID" 2>/dev/null || true
+            wait "$ORCA_PID" 2>/dev/null || true
+            wait "$CHROME_PID" 2>/dev/null || true
+          '
+          SESSION_RC=$?
+          set -e
+
+          echo "--- interaction ---"
+          cat /tmp/interaction.log 2>/dev/null || true
+          echo "--- Orca stderr ---"
+          tail -n 80 /tmp/orca.stderr 2>/dev/null || true
+          echo "--- Orca review matches ---"
+          grep -Eai 'Teacher review|Job ID|Reviewer ID|Reviewer API key|Load review|Review evidence|Source evidence|Candidate evidence|Evidence zoom|Review notes|Approve candidate|Reject candidate|Reprocess page|Loaded 1 review page|SPEECH OUTPUT|FOCUS' /tmp/orca.log 2>/dev/null | tail -n 520 || true
+          echo "session_rc=$SESSION_RC"
+
+          test "$SESSION_RC" -eq 0
+          test -s /tmp/orca.log
+
+          # Names and roles must be visible through the real Chrome/AT-SPI tree.
+          grep -Fq "[entry: 'Job ID']" /tmp/orca.log
+          grep -Fq "[entry: 'Reviewer ID']" /tmp/orca.log
+          grep -Fq "[password text: 'Reviewer API key']" /tmp/orca.log
+          grep -Fq "[push button: 'Load review']" /tmp/orca.log
+          grep -Fq "Review evidence" /tmp/orca.log
+          grep -Fq "Source evidence image" /tmp/orca.log
+          grep -Fq "Candidate evidence image" /tmp/orca.log
+          grep -Fq "Review notes" /tmp/orca.log
+          grep -Fq "Approve candidate" /tmp/orca.log
+          grep -Fq "Reject candidate" /tmp/orca.log
+          grep -Fq "Reprocess page" /tmp/orca.log
+
+          # Require actual Orca speech generated from the production review UI, not tree inspection alone.
+          grep -Eaiq "SPEECH OUTPUT:.*(Job ID|Reviewer ID|Reviewer API key|Load review)" /tmp/orca.log
+          grep -Eaiq "SPEECH OUTPUT:.*(Review evidence|Source evidence|Candidate evidence|Review notes|Approve candidate|Reject candidate|Reprocess page)" /tmp/orca.log
