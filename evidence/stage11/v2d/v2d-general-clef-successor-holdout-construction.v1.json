@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "stage11.v2d.general-clef-successor-holdout-construction.v1",
+  "generatedOn": "2026-09-26",
+  "status": "SOURCE_SET_CONSTRUCTION_OPENED_INCOMPLETE",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "ses-19-general-clef-successor-v1",
+    "pullRequest": 217,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "authorization": {
+    "freshHoldoutConstructionApproved": true,
+    "approvedByUserOn": "2026-09-26",
+    "sourceAccessStarted": true,
+    "qualificationExecutionApprovedConditionally": true,
+    "condition": "Only after source set, source manifest, frozen blind teacher truth, frozen predictions and A/B determinism requirements are all satisfied."
+  },
+  "frozenBindings": {
+    "candidateGeneratorId": "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative-c-review.v2",
+    "candidateGeneratorCommit": "b72bcc344501788b93d7daef6e8d35cec44b983d",
+    "candidateGeneratorBlobSha": "1cc4108319eb0c0531f4fbeced0d30738c6bd541",
+    "successorCommit": "aeaf323d7fd3e199053251240d10bc9d447602d0",
+    "successorBlobSha": "8bef05863aa15df9da102f5bfd71345435657bbc",
+    "prequalificationPolicyCommit": "f245c7038737cd559e9d4093f3de80c8c5ec24eb",
+    "prequalificationPolicyBlobSha": "82a0876ba50bf2b204b1447d1e020a51d1e2e8a7",
+    "freezeVerificationBindingCommit": "ecbd2af756282378c175c3234e6ae5faeb590dd1",
+    "frozenThresholds": {
+      "typedPooledPrecisionMinimum": 0.9,
+      "typedPooledRecallMinimum": 0.85,
+      "typedSubtypeRecallMinimum": {
+        "treble": 0.9,
+        "bass": 0.85,
+        "tab": 0.8
+      },
+      "cClefReviewPrecisionMinimum": 0.8,
+      "cClefReviewRecallMinimum": 0.8,
+      "cClefReviewAutomaticSubtypeAssignmentsMaximum": 0,
+      "iouThreshold": 0.5,
+      "determinismRequired": true,
+      "allCriteriaConjunctive": true
+    }
+  },
+  "mutationBoundary": {
+    "candidateMutationAllowed": false,
+    "thresholdMutationAllowed": false,
+    "postAccessCandidateSelectionAllowed": false,
+    "postAccessRetuningAllowed": false,
+    "pageIdFilenameSourceFamilyInferenceRulesAllowed": false,
+    "teacherMetadataInferenceRulesAllowed": false
+  },
+  "independence": {
+    "excludedEvidence": [
+      "18-page/213-box general-clef development corpus",
+      "P4.7 spent holdout",
+      "P4.9 spent holdout",
+      "Barley general-clef development family",
+      "Wikimedia Guitar Technical Exercise development family"
+    ],
+    "unseenSourceFamiliesTarget": 2,
+    "spentHoldoutReuseAllowed": false,
+    "developmentTruthReuseForQualificationAllowed": false
+  },
+  "sourceInventory": [
+    {
+      "sourceRef": "private-source:tchaikovsky-staffline-v1_4",
+      "role": "FRESH_RASTER_TREBLE_BASS_POSITIVE_CANDIDATE",
+      "byteSize": 309341,
+      "sha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47",
+      "mediaType": "image/png",
+      "dimensions": [
+        1304,
+        846
+      ],
+      "exactBytesAccessed": true,
+      "sourceFamilyDisjointFromGeneralClefDevelopment": true,
+      "sourceOnlyCandidateInputReady": true,
+      "qualificationLabelState": "BLIND_TRUTH_NOT_AVAILABLE"
+    },
+    {
+      "sourceRef": "private-source:nearer-phone-derivative-v1",
+      "role": "FRESH_RASTER_TREBLE_BASS_AND_DEGRADATION_CANDIDATE",
+      "byteSize": 647003,
+      "sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+      "mediaType": "image/jpeg",
+      "dimensions": [
+        2048,
+        1536
+      ],
+      "exactBytesAccessed": true,
+      "sourceFamilyDisjointFromGeneralClefDevelopment": true,
+      "sourceOnlyCandidateInputReady": true,
+      "qualificationLabelState": "BLIND_TRUTH_NOT_AVAILABLE",
+      "custodyBoundary": "PRIVATE_RESTRICTED_SOURCE_BYTES_NOT_FOR_ORDINARY_GIT"
+    },
+    {
+      "sourceRef": "private-source:debussy-string-quartet-op10-mxl",
+      "role": "FRESH_C_CLEF_SEMANTIC_SOURCE_CANDIDATE",
+      "byteSize": 327895,
+      "sha256": "f720a48649c5e3fba806c2832b28dc664d166042143825a8a2f7ea70f3175875",
+      "mediaType": "application/x-zip",
+      "exactBytesAccessed": true,
+      "sourceFamilyDisjointFromGeneralClefDevelopment": true,
+      "semanticInspection": {
+        "parts": [
+          "Violin 1",
+          "Violin 2",
+          "Viola",
+          "Violoncello"
+        ],
+        "cClefOccurrencesObservedInMusicXml": true,
+        "cClefLinesObserved": [
+          3,
+          4
+        ]
+      },
+      "sourceOnlyCandidateInputReady": false,
+      "reasonNotReady": "Frozen detector accepts score images; no exact raster rendering of this source is currently available.",
+      "qualificationLabelState": "BLIND_TRUTH_NOT_AVAILABLE"
+    }
+  ],
+  "missingSourceRequirements": {
+    "freshTabExactBytes": {
+      "satisfied": false,
+      "developmentFamiliesExplicitlyExcluded": [
+        "Barley",
+        "Wikimedia Guitar Technical Exercise"
+      ],
+      "independentCandidateDiscovery": "Molino / IMSLP 989907 previously source-qualified as an independent tablature family, but exact bytes are not available in connected custody.",
+      "mayUseMetadataOrThumbnailAsSubstitute": false
+    },
+    "cClefRasterPositive": {
+      "satisfied": false,
+      "semanticSourceAvailable": true,
+      "rasterSourceAvailable": false,
+      "syntheticRenderingMayBeSubstitutedWithoutSeparateBinding": false
+    },
+    "staffPresentNegativeEvidence": {
+      "satisfied": false,
+      "selectionFrozen": false
+    }
+  },
+  "teacherTruth": {
+    "required": true,
+    "requiredBlindToPredictions": true,
+    "frozen": false,
+    "opened": false,
+    "available": false,
+    "detectorOutputMayBeUsedAsGroundTruth": false,
+    "developmentTeacherTruthMayBeCopiedIntoHoldout": false
+  },
+  "holdoutFreeze": {
+    "ready": false,
+    "sourceManifestFrozen": false,
+    "sourceBytesComplete": false,
+    "blindTeacherTruthFrozen": false,
+    "candidatePredictionsFrozen": false,
+    "candidateABDeterminismEstablishedOnHoldout": false
+  },
+  "qualification": {
+    "executed": false,
+    "oneShotScoringAllowed": false,
+    "predictionArtifactCreated": false,
+    "teacherTruthOpenedAfterPredictionFreeze": false,
+    "result": "NOT_RUN_SOURCE_SET_AND_BLIND_TRUTH_INCOMPLETE"
+  },
+  "blockers": [
+    "FRESH_TAB_EXACT_BYTES_MISSING",
+    "C_CLEF_RASTER_SOURCE_MISSING",
+    "STAFF_PRESENT_NEGATIVE_SOURCE_NOT_FROZEN",
+    "BLIND_CLEF_TEACHER_TRUTH_MISSING"
+  ],
+  "claimBoundary": {
+    "freshHoldoutConstructionOpened": true,
+    "completeFreshHoldoutFrozen": false,
+    "detectorQualified": false,
+    "typedTrebleBassTabQualified": false,
+    "cClefReviewRoutingQualified": false,
+    "overallGeneralClefQualificationClaimAllowed": false,
+    "p414Modified": false,
+    "pr217MergeAuthorized": false,
+    "pr211MergeAuthorized": false,
+    "ses19Complete": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeAction": "Complete the fresh source set with exact independent TAB bytes, exact raster C-clef-positive source and staff-present negative source; then create and freeze blind clef teacher truth before any prediction/truth comparison or one-shot scoring."
+}
