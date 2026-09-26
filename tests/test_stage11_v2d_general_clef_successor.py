@@ -126,6 +126,27 @@ class Stage11V2dGeneralClefSuccessorTests(unittest.TestCase):
         self.assertEqual("unknown", result["detections"][0]["clef_type_or_unknown"])
         self.assertEqual("ACCEPT_PRESENCE_ONLY", result["detections"][0]["status"])
 
+    def test_possible_c_clef_candidate_is_review_required_without_forcing_soprano(self) -> None:
+        result = resolve_general_clef_successor(
+            [
+                self._candidate(
+                    clef_type="unknown",
+                    type_confidence=0.0,
+                    provenance="source-only:c-clef-review:five-line-c1-compact",
+                    review_required_reason="POSSIBLE_C_CLEF",
+                )
+            ],
+            self.five_line,
+            source_width=500,
+            source_height=300,
+        )
+
+        self.assertEqual(1, len(result["detections"]))
+        detection = result["detections"][0]
+        self.assertEqual("unknown", detection["clef_type_or_unknown"])
+        self.assertEqual("REVIEW_REQUIRED", detection["status"])
+        self.assertEqual("POSSIBLE_C_CLEF", detection["abstain_reason"])
+
     def test_duplicate_candidates_collapse_but_distinct_mid_staff_clefs_remain(self) -> None:
         candidates = [
             self._candidate(bbox=(20.0, 92.0, 45.0, 148.0), presence=0.90, provenance="weak"),
