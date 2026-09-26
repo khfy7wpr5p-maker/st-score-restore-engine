@@ -291,7 +291,8 @@ def _p414_collision(
             box = _bbox(raw["bbox"], width=width, height=height)
         except (KeyError, TypeError, ValueError):
             continue
-        if "staff_index" in raw and int(raw["staff_index"]) != int(record["staff_index"]):
+        p414_staff_index = raw.get("staff_index", raw.get("staffIndex"))
+        if p414_staff_index is not None and int(p414_staff_index) != int(record["staff_index"]):
             continue
         overlap = _iou(record["bbox"], box)
         if overlap >= P414_COLLISION_IOU_THRESHOLD:
@@ -302,7 +303,10 @@ def _p414_collision(
 
     collisions.sort(key=lambda item: (-item[0], item[1]))
     _, _, raw, box = collisions[0]
-    presence = raw.get("clef_presence_confidence", record["clef_presence_confidence"])
+    presence = raw.get(
+        "clef_presence_confidence",
+        raw.get("presenceConfidence", record["clef_presence_confidence"]),
+    )
     try:
         p414_presence = _confidence(presence)
     except (TypeError, ValueError):
