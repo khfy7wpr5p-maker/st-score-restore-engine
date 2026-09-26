@@ -186,6 +186,13 @@ def _candidate_record(
         clef_type = raw_type
         status = "ACCEPT_PRESENCE_ONLY" if clef_type == "unknown" else "ACCEPT_TYPED"
 
+    if (
+        clef_type == "unknown"
+        and str(raw.get("review_required_reason", "")) == "POSSIBLE_C_CLEF"
+    ):
+        status = "REVIEW_REQUIRED"
+        reason = "POSSIBLE_C_CLEF"
+
     line_count = int(staff["line_count"])
     if clef_type == "tab" and line_count != 6:
         return None, _abstention(index, "TOPOLOGY_MISMATCH", box)
