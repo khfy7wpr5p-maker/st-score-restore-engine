@@ -74,7 +74,7 @@ def package_candidate(checkpoint_path: Path, out_dir: Path) -> dict[str, Any]:
     if checkpoint_sha != EXPECTED_CHECKPOINT_SHA256:
         raise RuntimeError(f"frozen V2a checkpoint SHA mismatch: {checkpoint_sha}")
 
-    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
     if checkpoint.get("datasetMd5") != EXPECTED_DATASET_MD5:
         raise RuntimeError("checkpoint dataset provenance mismatch")
     if checkpoint.get("configSha256") != EXPECTED_CONFIG_SHA256:

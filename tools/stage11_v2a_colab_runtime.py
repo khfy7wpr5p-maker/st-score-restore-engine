@@ -170,7 +170,7 @@ def train_mode(data: dict[str, Any]) -> None:
     dev_loader = DataLoader(dev_ds, batch_size=BATCH, shuffle=False, num_workers=2, pin_memory=device.type == "cuda")
 
     model = build_residual_unet(base_channels=32).to(device)
-    source_checkpoint = torch.load(source, map_location=device)
+    source_checkpoint = torch.load(source, map_location=device, weights_only=True)
     if source_checkpoint.get("datasetMd5") != EXPECTED_ARCHIVE_MD5:
         raise RuntimeError("V2 source dataset provenance mismatch")
     model.load_state_dict(source_checkpoint["model"])
@@ -192,14 +192,14 @@ def train_mode(data: dict[str, Any]) -> None:
     resume_train_total = 0.0
     resume_train_batches = 0
     if last.exists():
-        ckpt = torch.load(last, map_location=device)
+        ckpt = torch.load(last, map_location=device, weights_only=True)
         if ckpt.get("configSha256") != CONFIG_SHA256 or ckpt.get("datasetMd5") != EXPECTED_ARCHIVE_MD5:
             raise RuntimeError("V2a last checkpoint provenance mismatch")
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
         start_epoch = int(ckpt["epoch"]) + 1
     if partial.exists():
-        ckpt = torch.load(partial, map_location=device)
+        ckpt = torch.load(partial, map_location=device, weights_only=True)
         if ckpt.get("configSha256") != CONFIG_SHA256 or ckpt.get("datasetMd5") != EXPECTED_ARCHIVE_MD5:
             raise RuntimeError("V2a partial checkpoint provenance mismatch")
         partial_epoch = int(ckpt["epoch"])
@@ -342,7 +342,7 @@ def load_frozen_model(device: Any) -> tuple[Any, dict[str, Any], Path]:
     best = V2A_TRAIN_OUT / "best.pt"
     if not best.exists():
         raise FileNotFoundError(best)
-    checkpoint = torch.load(best, map_location=device)
+    checkpoint = torch.load(best, map_location=device, weights_only=True)
     if checkpoint.get("datasetMd5") != EXPECTED_ARCHIVE_MD5 or checkpoint.get("configSha256") != CONFIG_SHA256:
         raise RuntimeError("V2a checkpoint/config/dataset provenance mismatch")
     model = build_residual_unet(base_channels=32).to(device)
