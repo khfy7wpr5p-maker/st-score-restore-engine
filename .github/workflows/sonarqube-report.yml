@@ -1,0 +1,147 @@
+name: SonarQube Report
+
+on:
+  workflow_run:
+    workflows:
+      - SonarQube Cloud
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    name: Export SonarQube quality report
+    if: ${{ vars.SONAR_CI_ENABLED == 'true' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+      SONAR_API_BASE_URL: https://sonarcloud.io/api
+      SONAR_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      SONAR_PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+
+    steps:
+      - name: Export Quality Gate and open issues
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import urlencode
+          from urllib.request import Request, urlopen
+
+          base_url = os.environ["SONAR_API_BASE_URL"].rstrip("/")
+          token = os.environ["SONAR_TOKEN"]
+          project_key = os.environ["SONAR_PROJECT_KEY"]
+          head_branch = (os.environ.get("SONAR_HEAD_BRANCH") or "main").strip()
+          pr_number = (os.environ.get("SONAR_PR_NUMBER") or "").strip()
+
+          if not token:
+              raise SystemExit("SONAR_TOKEN is missing")
+          if not project_key:
+              raise SystemExit("SONAR_PROJECT_KEY is missing")
+
+          scope = {"pullRequest": pr_number} if pr_number else {"branch": head_branch}
+
+          def api_get(path: str, params: dict[str, object]) -> dict:
+              query = urlencode(params, doseq=True)
+              request = Request(
+                  f"{base_url}/{path}?{query}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/json",
+                      "User-Agent": "st-score-restore-sonarqube-report",
+                  },
+              )
+              with urlopen(request, timeout=60) as response:
+                  return json.load(response)
+
+          gate = api_get(
+              "qualitygates/project_status",
+              {"projectKey": project_key, **scope},
+          )
+
+          issues: list[dict] = []
+          page = 1
+          page_size = 500
+          while True:
+              payload = api_get(
+                  "issues/search",
+                  {
+                      "componentKeys": project_key,
+                      "resolved": "false",
+                      "p": page,
+                      "ps": page_size,
+                      **scope,
+                  },
+              )
+              batch = payload.get("issues") or []
+              issues.extend(batch)
+
+              paging = payload.get("paging") or {}
+              total = int(paging.get("total", len(issues)))
+              if len(issues) >= total or not batch:
+                  break
+              page += 1
+
+          report = {
+              "schemaVersion": "st-score-restore.sonarqube-report.v1",
+              "projectKey": project_key,
+              "scope": scope,
+              "workflowRun": {
+                  "id": os.environ.get("GITHUB_RUN_ID"),
+                  "attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+              },
+              "qualityGate": gate.get("projectStatus", gate),
+              "openIssueCount": len(issues),
+              "issues": issues,
+          }
+
+          Path("sonar-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          status = (report.get("qualityGate") or {}).get("status", "UNKNOWN")
+          counts: dict[str, int] = {}
+          for issue in issues:
+              severity = str(issue.get("severity") or "UNKNOWN")
+              counts[severity] = counts.get(severity, 0) + 1
+
+          summary = [
+              "# SonarQube report",
+              "",
+              f"- Quality Gate: **{status}**",
+              f"- Open issues: **{len(issues)}**",
+              f"- Scope: `{scope}`",
+          ]
+          if counts:
+              summary.append("- Severities: " + ", ".join(
+                  f"{key}={value}" for key, value in sorted(counts.items())
+              ))
+          Path("sonar-summary.md").write_text(
+              "\n".join(summary) + "\n",
+              encoding="utf-8",
+          )
+
+          github_step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if github_step_summary:
+              with open(github_step_summary, "a", encoding="utf-8") as handle:
+                  handle.write(Path("sonar-summary.md").read_text(encoding="utf-8"))
+          PY
+
+      - name: Upload SonarQube report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-report-${{ github.event.workflow_run.id }}
+          path: |
+            sonar-report.json
+            sonar-summary.md
+          if-no-files-found: error
+          retention-days: 30
