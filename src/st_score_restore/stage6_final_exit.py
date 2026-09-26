@@ -36,7 +36,7 @@ def canonical_sha256(value: Any) -> str:
 
 def git_blob_sha1(payload: bytes) -> str:
     framed = b"blob " + str(len(payload)).encode("ascii") + b"\0" + payload
-    return hashlib.sha1(framed).hexdigest()
+    return hashlib.sha1(framed, usedforsecurity=False).hexdigest()
 
 
 def validate_stage6_final_exit(
