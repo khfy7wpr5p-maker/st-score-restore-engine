@@ -20,7 +20,23 @@ import numpy as np
 from .stage11_v2d_clef_adapter import detect_tab_clef_markers
 
 
-CANDIDATE_GENERATOR_ID = "stage11-general-clef-candidate-generator.staff-relative-cc.v1"
+CANDIDATE_GENERATOR_ID = "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative.v1"
+
+_OEMER_TARGET_PIXEL_MIDPOINT = 3_675_000.0
+_TREBLE_MIN_HEIGHT_SPACES = 5.10
+_TREBLE_MIN_WIDTH_SPACES = 1.40
+_TREBLE_MIN_ASPECT = 1.40
+_TREBLE_MAX_ASPECT = 3.60
+_TREBLE_WIDTH_SCALE = 1.225
+_TREBLE_HEIGHT_SCALE = 1.125
+_BASS_MIN_HEIGHT_SPACES = 2.70
+_BASS_MAX_HEIGHT_SPACES = 3.70
+_BASS_MIN_WIDTH_SPACES = 1.25
+_BASS_MAX_ASPECT = 2.20
+_BASS_MIN_START_OFFSET_SPACES = -2.0
+_BASS_MAX_START_OFFSET_SPACES = 15.0
+_BASS_WIDTH_SCALE = 1.95
+_BASS_HEIGHT_SCALE = 1.50
 
 _TOPOLOGY_KERNEL_WIDTH_RATIOS = (0.015, 0.025, 0.04, 0.06)
 _TOPOLOGY_ROW_COVERAGE_FLOORS = (0.04, 0.07, 0.10, 0.15, 0.22)
@@ -382,6 +398,253 @@ def _component_presence_candidates(
     return bounded
 
 
+def oemer_prediction_shape_for_source(
+    *,
+    source_width: int,
+    source_height: int,
+) -> tuple[int, int]:
+    """Reproduce Oemer's deterministic 3M-4.35M pixel resize contract."""
+    if source_width <= 0 or source_height <= 0:
+        raise ValueError("positive source geometry required")
+    pixels = int(source_width) * int(source_height)
+    if 3_000_000 <= pixels <= 4_350_000:
+        return int(source_width), int(source_height)
+    ratio = math.sqrt(_OEMER_TARGET_PIXEL_MIDPOINT / float(pixels))
+    return (
+        int(round(ratio * source_width)),
+        int(round(ratio * source_height)),
+    )
+
+
+def normalize_oemer_candidate_box(
+    bbox: Sequence[float],
+    *,
+    source_width: int,
+    source_height: int,
+    prediction_shape: Sequence[int],
+) -> list[float]:
+    """Map an Oemer prediction-space bbox back to original source pixels."""
+    if len(bbox) != 4 or len(prediction_shape) != 2:
+        raise ValueError("bbox and prediction_shape geometry mismatch")
+    prediction_width = int(prediction_shape[0])
+    prediction_height = int(prediction_shape[1])
+    if prediction_width <= 0 or prediction_height <= 0:
+        raise ValueError("positive Oemer prediction geometry required")
+    values = [float(value) for value in bbox]
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("finite Oemer bbox required")
+    x1, y1, x2, y2 = values
+    if (
+        x1 < 0.0
+        or y1 < 0.0
+        or x2 <= x1
+        or y2 <= y1
+        or x2 > prediction_width
+        or y2 > prediction_height
+    ):
+        raise ValueError("Oemer bbox must remain inside prediction geometry")
+    return [
+        x1 * float(source_width) / prediction_width,
+        y1 * float(source_height) / prediction_height,
+        x2 * float(source_width) / prediction_width,
+        y2 * float(source_height) / prediction_height,
+    ]
+
+
+def _normalized_external_staff_systems(
+    staff_systems: Sequence[dict[str, Any]] | None,
+    fallback_topologies: Sequence[dict[str, Any]],
+    *,
+    source_width: int,
+) -> list[dict[str, Any]]:
+    if staff_systems is None:
+        return [
+            {
+                "staff_index": int(item["topology_index"]),
+                "line_rows": [float(value) for value in item["line_rows"]],
+                "staff_spacing": float(item["staff_spacing"]),
+                "staff_center_y": float(item["staff_center_y"]),
+                "x1": 0.0,
+                "x2": float(source_width),
+            }
+            for item in fallback_topologies
+            if int(item["line_count"]) == 5
+        ]
+
+    normalized: list[dict[str, Any]] = []
+    for index, item in enumerate(staff_systems):
+        rows_raw = item.get("line_rows", item.get("lineRows"))
+        if not isinstance(rows_raw, Sequence) or len(rows_raw) != 5:
+            continue
+        rows = [float(value) for value in rows_raw]
+        if not all(math.isfinite(value) for value in rows):
+            continue
+        if not all(a < b for a, b in zip(rows, rows[1:])):
+            continue
+        spacing = float(np.median(np.diff(np.asarray(rows, dtype=float))))
+        if not math.isfinite(spacing) or spacing <= 0.0:
+            continue
+        normalized.append(
+            {
+                "staff_index": int(item.get("staff_index", item.get("staffIndex", index))),
+                "line_rows": rows,
+                "staff_spacing": spacing,
+                "staff_center_y": float(np.mean(rows)),
+                "x1": float(item.get("x1", 0.0)),
+                "x2": float(item.get("x2", source_width)),
+            }
+        )
+    return normalized
+
+
+def _expand_source_box(
+    bbox: Sequence[float],
+    *,
+    width_scale: float,
+    height_scale: float,
+    source_width: int,
+    source_height: int,
+) -> list[float]:
+    x1, y1, x2, y2 = [float(value) for value in bbox]
+    center_x = (x1 + x2) / 2.0
+    center_y = (y1 + y2) / 2.0
+    width = (x2 - x1) * width_scale
+    height = (y2 - y1) * height_scale
+    return [
+        max(0.0, center_x - width / 2.0),
+        max(0.0, center_y - height / 2.0),
+        min(float(source_width), center_x + width / 2.0),
+        min(float(source_height), center_y + height / 2.0),
+    ]
+
+
+def _typed_oemer_candidates(
+    boxes: Sequence[Sequence[float]],
+    *,
+    source_width: int,
+    source_height: int,
+    prediction_shape: Sequence[int] | None,
+    staff_systems: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if not boxes or not staff_systems:
+        return []
+    page_spacing = float(
+        np.median(
+            np.asarray(
+                [float(item["staff_spacing"]) for item in staff_systems],
+                dtype=float,
+            )
+        )
+    )
+    if not math.isfinite(page_spacing) or page_spacing <= 0.0:
+        return []
+
+    typed: list[dict[str, Any]] = []
+    for raw_box in boxes:
+        try:
+            box = (
+                normalize_oemer_candidate_box(
+                    raw_box,
+                    source_width=source_width,
+                    source_height=source_height,
+                    prediction_shape=prediction_shape,
+                )
+                if prediction_shape is not None
+                else [float(value) for value in raw_box]
+            )
+        except (TypeError, ValueError):
+            continue
+        if len(box) != 4:
+            continue
+        x1, y1, x2, y2 = box
+        if (
+            x1 < 0.0
+            or y1 < 0.0
+            or x2 <= x1
+            or y2 <= y1
+            or x2 > source_width
+            or y2 > source_height
+        ):
+            continue
+        center_x = (x1 + x2) / 2.0
+        center_y = (y1 + y2) / 2.0
+        staff = min(
+            staff_systems,
+            key=lambda item: (
+                abs(center_y - float(item["staff_center_y"])),
+                int(item["staff_index"]),
+            ),
+        )
+        local_spacing = float(staff["staff_spacing"])
+        if (
+            abs(center_y - float(staff["staff_center_y"]))
+            > _COMPONENT_STAFF_RADIUS_SPACES * local_spacing
+        ):
+            continue
+
+        width_spaces = (x2 - x1) / page_spacing
+        height_spaces = (y2 - y1) / page_spacing
+        aspect = (y2 - y1) / max(x2 - x1, 1e-9)
+        start_offset_spaces = (
+            center_x - float(staff.get("x1", 0.0))
+        ) / page_spacing
+
+        if (
+            height_spaces >= _TREBLE_MIN_HEIGHT_SPACES
+            and width_spaces >= _TREBLE_MIN_WIDTH_SPACES
+            and _TREBLE_MIN_ASPECT <= aspect <= _TREBLE_MAX_ASPECT
+        ):
+            clef_type = "treble"
+            refined = _expand_source_box(
+                box,
+                width_scale=_TREBLE_WIDTH_SCALE,
+                height_scale=_TREBLE_HEIGHT_SCALE,
+                source_width=source_width,
+                source_height=source_height,
+            )
+            presence_confidence = 0.95
+            type_confidence = 0.92
+        elif (
+            _BASS_MIN_HEIGHT_SPACES <= height_spaces <= _BASS_MAX_HEIGHT_SPACES
+            and width_spaces >= _BASS_MIN_WIDTH_SPACES
+            and aspect <= _BASS_MAX_ASPECT
+            and _BASS_MIN_START_OFFSET_SPACES
+            <= start_offset_spaces
+            <= _BASS_MAX_START_OFFSET_SPACES
+        ):
+            clef_type = "bass"
+            refined = _expand_source_box(
+                box,
+                width_scale=_BASS_WIDTH_SCALE,
+                height_scale=_BASS_HEIGHT_SCALE,
+                source_width=source_width,
+                source_height=source_height,
+            )
+            presence_confidence = 0.94
+            type_confidence = 0.90
+        else:
+            continue
+
+        typed.append(
+            {
+                "bbox": refined,
+                "clef_presence_confidence": presence_confidence,
+                "clef_type_or_unknown": clef_type,
+                "clef_type_confidence": type_confidence,
+                "candidate_provenance": f"source-only:oemer-staff-relative:{clef_type}",
+            }
+        )
+
+    typed.sort(
+        key=lambda item: (
+            float(item["bbox"][1]),
+            float(item["bbox"][0]),
+            str(item["clef_type_or_unknown"]),
+        )
+    )
+    return typed
+
+
 def _typed_tab_candidates(gray: np.ndarray) -> list[dict[str, Any]]:
     result = detect_tab_clef_markers(gray)
     detections = result.get("detections") or []
@@ -405,11 +668,19 @@ def _typed_tab_candidates(gray: np.ndarray) -> list[dict[str, Any]]:
     return typed
 
 
-def generate_general_clef_candidates(source_image: np.ndarray) -> dict[str, Any]:
-    """Generate deterministic source-only high-recall clef localizations.
+def generate_general_clef_candidates(
+    source_image: np.ndarray,
+    *,
+    oemer_candidate_boxes: Sequence[Sequence[float]] = (),
+    oemer_prediction_shape: Sequence[int] | None = None,
+    staff_systems: Sequence[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Generate deterministic source-only general-clef candidates.
 
-    The function intentionally exposes only the source image as an inference
-    input. Standard clef subtype evidence is deferred to the semantic stage.
+    When Oemer proposals are supplied, the generator normalizes them back to
+    source pixels and applies the frozen development-only staff-relative
+    treble/bass geometry sieve. Without Oemer proposals, the earlier
+    source-image connected-component presence fallback remains available.
     """
     gray = _require_source_image(source_image)
     five_line = _line_topology_proposals(gray, 5)
@@ -425,7 +696,23 @@ def generate_general_clef_candidates(source_image: np.ndarray) -> dict[str, Any]
     for index, item in enumerate(topologies):
         item["topology_index"] = index
 
-    candidates = _component_presence_candidates(gray, topologies)
+    normalized_staff_systems = _normalized_external_staff_systems(
+        staff_systems,
+        five_line,
+        source_width=gray.shape[1],
+    )
+    typed_standard = _typed_oemer_candidates(
+        list(oemer_candidate_boxes),
+        source_width=gray.shape[1],
+        source_height=gray.shape[0],
+        prediction_shape=oemer_prediction_shape,
+        staff_systems=normalized_staff_systems,
+    )
+    candidates = (
+        typed_standard
+        if oemer_candidate_boxes
+        else _component_presence_candidates(gray, topologies)
+    )
     candidates.extend(_typed_tab_candidates(gray))
     candidates.sort(
         key=lambda item: (
@@ -454,6 +741,17 @@ def generate_general_clef_candidates(source_image: np.ndarray) -> dict[str, Any]
                 for item in candidates
                 if item["clef_type_or_unknown"] == "unknown"
             ),
+            "typed_standard_candidate_count": sum(
+                1
+                for item in candidates
+                if item["clef_type_or_unknown"] in {"treble", "bass"}
+            ),
+            "oemer_candidate_count": len(oemer_candidate_boxes),
+            "oemer_prediction_shape": (
+                list(oemer_prediction_shape)
+                if oemer_prediction_shape is not None
+                else None
+            ),
             "typed_tab_candidate_count": sum(
                 1
                 for item in candidates
@@ -466,4 +764,6 @@ def generate_general_clef_candidates(source_image: np.ndarray) -> dict[str, Any]
 __all__ = [
     "CANDIDATE_GENERATOR_ID",
     "generate_general_clef_candidates",
+    "normalize_oemer_candidate_box",
+    "oemer_prediction_shape_for_source",
 ]
