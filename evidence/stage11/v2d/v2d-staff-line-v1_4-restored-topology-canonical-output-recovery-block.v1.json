@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-canonical-output-recovery-block.v1",
+  "generatedOn": "2026-09-14",
+  "status": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "authorization": {
+    "restoredOutputStaffTopologyComparisonAuthorized": true,
+    "authorizedByHumanTeacherInConversation": true,
+    "scopeOnly": "existing 20-page non-held-out development corpus",
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "preMeasurementPolicy": {
+    "path": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-policy.v1.json",
+    "freezeCommit": "8abd2ebb7f1e45caf9e070f46fa0011d746b8f6e",
+    "status": "FROZEN_PRE_MEASUREMENT",
+    "thresholdMovementAfterRecoveryAttemptAllowed": false
+  },
+  "sourceDetector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "qualified": true,
+    "staffLineSourcePass": true,
+    "freshHoldoutConsumed": true,
+    "retuningAllowed": false
+  },
+  "corpus": {
+    "developmentOnly": true,
+    "heldOutAccessedForThisComparison": false,
+    "pageCount": 20,
+    "sourceFamilyCount": 5,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2,
+    "teacherConfirmedSystemCount": 197,
+    "teacherConfirmedLineCount": 985,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+  },
+  "frozenRestoreCandidate": {
+    "packageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "packageSizeBytes": 7817857,
+    "weightsFrozen": true,
+    "full20ExecutionEvidencePath": "evidence/stage11/v2c/v2c-full20-repeat-execution.v1.json",
+    "full20ExecutionCommit": "f587fb2f591a5dc36749f39a3a93559162a506f2",
+    "canonicalCpuProfile": {
+      "device": "CPU",
+      "torch": "2.10.0+cpu",
+      "python": "3.13.5",
+      "intraopThreads": 5,
+      "interopThreads": 1,
+      "deterministicAlgorithms": false
+    },
+    "expectedCanonicalPageCount": 20,
+    "expectedCanonicalOutputsFrozen": true
+  },
+  "recoveryAudit": {
+    "exactSourceArtifactsRecovered": true,
+    "exactSourceRenderIdentityMatchedPages": 20,
+    "exactSourceRenderIdentityTotalPages": 20,
+    "restorePackageIdentityMatched": true,
+    "canonicalRestoredPngArchiveRecovered": false,
+    "historicalFull20ActionsArtifactRecovered": false,
+    "historicalFull20ActionsArtifactCount": 0,
+    "driveCurrentCacheMatchesFrozenFull20": false,
+    "driveRevisionContainingFrozenFull20Recovered": false,
+    "otherCanonicalNamedDriveRunsMatchFrozenFull20": false,
+    "recordedAdapterContractRecovered": true,
+    "historicalFull20ExecutionScriptRecovered": false,
+    "currentRunnerUsesPerTileUint8QuantizationBeforeOverlapAverage": true,
+    "currentRuntimeMatchesRecordedPythonAndTorchVersions": true,
+    "currentRuntimeExactPixelReproductionAchieved": false,
+    "rootCauseEvidenceAlreadyEstablishesCpuIntraopProfileCanChangeDecodedPixels": true,
+    "approximateOrNonCanonicalRestoredPixelsAcceptedForScoring": false,
+    "driveRestoredPagesFolderCandidatesFound": 2,
+    "primaryRestoredPagesFolderFileCount": 20,
+    "secondaryRestoredPagesFolderFileCount": 18,
+    "secondaryFolderIsLaterRerun": true,
+    "cacheManifestRevisionCount": 22,
+    "cacheManifestRevisionTimelineStarts": "2026-09-08T20:51:41.895Z",
+    "cacheManifestFirstFull20EraRevision": "2026-09-08T21:15:50.418Z",
+    "currentCacheManifestMatchesCurrentRestoredPages": true,
+    "canonicalBeethovenP1ExpectedByteSize": 223968,
+    "currentCacheBeethovenP1ByteSize": 223896,
+    "currentCacheBeethovenP1Sha256": "5765bf1c4257e21580222cd9d7698b9183d27853a78f32854404421065310a40",
+    "canonicalBeethovenP1VisibleCopyRecovered": false,
+    "canonicalBeethovenP1TrashCopyRecovered": false,
+    "decisiveMissingCanonicalFileEstablished": true
+  },
+  "identityProbes": [
+    {
+      "pageId": "beethoven-op48-no3-p1",
+      "expectedOutputSha256": "e6cb0ea1045b52503937000e74d318793daf728d02c39f9cd48e588e1c9ab0ff",
+      "expectedDecodedPixelSha256": "441b7c4bc113c6fe22dc7da6928b6c2642a30df5e24813f17ed5ab3b7c4ccadf",
+      "expectedByteSize": 223968,
+      "currentDriveCacheSha256": "5765bf1c4257e21580222cd9d7698b9183d27853a78f32854404421065310a40",
+      "currentDriveCacheByteSize": 223896,
+      "recoveryOutputSha256": "b544166a1ea66c54a8ccb8636792cd2a75bbbd69c5d9151a33178255afefe6e6",
+      "recoveryDecodedPixelSha256": "769ef82e72e01ae09205f88a6556307b7e7cf0728ae4b6c5be456c01a757848e",
+      "recoveryByteSize": 223898,
+      "identityMatch": false
+    },
+    {
+      "pageId": "wikimedia-guitar-technical-exercise-no1-p1",
+      "expectedOutputSha256": "0f914fd2508efb7af84de633d8010e66668a32a47ba647aa0aae2e744e7065e3",
+      "expectedDecodedPixelSha256": "bdbc948d3042e7e0177396abecf28ea6169120b7e7b01f691bfdd97658914032",
+      "expectedByteSize": 195245,
+      "recoveryOutputSha256": "cc3fcdaca59bb268a1f5fdd30478a6b465f8ed04a99c707a3df4ce9c1d4b5a28",
+      "recoveryDecodedPixelSha256": "91927d2b25891267d77502e9a93b86a20eacc42b924f4bf996e6106c9fe3e3d7",
+      "recoveryByteSize": 195651,
+      "identityMatch": false
+    }
+  ],
+  "measurement": {
+    "restoredTopologyScoringExecuted": false,
+    "restoredDetectorRunAcceptedAsCanonical": false,
+    "teacherMetricsInspectedAgainstNonCanonicalPixels": false,
+    "passFailVerdictIssued": false,
+    "reason": "The original source pages and frozen Restore package are intact, but at least one required canonical restored PNG (beethoven-op48-no3-p1) is conclusively absent from visible Drive copies and Trash and has no preserved Drive revision containing the expected bytes. A second restored_pages folder is a later 18-page rerun, not the frozen full20 set. The current 20-page cache manifest describes later noncanonical restored outputs. Current CPU reproduction also fails the frozen decoded-pixel identities despite matching recorded Python/Torch/thread settings. Therefore the 20/20 canonical set cannot be reconstructed from currently accessible storage and noncanonical reruns remain excluded from topology scoring."
+  },
+  "decision": {
+    "restoredStaffTopologyPreservationEstablished": false,
+    "restoredStaffTopologyDisposition": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+    "staffLineSourceDetectorQualified": true,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "nextSafeBoundary": "Either recover an external authoritative archive containing all 20 frozen restored PNGs whose decoded pixel hashes match v2c-full20-repeat-execution.v1.json, or separately authorize a new restored-output validation baseline that freezes a newly reproducible execution environment before measuring topology. Do not silently substitute the current cache, later reruns, or approximate outputs for the historical canonical set."
+  },
+  "claimBoundary": {
+    "staffLineSourceDetectorQualified": true,
+    "restoredImageTopologyComparisonAuthorized": true,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

@@ -1,0 +1,147 @@
+name: Stage 11 V2d Staff-Line V1.4 Fresh Holdout Qualification Validation
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-source-freeze.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-qualification-result-binding.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_HOLDOUT_CURRENT_TRUTH.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - '.github/workflows/stage11-v2d-staff-line-v1_4-fresh-holdout-qualification-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-source-freeze.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-qualification-result-binding.v1.json'
+      - 'docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_HOLDOUT_CURRENT_TRUTH.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - 'tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+      - '.github/workflows/stage11-v2d-staff-line-v1_4-fresh-holdout-qualification-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate frozen candidate identities
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          module = Path('src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py')
+          test = Path('tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py')
+          assert hashlib.sha256(module.read_bytes()).hexdigest() == '7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960'
+          assert hashlib.sha256(test.read_bytes()).hexdigest() == '1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb'
+          PY
+      - name: Validate teacher truth froze before scoring
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-teacher-truth-freeze-binding.v1.json').read_text())
+          assert freeze['status'] == 'TEACHER_TRUTH_FROZEN_PRE_SCORING'
+          assert freeze['submittedSingleJson']['sha256'] == '8dc2f86a82b7160626d431f668acef211ed71b8cca3621469656500007854532'
+          assert freeze['canonicalTeacherTruth']['sha256'] == '54e688755abdef9a9ff94c077269cc64e34791b428e94d78a84563c76a3dafd0'
+          assert freeze['canonicalTeacherTruth']['confirmedSystemCount'] == 4
+          assert freeze['canonicalTeacherTruth']['confirmedStaffLineCount'] == 20
+          assert freeze['mask']['sha256'] == '635660ee59c01fc9e903ac8576483d85b419e7151f5b0c236ade74cf8b7417cc'
+          assert freeze['blindReview']['teacherAnnotationIndependent'] is True
+          assert freeze['blindReview']['detectorOutputsShownToTeacher'] is False
+          assert freeze['blindReview']['detectorPredictedCountsShownToTeacher'] is False
+          assert freeze['blindReview']['lineDetectorGeometryShownToTeacher'] is False
+          assert freeze['blindReview']['restoredOutputsShownToTeacher'] is False
+          assert freeze['scoringBoundary']['qualificationScoringExecuted'] is False
+          assert freeze['scoringBoundary']['teacherTruthFrozenBeforeScoring'] is True
+          PY
+      - name: Validate exact source-only raw identity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          raw = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-source-freeze.v1.json').read_text())
+          assert raw['rawFreeze']['workflowConclusion'] == 'success'
+          assert raw['rawFreeze']['rawArtifactSha256'] == 'bcf96e175ee10bdb7a906da3990e12902ac6d9e6906cd08c041e8ca4c70804d5'
+          assert raw['rawFreeze']['rawArtifactByteSize'] == 9955
+          assert raw['rawFreeze']['rawAEqualsRawBByteForByte'] is True
+          assert raw['rawFreeze']['byteRepeatDeterminismVerified'] is True
+          assert raw['selectedSource']['sha256'] == 'f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47'
+          assert raw['detector']['teacherTruthAccessedBeforeRawFreeze'] is False
+          assert raw['detector']['teacherCoordinatesUsedDuringInference'] is False
+          assert raw['detector']['restoredOutputsUsedDuringInference'] is False
+          assert raw['detector']['thresholdMovementAfterSourceAccess'] is False
+          PY
+      - name: Validate one-shot qualification PASS under frozen policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-qualification-result-binding.v1.json').read_text())
+          policy = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json').read_text())
+          assert result['status'] == 'QUALIFICATION_COMPLETE_PASS'
+          assert result['scorer']['implementationSha256'] == 'db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8'
+          assert result['scorer']['scoringExecutionCount'] == 1
+          assert result['scorer']['scoringWillNotBeRepeated'] is True
+          s = result['holdoutScoring']
+          assert s['teacherSystemCount'] == 4
+          assert s['predictedSystemCount'] == 5
+          assert s['matchedSystemCountAtHalfSpacing'] == 4
+          assert s['teacherSystemRecallAtHalfSpacing'] == 1.0
+          assert s['predictedSystemPrecisionAtHalfSpacing'] == 0.8
+          assert s['presentPageCoverage']['rate'] == 1.0
+          assert s['absentPageSpecificity']['total'] == 0
+          assert s['absentPageSpecificity']['rate'] == 1.0
+          assert s['fiveLineCountCorrectRate'] == 1.0
+          assert s['lineOrderCorrectRate'] == 1.0
+          assert s['tabSixLineRejectionRate'] == 1.0
+          assert s['byteRepeatDeterminism'] is True
+          assert s['sourceIdentityMatchRate'] == 1.0
+          req = policy['futureIndependentHoldoutQualification']['requirements']
+          assert s['teacherSystemRecallAtHalfSpacing'] >= req['teacherSystemRecallAtHalfSpacingMin']
+          assert s['predictedSystemPrecisionAtHalfSpacing'] >= req['predictedSystemPrecisionAtHalfSpacingMin']
+          assert s['presentPageCoverage']['rate'] >= req['presentPageCoverageMin']
+          assert s['absentPageSpecificity']['rate'] >= req['absentPageSpecificityMin']
+          assert result['decision']['precisionEqualsMinimumThreshold'] is True
+          assert result['decision']['detectorQualified'] is True
+          assert result['decision']['staffLinePass'] is True
+          PY
+      - name: Validate claim boundary remains narrow
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-qualification-result-binding.v1.json').read_text())
+          truth = json.loads(Path('docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_HOLDOUT_CURRENT_TRUTH.json').read_text())
+          assert truth['state'] == 'V1_4_FRESH_HOLDOUT_QUALIFICATION_COMPLETE_PASS'
+          assert truth['candidate']['detectorQualified'] is True
+          assert truth['candidate']['staffLinePass'] is True
+          assert truth['freshHoldout']['qualificationScoringExecutionCount'] == 1
+          assert truth['holdoutFirewall']['currentFreshHoldoutMayBeUsedForTuning'] is False
+          assert truth['holdoutFirewall']['secondFreshHoldoutAuthorized'] is False
+          assert truth['holdoutFirewall']['restoredOutputTopologyComparisonAuthorized'] is False
+          for obj in (result['claimBoundary'], truth['claimBoundary']):
+              assert obj['restoredImageTopologyComparisonAuthorized'] is False
+              assert obj['semanticPreservationEstablished'] is False
+              assert obj['overallStage11PassAuthorized'] is False
+              assert obj['productionReady'] is False
+              assert obj['productionPromotionAuthorized'] is False
+              assert obj['stage12EntryAuthorized'] is False
+              assert obj['prReadyForMerge'] is False
+          assert truth['pullRequest']['mustRemainDraft'] is True
+          assert truth['pullRequest']['mergeAuthorized'] is False
+          PY

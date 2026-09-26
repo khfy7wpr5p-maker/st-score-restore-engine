@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-detector-development-plan.v1.1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-13",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "parentDetectorVersion": "stage11-v2d-staff-multisystem-source.v1",
+  "parentEvidenceImmutable": true,
+  "objective": "Develop a separately versioned deterministic source-only v1.1 staff-line multi-system detector on the already-spent frozen 20-page development corpus, increasing exact five-line system coverage without using teacher/restored/corpus-coordinate hints during inference and without modifying v1 evidence.",
+  "sourceCorpusFreeze": {
+    "expectedPageCount": 20,
+    "identityAuthority": "stage11_v2d_staff_line_multisystem_source_raw.v1.json",
+    "requireExactSourceSha256MatchBeforeCandidateFreeze": true,
+    "pages": [
+      {"pageId":"bach-anna-magdalena-p10","sourceFileName":"bach-anna-magdalena-p10.png","sourceSha256":"59a8b166e2a26359a82057e73d6546fb06d8a9e479af3d5949fc421b6ccd0819","width":720,"height":914},
+      {"pageId":"bach-anna-magdalena-p24","sourceFileName":"bach-anna-magdalena-p24.png","sourceSha256":"f67f0f2f5e140bb83446d120ba0a2530405d54fcfe0e75bf68143c1bcdad22c2","width":720,"height":914},
+      {"pageId":"bach-anna-magdalena-p4","sourceFileName":"bach-anna-magdalena-p4.png","sourceSha256":"f0f3392a7c54b88c148412b16fba54daeaa40041fd842dd401933ed24ec30129","width":720,"height":914},
+      {"pageId":"bach-anna-magdalena-p40","sourceFileName":"bach-anna-magdalena-p40.png","sourceSha256":"d98d978dd6fa7d3f95b9b404bec4a479bc5512c1149942f81055dbd34caeb97a","width":720,"height":914},
+      {"pageId":"barley-your-face-your-tongue-your-wit-p1","sourceFileName":"barley-your-face-your-tongue-your-wit-p1.png","sourceSha256":"ded7dcd743788adea0d97f561680392ae04acf5e30541161a0d0c06cd15556c9","width":612,"height":792},
+      {"pageId":"barley-your-face-your-tongue-your-wit-p2","sourceFileName":"barley-your-face-your-tongue-your-wit-p2.png","sourceSha256":"de259e9eaa4ac47e21b1105d58c9ce2718ccad8d81c27632f942c98ae7af5f35","width":612,"height":792},
+      {"pageId":"beethoven-op48-no3-p1","sourceFileName":"beethoven-op48-no3-p1.png","sourceSha256":"84f11e1cbd048cd0699383f59693b98ae7e7e9803907a7120a27328e7cd46b46","width":675,"height":860},
+      {"pageId":"beethoven-op48-no3-p2","sourceFileName":"beethoven-op48-no3-p2.png","sourceSha256":"fb297382dc68361eae317a8e1734d47b95e3487d0252002a73361ff332bb939f","width":675,"height":860},
+      {"pageId":"beethoven-op48-no3-p3","sourceFileName":"beethoven-op48-no3-p3.png","sourceSha256":"194a5adaa9f7ad1a9d1c426e1d85444dfb0eb0a55cf8f6ad54962f8fbe5134c8","width":675,"height":860},
+      {"pageId":"beethoven-op48-no3-p4","sourceFileName":"beethoven-op48-no3-p4.png","sourceSha256":"e65b9da7533f7e1fa1e134f887a53fa3d9c726ac2afe319efdad96c10a82a211","width":675,"height":860},
+      {"pageId":"carulli-morceaux-faciles-p10","sourceFileName":"carulli-morceaux-faciles-p10.png","sourceSha256":"b09a3b42c9d759de9af6f9e8d5f9781212a8256fc4640e2a7896e81600b1a1c1","width":1024,"height":1372},
+      {"pageId":"carulli-morceaux-faciles-p2","sourceFileName":"carulli-morceaux-faciles-p2.png","sourceSha256":"b47e5d89c72b0703b9cd2dbf882839fd8e77922c47c5a9c5e39d5073c8c89d2b","width":1024,"height":1390},
+      {"pageId":"carulli-morceaux-faciles-p3","sourceFileName":"carulli-morceaux-faciles-p3.png","sourceSha256":"b2147a6c11a9bff22ccde16ee66c6eff1b843d62f29cc6ff49561c8a66accee8","width":1024,"height":1392},
+      {"pageId":"carulli-morceaux-faciles-p4","sourceFileName":"carulli-morceaux-faciles-p4.png","sourceSha256":"a90febd0b77d8d94e523d61b7ab7b217c17be508e531fb441bb2545231c734da","width":1024,"height":1386},
+      {"pageId":"carulli-morceaux-faciles-p5","sourceFileName":"carulli-morceaux-faciles-p5.png","sourceSha256":"c8de51b93ae850adc834bcacd8a932c53343b9d7786d14df169882aeea1fb5be","width":1024,"height":1389},
+      {"pageId":"carulli-morceaux-faciles-p6","sourceFileName":"carulli-morceaux-faciles-p6.png","sourceSha256":"3c190502ee5dc35d1186f7fa8c5da8b0c26ae8f9eebfa947de94d0a0b8292cce","width":1024,"height":1376},
+      {"pageId":"carulli-morceaux-faciles-p7","sourceFileName":"carulli-morceaux-faciles-p7.png","sourceSha256":"4bb286fb2076b54ae19ae9170cee9e5d9e8a6e5e83cf15ac9b3f4dd58d76f11a","width":1024,"height":1379},
+      {"pageId":"carulli-morceaux-faciles-p8","sourceFileName":"carulli-morceaux-faciles-p8.png","sourceSha256":"a53a8578b956e9d6f9a31df0938e124c24d7bffe239f124124bc36d0a8b2fa1a","width":1024,"height":1376},
+      {"pageId":"carulli-morceaux-faciles-p9","sourceFileName":"carulli-morceaux-faciles-p9.png","sourceSha256":"1da7b81eb27c00221c215858ca521ef1fd5ec1026d6ce45ddaa469165639e3d1","width":1024,"height":1379},
+      {"pageId":"wikimedia-guitar-technical-exercise-no1-p1","sourceFileName":"wikimedia-guitar-technical-exercise-no1-p1.png","sourceSha256":"36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb","width":2025,"height":1821}
+    ]
+  },
+  "sealedInputsUntilCandidateFreeze": {"teacherTruth":true,"restoredOutputs":true,"teacherCoordinates":true,"teacherSystemCounts":true,"teacherSubtypes":true},
+  "invariants": {
+    "sourceOnly": true,
+    "deterministic": true,
+    "trainingOrFineTuning": false,
+    "newDataForbidden": true,
+    "newIndependentHoldoutAccessAuthorized": false,
+    "pageFingerprintingForbidden": true,
+    "pageIdSpecificRulesForbidden": true,
+    "cropSpecificConstantsForbidden": true,
+    "teacherDerivedThresholdsForbidden": true,
+    "restoredImageAccessForbiddenDuringDetectorDevelopment": true,
+    "standardStaffLineCount": 5,
+    "rejectObviousSixLineTab": true,
+    "existingCoordinateConventionUnchanged": true,
+    "existingBridgeInvariant": "sourceCenterY = sourceFrameTop + sourceFrameHeight * ((teacherCenterY - teacherFrameTop) / teacherFrameHeight)"
+  },
+  "ablationProtocol": {
+    "orderLocked": true,
+    "steps": [
+      {"id":"A0","name":"truthfulness_and_gate_recheck","action":"Confirm PR HEAD, v1 immutability, source-only boundary, rejected current detector disposition and blocked global capability flags."},
+      {"id":"A1","name":"freeze_v1_1_development_plan","action":"Commit this plan before any v1.1 tuning or teacher-truth access."},
+      {"id":"A2","name":"diagnostics_only_instrumentation","action":"Add source-only diagnostics for row support, candidate segment geometry, scale responses, local spacing estimates, candidate rejection reasons and selected hypotheses. Diagnostics must not alter acceptance decisions."},
+      {"id":"A3","name":"multi_scale_horizontal_morphology","action":"Evaluate the preregistered image-width-derived horizontal morphology scales. Combine source-supported horizontal evidence without page-specific selection."},
+      {"id":"A4","name":"local_spacing_strip_prior","action":"Estimate staff spacing from source-only repeated row/segment geometry in deterministic vertical strips and use it as a proposal prior, never as teacher-derived truth."},
+      {"id":"A5","name":"source_derived_staff_height_guard","action":"Reject implausible five-line clusters using only detected local spacing and cluster span/regularity; retain explicit six-line TAB rejection."},
+      {"id":"A6","name":"source_only_candidate_freeze","action":"Run the final preregistered v1.1 configuration on exactly the same 20 source pages, verify every input SHA-256, persist raw detections/config/diagnostics, and freeze with SHA-256 sidecar."},
+      {"id":"A7","name":"open_existing_teacher_truth_after_freeze","action":"Only after A6 succeeds, make the existing teacher truth available to scoring."},
+      {"id":"A8","name":"score_frozen_candidate","action":"Use the existing scoring/bridge conventions without changing the detector or candidate artifact."},
+      {"id":"A9","name":"decision_and_failure_page_regression","action":"Make a PASS/REVIEW/REJECT development decision and regression-check the five previously identified failure pages plus the two staff-absent pages without retuning."},
+      {"id":"A10","name":"final_report_and_reproducibility","action":"Verify deterministic reproduction including Python 3.11/3.12 CI and bind results without promoting global Stage 11 capability flags."}
+    ]
+  },
+  "preregisteredV1_1Parameters": {
+    "multiScaleHorizontalKernelFractions": [0.018,0.028,0.04],
+    "maxHorizontalKernelPx": 96,
+    "minSegmentWidthFraction": 0.18,
+    "localSpacingStripCount": 5,
+    "localSpacingMinSupportStrips": 2,
+    "localSpacingConsensusToleranceFraction": 0.22,
+    "spacingToleranceFraction": 0.20,
+    "staffHeightExpectedSpacingMultiples": 4.0,
+    "staffHeightToleranceFraction": 0.22,
+    "rowMergeTolerancePx": 2,
+    "sixLineRejectionToleranceFraction": 0.20,
+    "note": "These are fixed development ablation parameters selected before v1.1 implementation. They may not be changed after teacher truth is opened in A7 within the same evaluation cycle."
+  },
+  "developmentTargets": {
+    "targetOnlyNotContractAcceptance": true,
+    "countedExactFiveRecall": {"minimum":0.9444,"strong":0.95,"coverageTarget":"17/18 or better"},
+    "countedExactFivePrecision": {"minimum":0.95,"strong":0.98},
+    "staffPresentPageCoverage": "18/18",
+    "staffAbsentSpecificity": "2/2",
+    "fiveLineSystemIntegrity": 1.0,
+    "geometryValidity": 1.0,
+    "deterministicReproducibility": true
+  },
+  "stopConditions": [
+    "Do not open teacher truth before A6 source-only candidate freeze.",
+    "Do not tune v1.1 after A7 scoring in the same evaluation cycle.",
+    "Do not add new pages or independent holdout data.",
+    "Do not modify v1 detector or v1 evidence.",
+    "Do not promote staff_line based on development targets alone.",
+    "Do not change RestoreOutput, Stage 12, production, or semantic-preservation global capability flags."
+  ],
+  "claimBoundary": {
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextAction": "A2 diagnostics-only instrumentation in a separate v1.1 module, followed by A3-A5 in locked order; teacher truth remains sealed until A6 candidate freeze."
+}

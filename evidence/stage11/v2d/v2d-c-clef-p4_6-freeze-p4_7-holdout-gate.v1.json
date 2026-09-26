@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_7-holdout-gate.v1",
+  "artifactType": "P4_6_FREEZE_AND_P4_7_HOLDOUT_GATE",
+  "date": "2026-09-11",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "p4_6Freeze": {
+    "filterId": "source-image-c-clef-geometric-filter.p4_6.v1",
+    "runnerCommitSha": "76caac8a7c76606bf09051ae5cd1704e32ef29dd",
+    "developmentResultSha256": "77f353d1e0570adb7269f854f78841264a4a16245e9276e79538dc135f51c458",
+    "candidateSha256": "0c1c921d0c0f19849a9eb36efabe4f1dc658ca4d7a3d3aa904f1c42d97157832",
+    "filteredCandidateSha256": "9121eb8aa112c32161784f50d75e94be5e21e8654cdf57330c17dfec650ea005",
+    "sourceMeasurementSha256": "e2a046fdbba52ff1394b3676c1e103f26518da7ff5306d68ee1026eff5de2e45",
+    "developmentMetrics": {
+      "tp": 66,
+      "fp": 5,
+      "fn": 5,
+      "precision": 0.9295774647887324,
+      "recall": 0.9295774647887324,
+      "f1": 0.9295774647887324
+    },
+    "subtypeRecall": {
+      "C1": 1.0,
+      "C3": 0.9166666666666666,
+      "C4": 0.8666666666666667
+    },
+    "developmentOnly": true,
+    "retuningAfterFreezeForbidden": true
+  },
+  "p4_7HoldoutSearch": {
+    "driveSearches": [
+      "C_CLEF HOLDOUT",
+      "holdout clef",
+      "held out C clef",
+      "ST_SCORE_RESTORE_STAGE11_EVAL holdout"
+    ],
+    "dedicatedCClefHoldoutFound": false,
+    "reviewedAlternatives": [
+      {
+        "name": "deepscoresv2_dense_v2a_heldout",
+        "disposition": "NOT_APPLICABLE",
+        "reason": "This is Restore/image-model held-out evidence and does not provide independent C1/C3/C4 teacher boxes for the P4.6 detector."
+      },
+      {
+        "name": "shared ST_SCORE_RESTORE_STAGE11_EVAL/C3_ALTO and C4_TENOR source folders",
+        "disposition": "NOT_INDEPENDENT",
+        "reason": "Source filenames overlap the P4.5/P4.6 development manifest inputs (including Bartok/Schumann and the C4 source family)."
+      },
+      {
+        "name": "shared ST_SCORE_RESTORE_STAGE11_EVAL/C1_SOPRANO",
+        "disposition": "EMPTY",
+        "reason": "No source files were present when checked."
+      }
+    ]
+  },
+  "decision": {
+    "status": "INSUFFICIENT_EVIDENCE",
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionInferenceAuthorized": false,
+    "holdoutAccessedForP4_6Tuning": false,
+    "holdoutMeasurementExecuted": false,
+    "reason": "No valid independent C-clef holdout corpus with C1/C3/C4 ground truth is currently available. Reusing development or overlapping source pages would invalidate qualification."
+  },
+  "nextSafeAction": {
+    "required": "Prepare an independent C-clef holdout corpus that was not used in P4.4-P4.6 development, with exact source-image hashes and teacher C1/C3/C4 boxes hidden until the frozen detector output is produced.",
+    "minimumControls": [
+      "no source-file/hash overlap with the 29-page development manifest",
+      "teacher boxes unavailable to detector inference",
+      "P4.6 filter and thresholds remain unchanged",
+      "primary IoU threshold remains 0.50",
+      "single holdout evaluation only; no retuning after access",
+      "report pooled and subtype TP/FP/FN/precision/recall/F1 with sample sizes"
+    ]
+  }
+}

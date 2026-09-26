@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "stage11.v2c.teacher-review-overlay.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-08",
+  "sourceReviewPdf": {
+    "sha256": "ad083a7ac30f466ec9718d896273a3ce7b4811e248ad859071d49bbf77ef3a0a",
+    "byteSize": 30385082,
+    "pageCount": 21,
+    "reviewerName": "Önder Özüdoğru",
+    "reviewDate": "08.09.2026",
+    "totalFormFieldCount": 262,
+    "semanticResponseFieldCount": 240,
+    "pageNoteFieldCount": 20
+  },
+  "independenceBoundary": {
+    "reviewBasis": "source_page_only",
+    "modelOutputShown": false,
+    "detectorOutputUsedAsGroundTruth": false
+  },
+  "semanticClassOrder": [
+    "staff_line",
+    "tab_line",
+    "notehead",
+    "stem",
+    "beam_or_flag",
+    "rest",
+    "accidental",
+    "clef",
+    "barline",
+    "tie_or_slur",
+    "tab_digit",
+    "tab_string"
+  ],
+  "pages": [
+    {"pageId":"beethoven-op48-no3-p1","states":["absent","absent","absent","absent","absent","absent","absent","absent","absent","absent","absent","absent"]},
+    {"pageId":"beethoven-op48-no3-p2","states":["present","not_applicable","present","present","present","present","present","present","present","present","not_applicable","not_applicable"],"note":"vokal ve piyano alanı TAB GEREKMİYOR."},
+    {"pageId":"beethoven-op48-no3-p3","states":["present","not_applicable","present","present","present","present","present","present","present","present","not_applicable","not_applicable"]},
+    {"pageId":"beethoven-op48-no3-p4","states":["absent","absent","absent","absent","absent","absent","absent","absent","absent","absent","absent","absent"]},
+    {"pageId":"wikimedia-guitar-technical-exercise-no1-p1","states":["present","present","present","present","present","present","present","present","present","present","present","present"]},
+    {"pageId":"barley-your-face-your-tongue-your-wit-p1","states":["present","present","present","present","present","present","present","present","present","present","present","present"]},
+    {"pageId":"barley-your-face-your-tongue-your-wit-p2","states":["present","present","present","present","present","present","present","present","present","present","present","present"]},
+    {"pageId":"carulli-morceaux-faciles-p2","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"],"note":"GİTAR NOTALARI. TAB OLABİLİRDİ. AMA YOK."},
+    {"pageId":"carulli-morceaux-faciles-p3","states":["present","absent","present","present","present","present","present","present","present","present","absent","present"],"note":"GİTAR NOTALARI TAB OLABİLİRDİ.AMA YOK."},
+    {"pageId":"carulli-morceaux-faciles-p4","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p5","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p6","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p7","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p8","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p9","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"carulli-morceaux-faciles-p10","states":["present","absent","present","present","present","present","present","present","present","present","absent","absent"]},
+    {"pageId":"bach-anna-magdalena-p4","states":["present","not_applicable","present","present","present","present","present","present","present","present","not_applicable","not_applicable"],"note":"PİYANO NOTALARI. İKİ STAFF. TAB'a GEREK YOK."},
+    {"pageId":"bach-anna-magdalena-p10","states":["present","not_applicable","present","present","present","present","present","present","present","present","not_applicable","not_applicable"]},
+    {"pageId":"bach-anna-magdalena-p24","states":["present","not_applicable","not_applicable","present","present","present","present","present","present","present","not_applicable","not_applicable"]},
+    {"pageId":"bach-anna-magdalena-p40","states":["present","not_applicable","present","present","present","present","present","present","present","present","not_applicable","not_applicable"]}
+  ],
+  "conflicts": [
+    {
+      "pageId": "carulli-morceaux-faciles-p3",
+      "classId": "tab_string",
+      "reviewerSelectedState": "present",
+      "effectiveState": "unknown_review_required",
+      "reason": "reviewer_note_says_TAB_absent_but_field_selected_present"
+    },
+    {
+      "pageId": "bach-anna-magdalena-p24",
+      "classId": "notehead",
+      "reviewerSelectedState": "not_applicable",
+      "effectiveState": "unknown_review_required",
+      "reason": "source_page_visibly_contains_noteheads_but_field_selected_not_applicable"
+    }
+  ],
+  "effectiveSummary": {
+    "sourceFamilyCount": 5,
+    "reviewPageCount": 20,
+    "semanticClassCount": 12,
+    "expectedResponseCount": 240,
+    "receivedResponseCount": 240,
+    "acceptedResponseCount": 238,
+    "unresolvedConflictCount": 2,
+    "effectiveStateCounts": {
+      "present": 170,
+      "absent": 50,
+      "not_applicable": 18,
+      "unknown_review_required": 2
+    },
+    "independentlyAnnotatedPresentOrAbsentClassCount": 220,
+    "annotationCoverage": 0.990990990990991,
+    "completeFormSubmission": true
+  },
+  "claimBoundary": {
+    "teacherLabelsIngested": true,
+    "allTeacherLabelsConflictFree": false,
+    "semanticPreservationEstablished": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

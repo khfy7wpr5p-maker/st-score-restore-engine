@@ -1,0 +1,127 @@
+{
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "comparisonToV1": {
+    "absentPageSpecificity": {
+      "absoluteDelta": 0.0,
+      "v1": 1.0,
+      "v1_1": 1.0
+    },
+    "matchedSystemCountAtHalfSpacing": {
+      "delta": 20,
+      "v1": 71,
+      "v1_1": 91
+    },
+    "predictedSystemCount": {
+      "delta": 25,
+      "v1": 89,
+      "v1_1": 114
+    },
+    "predictedSystemPrecisionAtHalfSpacing": {
+      "absoluteDelta": 0.0004928050463237632,
+      "v1": 0.797752808988764,
+      "v1_1": 0.7982456140350878
+    },
+    "presentPageCoverage": {
+      "absoluteDelta": 0.16666666666666663,
+      "v1": 0.8333333333333334,
+      "v1_1": 1.0
+    },
+    "teacherSystemRecallAtHalfSpacing": {
+      "absoluteDelta": 0.10152284263959388,
+      "v1": 0.3604060913705584,
+      "v1_1": 0.4619289340101523
+    }
+  },
+  "decision": {
+    "bindingQualificationAcceptanceThresholdsDeclared": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "materialDevelopmentImprovementObserved": true,
+    "nextSmallestSafeAction": "Freeze a separate qualification/acceptance policy before any fresh independent holdout. Keep restored-output comparison closed until source-detector adequacy is established under that policy.",
+    "reason": "V1.1 raises comparable half-spacing matched systems from 71 to 91 and covers all 18 staff-present development pages while preserving approximately 0.798 predicted-system precision and 2/2 staff-absent specificity. However it still misses 106/197 teacher-confirmed systems at the 0.5-spacing diagnostic, and the same spent development corpus cannot qualify staff_line.",
+    "restoredImageTopologyComparisonAuthorized": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR"
+  },
+  "detector": {
+    "detectorSourceSha256": "cb6271d667792275afb9c51e4f3a84fde0d426538b034223c8b0be6fc23fdc9a",
+    "heldOutAccessed": false,
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "pageSpecificRulesUsed": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "teacherArtifactLoadedDuringInference": false,
+    "trainingOrFineTuningPerformed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.1"
+  },
+  "developmentOnly": true,
+  "generatedOn": "2026-09-13",
+  "phaseAFreeze": {
+    "byteRepeatDeterminismVerified": true,
+    "pageCount": 20,
+    "predictedSystemCount": 114,
+    "rawArtifactFileName": "stage11_v2d_staff_line_multisystem_source_raw.v1_1.json",
+    "rawArtifactFileSha256": "9b2a2c8f8e79fc2837b1f2a4ea7c3da09c5a6bbe3da212fe3bef3d57a14cd575",
+    "sourceIdentityMatchedPages": 20
+  },
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_1-development-evaluation.v1",
+  "scoring": {
+    "absentPageSpecificity": {
+      "clean": 2,
+      "rate": 1.0,
+      "total": 2
+    },
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "maskDiagnostics": {
+      "reason": "This v1.1 conclusion is based on the pre-frozen source output and system/topology comparison. Exact/tolerance mask raster diagnostics were not recomputed in this iteration and are not claimed.",
+      "recomputed": false
+    },
+    "pages": [
+      {"expectedStaffPresent": false, "matchedSystemCount": 0, "pageId": "beethoven-op48-no3-p1", "predictedSystemCount": 0, "teacherSystemCount": 0},
+      {"expectedStaffPresent": true, "matchedSystemCount": 8, "pageId": "beethoven-op48-no3-p2", "predictedSystemCount": 8, "teacherSystemCount": 9},
+      {"expectedStaffPresent": true, "matchedSystemCount": 10, "pageId": "beethoven-op48-no3-p3", "predictedSystemCount": 10, "teacherSystemCount": 12},
+      {"expectedStaffPresent": false, "matchedSystemCount": 0, "pageId": "beethoven-op48-no3-p4", "predictedSystemCount": 0, "teacherSystemCount": 0},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "wikimedia-guitar-technical-exercise-no1-p1", "predictedSystemCount": 3, "teacherSystemCount": 3},
+      {"expectedStaffPresent": true, "matchedSystemCount": 2, "pageId": "barley-your-face-your-tongue-your-wit-p1", "predictedSystemCount": 3, "teacherSystemCount": 4},
+      {"expectedStaffPresent": true, "matchedSystemCount": 1, "pageId": "barley-your-face-your-tongue-your-wit-p2", "predictedSystemCount": 3, "teacherSystemCount": 5},
+      {"expectedStaffPresent": true, "matchedSystemCount": 2, "pageId": "carulli-morceaux-faciles-p2", "predictedSystemCount": 3, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 4, "pageId": "carulli-morceaux-faciles-p3", "predictedSystemCount": 6, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 8, "pageId": "carulli-morceaux-faciles-p4", "predictedSystemCount": 8, "teacherSystemCount": 15},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "carulli-morceaux-faciles-p5", "predictedSystemCount": 7, "teacherSystemCount": 15},
+      {"expectedStaffPresent": true, "matchedSystemCount": 8, "pageId": "carulli-morceaux-faciles-p6", "predictedSystemCount": 8, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 4, "pageId": "carulli-morceaux-faciles-p7", "predictedSystemCount": 7, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 1, "pageId": "carulli-morceaux-faciles-p8", "predictedSystemCount": 6, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 1, "pageId": "carulli-morceaux-faciles-p9", "predictedSystemCount": 4, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 8, "pageId": "carulli-morceaux-faciles-p10", "predictedSystemCount": 10, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 4, "pageId": "bach-anna-magdalena-p4", "predictedSystemCount": 4, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "bach-anna-magdalena-p10", "predictedSystemCount": 3, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 14, "pageId": "bach-anna-magdalena-p24", "predictedSystemCount": 14, "teacherSystemCount": 14},
+      {"expectedStaffPresent": true, "matchedSystemCount": 7, "pageId": "bach-anna-magdalena-p40", "predictedSystemCount": 7, "teacherSystemCount": 12}
+    ],
+    "presentPageCoverage": {"detected": 18, "rate": 1.0, "total": 18},
+    "systemCount": {"matchedAtHalfSpacing": 91, "predicted": 114, "predictedPrecisionAtHalfSpacing": 0.7982456140350878, "teacher": 197, "teacherRecallAtHalfSpacing": 0.4619289340101523},
+    "systemMatchRule": "One-to-one greedy minimum normalized mean line-Y error among pairs whose five ordered line centers are all within the stated fraction of the local teacher median staff spacing and whose horizontal bboxes overlap. The 0.5 implementation was cross-checked against frozen v1 and reproduced its official 71/197 matched-system result exactly.",
+    "systemSensitivity": {
+      "0.5": {"matchedSystems": 91, "predictedSystemPrecision": 0.7982456140350878, "teacherSystemRecall": 0.4619289340101523},
+      "1.0": {"matchedSystems": 94, "predictedSystemPrecision": 0.8245614035087719, "teacherSystemRecall": 0.47715736040609136}
+    }
+  },
+  "teacherTruth": {
+    "ambiguousSystemCount": 0,
+    "completedPageCount": 20,
+    "confirmedLineCount": 985,
+    "confirmedSystemCount": 197,
+    "driveFileId": "1GeC-L9yHc4LBb_yFZq5tHxusGWp84_s5",
+    "openedOnlyAfterPhaseAFreeze": true,
+    "pageCount": 20,
+    "rawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "schemaVersion": "stage11.v2d.staff-line-teacher-mask-topology.v1"
+  }
+}

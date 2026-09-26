@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_8-policy-development-remeasurement-binding.v1",
+  "status": "DEVELOPMENT_REMEASUREMENT_BOUND",
+  "developmentOnly": true,
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "runnerCommit": "074d1e88163e94ae28399be56eaded5e26581941",
+  "driveArtifact": {
+    "fileId": "1sQxpIx7OpXgIVz-KzdoSGl-UXCSQxKaT",
+    "fileName": "p4_8_policy_candidate_development_remeasurement.v1.json",
+    "sha256": "2e1861962b049e4e3414f570992d882ddb4fdd715e80eb91703e8801e3554b30",
+    "byteSize": 49820
+  },
+  "policy": {
+    "lowStaffSpacingCanonicalRoutePx": 12.0,
+    "verticalMirrorSimilarityMinimum": 0.86,
+    "bottomBBoxPaddingStaffSpaces": 0.25
+  },
+  "variants": {
+    "scale_0_50": {
+      "tp": 67,
+      "fp": 11,
+      "fn": 4,
+      "precision": 0.8589743589743589,
+      "recall": 0.9436619718309859,
+      "f1": 0.8993288590604026,
+      "subtypeRecall": {"C1": 1.0, "C3": 0.9722222222222222, "C4": 0.8},
+      "targetMet": true
+    },
+    "scale_0_75": {
+      "tp": 67,
+      "fp": 7,
+      "fn": 4,
+      "precision": 0.9054054054054054,
+      "recall": 0.9436619718309859,
+      "f1": 0.9241379310344827,
+      "subtypeRecall": {"C1": 1.0, "C3": 0.9722222222222222, "C4": 0.8},
+      "targetMet": true
+    },
+    "scale_1_00": {
+      "tp": 68,
+      "fp": 3,
+      "fn": 3,
+      "precision": 0.9577464788732394,
+      "recall": 0.9577464788732394,
+      "f1": 0.9577464788732394,
+      "subtypeRecall": {"C1": 1.0, "C3": 0.9722222222222222, "C4": 0.8666666666666667},
+      "targetMet": true
+    }
+  },
+  "developmentTargetMetAllScales": true,
+  "p4_7HoldoutAccessedDuringRemeasurement": false,
+  "p4_7HoldoutMustNotBeReusedForQualification": true,
+  "independentQualificationEvidence": false,
+  "newIndependentHoldoutRequiredAfterFreeze": true,
+  "decisionBoundary": {
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12Authorized": false
+  }
+}

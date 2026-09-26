@@ -1,0 +1,64 @@
+{
+  "artifactType": "ST_SCORE_RESTORE_STAGE11_V2D_C_CLEF_P4_8_FILTER_REJECTION_DIAGNOSTIC_BINDING",
+  "schemaVersion": "1.0.0",
+  "status": "COMPLETE",
+  "developmentOnly": true,
+  "p4_7HoldoutAccessed": false,
+  "thresholdsChanged": false,
+  "sourceArtifacts": {
+    "scaleCandidatesSha256": "a73c2eb5df0466257e27ee33098d2546c3ce7d19665e4f42ac1a4a9b4a47699d",
+    "rejectionDiagnosticSha256": "8a04789026e37b40bebc93bd0cbcf5542b3e604d1b0de667c4ec17f0c12abb29",
+    "developmentTeacherSha256": "1104d916faaf8d3c391cca9eda0354d21259f722cdcfe0f414c140796a5ffc5b"
+  },
+  "findings": {
+    "scale_1_00": {
+      "matchedRawTP": 66,
+      "keptMatchedTP": 66,
+      "rejectedMatchedTP": 0,
+      "matchedTPKeepRate": 1.0,
+      "rejectionReasonCounts": {}
+    },
+    "scale_0_75": {
+      "matchedRawTP": 58,
+      "keptMatchedTP": 9,
+      "rejectedMatchedTP": 49,
+      "matchedTPKeepRate": 0.15517241379310345,
+      "rejectionReasonCounts": {
+        "low_spacing_requires_height_at_least_5_00": 49,
+        "area_above_9_80": 1
+      },
+      "perSubtype": {
+        "C1": {"matchedRawTP": 20, "keptByP4_6": 0, "rejectedByP4_6": 20},
+        "C3": {"matchedRawTP": 26, "keptByP4_6": 7, "rejectedByP4_6": 19},
+        "C4": {"matchedRawTP": 12, "keptByP4_6": 2, "rejectedByP4_6": 10}
+      }
+    },
+    "scale_0_50": {
+      "matchedRawTP": 48,
+      "keptMatchedTP": 2,
+      "rejectedMatchedTP": 46,
+      "matchedTPKeepRate": 0.041666666666666664,
+      "rejectionReasonCounts": {
+        "low_spacing_requires_height_at_least_5_00": 46,
+        "area_below_4_15": 5
+      },
+      "perSubtype": {
+        "C1": {"matchedRawTP": 16, "keptByP4_6": 0, "rejectedByP4_6": 16},
+        "C3": {"matchedRawTP": 25, "keptByP4_6": 0, "rejectedByP4_6": 25},
+        "C4": {"matchedRawTP": 7, "keptByP4_6": 2, "rejectedByP4_6": 5}
+      }
+    }
+  },
+  "rootCauseInterpretation": {
+    "primary": "The frozen P4.6 rule that combines a pixel-domain staffSpacing threshold (<12 px) with a normalized glyph-height threshold (>=5 staff spaces) is not scale invariant and dominates true-positive rejection under synthetic downscaling.",
+    "secondary": "At 0.50 scale the raw P4.5 localizer also loses recall before filtering, so P4.8 must address both canonical input scale and filtering behavior rather than only loosening a threshold.",
+    "staffDetection": "Not the primary cause in the synthetic scale diagnostic; zeroStaffPageCount remained 0 at 1.00, 0.75 and 0.50 scale."
+  },
+  "nextSafeAction": "Evaluate development-only canonical staff-spacing normalization before frozen P4.5 localization and frozen P4.6 filtering. Do not read or retune on P4.7 holdout. If a P4.8 version is later frozen, require a new independent holdout.",
+  "boundaries": {
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

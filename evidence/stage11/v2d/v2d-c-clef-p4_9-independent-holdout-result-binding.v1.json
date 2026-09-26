@@ -1,0 +1,64 @@
+{
+  "artifactType": "C_CLEF_P4_9_INDEPENDENT_HOLDOUT_RESULT_BINDING",
+  "schemaVersion": "1.0.0",
+  "phase": "Stage 11 v2d / P4.9 independent C-clef holdout",
+  "status": "HOLDOUT_FAILED",
+  "runner": {
+    "commit": "ac8e2bf2b29cd50d2395535a128485a49277ceb7",
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_9_holdout_evaluation.py"
+  },
+  "frozenInputs": {
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "pageCount": 11,
+    "teacherBoxCount": 38,
+    "labelCounts": {
+      "C1": 12,
+      "C3": 21,
+      "C4": 5,
+      "AMBIGUOUS": 0
+    },
+    "p4_8PolicyFreezeCommit": "3ddda8672af9907b34e55b20f8dc168b9b64fc8c",
+    "p4_8PolicyRemeasurementCommit": "074d1e88163e94ae28399be56eaded5e26581941"
+  },
+  "candidateFreeze": {
+    "sha256": "5ddd472575019d7f502834f1e551daa1562757f88b3c634c2a19e139dfad9e8c",
+    "teacherTruthReadBeforeCandidateFreeze": false
+  },
+  "result": {
+    "path": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_C_CLEF_HOLDOUT_P4_9_RESULT/p4_9_p4_8_holdout_evaluation_result.v1.json",
+    "sha256": "102c3b56299436cb4a8f8be6aa059dd39e1ab1e361775626ef54c7802c048dea",
+    "pooled": {
+      "tp": 7,
+      "fp": 13,
+      "fn": 31,
+      "precision": 0.35,
+      "recall": 0.18421052631578946,
+      "f1": 0.24137931034482757
+    },
+    "subtypeRecall": {
+      "C1": 0.0,
+      "C3": 0.3333333333333333,
+      "C4": 0.0
+    },
+    "holdoutTargetMet": false,
+    "cClefDetectorQualifiedOnP4_9": false
+  },
+  "governance": {
+    "p4_9MayNotBeUsedForFurtherQualificationAfterAnyRetuning": true,
+    "noRetuningOnP4_9Holdout": true,
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12Authorized": false
+  },
+  "interpretation": {
+    "summary": "Frozen P4.8 policy does not generalize to the independent P4.9 holdout.",
+    "criticalFailures": [
+      "C1 recall is 0.0",
+      "C4 recall is 0.0",
+      "C3 recall is only 0.3333333333333333",
+      "pooled recall is 0.18421052631578946"
+    ]
+  },
+  "nextSafeAction": "Treat P4.9 as spent holdout evidence. Perform a new P4.10 root-cause/development phase without claiming qualification, then require a brand-new independent holdout for any future C-clef qualification attempt."
+}

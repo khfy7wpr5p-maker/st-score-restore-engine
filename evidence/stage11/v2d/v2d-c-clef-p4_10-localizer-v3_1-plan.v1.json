@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-localizer-v3_1-plan.v1",
+  "status": "FROZEN_FOR_DEVELOPMENT_REMEASUREMENT",
+  "developmentOnly": true,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "officialV3Result": {
+    "tp": 33,
+    "fn": 5,
+    "recall": 0.868421052631579,
+    "C1": 0.8333333333333334,
+    "C3": 0.9047619047619048,
+    "C4": 0.8,
+    "candidateCount": 61500,
+    "targetMet": false
+  },
+  "failureLocalization": {
+    "kyrieA": "one C1 best-IoU=0.49941952960398933; horizontal group center is biased right",
+    "kyrieB": "four misses; fallback replaced the lone sane P4.5 staff and selected wrong small-spacing staff hypotheses"
+  },
+  "v3_1Changes": [
+    "preserve sane P4.5 staffs when fallback is required",
+    "derive fallback spacing prior from sane P4.5 staff spacing when available",
+    "use horizontal five-line lattice scoring instead of replacement strict projection only",
+    "add -1.0 staff-space horizontal rescue hypothesis while retaining existing 0.0 and +1.25 hypotheses"
+  ],
+  "localExactPngCanary": {
+    "kyrieBTeacherBoxesRecovered": "5/5",
+    "kyrieABorderlineC1Recovered": true,
+    "projectedPooledCeiling": "38/38 on current development diagnostic set"
+  },
+  "target": {
+    "pooledRecallAtLeast": 0.9,
+    "eachSubtypeRecallAtLeast": 0.8
+  },
+  "decisionBoundary": {
+    "detectorQualified": false,
+    "qualificationEvidence": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutRequiredAfterDevelopmentFreeze": true
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-localizer-v3_2-plan.v1",
+  "status": "FROZEN_FOR_DEVELOPMENT_REMEASUREMENT",
+  "developmentOnly": true,
+  "p4_9SpentHoldoutReclassifiedForDevelopmentDiagnostic": true,
+  "officialV3_1Result": {
+    "resultSha256": "6d72f795ed16e718d12d458ce666d512d3c0aeb8d0f6680c8edaf76701c848c7",
+    "candidateArtifactSha256": "0d724d6958684e7f5616f035eaeffeacfaedf6e9fc5491f29d287bbdfb85254b",
+    "tp": 34,
+    "fn": 4,
+    "recall": 0.8947368421052632,
+    "C1": 0.9166666666666666,
+    "C3": 0.9047619047619048,
+    "C4": 0.8,
+    "candidateCount": 92844,
+    "targetMet": false
+  },
+  "failureLocalization": {
+    "missedPageId": "p4_9-02-dies-irae-p0001",
+    "missedTeacherBoxes": 4,
+    "p45SaneStaffs": 0,
+    "v3_1ReportedSpacingHint": null,
+    "v3_1SelectedStaffSpacing": 13.7675,
+    "sourceOnlyDominantHorizontalSpacingEstimate": 62.5,
+    "rootCause": "The no-primary-staff v3.1 path falls back to a fixed small-spacing search range (approximately 6-14 px). On the high-resolution source page the true dominant staff spacing is approximately 62.5 px, so the fallback locks onto a false small-spacing hypothesis."
+  },
+  "v3_2Change": [
+    "retain the frozen v3.1 candidate geometry, x-offset hypotheses, full-width scanning, and P4.5 staff-preservation behavior",
+    "when P4.5 yields zero sane staffs, estimate a source-only spacing prior from long horizontal-line projection gaps",
+    "feed that scale-aware spacing prior into the existing v3.1 five-line lattice fallback",
+    "fall back to the previous small-spacing default only when the source projection cannot establish a supported spacing mode"
+  ],
+  "localExactPngCanary": {
+    "pageId": "p4_9-02-dies-irae-p0001",
+    "sourceSpacingHint": 62.5,
+    "recoveredTeacherBoxes": "4/4 at IoU >= 0.50",
+    "bestIoUByTeacherBox": [0.8932284349536387, 0.868, 0.7140248539181946, 0.8117692307692308],
+    "candidateCountOnPage": 3771,
+    "projectedPooledCeilingIfOtherFrozenPagesRemainUnchanged": "38/38",
+    "projectedCandidateCountTotal": 95778,
+    "warning": "Local canary is development diagnosis only and is not official evidence."
+  },
+  "runner": {
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_10_localizer_v3_2_candidate_ceiling.py",
+    "pinnedV3_1Commit": "670c1c0a4aa5670d066e769e43eddec49607021a",
+    "pinnedV3_1BlobSha1": "97183191f9265b53c19894827f987741bee9ce81"
+  },
+  "target": {
+    "pooledRecallAtLeast": 0.9,
+    "eachSubtypeRecallAtLeast": 0.8
+  },
+  "ifTargetMet": "Freeze localizer-v3.2 candidate generation and move to precision-gate development on frozen development candidates only.",
+  "ifTargetNotMet": "Preserve the failed result, diagnose remaining misses from frozen raw candidates and source images, and version the next localizer separately without touching qualification data.",
+  "decisionBoundary": {
+    "detectorQualified": false,
+    "qualificationEvidence": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "newIndependentHoldoutRequiredAfterDevelopmentFreeze": true
+  }
+}

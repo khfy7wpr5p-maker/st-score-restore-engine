@@ -1,0 +1,157 @@
+{
+  "candidate": {
+    "config": {
+      "sourceEvidence": {
+        "fail_open_if_parent_nonempty": true,
+        "weak_confidence_min": 0.91,
+        "weak_page_width_fraction_min": 0.75
+      },
+      "spacingConsensus": {
+        "min_anchor_systems": 2,
+        "min_fallback_systems": 2,
+        "weak_spacing_ratio_max": 1.18,
+        "weak_spacing_ratio_min": 0.82
+      }
+    },
+    "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
+    "consumedChopinHoldoutUsedForTuning": false,
+    "consumedV1_3FreshHoldoutUsedForTuning": false,
+    "generationMode": "deterministic-v1.4-successor-over-frozen-v1.2-via-frozen-v1.3-spacing-consensus",
+    "grandparentRawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "grandparentVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "heldOutAccessed": false,
+    "moduleBlobSha": "1233bc090cb68057a8e6f9b5b8b950638e2c661f",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "pageIdentityUsed": false,
+    "pageSpecificRulesUsed": false,
+    "parentSourceSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.3",
+    "restoredOutputsLoadedDuringInference": false,
+    "sourceOnly": true,
+    "teacherArtifactLoadedDuringInference": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "testBlobSha": "25e59696aa980e41c51be3626a3619cb79d5c765",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "testSha256": "1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb",
+    "trainingOrFineTuningPerformed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.4"
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "prReadyForMerge": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLinePass": false,
+    "stage12EntryAuthorized": false
+  },
+  "comparisonToFrozenV1_3Development": {
+    "delta": {
+      "falsePositiveSystems": -12,
+      "matchedSystems": -4,
+      "precision": 0.06140350877192979,
+      "predictedSystems": -16,
+      "recall": -0.020304568527918936
+    },
+    "v1_3": {
+      "absentPageSpecificity": 1.0,
+      "falsePositiveSystemCount": 28,
+      "matchedSystemCount": 140,
+      "predictedSystemCount": 168,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+      "presentPageCoverage": 1.0,
+      "teacherSystemRecallAtHalfSpacing": 0.7106598984771574
+    },
+    "v1_4": {
+      "absentPageSpecificity": 1.0,
+      "falsePositiveSystemCount": 16,
+      "matchedSystemCount": 136,
+      "predictedSystemCount": 152,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8947368421052632,
+      "presentPageCoverage": 1.0,
+      "teacherSystemRecallAtHalfSpacing": 0.6903553299492385
+    }
+  },
+  "developmentOnly": true,
+  "developmentReadinessAssessment": {
+    "absentPageSpecificityRequired": 1.0,
+    "engineeringGuidanceOnly": true,
+    "fiveLineCountCorrectRateRequired": 1.0,
+    "freshIndependentHoldoutAuthorized": false,
+    "lineOrderCorrectRateRequired": 1.0,
+    "observedMeetsFrozenDevelopmentReadinessFloors": true,
+    "policySource": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "precisionFloor": 0.75,
+    "presentPageCoverageRequired": 1.0,
+    "qualificationClaim": false,
+    "recallFloor": 0.6
+  },
+  "freezeBoundary": {
+    "byteRepeatDeterminismVerified": true,
+    "byteSize": 171771,
+    "consumedHoldoutsAccessedForCandidateDevelopment": false,
+    "failOpenRestoredSystemCount": 1,
+    "pageCount": 20,
+    "predictedSystemCount": 152,
+    "rawArtifactSha256": "50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d",
+    "sourceEvidenceSuppressedWeakSystemCount": 16,
+    "sourceIdentityMatchedCount": 20,
+    "spacingConsensusSuppressedWeakSystemCount": 19,
+    "teacherCoordinatesUsedDuringInference": false,
+    "teacherTruthAccessedBeforeRawFreeze": false
+  },
+  "generatedOn": "2026-09-14",
+  "holdoutFirewall": {
+    "consumedChopinHoldoutAccessed": false,
+    "consumedChopinHoldoutUsedForTuning": false,
+    "consumedV1_3FreshHoldoutAccessed": false,
+    "consumedV1_3FreshHoldoutUsedForTuning": false,
+    "newIndependentHoldoutAccessed": false,
+    "qualificationThresholdMovementAfterHoldoutObservation": false
+  },
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_4-evaluation.v1",
+  "scorerCompatibility": {
+    "executionOutputSha256": "109324cf910c305ccdbd9e452adb7645076e50f8bf7edae3f99f9627d3ec8ea1",
+    "expectedFrozenV1MatchedSystemCount": 71,
+    "expectedTeacherSystemCount": 197,
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "passed": true,
+    "reproducedMatchedSystemCountAtHalfSpacing": 71,
+    "reproducedTeacherSystemCount": 197,
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "toleranceFraction": 0.5
+  },
+  "scoring": {
+    "absentPageSpecificity": {
+      "clean": 2,
+      "rate": 1.0,
+      "total": 2
+    },
+    "falsePositiveSystemCount": 16,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "matchedSystemCount": 136,
+    "predictedSystemCount": 152,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8947368421052632,
+    "presentPageCoverage": {
+      "detected": 18,
+      "rate": 1.0,
+      "total": 18
+    },
+    "teacherSystemCount": 197,
+    "teacherSystemRecallAtHalfSpacing": 0.6903553299492385
+  },
+  "teacherTruth": {
+    "ambiguousSystemCount": 0,
+    "confirmedLineCount": 985,
+    "confirmedSystemCount": 197,
+    "pageCount": 20,
+    "sha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "usedOnlyAfterCandidateRawFreezeForDevelopmentScoring": true
+  }
+}

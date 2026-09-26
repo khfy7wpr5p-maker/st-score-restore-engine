@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "stage11.v2d.spatial-teacher-review-work-package.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "state": "awaiting_human_spatial_labels",
+  "purpose": "independent_clef_box_and_staff_line_mask_topology_annotation",
+  "scope": {
+    "developmentOnly": true,
+    "semanticClasses": ["clef", "staff_line"],
+    "teacherPresentPageCount": 18,
+    "sourceFamilyCount": 5,
+    "heldOutAccessed": false,
+    "trainingAuthorized": false
+  },
+  "independenceBoundary": {
+    "reviewBasis": "source_page_only",
+    "modelOutputShown": false,
+    "restoredOutputShown": false,
+    "detectorOutputUsedAsGroundTruth": false,
+    "instruction": "Show the exact source page only. Do not show Oemer, Restore, or any other automated overlay while the teacher annotates."
+  },
+  "coordinateContract": {
+    "renderProfile": "pdftoppm-72dpi-singlepage-or-source-png-copy.v1",
+    "origin": "top_left",
+    "units": "integer_source_page_pixels",
+    "boxOrder": ["xMin", "yMin", "xMaxExclusive", "yMaxExclusive"],
+    "reviewImageRule": "For PDF assets export the listed page once at 72 DPI with pdftoppm; for the source PNG use an exact byte copy. Do not crop, deskew, resize, enhance, or rotate. Bind the PNG hash, dimensions, and renderer version in the separate human completion artifact."
+  },
+  "clefAnnotationContract": {
+    "geometry": "axis_aligned_boxes",
+    "includeEveryVisibleClef": true,
+    "modelSuggestionsAllowed": false,
+    "emptyArrayMeansTeacherConfirmedAbsent": true,
+    "requiredBoxFields": ["boxId", "xMin", "yMin", "xMaxExclusive", "yMaxExclusive", "clefType", "truncated", "ambiguous"],
+    "allowedClefTypes": ["treble", "bass", "alto", "tenor", "percussion", "tab", "other", "unknown"]
+  },
+  "staffLineAnnotationContract": {
+    "maskFormat": "single_channel_png",
+    "maskValues": {"background": 0, "staffLine": 255},
+    "systemTopologyRequired": true,
+    "individualLineOrder": "top_to_bottom",
+    "modelSuggestionsAllowed": false,
+    "requiredSystemFields": ["systemId", "notationKind", "lineIds", "complete", "ambiguous"],
+    "allowedNotationKinds": ["standard", "tablature", "mixed", "unknown"],
+    "maskRule": "Mark visible staff-line ink only, including interrupted line fragments; exclude stems, barlines, beams, text, and page borders."
+  },
+  "sourceAssets": [
+    {"sourceId": "beethoven", "driveFileId": "1F6Xp6mmwsjmpk64GkcDqw6t0XpH_1IGk", "filename": "beethoven-op48-no3.pdf", "byteSize": 1182561, "sha256": "c25a5c5979ae076f8fc3607926ddb1d6aeb96a394498c2c1ebc54c27d884053c"},
+    {"sourceId": "wikimedia", "driveFileId": "1JYyN_nk0lYarszlBlC9nqVfeJxB0FEmz", "filename": "wikimedia-guitar-technical-exercise-no1.png", "byteSize": 34636, "sha256": "36484c2bfbb57643d992ca77fc0c8f9de0991f52d035d91bb0c780f097de3dcb"},
+    {"sourceId": "barley", "driveFileId": "1TsmQFpcM4uv52MH37ilKFj1jYY4pyCrG", "filename": "barley-your-face-your-tongue-your-wit.pdf", "byteSize": 84689, "sha256": "6b3044422b4df58dc4e458cba3de75fd99c88e13c2060498db191238cfdbac6e"},
+    {"sourceId": "carulli", "driveFileId": "1TkE4FVRb16IhVkYH5q10WOs4wPRDdhmi", "filename": "carulli-morceaux-faciles.pdf", "byteSize": 4662523, "sha256": "db20e9ce755aa56dd9dbb0436a37a48545442e7961e471f813cde7aaa8fc0f22"},
+    {"sourceId": "bach", "driveFileId": "1tgd9EEplOAwJmdurUGctvQ9Rzw6U4zvX", "filename": "bach-anna-magdalena.pdf", "byteSize": 3235494, "sha256": "692d4317375048b9d520b4d756c3ce992e96ca82b10c3026a5925f1a878fc959"}
+  ],
+  "pages": [
+    {"pageId": "beethoven-op48-no3-p2", "sourceId": "beethoven", "sourcePageNumber": 2, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/beethoven-op48-no3-p2.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "beethoven-op48-no3-p3", "sourceId": "beethoven", "sourcePageNumber": 3, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/beethoven-op48-no3-p3.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "wikimedia-guitar-technical-exercise-no1-p1", "sourceId": "wikimedia", "sourcePageNumber": 1, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/wikimedia-guitar-technical-exercise-no1-p1.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "barley-your-face-your-tongue-your-wit-p1", "sourceId": "barley", "sourcePageNumber": 1, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/barley-your-face-your-tongue-your-wit-p1.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "barley-your-face-your-tongue-your-wit-p2", "sourceId": "barley", "sourcePageNumber": 2, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/barley-your-face-your-tongue-your-wit-p2.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p2", "sourceId": "carulli", "sourcePageNumber": 2, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p2.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p3", "sourceId": "carulli", "sourcePageNumber": 3, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p3.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p4", "sourceId": "carulli", "sourcePageNumber": 4, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p4.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p5", "sourceId": "carulli", "sourcePageNumber": 5, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p5.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p6", "sourceId": "carulli", "sourcePageNumber": 6, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p6.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p7", "sourceId": "carulli", "sourcePageNumber": 7, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p7.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p8", "sourceId": "carulli", "sourcePageNumber": 8, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p8.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p9", "sourceId": "carulli", "sourcePageNumber": 9, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p9.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "carulli-morceaux-faciles-p10", "sourceId": "carulli", "sourcePageNumber": 10, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/carulli-morceaux-faciles-p10.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "bach-anna-magdalena-p4", "sourceId": "bach", "sourcePageNumber": 4, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/bach-anna-magdalena-p4.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "bach-anna-magdalena-p10", "sourceId": "bach", "sourcePageNumber": 10, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/bach-anna-magdalena-p10.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "bach-anna-magdalena-p24", "sourceId": "bach", "sourcePageNumber": 24, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/bach-anna-magdalena-p24.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}},
+    {"pageId": "bach-anna-magdalena-p40", "sourceId": "bach", "sourcePageNumber": 40, "teacherExpectedState": {"clef": "present", "staff_line": "present"}, "reviewImagePath": "source-pages/bach-anna-magdalena-p40.png", "humanAnnotations": {"clefBoxes": null, "staffLineMaskPng": null, "staffSystems": null, "reviewerStatus": null, "reviewerNote": null}}
+  ],
+  "completionSeparation": {
+    "workPackageMustRemainNullFilled": true,
+    "humanCompletionMustBeSeparateArtifact": true,
+    "requiredCompletionBindings": ["reviewerName", "reviewDate", "reviewImageSha256", "reviewImageByteSize", "reviewImageWidth", "reviewImageHeight", "staffLineMaskSha256", "staffLineMaskByteSize"]
+  },
+  "claimBoundary": {
+    "teacherSpatialLabelsComplete": false,
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "newColabRunRequiredNow": false
+  }
+}

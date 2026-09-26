@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-source-freeze.v1",
+  "generatedOn": "2026-09-14",
+  "status": "FRESH_HOLDOUT_RAW_FROZEN_BLIND_TEACHER_REVIEW_PENDING",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false,
+    "selectionRegistryCommit": "865adee94246a20627e54f6fe23fe8d47a2027f7",
+    "authorizationCommit": "1aebbf3b9e511f142d48bc2533b7bd18b0a6d40c",
+    "artifactUploadFixCommit": "296a4619d08b4843da6ce3a9c0df79ca8d12134f",
+    "sealedRunBranch": "stage11-v1-4-holdout-sealed-run",
+    "sealedRunCommit": "03b58ce90151dacbe71089fabe47464394321955"
+  },
+  "selectedSource": {
+    "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "pageId": "tchaikovsky-piano-concerto-no1-score-p1",
+    "fileName": "tchaikovsky-piano-concerto-no1-score-p1.png",
+    "mediaType": "image/png",
+    "width": 1304,
+    "height": 846,
+    "byteSize": 309341,
+    "sha1": "2c135dd588eec917acfee894f1c8329e61590c37",
+    "sha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47",
+    "publicMetadataIdentityMatched": true,
+    "sourceAccessOccurredOnlyAfterSelectionAndAuthorizationFreeze": true
+  },
+  "detector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "configCanonicalSha256": "0aef0b0ad31b024c5b81233e7810c3c38c23d40c61a1b7605726dbe48e23df79",
+    "sourceOnly": true,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "pageSpecificRulesUsed": false,
+    "trainingOrFineTuningPerformed": false,
+    "thresholdMovementAfterSourceAccess": false
+  },
+  "rawFreeze": {
+    "workflowRunId": 34826009001,
+    "workflowConclusion": "success",
+    "workflowArtifactId": 10340542101,
+    "workflowArtifactName": "stage11-v2d-v14-fresh-holdout-sealed",
+    "workflowArtifactDigest": "sha256:0418e6e2c37770f203373d4949a01a6335eb488f60ff6e336faa341373be79fa",
+    "workflowArtifactByteSize": 313948,
+    "rawAFileName": "stage11_v2d_staff_line_holdout_tchaikovsky_raw.v1_4.A.json",
+    "rawBFileName": "stage11_v2d_staff_line_holdout_tchaikovsky_raw.v1_4.B.json",
+    "rawArtifactSha256": "bcf96e175ee10bdb7a906da3990e12902ac6d9e6906cd08c041e8ca4c70804d5",
+    "rawArtifactByteSize": 9955,
+    "rawAEqualsRawBByteForByte": true,
+    "byteRepeatDeterminismVerified": true,
+    "sourceManifestSha256": "4d2ea5b77d20dbe4a5d82ffe038a3dad80b6a8dc08373ff3d285b15a49fd6e35",
+    "rawPayloadAndPredictionGeometryExposedToTeacher": false,
+    "rawPredictionCountExposedToTeacher": false
+  },
+  "blindBoundary": {
+    "teacherTruthExistsAtRawFreeze": false,
+    "teacherTruthMayBeDerivedFromDetectorOutput": false,
+    "teacherMaySeeRawBeforeTruthFreeze": false,
+    "teacherMaySeePredictionCountBeforeTruthFreeze": false,
+    "teacherMaySeePredictionGeometryBeforeTruthFreeze": false,
+    "teacherMaySeeRestoredOutputBeforeTruthFreeze": false,
+    "qualificationScoringPerformed": false
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "nextAction": "Prepare and freeze a detector-blind teacher work package containing only the exact source image and annotation controls. Do not inspect raw predictions for scoring and do not score until independently finalized teacher truth is frozen."
+}

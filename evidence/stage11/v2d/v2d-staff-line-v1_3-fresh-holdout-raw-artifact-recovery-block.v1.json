@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_3-fresh-holdout-raw-artifact-recovery-block.v1",
+  "generatedOn": "2026-09-14",
+  "state": "RESOLVED_BY_BYTE_IDENTICAL_RECONSTRUCTION",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "pullRequestNumber": 211,
+  "resolutionPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-raw-artifact-recovery-resolution.v1.json",
+  "teacherTruth": {
+    "frozen": true,
+    "freezeBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-truth-freeze-binding.v1.json",
+    "freezeCommit": "5be5c9406eb1cfb532aea1beaf3aed7e179178fd",
+    "submittedFinalSha256": "2f3652a834e6503744aba088807fe57385aa647b603b53f38da4b792176fd1fe",
+    "canonicalSha256": "6fee7b44a8304acfdcfd1a42e2683c50e9c84ad70b76527fd510d647840a36c0",
+    "maskSha256": "07f914e49c6c07a97d2e70f6c5d0200f360996ba504bb9263429f2750c7e56bf",
+    "confirmedSystemCount": 6,
+    "confirmedStaffLineCount": 30,
+    "excludedUnfinishedDraftLineCount": 2
+  },
+  "frozenRaw": {
+    "freezeBindingPath": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json",
+    "freezeCommit": "ea7e451b3c94cc5aba752871be8ed4b261208e60",
+    "expectedFileName": "stage11_v2d_staff_line_holdout_nearer_phone_raw.v1_3.json",
+    "expectedSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52",
+    "expectedPredictedSystemCount": 3,
+    "byteRepeatDeterminismVerifiedAtFreeze": true,
+    "exactBytesRecovered": true,
+    "recoveredByteSize": 8130,
+    "recoveredSha256": "662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52"
+  },
+  "recoveryAudit": {
+    "originalManagedRawWasMissing": true,
+    "driveShaSidecarFound": true,
+    "preTeacherCanonicalConstructionRecordRecovered": true,
+    "sourceImageBytesAvailableAndIdentityVerified": true,
+    "sourceImageSha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5",
+    "byteIdenticalReconstructionCompleted": true,
+    "approximateOrRememberedPredictionGeometryUsedForScoring": false,
+    "managedRestrictedRawRestored": true
+  },
+  "scorer": {
+    "fileName": "stage11_v2d_staff_line_holdout_scorer.v1.py",
+    "sha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "frozenDevelopmentCompatibilityAnchor": "71/197",
+    "compatibilityAnchorPassedBeforeHoldoutScoring": true,
+    "holdoutScoringExecuted": true,
+    "holdoutScoringExecutionCount": 1,
+    "coreOutputSha256": "822dfbbce63da3ed994e523707e7af7b9714c4091aba852ba500370163b6cedc"
+  },
+  "qualification": {
+    "resultBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-qualification-result-binding.v1.json",
+    "disposition": "REJECTED_CURRENT_DETECTOR",
+    "detectorQualified": false,
+    "staffLinePass": false
+  },
+  "governance": {
+    "retuningAllowed": false,
+    "thresholdMovementAllowed": false,
+    "secondFreshHoldoutAuthorized": false,
+    "restoredOutputTopologyComparisonAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestReadyForReviewAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "reason": "The original managed raw object became inaccessible, but the exact pre-teacher canonical construction record, registered source identity, frozen detector identities, pre-freeze geometry/diagnostics fingerprints, and expected SHA-256 allowed deterministic byte-identical reconstruction. The recovered 8130-byte artifact matches the original frozen SHA-256 exactly and was then scored exactly once.",
+  "nextSafeAction": "Do not retune v1.3 against the consumed fresh holdout. Any successor must be separately versioned and developed only on authorized non-holdout development evidence."
+}

@@ -1,0 +1,63 @@
+{
+  "artifactType": "C_CLEF_P4_10_ROOT_CAUSE_DIAGNOSTIC_BINDING",
+  "schemaVersion": "1.0.0",
+  "phase": "Stage 11 v2d / P4.10 C-clef root-cause diagnosis",
+  "status": "COMPLETE",
+  "diagnosticRunnerCommit": "c1d8ccc8ef770c03c50dfc20db0780daca2bcc12",
+  "sourceFailureEvidence": {
+    "p4_9ResultSha256": "102c3b56299436cb4a8f8be6aa059dd39e1ab1e361775626ef54c7802c048dea",
+    "expectedFalseNegatives": 31
+  },
+  "diagnosticArtifact": {
+    "driveFileId": "1Pqlrx4GnVTV5rCtm-9hulo974f8dNmct",
+    "path": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_C_CLEF_HOLDOUT_P4_9/_P4_10_DIAGNOSTIC/p4_10_p4_9_failure_root_cause_diagnostic.v1.json",
+    "sha256": "551478db383abb18ad4bb8dec71fb445e6c281170526fe11777c1dc5d8d20be2",
+    "diagnosedFalseNegatives": 31
+  },
+  "rootCauseCounts": {
+    "LOCALIZER_MISS": 11,
+    "LOCALIZER_GEOMETRY_NEAR_MISS": 6,
+    "CANONICAL_FILTER_REJECTION": 6,
+    "STAFF_DETECTION_FAILURE": 4,
+    "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH": 4
+  },
+  "rootCauseCountsBySubtype": {
+    "C1": {
+      "LOCALIZER_MISS": 5,
+      "LOCALIZER_GEOMETRY_NEAR_MISS": 3,
+      "CANONICAL_FILTER_REJECTION": 2,
+      "STAFF_DETECTION_FAILURE": 1,
+      "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH": 1
+    },
+    "C3": {
+      "LOCALIZER_MISS": 5,
+      "LOCALIZER_GEOMETRY_NEAR_MISS": 3,
+      "CANONICAL_FILTER_REJECTION": 3,
+      "STAFF_DETECTION_FAILURE": 2,
+      "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH": 1
+    },
+    "C4": {
+      "LOCALIZER_MISS": 1,
+      "LOCALIZER_GEOMETRY_NEAR_MISS": 0,
+      "CANONICAL_FILTER_REJECTION": 1,
+      "STAFF_DETECTION_FAILURE": 1,
+      "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH": 2
+    }
+  },
+  "interpretation": {
+    "preFilterFailures": 21,
+    "preFilterFailureFraction": 0.6774193548387096,
+    "primaryConclusion": "The dominant failure is upstream localization/staff handling rather than final threshold filtering. Further threshold-only retuning is not the correct next step.",
+    "recommendedDirection": "Develop a separately versioned localizer-v2 with staff fallback, multi-component/merged-glyph candidate generation, staff-anchored geometry, and dual-path rescue before applying a precision gate."
+  },
+  "governance": {
+    "p4_9IsSpentQualificationHoldout": true,
+    "p4_9MayBeUsedOnlyAsFailureDiagnosticOrFutureDevelopmentData": true,
+    "p4_9CannotQualifyAnyRetunedOrNewDetector": true,
+    "brandNewIndependentHoldoutRequiredForFutureQualification": true,
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12Authorized": false
+  }
+}

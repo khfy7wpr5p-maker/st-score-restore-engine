@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_13-semantic-group-localizer-plan.v1",
+  "status": "PREREGISTERED_DEVELOPMENT_ONLY",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "purpose": "Collapse P4.12 proposal variants only within exact P4.11 source-component identity, compute source-only semantic ranking before representative selection, and refine the representative bbox to nearby non-staff source ink.",
+  "inputs": {
+    "sourceManifestSha256": "8db0cf576137ec8cfd8458dd5b9cead73f49b4b2910bf6436e31e1e3737a7ece",
+    "teacherTruthSha256": "8ce56115b519df0429ec37964de9e694c44a0fdf081b74c9bff0484bf248f095",
+    "v32SourceOnlyCandidateArtifactSha256": "ec2e855a044d009b895dc02ea2e8d5132a58359e5d880abd7cfb11a6bf9c0897",
+    "p4_11ProposalCount": 26732,
+    "p4_12RetainedProposalCount": 7204,
+    "pageCount": 11,
+    "teacherBoxCount": 38
+  },
+  "phaseA": {
+    "teacherTruthClosed": true,
+    "restoredImagesAccessed": false,
+    "newIndependentHoldoutAccessed": false,
+    "steps": [
+      "Regenerate the frozen P4.11 source-component proposal policy from exact source pixels and frozen v3.2 staff geometry.",
+      "Reapply the exact P4.12 source-semantic sieve and require the retained count to equal 7204.",
+      "Compute a deterministic source-only semantic score for every retained variant before representative selection.",
+      "Group only by exact (staffIndex, componentGroupIndex) identity; do not perform cross-group NMS.",
+      "Select the highest-scoring member within each exact source group using deterministic source-only tie breaks.",
+      "Refine the selected bbox to nearby connected source ink after horizontal staff-line suppression.",
+      "Freeze the full source-group artifact before teacher truth is opened."
+    ]
+  },
+  "semanticScore": {
+    "calibratedProbability": false,
+    "teacherFitted": false,
+    "scope": "within-exact-source-component ranking only",
+    "weights": {
+      "leftVerticalRunP90": 0.22,
+      "leftVerticalRunMax": 0.13,
+      "anchorInkBalance": 0.15,
+      "leftLobeBalance": 0.12,
+      "cleanInkDensity": 0.12,
+      "rawInkDensity": 0.08,
+      "nonStaffInkRetention": 0.08,
+      "xOffsetAlignment": 0.06,
+      "anchorRankPrior": 0.04
+    },
+    "importantBoundary": "The score is a transparent heuristic ranking signal, not a calibrated C-clef probability and not a detector qualification threshold."
+  },
+  "grouping": {
+    "identity": [
+      "staffIndex",
+      "componentGroupIndex"
+    ],
+    "scoreBeforeRepresentativeSelection": true,
+    "firstWinsNms": false,
+    "crossGroupSuppression": false,
+    "crossGroupMerge": false
+  },
+  "sourceInkRefinement": {
+    "staffLineSuppression": true,
+    "componentSeed": "nearest non-staff connected component to the frozen P4.11 source component-group center",
+    "mergeRule": "iteratively include source-ink components whose bbox gap to the current support union is at most 0.55 staff spaces",
+    "teacherCoordinatesUsed": false,
+    "teacherSubtypeUsed": false
+  },
+  "phaseB": {
+    "allowedOnlyAfterPhaseAArtifactFrozen": true,
+    "data": "already-spent P4.9 teacher truth reclassified for development diagnostic",
+    "primaryIoU": 0.5,
+    "report": [
+      "exact source-group count and proposal-collapse fraction",
+      "pooled TP/FP/FN/precision/recall/F1 for original representatives",
+      "pooled TP/FP/FN/precision/recall/F1 for source-ink refined representatives",
+      "per-subtype refined recall",
+      "per-page original versus refined diagnostics"
+    ],
+    "automaticQualificationDecision": false,
+    "automaticPrecisionPass": false
+  },
+  "selectionDisclosure": {
+    "policyDesignedWithSpentDevelopmentContext": true,
+    "p4_9IndependentQualificationStatus": "SPENT_RECLASSIFIED_FOR_DEVELOPMENT_ONLY",
+    "newIndependentHoldoutRequiredAfterFinalPrecisionPolicyFreeze": true
+  },
+  "safety": {
+    "training": false,
+    "fineTuning": false,
+    "optimizerOrBackprop": false,
+    "restoreModelLoaded": false,
+    "restoredImagesEvaluated": false,
+    "newIndependentHoldoutAccess": false,
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "stopConditions": [
+    "Any frozen input SHA mismatch.",
+    "P4.11 proposal count differs from 26732.",
+    "P4.12 retained count differs from 7204.",
+    "Teacher truth is required before the source-group artifact is frozen.",
+    "Any new independent holdout is needed to continue implementation.",
+    "Any request to reinterpret the semantic score as calibrated probability or qualification evidence."
+  ],
+  "nextAfterMeasurement": "Review group collapse and bbox-refinement diagnostics. Only if the geometry remains recall-safe should a final cross-group precision/ranking policy be preregistered before any new independent holdout is opened."
+}

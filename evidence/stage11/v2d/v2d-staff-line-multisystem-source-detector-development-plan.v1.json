@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-detector-development-plan.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-12",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "trigger": {
+    "baselineBinding": "evidence/stage11/v2d/v2d-staff-line-source-baseline-development-result-binding.v1.json",
+    "baselineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "rootCause": [
+      "the frozen baseline returns after the first qualifying 5/6-line window, so it cannot represent all systems on a page",
+      "whole-page row occupancy >= 0.35 is too conservative for several admitted scanned pages",
+      "full-width line bboxes cannot express source line extent, continuity or gap topology"
+    ]
+  },
+  "objective": "Develop an explicitly versioned deterministic source-only multi-system staff detector on the already-spent 20-page development corpus. The detector must emit sparse five-line system geometry and source-supported line traces without teacher coordinates, page-specific exceptions, training, restored-image access or new holdout access.",
+  "inputs": {
+    "developmentCorpus": "the same frozen 20-page V2c development corpus",
+    "teacherTruthSha256": "28ea439c270fd72dca8099518f388ed2f54dadfd9ed3bc730f2a5daad229edc6",
+    "teacherTruthUse": "evaluation/development feedback only after each source-only raw detector artifact is frozen",
+    "newIndependentHoldoutAccessAuthorized": false,
+    "restoredOutputsAuthorizedForDetectorDevelopment": false
+  },
+  "detectorContract": {
+    "sourceOnly": true,
+    "deterministic": true,
+    "trainingOrFineTuning": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "pageIdSpecificRulesForbidden": true,
+    "teacherSubtypeOrSystemCountHintsForbidden": true,
+    "mustProcessWholePage": true,
+    "mustReturnAllSupportedSystemsInsteadOfFirstMatch": true,
+    "standardStaffLineCount": 5,
+    "outputPerSystem": [
+      "ordered five line traces or bounded line segments",
+      "source-supported x extent for every line",
+      "staff spacing estimate derived from source pixels",
+      "system bbox derived only from detected source geometry",
+      "confidence and abstention reason when applicable"
+    ],
+    "fullWidthSyntheticLineBoxesAsFinalOutput": false
+  },
+  "implementationDirection": {
+    "stage1": "Extract near-horizontal source ink support using deterministic binarization plus horizontal stroke/segment evidence robust to scanned-page contrast.",
+    "stage2": "Estimate page/local staff spacing from repeated source geometry rather than fixed teacher-derived spacing.",
+    "stage3": "Form five-line hypotheses using ordered near-equal spacing and common horizontal support; allow multiple independent systems per page.",
+    "stage4": "Resolve overlapping hypotheses using source-only support/regularity with explicit abstention instead of teacher-guided selection.",
+    "stage5": "Trace each accepted line over its observed source extent so continuity/gap and mask metrics are measurable.",
+    "note": "This is a new versioned detector, not an in-place reinterpretation of stage11-v2c-line-system.v1. The rejected baseline remains immutable evidence."
+  },
+  "freezeAndScoreProtocol": {
+    "phaseA": "Run detector with teacher file unavailable to the inference process; persist page inputs/hashes, detector version/config and raw detections; SHA-256 freeze the raw artifact.",
+    "phaseB": "Only after Phase A freeze, open the existing completed teacher artifact and score the frozen detections.",
+    "metrics": [
+      "staff-present page coverage",
+      "staff-absent specificity and false systems",
+      "teacher confirmed system count versus predicted system count",
+      "one-to-one system coverage",
+      "five-line count correctness",
+      "line-order correctness",
+      "per-line normalized y error",
+      "inter-line spacing error",
+      "teacher-mask precision/recall/F1",
+      "line continuity and gap statistics from traced source-supported geometry"
+    ],
+    "bindingAcceptanceThresholdsDeclared": false,
+    "reasonNoThresholdYet": "The parent human-mask plan preregistered metrics but no numerical detector adequacy thresholds. The first new detector iteration remains development diagnostic and cannot auto-qualify staff_line."
+  },
+  "stopConditions": [
+    "do not compare restored output if source-detector adequacy is not established",
+    "do not access a new independent holdout in this development package",
+    "do not promote staff_line based on development data alone",
+    "do not modify the frozen Restore package or shared music-safety validator"
+  ],
+  "claimBoundary": {
+    "staffLineDisposition": "REJECTED_CURRENT_DETECTOR",
+    "detectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextAction": "Implement the first source-only multi-system detector iteration and freeze its raw output before teacher scoring."
+}

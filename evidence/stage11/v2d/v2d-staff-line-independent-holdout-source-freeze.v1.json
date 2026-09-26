@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-independent-holdout-source-freeze.v1",
+  "generatedOn": "2026-09-13",
+  "status": "SOURCE_ONLY_RAW_FROZEN_TEACHER_TRUTH_PENDING",
+  "authorizationPath": "evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v1.json",
+  "sourceFreezePlanPath": "evidence/stage11/v2d/v2d-staff-line-independent-holdout-source-freeze-plan.v1.json",
+  "qualificationPolicyPath": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+  "repository": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeBindingCommit": "aadeea06eb4e9227e1e28369828959576a768734",
+    "detectorCodeUnchangedAfterHoldoutAuthorization": true
+  },
+  "holdoutSource": {
+    "datasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+    "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "purposeGrantStatus": "granted",
+    "eligibilityClass": "open_corpus",
+    "sourceKind": "public_domain",
+    "catalogPath": "evidence/stage1c/imslp82860-c17c-noise/catalog.v2.json",
+    "parentPdfDriveFileId": "1a-d5J7oEINts7x6QiXkUfZjsosOLDcjR",
+    "parentPdfFileName": "IMSLP82860-Chopin-Waltzes-Op69-heldout-candidate.pdf",
+    "parentPdfByteSize": 1114479,
+    "parentPdfSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+    "pdfPageCount": 8,
+    "allPagesUsed": true,
+    "pageCherryPickingPerformed": false
+  },
+  "rasterization": {
+    "renderer": "pdfium via project PDF render utility",
+    "dpi": 200,
+    "format": "PNG",
+    "crop": false,
+    "deskew": false,
+    "preDetectorEnhancement": false,
+    "detectorReadMode": "cv2.IMREAD_GRAYSCALE"
+  },
+  "renderedSourcePages": [
+    {"pageId":"chopin-op69-holdout-p1","sourceFileName":"chopin-op69-holdout-p1.png","width":1878,"height":2368,"sha256":"c3363c67378f956b0cb6f7470f1dc2918365c6ac5955dd3ed624e14f614b269d","teacherDriveFileId":"16yqwE6xw_KIWNHu8vP1D4Hu7unvOMCRY"},
+    {"pageId":"chopin-op69-holdout-p2","sourceFileName":"chopin-op69-holdout-p2.png","width":1902,"height":2426,"sha256":"6a750bfc46b689f3553691ec0344afc89647b526ddd19f6a2d71b1dfce5b42a9","teacherDriveFileId":"1TDfQsPJnSa8wy7EcOR_NhWdhdCXeHYro"},
+    {"pageId":"chopin-op69-holdout-p3","sourceFileName":"chopin-op69-holdout-p3.png","width":1902,"height":2426,"sha256":"57a2be93cecb3b7c6c190266625aa2b77c8f4946c32313ed48b7e21920a764d0","teacherDriveFileId":"1jksJFMsSpmYItScVjB6ESFCbzq-9LN1W"},
+    {"pageId":"chopin-op69-holdout-p4","sourceFileName":"chopin-op69-holdout-p4.png","width":1902,"height":2426,"sha256":"95b159c6e57d1c7c0f49ba298029a04e4f577a19af99019ba546050c055fc3c1","teacherDriveFileId":"1zVBR3UbpmXvdgdq_mfza99-We63UEU9K"},
+    {"pageId":"chopin-op69-holdout-p5","sourceFileName":"chopin-op69-holdout-p5.png","width":1902,"height":2426,"sha256":"ffdeb1ce258cc9b8450894575f023aaf8d6df35c569e97c8fee569d2445c9268","teacherDriveFileId":"1LvK7rAOSEaZDFbpm4IIlKLmEqXsdXMTI"},
+    {"pageId":"chopin-op69-holdout-p6","sourceFileName":"chopin-op69-holdout-p6.png","width":1902,"height":2426,"sha256":"37c9140f3f8a8cc679bd579aeca9e24facb08f9d6391d1794736c6b9ad2462b9","teacherDriveFileId":"1ld8JvGAIUi4OiH8T09GVL_H4Tvv7X1R9"},
+    {"pageId":"chopin-op69-holdout-p7","sourceFileName":"chopin-op69-holdout-p7.png","width":1902,"height":2426,"sha256":"7871b9665609a3242aa9c3c0f238930a63edf6065926082781d9d8f2232af6f8","teacherDriveFileId":"1bKyIbKYLSGu9sH22xGzu7ABJR1Qx3iTQ"},
+    {"pageId":"chopin-op69-holdout-p8","sourceFileName":"chopin-op69-holdout-p8.png","width":1902,"height":2426,"sha256":"d96cd78959069f2dd4201e70cafa1b1e7f2b0455cc61ff0f56956b589ee5b88d","teacherDriveFileId":"1nlu3DC8AbTVV-lIHloEgzav3tqfY40OJ"}
+  ],
+  "detector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.2",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "moduleSha256": "0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95",
+    "secondaryHelperSha256": "0030f64c5767fc26b65ccf6013b020f9d26a215301d37c3e5148c03ddbeaacd2",
+    "templateHelperSha256": "0d2828b28e43f57b22c7d6d1d57d662fc6f5047bdd8816a46142776a8cde9cf4",
+    "parentV1_1Sha256": "e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5",
+    "configCanonicalSha256": "01da186f70bd511e978b61b343effa1ddf13e85e99fd7287d902e9d556b48cf7",
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsUsedDuringInference": false,
+    "retunedAfterHoldoutAccess": false,
+    "pageSpecificRulesUsed": false,
+    "trainingOrFineTuningPerformed": false
+  },
+  "rawFreeze": {
+    "pageCount": 8,
+    "sourceIdentityMatchedPages": 8,
+    "sourceIdentityMatchRate": 1.0,
+    "predictedSystemCount": 128,
+    "perPagePredictedSystemCounts": [5,13,18,18,23,17,18,16],
+    "rawArtifactFileName": "stage11_v2d_staff_line_holdout_chopin_raw.v1_2.json",
+    "rawArtifactSha256": "f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb",
+    "rawArtifactDriveFileId": "1K8nFelAld8Q2AHPW9eXx5AmMvozzV5na",
+    "rawArtifactShaSidecarDriveFileId": "1qVW6uPCy2ztH82P13-BuPwzGNy--gki3",
+    "sourceManifestSha256": "797823006132587c66000beb3f680d7645f3f9db59530762427565beae09e310",
+    "sourceManifestDriveFileId": "1JUSrNl2U8nX5RG8XbwKCkPPYdtsqdKp1",
+    "byteRepeatDeterminismVerified": true,
+    "repeatArtifactSha256": "f2ef8a352d9c1f26e7c460ed0f71b125a33e35838294f741d562ce81d4b077fb"
+  },
+  "blindTeacherBoundary": {
+    "teacherTruthExistedAtRawFreeze": false,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "detectorOutputsShownToTeacher": false,
+    "detectorPredictedCountsShownToTeacher": false,
+    "lineDetectorGeometryShownToTeacher": false,
+    "restoredOutputsShownToTeacher": false,
+    "teacherSourceFolderDriveId": "13ki00Xu6LbJynSIoeU6lXjUDvwErwobN",
+    "teacherAnnotationFolderDriveId": "1xq77Q6RRmH4Cvw70rGIXfet3ut3MvwYv",
+    "teacherMaskFolderDriveId": "1rUwmDv-q9MF7PucuVunM_BvEUBrBf-Gy",
+    "blindReviewFolderDriveId": "1SvIVZ2eonnR4LdSaJi1hhOtCpvQWNFBK",
+    "blindNotebookDriveFileId": "18KkqQEl5UhEegs3fUJgY3JNPr2jks0J7",
+    "blindNotebookSha256": "6ac87883829943801a0d2e61cd99a0acb3515eee984d435b7c948fbbfae91def",
+    "teacherWorkPackageDriveFileId": "12CkDssmEPce0vdFPlwtmGiog4HjJAkay",
+    "teacherWorkPackageSha256": "fe898eb3fd11a5445cdfda53f89f44e8e523bc6ce4aa0cd4a446d95a9700ab07",
+    "teacherAnnotationStatus": "PENDING_HUMAN_REVIEW"
+  },
+  "qualification": {
+    "scoringExecuted": false,
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "reason": "Independent human holdout topology is not yet complete. Raw detector output is frozen and may not be changed in response to future teacher observations."
+  },
+  "claimBoundary": {
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

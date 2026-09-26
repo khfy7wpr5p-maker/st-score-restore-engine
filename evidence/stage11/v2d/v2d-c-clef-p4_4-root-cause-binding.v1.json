@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_4-root-cause-binding.v1",
+  "generatedOn": "2026-09-10",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "status": "COMPLETE",
+  "purpose": "Bind the frozen three-page P4.4 diagnostic and separate upstream EOMER mask failure from downstream adapter failure without qualifying a new detector.",
+  "diagnosticArtifact": {
+    "driveFileId": "1NAupo88J2khA6sqJXMVYoFiNeeX0h-QP",
+    "drivePath": "/content/drive/MyDrive/ST_SCORE_RESTORE_STAGE11_EVAL/P4_C_CLEF_DIAGNOSTIC_P4_4/p4_4_c_clef_root_cause_diagnostic.v1.json",
+    "pageCount": 3,
+    "planVersion": "stage11.v2d.c-clef-p4_4-diagnostic-plan.v1",
+    "executionProfile": "HYBRID_UNET_CPU_SEGNET_CUDA_WHOLE_SESSION_FALLBACK_DISABLED",
+    "heldOutAccessed": false,
+    "p4_3Retuned": false
+  },
+  "teacherTruth": {
+    "sha256": "1104d916faaf8d3c391cca9eda0354d21259f722cdcfe0f414c140796a5ffc5b",
+    "sourceManifestSha256": "365d45462b9d7b422a640e47bacdd5c8a5f16860198dec37121946411f6b3294"
+  },
+  "diagnosticMetrics": {
+    "C1": {
+      "teacherBoxes": 2,
+      "boxesWithAnyUpstreamMaskPixel": 1,
+      "meanTeacherBoxMaskCoverage": 0.015536723163841809,
+      "maximumTeacherBoxMaskCoverage": 0.031073446327683617,
+      "meanMaxRawComponentIoU": 0.01784623462231599,
+      "maximumRawComponentIoU": 0.03569246924463198
+    },
+    "C3": {
+      "teacherBoxes": 3,
+      "boxesWithAnyUpstreamMaskPixel": 3,
+      "meanTeacherBoxMaskCoverage": 0.37451210814036556,
+      "minimumTeacherBoxMaskCoverage": 0.3526170798898072,
+      "maximumTeacherBoxMaskCoverage": 0.3943014705882353,
+      "meanMaxRawComponentIoU": 0.34039842741809706,
+      "maximumRawComponentIoU": 0.38740929892111536
+    },
+    "C4": {
+      "teacherBoxes": 2,
+      "boxesWithAnyUpstreamMaskPixel": 2,
+      "meanTeacherBoxMaskCoverage": 0.30027371107409684,
+      "minimumTeacherBoxMaskCoverage": 0.13606654783125371,
+      "maximumTeacherBoxMaskCoverage": 0.4644808743169399,
+      "meanMaxRawComponentIoU": 0.6178992652413009,
+      "maximumRawComponentIoU": 0.7821677937024538
+    }
+  },
+  "rootCauseDecision": {
+    "C1": "UPSTREAM_EOMER_MASK_INADEQUATE_FOR_C1",
+    "C3": "UPSTREAM_SIGNAL_PRESENT_BUT_COMPONENT_LOCALIZATION_BELOW_PRIMARY_IOU",
+    "C4": "UPSTREAM_SIGNAL_PRESENT_AND_CAN_LOCALIZE_SOME_TRUE_BOXES",
+    "overall": "DO_NOT_USE_EOMER_CLEFS_KEYS_AS_REQUIRED_C_CLEF_SOURCE"
+  },
+  "architectureDecision": {
+    "nextDetectorVersion": "P4.5_SOURCE_IMAGE_FIRST_C_CLEF",
+    "primaryInput": "original source PNG",
+    "primaryMechanism": "OpenCV staff-system detection plus left-start glyph candidate localization",
+    "eomerRole": "optional diagnostic/exclusion evidence only; not required for C-clef localization",
+    "teacherTruthAtInference": false,
+    "developmentEvaluationAllowedAfterInference": true,
+    "heldOutAccessBeforeFreeze": false,
+    "productionInferenceAuthorized": false
+  },
+  "safetyBoundaries": {
+    "p4_3RetuningAuthorized": false,
+    "newDetectorQualified": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false
+  }
+}

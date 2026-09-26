@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-current-truth.v1",
+  "generatedOn": "2026-09-14",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "V1_4_DEVELOPMENT_SUCCESSOR_FROZEN_NOT_QUALIFIED",
+  "authority": {
+    "scope": "v1.4 development-only staff-line successor",
+    "historicalV1_2HoldoutTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_HOLDOUT_CURRENT_TRUTH.json",
+    "v1_3FreshHoldoutTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_3_HOLDOUT_CURRENT_TRUTH.json",
+    "historicalEvidenceRewritten": false
+  },
+  "candidate": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "moduleSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_4.py",
+    "testSha256": "1d0e3e76df01bb357192e2e5315772b06ca6dd43ec6454dadeddcf50e27b4edb",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.3",
+    "parentSourceSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "detectorQualified": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLinePass": false
+  },
+  "developmentRawFreeze": {
+    "bindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_4-raw-artifact-binding.v1.json",
+    "rawArtifactSha256": "50e8f0585adfd9900ee97a2e8f3eddffb205bc55b68e5b42df8e606e324da42d",
+    "rawArtifactByteSize": 171771,
+    "pageCount": 20,
+    "sourceIdentityMatchedCount": 20,
+    "predictedSystemCount": 152,
+    "spacingConsensusSuppressedWeakSystemCount": 19,
+    "sourceEvidenceSuppressedWeakSystemCount": 16,
+    "failOpenRestoredSystemCount": 1,
+    "byteRepeatDeterminismVerified": true,
+    "teacherTruthAccessedBeforeRawFreeze": false,
+    "heldOutAccessed": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "pageSpecificRulesUsed": false
+  },
+  "developmentEvaluation": {
+    "path": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_4_evaluation.v1.json",
+    "sha256": "f875f81c32be70512fb85564d8c1e11429c89617c9e0210b59f2f11ff853dd97",
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 152,
+    "matchedSystemCountAtHalfSpacing": 136,
+    "teacherSystemRecallAtHalfSpacing": 0.6903553299492385,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8947368421052632,
+    "falsePositiveSystemCount": 16,
+    "presentPageCoverage": 1.0,
+    "absentPageSpecificity": 1.0,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "scorerCompatibilityAnchor": "71/197 PASS",
+    "developmentOnly": true,
+    "qualificationEvidence": false
+  },
+  "comparisonToV1_3Development": {
+    "v1_3": {
+      "predictedSystemCount": 168,
+      "matchedSystemCount": 140,
+      "recall": 0.7106598984771574,
+      "precision": 0.8333333333333334,
+      "falsePositiveSystemCount": 28,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "v1_4": {
+      "predictedSystemCount": 152,
+      "matchedSystemCount": 136,
+      "recall": 0.6903553299492385,
+      "precision": 0.8947368421052632,
+      "falsePositiveSystemCount": 16,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "delta": {
+      "predictedSystems": -16,
+      "matchedSystems": -4,
+      "recall": -0.020304568527918936,
+      "precision": 0.06140350877192979,
+      "falsePositiveSystems": -12
+    }
+  },
+  "developmentDecision": {
+    "resultBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_4-development-result-binding.v1.json",
+    "developmentReadinessFloorsMet": true,
+    "developmentReadinessForFutureHoldoutRequest": true,
+    "disposition": "DEVELOPMENT_READY_FOR_FUTURE_HOLDOUT_REQUEST_NOT_QUALIFIED",
+    "freshIndependentHoldoutAuthorized": false,
+    "reason": "V1.4 materially reduces development false positives while retaining the frozen development-readiness floors and all source-only structural invariants. Development evidence cannot qualify staff_line and does not authorize opening another holdout."
+  },
+  "holdoutFirewall": {
+    "consumedChopinHoldoutMayBeUsedForTuning": false,
+    "consumedV1_3FreshHoldoutMayBeUsedForTuning": false,
+    "consumedHoldoutGeometryMayBeUsedForThresholdSelection": false,
+    "newIndependentHoldoutAccessedForV1_4": false,
+    "newIndependentHoldoutAuthorized": false,
+    "thresholdMovementAfterHoldoutObservationAuthorized": false
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "detectorQualified": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "pullRequest": {
+    "number": 211,
+    "mustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "nextSafeBoundary": "Stop with v1.4 frozen as a development-only successor. A genuinely fresh independent holdout requires a new explicit authorization after this freeze. Until then do not access a new holdout, retune against either consumed holdout, move qualification thresholds, run restored-output staff-topology comparison, mark PR #211 ready, or merge it."
+}

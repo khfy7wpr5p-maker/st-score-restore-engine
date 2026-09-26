@@ -1,0 +1,147 @@
+name: Stage 11 V2d Staff-Line V1.3 Fresh Holdout Validation
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'evidence/stage1c/nearer-my-god-to-thee-c17d/catalog.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
+      - '.github/workflows/stage11-v2d-staff-line-v1_3-fresh-holdout-validation.yml'
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - 'evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json'
+      - 'evidence/stage1c/nearer-my-god-to-thee-c17d/catalog.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py'
+      - '.github/workflows/stage11-v2d-staff-line-v1_3-fresh-holdout-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate v1.3 frozen candidate and unchanged policy
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          dev = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-development-result-binding.v1.json').read_text())
+          policy = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json').read_text())
+          module = Path('src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py')
+          assert dev['decision']['developmentReadinessForFreshHoldoutRequest'] is True
+          assert dev['decision']['detectorQualified'] is False
+          assert dev['candidate']['version'] == 'stage11-v2d-staff-multisystem-source.v1.3'
+          assert hashlib.sha256(module.read_bytes()).hexdigest() == 'e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5'
+          assert policy['status'] == 'FROZEN_PRE_HOLDOUT'
+          assert policy['freezeBoundary']['thresholdMovementAfterFreshHoldoutAccessAllowed'] is False
+          req = policy['futureIndependentHoldoutQualification']['requirements']
+          assert req['teacherSystemRecallAtHalfSpacingMin'] == 0.65
+          assert req['predictedSystemPrecisionAtHalfSpacingMin'] == 0.80
+          assert req['presentPageCoverageMin'] == 0.95
+          assert req['absentPageSpecificityMin'] == 1.0
+          PY
+      - name: Validate fresh holdout authorization and dataset purpose
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          auth = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-fresh-holdout-authorization.v2.json').read_text())
+          catalog = json.loads(Path('evidence/stage1c/nearer-my-god-to-thee-c17d/catalog.v1.json').read_text())
+          item = catalog['items'][0]
+          assert auth['status'] == 'AUTHORIZED_FOR_ONE_FRESH_INDEPENDENT_HOLDOUT_QUALIFICATION'
+          assert auth['scope']['detectorVersion'] == 'stage11-v2d-staff-multisystem-source.v1.3'
+          assert auth['preconditions']['qualificationThresholdsChangedForV1_3'] is False
+          assert auth['preconditions']['consumedChopinHoldoutForbiddenForTuning'] is True
+          assert auth['selectedFreshHoldout']['datasetItemId'] == item['datasetItemId']
+          assert auth['selectedFreshHoldout']['sourceFamilyId'] == item['sourceFamilyId']
+          assert auth['selectedFreshHoldout']['artifactSha256'] == item['artifact']['sha256']
+          assert item['split'] == 'held_out'
+          assert item['permissions']['held_out_evaluation']['status'] == 'granted'
+          assert item['permissions']['model_training']['status'] != 'granted'
+          assert item['permissions']['quality_calibration']['status'] != 'granted'
+          assert auth['stillForbidden']['useConsumedChopinHoldoutForTuning'] is True
+          assert auth['stillForbidden']['detectorRetuningAfterFreshHoldoutAccess'] is True
+          assert auth['stillForbidden']['thresholdMovementAfterFreshHoldoutAccess'] is True
+          assert auth['stillForbidden']['teacherCoordinatesAsInferenceInput'] is True
+          assert auth['stillForbidden']['restoredOutputStaffTopologyComparison'] is True
+          assert auth['stillForbidden']['pullRequestMerge'] is True
+          PY
+      - name: Validate source-only raw freeze before teacher truth
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          freeze = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-independent-holdout-v1_3-source-freeze.v2.json').read_text())
+          assert freeze['status'] == 'SOURCE_ONLY_RAW_FROZEN_TEACHER_TRUTH_PENDING'
+          assert freeze['holdoutSource']['datasetItemId'] == 'dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1'
+          assert freeze['holdoutSource']['pageCount'] == 1
+          assert freeze['holdoutSource']['allPagesUsed'] is True
+          assert freeze['holdoutSource']['pageCherryPickingPerformed'] is False
+          assert freeze['holdoutSource']['providerSpecificIdentifiersCommittedToGit'] is False
+          assert freeze['sourcePreparation']['sourceBytesUsedDirectly'] is True
+          assert freeze['sourcePreparation']['crop'] is False
+          assert freeze['sourcePreparation']['deskew'] is False
+          assert freeze['sourcePreparation']['preDetectorEnhancement'] is False
+          assert freeze['detector']['version'] == 'stage11-v2d-staff-multisystem-source.v1.3'
+          assert freeze['detector']['moduleSha256'] == 'e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5'
+          assert freeze['detector']['teacherCoordinatesUsedDuringInference'] is False
+          assert freeze['detector']['restoredOutputsUsedDuringInference'] is False
+          assert freeze['detector']['retunedAfterHoldoutAccess'] is False
+          assert freeze['rawFreeze']['pageCount'] == 1
+          assert freeze['rawFreeze']['sourceIdentityMatchedPages'] == 1
+          assert freeze['rawFreeze']['sourceIdentityMatchRate'] == 1.0
+          assert freeze['rawFreeze']['predictedSystemCount'] == 3
+          assert freeze['rawFreeze']['rawArtifactSha256'] == '662f5b79081860e90e522ea636de782085620e4d040a09d5f362e0e968f37b52'
+          assert freeze['rawFreeze']['sourceManifestSha256'] == '4dd873e0aa99d04b293f2fa74209ffcd7237b20b2bfc6c9c9b4285cd864673e7'
+          assert freeze['rawFreeze']['byteRepeatDeterminismVerified'] is True
+          assert freeze['blindTeacherBoundary']['teacherTruthExistedAtRawFreeze'] is False
+          assert freeze['blindTeacherBoundary']['teacherTruthAccessedBeforeRawFreeze'] is False
+          assert freeze['qualification']['scoringExecuted'] is False
+          assert freeze['qualification']['detectorQualified'] is False
+          PY
+      - name: Validate blind teacher package boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          binding = json.loads(Path('evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1.json').read_text())
+          text = Path('evidence/stage11/v2d/v2d-staff-line-v1_3-fresh-holdout-teacher-work-package-binding.v1.json').read_text().lower()
+          assert binding['status'] == 'BLIND_TEACHER_WORK_PACKAGE_READY_HUMAN_REVIEW_PENDING'
+          assert binding['teacherWorkPackage']['teacherAnnotationStatus'] == 'PENDING_HUMAN_REVIEW'
+          assert binding['teacherWorkPackage']['teacherPageCount'] == 1
+          assert binding['source']['providerSpecificIdentifiersCommittedToGit'] is False
+          assert binding['teacherWorkPackage']['providerSpecificIdentifiersCommittedToGit'] is False
+          assert binding['blindBoundary']['sourceOnlyRawFrozenBeforeWorkPackage'] is True
+          assert binding['blindBoundary']['teacherTruthExistedAtRawFreeze'] is False
+          assert binding['blindBoundary']['teacherTruthAccessedBeforeRawFreeze'] is False
+          assert binding['blindBoundary']['detectorOutputsShownToTeacher'] is False
+          assert binding['blindBoundary']['detectorPredictedCountsShownToTeacher'] is False
+          assert binding['blindBoundary']['lineDetectorGeometryShownToTeacher'] is False
+          assert binding['blindBoundary']['restoredOutputsShownToTeacher'] is False
+          assert binding['blindBoundary']['notebookLoadsDetectorRawOutput'] is False
+          assert binding['annotationContract']['eachConfirmedSystemRequiresExactlyFiveOrderedLines'] is True
+          assert binding['qualification']['scoringExecuted'] is False
+          assert binding['qualification']['detectorQualified'] is False
+          assert binding['claimBoundary']['prReadyForMerge'] is False
+          for forbidden in ('drive.google.com', '/content/drive/mydrive', 'fileid', 'folderid'):
+              assert forbidden not in text
+          PY

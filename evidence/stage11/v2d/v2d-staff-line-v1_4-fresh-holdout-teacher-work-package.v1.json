@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-teacher-work-package.v1",
+  "generatedOn": "2026-09-14",
+  "status": "BLIND_TEACHER_WORK_PACKAGE_READY_HUMAN_REVIEW_PENDING",
+  "qualificationScoringPerformed": false,
+  "source": {
+    "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "pageId": "tchaikovsky-piano-concerto-no1-score-p1",
+    "fileName": "tchaikovsky-piano-concerto-no1-score-p1.png",
+    "mediaType": "image/png",
+    "width": 1304,
+    "height": 846,
+    "byteSize": 309341,
+    "sha1": "2c135dd588eec917acfee894f1c8329e61590c37",
+    "sha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47"
+  },
+  "teacherArtifact": {
+    "offlineHtmlFileName": "stage11_v2d_staff_line_v1_4_tchaikovsky_blind_teacher_annotation_OFFLINE.html",
+    "offlineHtmlSha256": "7fde78488cea8ef346fe793cade1e4067692bbedb0b525d7a516f8a7a4d712da",
+    "finalJsonFileName": "staff_line_tchaikovsky_teacher_topology.v1.single.json",
+    "progressJsonFileName": "staff_line_tchaikovsky_teacher_progress.single.json",
+    "schemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-topology.single-json.v1",
+    "allDataInSingleJson": true,
+    "embeddedBinaryMaskRequired": true,
+    "externalMaskFileRequired": false,
+    "browserAutosave": true,
+    "offline": true
+  },
+  "blindBoundary": {
+    "sourceImageShown": true,
+    "detectorOutputShown": false,
+    "detectorPredictedCountShown": false,
+    "detectorGeometryShown": false,
+    "restoredOutputShown": false,
+    "rawArtifactShown": false,
+    "networkRequestsUsedByHtml": false,
+    "teacherCoordinatesUsedByDetector": false
+  },
+  "teacherInstructions": [
+    "Work only from the source score image embedded in the HTML.",
+    "For every genuine visible standard five-line staff system, draw exactly five staff lines from top to bottom and save the system.",
+    "Use CONFIRMED for unambiguous standard five-line systems and AMBIGUOUS only when visual evidence is genuinely uncertain.",
+    "If the page contains no standard five-line staff, mark Staff YOK and leave zero systems.",
+    "Do not use detector output, predicted counts, restored output, or prior holdout truth.",
+    "When complete, use TAMAMLA ve TEK JSON INDIR and return the resulting final JSON."
+  ],
+  "finalizationRules": {
+    "staffPresentRequiresAtLeastOneSystem": true,
+    "staffPresentRequiresAtLeastOneConfirmedSystem": true,
+    "staffAbsentRequiresZeroSystems": true,
+    "eachSystemExactlyFiveLines": true,
+    "lineIndicesTopToBottom": true,
+    "unresolvedDraftLinesForbiddenInFinal": true,
+    "teacherTruthMustFreezeBeforeRawIsOpenedForScoring": true,
+    "scoreExactlyOnceAfterTeacherTruthFreeze": true,
+    "retuningAfterHoldoutObservationAllowed": false
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_3-development-result-binding.v1",
+  "generatedOn": "2026-09-13",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "repositoryState": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "prNumber": 211,
+    "prMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "candidate": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.3",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "moduleBlobSha": "623ded1e40bfebdcbff0b4bbfe124b8716b3c907",
+    "moduleSha256": "e8512194153a857abc80cf275beca8a9f0420923bb66fdc2b26d17a61a80ffc5",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_3.py",
+    "testBlobSha": "6f70417b1b970f81f3e4f48f2b63fa832911402b",
+    "configCanonicalSha256": "36a41ff17396791e18dec7ab464f2fb12683b97c4c62bb7df7ddc0f7667d4815",
+    "parentVersion": "stage11-v2d-staff-multisystem-source.v1.2",
+    "parentRawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "sourceOnly": true,
+    "teacherArtifactLoadedDuringInference": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "heldOutAccessed": false,
+    "consumedChopinHoldoutUsedForTuning": false,
+    "trainingOrFineTuningPerformed": false,
+    "pageIdentityUsed": false,
+    "pageSpecificRulesUsed": false
+  },
+  "phaseAFreeze": {
+    "rawArtifactBindingPath": "evidence/stage11/v2d/v2d-staff-line-multisystem-source-v1_3-raw-artifact-binding.v1.json",
+    "rawArtifactSha256": "eeb1c00e317b15540525b50abe1ee78ee9e4ee94832a12e71a6ae12eac6e482b",
+    "pageCount": 20,
+    "sourceIdentityMatchedPages": 20,
+    "predictedSystemCount": 168,
+    "suppressedWeakSystemCount": 19,
+    "byteRepeatDeterminismVerified": true,
+    "teacherArtifactLoadedBeforeFreeze": false,
+    "teacherCoordinatesUsedBeforeFreeze": false,
+    "restoredOutputsLoadedBeforeFreeze": false,
+    "consumedIndependentHoldoutAccessedBeforeFreeze": false
+  },
+  "phaseBTeacherScoring": {
+    "evaluationPath": "evidence/stage11/v2d/stage11_v2d_staff_line_multisystem_source_v1_3_evaluation.v1.json",
+    "evaluationFileSha256": "be3f26b18d8e5ef071b356aff045ed817aec18fd9abe4dc6493b46f96dfdd64f",
+    "teacherRawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "teacherPageCount": 20,
+    "teacherConfirmedSystemCount": 197,
+    "teacherConfirmedLineCount": 985,
+    "teacherAmbiguousSystemCount": 0,
+    "teacherTruthUsedOnlyAfterCandidateRawFreeze": true,
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "scorerCompatibilityExpectedMatchedCount": 71,
+    "scorerCompatibilityReproducedMatchedCount": 71
+  },
+  "developmentMetrics": {
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 168,
+    "matchedSystemCountAtHalfSpacing": 140,
+    "teacherSystemRecallAtHalfSpacing": 0.7106598984771574,
+    "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+    "falsePositiveSystemCount": 28,
+    "presentPageCoverage": {
+      "detected": 18,
+      "total": 18,
+      "rate": 1.0
+    },
+    "absentPageSpecificity": {
+      "clean": 2,
+      "total": 2,
+      "rate": 1.0
+    },
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "syntheticSixLineTabNegativeControl": {
+      "testedCount": 1,
+      "rejected": true,
+      "rejectionRate": 1.0,
+      "scope": "synthetic regression control, not independent-holdout evidence"
+    },
+    "sourceIdentityMatchRate": 1.0,
+    "byteRepeatDeterminism": true
+  },
+  "comparisonToFrozenV1_2Development": {
+    "v1_2": {
+      "predictedSystemCount": 187,
+      "matchedSystemCountAtHalfSpacing": 141,
+      "teacherSystemRecallAtHalfSpacing": 0.7157360406091371,
+      "predictedSystemPrecisionAtHalfSpacing": 0.7540106951871658,
+      "falsePositiveSystemCount": 46,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "v1_3": {
+      "predictedSystemCount": 168,
+      "matchedSystemCountAtHalfSpacing": 140,
+      "teacherSystemRecallAtHalfSpacing": 0.7106598984771574,
+      "predictedSystemPrecisionAtHalfSpacing": 0.8333333333333334,
+      "falsePositiveSystemCount": 28,
+      "presentPageCoverage": 1.0,
+      "absentPageSpecificity": 1.0
+    },
+    "delta": {
+      "predictedSystems": -19,
+      "matchedSystems": -1,
+      "falsePositiveSystems": -18,
+      "teacherSystemRecall": -0.005076142131979711,
+      "predictedSystemPrecision": 0.07932263814616758
+    }
+  },
+  "validation": {
+    "workflowName": "Stage 11 V2d Staff-Line Multi-System Source Detector Validation",
+    "workflowRunId": 34782136756,
+    "validatedHead": "6831bbf7fdbf0940d857c34f3a0f91a7a5b0e4f9",
+    "python311": "SUCCESS",
+    "python312": "SUCCESS",
+    "v1_3RegressionTestsPerPython": "9/9 PASS",
+    "compile": "PASS",
+    "consumedHoldoutFirewall": "PASS"
+  },
+  "holdoutFirewall": {
+    "consumedHoldoutDatasetItem": "dataset.item.imslp82860-chopin-op69.v2",
+    "consumedHoldoutUsedForCandidateTuning": false,
+    "consumedHoldoutGeometryUsedForCandidateThresholdSelection": false,
+    "v1_2RetunedAgainstConsumedHoldout": false,
+    "newIndependentHoldoutAccessed": false,
+    "qualificationThresholdMovementAfterHoldoutObservation": false
+  },
+  "decision": {
+    "materialFalsePositiveImprovementObserved": true,
+    "developmentReadinessForFreshHoldoutRequest": true,
+    "staffLineDisposition": "DEVELOPMENT_READY_FOR_FRESH_HOLDOUT_REQUEST_NOT_QUALIFIED",
+    "sourceDetectorAdequacyEstablished": false,
+    "detectorQualified": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "reason": "On the already-spent 20-page development corpus, the separately versioned source-only v1.3 candidate reduces false-positive systems from 46 to 28 while retaining 140/141 of v1.2 development matches, recall above 0.70, precision above 0.82, exact present-page coverage, absent-page specificity, five-line/order invariants, TAB rejection, source identity and determinism. This is development readiness only and does not qualify staff_line.",
+    "nextSmallestSafeAction": "Prepare a proposal for a genuinely fresh independent staff-line holdout without opening or consuming it, then stop for new explicit authorization. Restored-output staff-topology comparison remains closed."
+  },
+  "claimBoundary": {
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "detectorQualified": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-current-truth.v2",
+  "generatedOn": "2026-09-14",
+  "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+  "implementationBranch": "stage11-v2c-semantic-detector-corpus-expansion",
+  "state": "RESTORED_TOPOLOGY_BASELINE_V2_COMPLETE_FAIL",
+  "authorization": {
+    "restoredOutputStaffTopologyComparisonAuthorized": true,
+    "newVersionedBaselineAuthorized": true,
+    "conditionalOverallStage11ClosureDecisionAuthorized": true,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "pullRequestMergeAuthorized": false
+  },
+  "sourceDetector": {
+    "version": "stage11-v2d-staff-multisystem-source.v1.4",
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "qualified": true,
+    "staffLineSourcePass": true,
+    "qualificationTruthPath": "docs/live/ST_SCORE_RESTORE_STAGE11_V2D_STAFF_LINE_V1_4_HOLDOUT_CURRENT_TRUTH.json"
+  },
+  "historicalCanonicalBaseline": {
+    "state": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+    "reclassified": false,
+    "rewritten": false
+  },
+  "validationBaselineV2": {
+    "baselineId": "stage11.v2d.restored-output-validation-baseline.v2",
+    "manifestPath": "evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json",
+    "policyPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-baseline-v2-policy.v1.json",
+    "policyFreezeCommit": "ac2238d84c4140d9732d0c938671bbcdfcc09888",
+    "resultBindingPath": "evidence/stage11/v2d/v2d-staff-line-v1_4-restored-topology-validation-baseline-v2-result-binding.v1.json",
+    "pageCount": 20,
+    "staffPresentPageCount": 18,
+    "staffAbsentPageCount": 2,
+    "teacherSystemCount": 197,
+    "teacherLineCount": 985,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7",
+    "heldOutUsedForRestoredComparison": false,
+    "baselineInputIdentity": "20/20 PASS"
+  },
+  "measurement": {
+    "executed": true,
+    "workflowRunId": 34897005035,
+    "workflowConclusion": "success",
+    "detectorRawByteRepeatDeterminism": true,
+    "rawArtifactSha256": "1ca65cdbd0e49b48bc81235443cef24f51dc174341695e4e8cfdfc474686da29",
+    "scoringExecutionCount": 1,
+    "teacherSystemCount": 197,
+    "predictedSystemCount": 156,
+    "matchedSystemCount": 123,
+    "teacherSystemRecallAtHalfSpacing": 0.6243654822335025,
+    "teacherSystemRecallThreshold": 0.65,
+    "teacherSystemRecallPass": false,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7884615384615384,
+    "predictedSystemPrecisionThreshold": 0.8,
+    "predictedSystemPrecisionPass": false,
+    "presentPageCoverage": 1.0,
+    "presentPageCoverageThreshold": 0.95,
+    "presentPageCoveragePass": true,
+    "absentPageSpecificity": 0.5,
+    "absentPageSpecificityThreshold": 1.0,
+    "absentPageSpecificityPass": false,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "restoredStaffTopologyPass": false
+  },
+  "stage11Closure": {
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "disposition": "FAIL_RESTORED_TOPOLOGY_BASELINE_V2",
+    "reason": "Frozen restored-output topology policy is conjunctive and failed recall, precision, and absent-page specificity. No post-measurement threshold movement or retuning is permitted."
+  },
+  "claimBoundary": {
+    "staffLineSourceDetectorQualified": true,
+    "staffLineSourcePass": true,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11Pass": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  },
+  "pullRequest": {
+    "number": 211,
+    "mustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "nextSafeBoundary": "Do not retune v1.4 or move frozen thresholds against this measured baseline. Keep source-detector qualification PASS separate from downstream restored-topology FAIL. A successor restoration/topology approach requires a separately versioned development cycle and fresh pre-measurement policy before any new closure claim."
+}

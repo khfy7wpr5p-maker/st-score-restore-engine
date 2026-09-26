@@ -1,0 +1,87 @@
+{
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "developmentOnly": true,
+  "developmentReadinessPolicy": {
+    "absentPageSpecificityMin": 1.0,
+    "absentSpecificityPassed": true,
+    "fiveLineCountCorrectRateMin": 1.0,
+    "fiveLinePassed": true,
+    "lineOrderCorrectRateMin": 1.0,
+    "lineOrderPassed": true,
+    "precisionMin": 0.75,
+    "precisionPassed": true,
+    "presentCoveragePassed": true,
+    "presentPageCoverageMin": 1.0,
+    "recallMin": 0.6,
+    "recallPassed": true
+  },
+  "frozenRawArtifact": {
+    "byteRepeatDeterminismVerified": true,
+    "fileName": "stage11_v2d_staff_line_multisystem_source_raw.v1_2.json",
+    "pageCount": 20,
+    "predictedSystemCount": 187,
+    "sha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "sourceIdentityMatchedCount": 20
+  },
+  "generatedOn": "2026-09-13",
+  "qualificationEvidence": false,
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_2-development-evaluation.v1",
+  "scorerCompatibility": {
+    "frozenV1ExpectedMatchedSystemCountAtHalfSpacing": 71,
+    "passed": true,
+    "reproducedMatchedSystemCountAtHalfSpacing": 71
+  },
+  "scoring": {
+    "absentPageSpecificity": {"clean": 2, "rate": 1.0, "total": 2},
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "matchedSystemCount": 141,
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "pages": [
+      {"expectedStaffPresent": false, "matchedSystemCount": 0, "pageId": "beethoven-op48-no3-p1", "predictedSystemCount": 0, "teacherSystemCount": 0},
+      {"expectedStaffPresent": true, "matchedSystemCount": 9, "pageId": "beethoven-op48-no3-p2", "predictedSystemCount": 9, "teacherSystemCount": 9},
+      {"expectedStaffPresent": true, "matchedSystemCount": 12, "pageId": "beethoven-op48-no3-p3", "predictedSystemCount": 12, "teacherSystemCount": 12},
+      {"expectedStaffPresent": false, "matchedSystemCount": 0, "pageId": "beethoven-op48-no3-p4", "predictedSystemCount": 0, "teacherSystemCount": 0},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "wikimedia-guitar-technical-exercise-no1-p1", "predictedSystemCount": 3, "teacherSystemCount": 3},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "barley-your-face-your-tongue-your-wit-p1", "predictedSystemCount": 4, "teacherSystemCount": 4},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "barley-your-face-your-tongue-your-wit-p2", "predictedSystemCount": 5, "teacherSystemCount": 5},
+      {"expectedStaffPresent": true, "matchedSystemCount": 3, "pageId": "carulli-morceaux-faciles-p2", "predictedSystemCount": 11, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 8, "pageId": "carulli-morceaux-faciles-p3", "predictedSystemCount": 11, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 14, "pageId": "carulli-morceaux-faciles-p4", "predictedSystemCount": 15, "teacherSystemCount": 15},
+      {"expectedStaffPresent": true, "matchedSystemCount": 6, "pageId": "carulli-morceaux-faciles-p5", "predictedSystemCount": 14, "teacherSystemCount": 15},
+      {"expectedStaffPresent": true, "matchedSystemCount": 12, "pageId": "carulli-morceaux-faciles-p6", "predictedSystemCount": 13, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 6, "pageId": "carulli-morceaux-faciles-p7", "predictedSystemCount": 11, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 2, "pageId": "carulli-morceaux-faciles-p8", "predictedSystemCount": 13, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 1, "pageId": "carulli-morceaux-faciles-p9", "predictedSystemCount": 5, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 11, "pageId": "carulli-morceaux-faciles-p10", "predictedSystemCount": 13, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 11, "pageId": "bach-anna-magdalena-p4", "predictedSystemCount": 11, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 11, "pageId": "bach-anna-magdalena-p10", "predictedSystemCount": 11, "teacherSystemCount": 12},
+      {"expectedStaffPresent": true, "matchedSystemCount": 14, "pageId": "bach-anna-magdalena-p24", "predictedSystemCount": 14, "teacherSystemCount": 14},
+      {"expectedStaffPresent": true, "matchedSystemCount": 12, "pageId": "bach-anna-magdalena-p40", "predictedSystemCount": 12, "teacherSystemCount": 12}
+    ],
+    "predictedSystemCount": 187,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7540106951871658,
+    "presentPageCoverage": {"detected": 18, "rate": 1.0, "total": 18},
+    "systemSensitivity": {
+      "0.5": {"matchedSystems": 141, "predictedSystemPrecision": 0.7540106951871658, "teacherSystemRecall": 0.7157360406091371},
+      "1.0": {"matchedSystems": 159, "predictedSystemPrecision": 0.8502673796791443, "teacherSystemRecall": 0.8071065989847716}
+    },
+    "teacherSystemCount": 197,
+    "teacherSystemRecallAtHalfSpacing": 0.7157360406091371,
+    "toleranceFraction": 0.5
+  },
+  "teacherTruth": {
+    "confirmedSystemCount": 197,
+    "fileName": "staff_line_teacher_mask_topology.v1.json",
+    "pageCount": 20,
+    "sha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+  }
+}

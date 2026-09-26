@@ -1,0 +1,101 @@
+name: Stage 11 V2d Staff-Line V1.4 Fresh Holdout Freeze
+
+on:
+  push:
+    branches:
+      - stage11-v2c-semantic-detector-corpus-expansion
+    paths:
+      - '.github/workflows/stage11-v2d-staff-line-v1_4-fresh-holdout-freeze.yml'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-registry-entry.v1.json'
+      - 'evidence/stage11/v2d/v2d-staff-line-v1_4-fresh-holdout-authorization.v1.json'
+      - 'src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_4.py'
+
+permissions:
+  contents: read
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install repository
+        run: python -m pip install -e .
+      - name: Fetch exact selected source after pre-access selection freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .sealed/source .sealed/out
+          curl -L --fail --retry 3 --retry-delay 2 \
+            --output .sealed/source/tchaikovsky-piano-concerto-no1-score-p1.png \
+            'https://upload.wikimedia.org/wikipedia/commons/7/78/Piano_Concerto_No._1_%28Tchaikovsky%29.png'
+      - name: Verify public metadata identity and freeze v1.4 twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+          import hashlib
+          import json
+          from pathlib import Path
+          import cv2
+          from st_score_restore import stage11_v2d_staff_line_multisystem_source_detector_v1_4 as mod
+
+          src = Path('.sealed/source/tchaikovsky-piano-concerto-no1-score-p1.png')
+          data = src.read_bytes()
+          sha1 = hashlib.sha1(data).hexdigest()
+          sha256 = hashlib.sha256(data).hexdigest()
+          assert sha1 == '2c135dd588eec917acfee894f1c8329e61590c37', (sha1, 'metadata SHA-1 mismatch')
+          assert len(data) == 309341, (len(data), 'metadata byte-size mismatch')
+          image = cv2.imread(str(src), cv2.IMREAD_GRAYSCALE)
+          assert image is not None, 'unreadable selected source'
+          assert image.shape == (846, 1304), image.shape
+
+          expected = {src.name: sha256}
+          a = Path('.sealed/out/stage11_v2d_staff_line_holdout_tchaikovsky_raw.v1_4.A.json')
+          b = Path('.sealed/out/stage11_v2d_staff_line_holdout_tchaikovsky_raw.v1_4.B.json')
+          first = mod.freeze_source_folder(src.parent, a, expected_source_sha256=expected)
+          second = mod.freeze_source_folder(src.parent, b, expected_source_sha256=expected)
+          assert a.read_bytes() == b.read_bytes(), 'v1.4 fresh holdout raw is not byte-repeat deterministic'
+          assert first['artifactSha256'] == second['artifactSha256']
+
+          manifest = {
+              'schemaVersion': 'stage11.v2d.staff-line-v1_4-fresh-holdout-source-manifest.v1',
+              'generatedOn': '2026-09-14',
+              'datasetItemId': 'dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1',
+              'sourceFamilyId': 'source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1',
+              'pageId': 'tchaikovsky-piano-concerto-no1-score-p1',
+              'sourceFileName': src.name,
+              'mediaType': 'image/png',
+              'width': 1304,
+              'height': 846,
+              'byteSize': len(data),
+              'sha1': sha1,
+              'sha256': sha256,
+              'publicMetadataIdentityMatched': True,
+              'selectionRegistryCommitPrecededSourceAccess': True,
+              'authorizationCommitPrecededSourceAccess': True,
+              'teacherTruthAccessedBeforeRawFreeze': False,
+              'teacherCoordinatesUsedDuringInference': False,
+              'restoredOutputsUsedDuringInference': False,
+              'pageSpecificRulesUsed': False,
+              'detectorVersion': mod.DETECTOR_VERSION,
+              'rawArtifactSha256': first['artifactSha256'],
+              'byteRepeatDeterminismVerified': True,
+          }
+          manifest_path = Path('.sealed/out/stage11_v2d_staff_line_holdout_tchaikovsky_source_manifest.v1.json')
+          manifest_path.write_text(json.dumps(manifest, sort_keys=True, indent=2) + '\n', encoding='utf-8')
+          print('SOURCE_IDENTITY_OK')
+          print('BYTE_REPEAT_DETERMINISM_OK')
+          PY
+      - name: Seal exact source and raw outputs as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage11-v2d-v14-fresh-holdout-sealed
+          path: .sealed/
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 30

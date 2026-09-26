@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "stage11.v2d.canonical-cpu-identity-bridge-attempt.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "scope": {
+    "developmentOnly": true,
+    "selectedSemanticClass": "notehead",
+    "heldOutAccessed": false,
+    "trainingPerformed": false,
+    "fineTuningPerformed": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "runtimePreflight": {
+    "passed": true,
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu",
+    "device": "CPU",
+    "intraopThreads": 5,
+    "interopThreads": 1,
+    "deterministicAlgorithms": false
+  },
+  "firstEvaluatedPage": {
+    "pageId": "beethoven-op48-no3-p2",
+    "sourcePixelSha256": {
+      "committedCanonical": "03a75dd2434d1544fbd18f004d709d2d40fae29561ef44cf539029561e2d4d55",
+      "currentRun": "03a75dd2434d1544fbd18f004d709d2d40fae29561ef44cf539029561e2d4d55",
+      "matches": true
+    },
+    "restoreOutputPixelSha256": {
+      "committedV2cCanonical": "ae415d125b0987704c3ad8a1e0d212f1f85d5697648651fea2e7c80a8cce88ce",
+      "currentExactSoftwareCpuRun": "1aaeba98a603766941950fb662f400abd4d5a024e37f1454233727378997c881",
+      "existingV2dCachedRestore": "d146518be6d6e16c39b908bd589b1d9ca2c8b20118d667f0a6dc79e529682474",
+      "currentCpuMatchesCommittedCanonical": false,
+      "v2dCacheMatchesCommittedCanonical": false
+    },
+    "restoreOutputPngSha256": {
+      "committedV2cCanonical": "023a36aa907e4f715e19d2f14286b585639f33ea6e7bfd194f91d8d5f99b3c16",
+      "currentExactSoftwareCpuRun": "1e3fee4cda334b3ff7aaecab20c66edc282f9b10352eb56ee2b1c1a39a5e95f",
+      "matches": false
+    },
+    "detectorRecordFingerprintValid": true,
+    "existingExploratoryNoteheadMetric": {
+      "sourceCount": 68,
+      "candidateCount": 84,
+      "matchedCount": 53,
+      "sourceRecall": 0.7794117647058824
+    }
+  },
+  "interpretation": {
+    "exactSoftwareProfileReproduced": true,
+    "sourceInputIdentityEstablished": true,
+    "crossRuntimeBitPixelIdentityEstablished": false,
+    "existingV2dDetectorRecordMayBeReusedForNewCpuRestoreOutput": false,
+    "reason": "The detector record is fingerprint-bound to the existing V2d restored image. The new exact-software CPU Restore output has different pixels, so reusing the old detector record as if it described the new CPU output would be invalid.",
+    "likelyCauseNotYetProven": "CPU backend or hardware-dependent floating-point behavior; the earlier V2c evidence proved repeat stability inside its recorded runtime but did not prove bit-identical portability across different CPU hosts."
+  },
+  "disposition": {
+    "status": "FAIL_CLOSED_CROSS_RUNTIME_PIXEL_IDENTITY_NOT_ESTABLISHED",
+    "repeatSameIdentityBridgeAuthorized": false,
+    "canonicalSemanticUpgradeAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "productionReady": false,
+    "stage12EntryAuthorized": false,
+    "nextAction": "Do not repeat the same pixel-identity bridge. Design a true canonical semantic rerun whose detector evidence is generated against the actual canonical CPU Restore outputs, or otherwise reproduce the original canonical hardware/backend sufficiently to establish identity."
+  }
+}

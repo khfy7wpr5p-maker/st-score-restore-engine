@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "stage11.v2d.c-clef-p4_10-root-cause-diagnostic-plan.v1",
+  "phase": "Stage 11 v2d / P4.10",
+  "status": "DIAGNOSTIC_PLAN_FROZEN",
+  "inputEvidence": {
+    "p4_9ResultStatus": "HOLDOUT_FAILED",
+    "p4_9ResultBindingCommit": "5a167c7028945cda09b40edb73a7f9c0144a5a34",
+    "p4_9Pooled": {"tp": 7, "fp": 13, "fn": 31},
+    "p4_9SubtypeRecall": {"C1": 0.0, "C3": 0.3333333333333333, "C4": 0.0}
+  },
+  "purpose": "Classify each of the 31 frozen P4.9 false negatives by the earliest failed stage without changing the frozen P4.8 policy.",
+  "rootCauseClasses": [
+    "STAFF_DETECTION_FAILURE",
+    "LOCALIZER_MISS",
+    "LOCALIZER_GEOMETRY_NEAR_MISS",
+    "ROUTING_CANONICAL_ONLY_LOST_ORIGINAL_MATCH",
+    "ORIGINAL_P46_FILTER_REJECTION",
+    "CANONICAL_FILTER_REJECTION",
+    "CANONICAL_P48_FILTER_REJECTION",
+    "CANONICAL_DEDUP_SUPPRESSION",
+    "SHAPE_MIRROR_GATE_REJECTION",
+    "BBOX_PADDING_OR_FINAL_GEOMETRY_FAILURE",
+    "GREEDY_MATCH_ASSIGNMENT_CONFLICT",
+    "LOW_SPACING_PATH_UNRESOLVED",
+    "UNRESOLVED_POLICY_FAILURE"
+  ],
+  "governance": {
+    "diagnosticOnly": true,
+    "p4_9IsSpentHoldout": true,
+    "p4_9MayNotQualifyAnyFutureRetunedDetector": true,
+    "p4_8PolicyChanged": false,
+    "thresholdSelectionAuthorized": false,
+    "newIndependentHoldoutRequiredForFutureQualification": true,
+    "detectorQualified": false,
+    "productionInferenceAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12Authorized": false
+  },
+  "runner": {
+    "path": "src/st_score_restore/stage11_v2d_c_clef_p4_10_root_cause_diagnostic.py",
+    "commit": "c1d8ccc8ef770c03c50dfc20db0780daca2bcc12"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-fresh-holdout-registry-entry.v1",
+  "generatedOn": "2026-09-14",
+  "status": "REGISTERED_PRE_SOURCE_ACCESS_SELECTED_HELD_OUT",
+  "scope": "Stage 11 staff-line v1.4 qualification only; historical Stage 1 catalog.v2 remains immutable",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeRegistration": "2fb26dd434f18d7f291265863d1e97a4ff5e65c8",
+    "pullRequestNumber": 211,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "candidate": {
+    "datasetItemId": "dataset.item.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "sourceFamilyId": "source.family.wikimedia-tchaikovsky-piano-concerto-no1-score-image.v1",
+    "split": "held_out",
+    "purpose": "held_out_evaluation",
+    "eligibilityClass": "stage11_only_public_domain_holdout",
+    "input": {
+      "kind": "png",
+      "mediaType": "image/png",
+      "notationKinds": ["staff"],
+      "pageCount": 1,
+      "metadataDeclaredWidth": 1304,
+      "metadataDeclaredHeight": 846,
+      "metadataDeclaredByteSize": 309341
+    },
+    "metadataSource": {
+      "provider": "Wikimedia Commons",
+      "filePage": "https://commons.wikimedia.org/wiki/File:Piano_Concerto_No._1_(Tchaikovsky).png",
+      "title": "Piano Concerto No. 1 (Tchaikovsky).png",
+      "metadataDeclaredChecksumAlgorithm": "SHA-1",
+      "metadataDeclaredChecksum": "2c135dd588eec917acfee894f1c8329e61590c37",
+      "sourceBytesAccessedForSelection": false
+    },
+    "provenance": {
+      "sourceKind": "public_domain",
+      "composer": "Peter Ilyich Tchaikovsky",
+      "workDate": "1875",
+      "imageAuthor": "RoodyAlien",
+      "rightsReviewStatus": "approved_from_public_metadata",
+      "licenseBasis": "public domain",
+      "publicMetadataStatesPublicDomain": true
+    },
+    "permissions": {
+      "held_out_evaluation": "granted_by_explicit_user_authorization_2026-09-14",
+      "quality_evaluation": "not_granted_for_this_holdout",
+      "quality_calibration": "not_granted",
+      "model_training": "not_granted",
+      "publication": "not_inferred"
+    },
+    "artifactIdentity": {
+      "exactSha256": null,
+      "exactByteSize": null,
+      "identityStatus": "PENDING_POST_SELECTION_SOURCE_ACCESS"
+    }
+  },
+  "selectionBoundary": {
+    "selectionBasedOnlyOnCatalogAndPublicMetadata": true,
+    "selectedSourceBytesAccessedBeforeRegistration": false,
+    "teacherTruthAccessedBeforeRegistration": false,
+    "detectorRunOnSelectedSourceBeforeRegistration": false,
+    "selectedBecauseOfDetectorPerformance": false
+  },
+  "independence": {
+    "consumedDatasetItems": [
+      "dataset.item.imslp82860-chopin-op69.v2",
+      "dataset.item.wikimedia-nearer-my-god-to-thee-phone-photo.v1"
+    ],
+    "consumedSourceFamilies": [
+      "source.family.imslp82860-chopin-op69.v2",
+      "source.family.wikimedia-nearer-my-god-to-thee.v1"
+    ],
+    "developmentSourceFamilies": [
+      "source.family.imslp799143-beethoven-op48-no3.v1",
+      "source.family.wikimedia-guitar-technical-exercise-no1.v1",
+      "source.family.barley-mnoah-your-face-your-tongue-your-wit.v1"
+    ],
+    "datasetItemOverlapWithConsumedHoldouts": false,
+    "sourceFamilyOverlapWithConsumedHoldouts": false,
+    "sourceFamilyOverlapWithDevelopment": false
+  },
+  "historicalCorpusBoundary": {
+    "stage1CatalogPath": "evidence/stage1c/corpus/catalog.v2.json",
+    "stage1CatalogModified": false,
+    "reasonForStage11OnlyRegistry": "The accepted Stage 1 catalog contains exactly two held-out source families and both are already consumed; reusing either would violate fresh-holdout independence."
+  },
+  "claimBoundary": {
+    "detectorQualified": false,
+    "staffLinePass": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "prReadyForMerge": false
+  }
+}

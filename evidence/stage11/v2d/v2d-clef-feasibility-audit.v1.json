@@ -1,0 +1,235 @@
+{
+  "schemaVersion": "stage11.v2d.clef-feasibility-audit.v1",
+  "contractId": "stage11.v2c.semantic-preservation.nonheldout.v1",
+  "generatedOn": "2026-09-09",
+  "sourceBenchmark": {
+    "driveFileId": "1QiQ0-2vCf8WbeLl-E4OzxAhIKuoL_vgp",
+    "byteSize": 40685,
+    "sha256": "63fdb35ed102c45544a1a97591f1b7b7269d8c2f13f87b4c858558ec5ce52568"
+  },
+  "scope": {
+    "developmentOnly": true,
+    "teacherGroundTruthFrozen": true,
+    "detectorOutputUsedAsGroundTruth": false,
+    "heldOutAccessed": false,
+    "trainingPerformed": false
+  },
+  "exploratoryClefEvidence": {
+    "eligibleTeacherPresentPages": 18,
+    "evaluatedPages": 18,
+    "detectorCoverage": 1.0,
+    "pagesAtRecallGte0_80": 12,
+    "rateAtRecallGte0_80": 0.6666666666666666,
+    "meanPageSourceRecall": 0.8368596621496107,
+    "minimumPageSourceRecall": 0.46875,
+    "maximumPageSourceRecall": 1.0,
+    "pooledSourceRecall": 0.7679180887372014,
+    "sourceCountTotal": 586,
+    "matchedCountTotal": 450,
+    "candidateCountTotal": 557,
+    "candidateOnlyCountTotal": 107,
+    "candidateOnlyShareOfRestoredCandidates": 0.19210053859964094,
+    "interpretation": "candidateOnlyCount is a source-versus-restored detector disagreement count, not an absolute false-positive count because no teacher box ground truth exists",
+    "pages": [
+      {
+        "pageId": "beethoven-op48-no3-p2",
+        "sourceCount": 24,
+        "candidateCount": 33,
+        "matchedCount": 17,
+        "candidateOnlyCount": 16,
+        "sourceRecall": 0.7083333333333334
+      },
+      {
+        "pageId": "beethoven-op48-no3-p3",
+        "sourceCount": 44,
+        "candidateCount": 31,
+        "matchedCount": 24,
+        "candidateOnlyCount": 7,
+        "sourceRecall": 0.5454545454545454
+      },
+      {
+        "pageId": "wikimedia-guitar-technical-exercise-no1-p1",
+        "sourceCount": 3,
+        "candidateCount": 3,
+        "matchedCount": 3,
+        "candidateOnlyCount": 0,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "barley-your-face-your-tongue-your-wit-p1",
+        "sourceCount": 4,
+        "candidateCount": 4,
+        "matchedCount": 4,
+        "candidateOnlyCount": 0,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "barley-your-face-your-tongue-your-wit-p2",
+        "sourceCount": 5,
+        "candidateCount": 5,
+        "matchedCount": 5,
+        "candidateOnlyCount": 0,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p2",
+        "sourceCount": 15,
+        "candidateCount": 19,
+        "matchedCount": 13,
+        "candidateOnlyCount": 6,
+        "sourceRecall": 0.8666666666666667
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p3",
+        "sourceCount": 28,
+        "candidateCount": 24,
+        "matchedCount": 15,
+        "candidateOnlyCount": 9,
+        "sourceRecall": 0.5357142857142857
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p4",
+        "sourceCount": 15,
+        "candidateCount": 18,
+        "matchedCount": 15,
+        "candidateOnlyCount": 3,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p5",
+        "sourceCount": 15,
+        "candidateCount": 22,
+        "matchedCount": 15,
+        "candidateOnlyCount": 7,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p6",
+        "sourceCount": 12,
+        "candidateCount": 16,
+        "matchedCount": 12,
+        "candidateOnlyCount": 4,
+        "sourceRecall": 1.0
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p7",
+        "sourceCount": 32,
+        "candidateCount": 33,
+        "matchedCount": 15,
+        "candidateOnlyCount": 18,
+        "sourceRecall": 0.46875
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p8",
+        "sourceCount": 12,
+        "candidateCount": 18,
+        "matchedCount": 11,
+        "candidateOnlyCount": 7,
+        "sourceRecall": 0.9166666666666666
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p9",
+        "sourceCount": 14,
+        "candidateCount": 14,
+        "matchedCount": 13,
+        "candidateOnlyCount": 1,
+        "sourceRecall": 0.9285714285714286
+      },
+      {
+        "pageId": "carulli-morceaux-faciles-p10",
+        "sourceCount": 13,
+        "candidateCount": 19,
+        "matchedCount": 12,
+        "candidateOnlyCount": 7,
+        "sourceRecall": 0.9230769230769231
+      },
+      {
+        "pageId": "bach-anna-magdalena-p4",
+        "sourceCount": 78,
+        "candidateCount": 71,
+        "matchedCount": 66,
+        "candidateOnlyCount": 5,
+        "sourceRecall": 0.8461538461538461
+      },
+      {
+        "pageId": "bach-anna-magdalena-p10",
+        "sourceCount": 110,
+        "candidateCount": 97,
+        "matchedCount": 86,
+        "candidateOnlyCount": 11,
+        "sourceRecall": 0.7818181818181819
+      },
+      {
+        "pageId": "bach-anna-magdalena-p24",
+        "sourceCount": 97,
+        "candidateCount": 76,
+        "matchedCount": 72,
+        "candidateOnlyCount": 4,
+        "sourceRecall": 0.7422680412371134
+      },
+      {
+        "pageId": "bach-anna-magdalena-p40",
+        "sourceCount": 65,
+        "candidateCount": 54,
+        "matchedCount": 52,
+        "candidateOnlyCount": 2,
+        "sourceRecall": 0.8
+      }
+    ]
+  },
+  "codeProvenance": {
+    "upstreamRepository": "https://github.com/BreezeWhite/oemer",
+    "upstreamCommit": "dbe2a933d630d0f74805d717960eb259473f5978",
+    "upstreamGeneratePredPath": "oemer/ete.py",
+    "upstreamLogic": "generate_pred runs unet_big/model.onnx for staff/symbol maps and seg_net/model.onnx for stems/rests, noteheads, and the combined clefs_keys class",
+    "repositoryExtractionPath": "src/st_score_restore/stage11_v2d_colab_runner.py::_detect_semantic_boxes",
+    "repositoryHeuristic": "connected components from clefs_keys are split by source-derived unit geometry; tall/wide components are labeled clef and smaller components accidental",
+    "semanticLimitation": "the benchmark does not run Oemer clef/key SVM classification and clefs_keys is not a clef-only ground-truth channel",
+    "checkpointSha256": {
+      "unet_big/model.onnx": "37512e858731096439746f60b377c049f07055b4a23ec6eb9a178ce92cfba174",
+      "seg_net/model.onnx": "ed2e1a86ea75712ee6cdc740e96f7a36753543cf9bb980227c071c9256d9d82e"
+    }
+  },
+  "narrowPathAssessment": {
+    "fullOemerPipelineRequired": false,
+    "unetBigRequiredByExistingExploratoryImplementation": true,
+    "segNetContainsClefsKeysChannel": true,
+    "possibleFutureNarrowPath": "seg_net-only clefs_keys extraction plus an independently validated image-geometry unit estimator",
+    "admittedNow": false,
+    "reason": "the narrow estimator and clef-versus-key heuristic have not been validated against teacher box truth; changing them would create a new detector rather than reproduce the exploratory detector"
+  },
+  "equivalenceAndCost": {
+    "cpuGpuEquivalenceRequiredBeforeGpuAdmission": true,
+    "proposedCanaryPageId": "beethoven-op48-no3-p2",
+    "noteheadObservedGpuDetectorSecondsFor18Pages": 915.9926039410001,
+    "noteheadObservedTotalWallSeconds": 1230.054140588,
+    "clefSegNetOnlyRuntimeEstimateSeconds": 915.9926039410001,
+    "estimateBasis": "clef and notehead are channels of the same seg_net inference output; a future narrow clef path could share comparable inference cost but requires separate exact-box equivalence and heuristic validation",
+    "newColabRunRequiredNow": false
+  },
+  "decision": {
+    "disposition": "REVIEW_ONLY_NO_CANONICAL_RERUN",
+    "canonicalRerunPrepared": false,
+    "rationale": [
+      "only 12 of 18 pages reach the existing 0.80 source-recall marker",
+      "minimum page recall is 0.46875 and pooled source recall is below 0.80",
+      "107 of 557 restored candidates are candidate-only disagreements",
+      "current clef boxes come from a combined clefs_keys segmentation channel plus an unvalidated geometry heuristic",
+      "teacher evidence confirms class presence but provides no clef box ground truth for absolute detector precision/recall"
+    ],
+    "unlockConditions": [
+      "independent teacher-reviewed clef box corpus across all five source families",
+      "pre-registered clef detector precision/recall and preservation thresholds",
+      "validated seg_net-only unit estimator or an explicit decision to retain unet_big",
+      "single-canary CPU/GPU exact-box equivalence and no-fallback probe",
+      "static CI and cost preflight pass before any paid run"
+    ]
+  },
+  "claimBoundary": {
+    "semanticPreservationEstablished": false,
+    "overallStage11PassAuthorized": false,
+    "productionReady": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  }
+}

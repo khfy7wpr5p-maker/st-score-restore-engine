@@ -1,0 +1,136 @@
+{
+  "claimBoundary": {
+    "detectorQualified": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredImageTopologyComparisonAuthorized": false,
+    "semanticPreservationEstablished": false,
+    "stage12EntryAuthorized": false
+  },
+  "comparison": {
+    "baseline": {"absentPageSpecificity": 1.0, "matchedSystems": 10, "precision": 1.0, "predictedSystems": 10, "presentPageCoverage": 0.5555555555555556, "recall": 0.050761421319796954},
+    "v1": {"absentPageSpecificity": 1.0, "matchedSystems": 71, "precision": 0.797752808988764, "predictedSystems": 89, "presentPageCoverage": 0.8333333333333334, "recall": 0.3604060913705584},
+    "v1_1": {"absentPageSpecificity": 1.0, "matchedSystems": 91, "precision": 0.7982456140350878, "predictedSystems": 114, "presentPageCoverage": 1.0, "recall": 0.4619289340101523},
+    "v1_2": {"absentPageSpecificity": 1.0, "matchedSystems": 141, "precision": 0.7540106951871658, "predictedSystems": 187, "presentPageCoverage": 1.0, "recall": 0.7157360406091371}
+  },
+  "decision": {
+    "detectorQualified": false,
+    "developmentReadinessForFutureHoldoutRequest": true,
+    "freshIndependentHoldoutAuthorized": false,
+    "materialDevelopmentImprovementObserved": true,
+    "reason": "Frozen v1.2 exceeds the predeclared development-readiness floors on the already-spent development corpus while retaining exact absent-page specificity and topology invariants. Development data cannot qualify staff_line, and the frozen policy explicitly states that passing readiness does not automatically authorize a fresh holdout.",
+    "restoredImageTopologyComparisonAuthorized": false,
+    "sourceDetectorAdequacyEstablished": false,
+    "staffLineDisposition": "DEVELOPMENT_READY_FOR_FUTURE_HOLDOUT_REQUEST_NOT_QUALIFIED"
+  },
+  "detector": {
+    "configCanonicalSha256": "01da186f70bd511e978b61b343effa1ddf13e85e99fd7287d902e9d556b48cf7",
+    "heldOutAccessed": false,
+    "localRegressionTests": "8/8 PASS",
+    "moduleBlobSha": "54f218bf92222543be3a5cce904d4b03280ed7d0",
+    "modulePath": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "moduleSha256": "0e05aafed4c78982e155f0e77a06b774aed481f92bc2aa4dc6bd70f77c61ad95",
+    "pageSpecificRulesUsed": false,
+    "restoredOutputsLoadedDuringInference": false,
+    "secondaryHelperBlobSha": "6ebdb62a40c90983686cc9ef59c2f3440fe30eee",
+    "secondaryHelperPath": "src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_secondary.py",
+    "secondaryHelperSha256": "0030f64c5767fc26b65ccf6013b020f9d26a215301d37c3e5148c03ddbeaacd2",
+    "teacherArtifactLoadedDuringInference": false,
+    "teacherCoordinatesUsedDuringInference": false,
+    "templateHelperBlobSha": "f528af05bfd410aae5744a690cec4d8010400062",
+    "templateHelperPath": "src/st_score_restore/_stage11_v2d_staff_line_multisystem_source_detector_v1_2_template.py",
+    "templateHelperSha256": "0d2828b28e43f57b22c7d6d1d57d662fc6f5047bdd8816a46142776a8cde9cf4",
+    "testBlobSha": "4e77e7d0ab1e78b9f775830c2508131c7da88cbe",
+    "testPath": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py",
+    "testSha256": "227bda7a6fb544354e2795a65dcf4a66653e48513573bc1644108d8d8bb30de4",
+    "trainingOrFineTuningPerformed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.2"
+  },
+  "developmentMetrics": {
+    "absentPageSpecificity": {"clean": 2, "rate": 1.0, "total": 2},
+    "byteRepeatDeterminismVerified": true,
+    "fiveLineCountCorrectRate": 1.0,
+    "lineOrderCorrectRate": 1.0,
+    "matchedSystemCountAtHalfSpacing": 141,
+    "predictedSystemCount": 187,
+    "predictedSystemPrecisionAtHalfSpacing": 0.7540106951871658,
+    "presentPageCoverage": {"detected": 18, "rate": 1.0, "total": 18},
+    "sourceIdentityMatchRate": 1.0,
+    "syntheticSixLineTabNegativeControl": {
+      "evidence": "tests/test_stage11_v2d_staff_line_multisystem_source_detector_v1_2.py::test_rejects_six_line_tab_like_system",
+      "rejected": true,
+      "rejectionRate": 1.0,
+      "scope": "synthetic regression control, not teacher-labelled holdout evidence",
+      "testedCount": 1
+    },
+    "teacherSystemCount": 197,
+    "teacherSystemRecallAtHalfSpacing": 0.7157360406091371
+  },
+  "developmentOnly": true,
+  "frozenPolicy": {
+    "developmentReadinessIsQualification": false,
+    "developmentReadinessRequirements": {
+      "absentPageSpecificityMin": 1.0,
+      "byteRepeatDeterminismRequired": true,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0,
+      "precisionMin": 0.75,
+      "presentPageCoverageMin": 1.0,
+      "recallMin": 0.6,
+      "sourceIdentityMatchRateRequired": 1.0,
+      "tabSixLineRejectionRateMin": 1.0
+    },
+    "freshHoldoutAutomaticallyAuthorized": false,
+    "path": "evidence/stage11/v2d/v2d-staff-line-source-detector-qualification-policy.v1.json",
+    "status": "FROZEN_PRE_HOLDOUT"
+  },
+  "generatedOn": "2026-09-13",
+  "parentV1_1Identity": {
+    "currentGitBlobSha": "deb988a359f2f2526c484b2cd49b57597c7733db",
+    "currentSourceSha256": "e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5",
+    "exactBlobBytesUsedForV1_2Freeze": true,
+    "frozenV1_2RawRecordedParentSourceSha256": "e676f29889965f33178e3252580b8b358a1d36b3c0691ac7a77928e5484230b5",
+    "historicalRecordedShaMatchesCurrentBlobBytes": false,
+    "historicalV1_1BindingModified": false,
+    "historicalV1_1BindingRecordedSourceSha256": "cb6271d667792275afb9c51e4f3a84fde0d426538b034223c8b0be6fc23fdc9a",
+    "path": "src/st_score_restore/stage11_v2d_staff_line_multisystem_source_detector_v1_1.py",
+    "reconciliationPath": "evidence/stage11/v2d/v2d-staff-line-v1_1-source-identity-reconciliation.v1.json",
+    "version": "stage11-v2d-staff-multisystem-source.v1.1"
+  },
+  "phaseAFreeze": {
+    "byteRepeatDeterminismVerified": true,
+    "freshIndependentHoldoutAccessedBeforeFreeze": false,
+    "pageCount": 20,
+    "predictedSystemCount": 187,
+    "rawArtifactDriveFileId": "1CqDjx7xKXeFW91TUU0GrBKJv48DM0A2U",
+    "rawArtifactFileName": "stage11_v2d_staff_line_multisystem_source_raw.v1_2.json",
+    "rawArtifactSha256": "b89241345e9ae6d58dd010c111e76bd724f68272fb5b18d6bb3fbf6b02a4ac76",
+    "rawArtifactShaSidecarDriveFileId": "1ukYH5YpPIu2s6GEI0sQbDhrDlYvrTfuA",
+    "restoredOutputsLoadedBeforeFreeze": false,
+    "sourceIdentityMatchedPages": 20,
+    "teacherArtifactLoadedBeforeFreeze": false
+  },
+  "phaseBTeacherScoring": {
+    "evaluationDriveFileId": "1x8DtfnCGqSvjGR6m5sDaOCG4Rmtm8EId",
+    "evaluationFileName": "stage11_v2d_staff_line_multisystem_source_v1_2_evaluation.v1.json",
+    "evaluationSha256": "17a097ed27a3df81c459756947952f9f26c855f142df48dd45342d969ffbb6f5",
+    "scorerCompatibilityReproducedFrozenV1MatchedCount71": true,
+    "teacherAmbiguousSystemCount": 0,
+    "teacherConfirmedLineCount": 985,
+    "teacherConfirmedSystemCount": 197,
+    "teacherDriveFileId": "1GeC-L9yHc4LBb_yFZq5tHxusGWp84_s5",
+    "teacherPageCount": 20,
+    "teacherRawFileSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+  },
+  "qualificationEvidence": false,
+  "repositoryState": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeBindingCommit": "95ccd69082ddb0482d96beeda0dc9b65c1ed92c6",
+    "mergeAuthorized": false,
+    "prMustRemainDraft": true,
+    "prNumber": 211,
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine"
+  },
+  "schemaVersion": "stage11.v2d.staff-line-multisystem-source-v1_2-development-result-binding.v1"
+}

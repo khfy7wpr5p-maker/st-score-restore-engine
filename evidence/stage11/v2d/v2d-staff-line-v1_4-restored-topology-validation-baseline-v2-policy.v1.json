@@ -1,0 +1,104 @@
+{
+  "authorization": {
+    "approvedSequence": [
+      "freeze a new separately versioned reproducible restored-output baseline",
+      "measure staff topology on the existing 20-page development corpus",
+      "aggregate semantic-preservation evidence",
+      "close Stage 11 as PASS only if all frozen closure criteria and governance CI pass"
+    ],
+    "authorizationDate": "2026-09-14",
+    "authorizedByHumanTeacherInConversation": true,
+    "conditionalOverallStage11ClosureDecisionAuthorized": true,
+    "productionPromotionAuthorized": false,
+    "pullRequestMergeAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "baseline": {
+    "cacheManifestSha256": "c5131d56cf9c23e1804e0e3b49ef6cb1200e15cfaa432924fc9b3a34f17daeda",
+    "developmentOnly": true,
+    "heldOutAccessed": false,
+    "manifestPath": "evidence/stage11/v2d/v2d-restored-output-validation-baseline-v2-manifest.v1.json",
+    "manifestSha256": "491be22654521f2f384f889bd0379d4f10dcddba215ca8c1623f5aef2134b739",
+    "pageCount": 20,
+    "restorePackageSha256": "7ff4023466f6b18eda41d9e8af7a9f6858429354621781dd9bd93b26210ba234",
+    "restoreWeightsMutationAllowed": false,
+    "teacherLineCount": 985,
+    "teacherSystemCount": 197,
+    "teacherTruthSha256": "28ea439c30ca75a7935f310a0ae413c50769ba3f457d23f0d2132192555350a7"
+  },
+  "claimBoundary": {
+    "newRestoredBaselineFrozen": true,
+    "overallStage11Pass": false,
+    "prReadyForMerge": false,
+    "productionPromotionAuthorized": false,
+    "productionReady": false,
+    "restoredStaffTopologyPreservationEstablished": false,
+    "restoredTopologyMeasurementStarted": false,
+    "semanticPreservationEstablished": false,
+    "staffLineSourceDetectorQualified": true,
+    "stage12EntryAuthorized": false
+  },
+  "detector": {
+    "detectorMutationAllowed": false,
+    "freshHoldoutConsumed": true,
+    "qualifiedOnIndependentHoldout": true,
+    "retuningAllowed": false,
+    "sourceSha256": "7bc42e4a1d289d748637f5f8ff8d4709fd7ce5507f82765994aa08e3120f6960",
+    "thresholdMovementAllowed": false,
+    "version": "stage11-v2d-staff-multisystem-source.v1.4"
+  },
+  "generatedOn": "2026-09-14",
+  "passPolicy": {
+    "allCriteriaRequired": true,
+    "postMeasurementThresholdSelectionAllowed": false,
+    "requirements": {
+      "absentPageSpecificityMin": 1.0,
+      "baselineInputIdentityMatchRateRequired": 1.0,
+      "detectorByteRepeatDeterminismRequired": true,
+      "fiveLineCountCorrectRateMin": 1.0,
+      "lineOrderCorrectRateMin": 1.0,
+      "predictedSystemPrecisionAtHalfSpacingMin": 0.8,
+      "presentPageCoverageMin": 0.95,
+      "teacherSystemRecallAtHalfSpacingMin": 0.65
+    },
+    "thresholdsChangedFromFrozenV1_4TopologyPolicy": false
+  },
+  "preMeasurementIdentityPolicy": {
+    "baselineInputIdentityMeaning": "each restored PNG byte SHA-256 must match the frozen v2 baseline manifest",
+    "explanation": "This downstream validation runs the frozen detector on restored-output PNGs, so identity is the frozen restored-baseline input identity rather than the original source-render identity. No topology threshold is relaxed.",
+    "requiredBaselineInputIdentityMatchRate": 1.0,
+    "sourceRenderIdentityNotApplicableToRestoredInput": true
+  },
+  "repository": {
+    "branch": "stage11-v2c-semantic-detector-corpus-expansion",
+    "headBeforeFreeze": "88ed331d61a416e9a83bb0497b79afbd3dd80803",
+    "mergeAuthorized": false,
+    "pullRequestMustRemainDraft": true,
+    "pullRequestNumber": 211,
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine"
+  },
+  "requiredSequence": [
+    "commit baseline manifest and this policy before topology metrics are inspected",
+    "run frozen v1.4 detector twice on the exact 20 baseline PNGs",
+    "require byte-identical detector raw A/B",
+    "score exactly one accepted deterministic raw against the already-frozen 20-page teacher truth",
+    "issue restored-topology PASS/FAIL under the frozen criteria",
+    "only if PASS, aggregate Stage 11 semantic-preservation closure evidence and governance CI"
+  ],
+  "schemaVersion": "stage11.v2d.staff-line-v1_4-restored-topology-validation-baseline-v2-policy.v1",
+  "status": "FROZEN_PRE_MEASUREMENT",
+  "supersessionBoundary": {
+    "historicalCanonicalBaselineState": "BLOCKED_ON_CANONICAL_RESTORED_OUTPUT_RECOVERY",
+    "historicalCanonicalEvidenceRewritten": false,
+    "historicalCanonicalOutputsTreatedAsEquivalent": false,
+    "newBaselineId": "stage11.v2d.restored-output-validation-baseline.v2",
+    "newBaselineIsSeparateVersion": true,
+    "reason": "historical full20 canonical PNG archive recovery exhausted; user explicitly authorized a new reproducible validation baseline"
+  },
+  "validator": {
+    "horizontalOverlapRequired": true,
+    "matchingRule": "one_to_one_ordered_five_line_half_spacing",
+    "scorerSha256": "db6e044fb6f0050be0c98f4db49467813b35dafbf237516cdcc9ac57b07834b8",
+    "toleranceFractionOfLocalTeacherMedianStaffSpacing": 0.5
+  }
+}

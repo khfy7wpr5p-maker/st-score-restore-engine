@@ -1,0 +1,33 @@
+{
+  "detectorOutputsShownToTeacher": false,
+  "detectorPredictedCountsShownToTeacher": false,
+  "generatedOn": "2026-09-13",
+  "independentHoldout": true,
+  "instructions": {
+    "annotateOnlySourcePages": true,
+    "detectorOrRestoreMayInfluenceAnnotation": false,
+    "doNotOpenDetectorOutputFolderDuringReview": true,
+    "perPageDecision": "Mark staffPresent true/false. For every visible standard five-line staff system, draw exactly five top-to-bottom line center traces from left extent to right extent. Mark genuinely uncertain systems AMBIGUOUS rather than forcing CONFIRMED."
+  },
+  "lineDetectorGeometryShownToTeacher": false,
+  "pages": [
+    {"completed":false,"height":2368,"notes":"","pageId":"chopin-op69-holdout-p1","sha256":"c3363c67378f956b0cb6f7470f1dc2918365c6ac5955dd3ed624e14f614b269d","sourceFileName":"chopin-op69-holdout-p1.png","staffPresent":null,"systems":null,"width":1878},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p2","sha256":"6a750bfc46b689f3553691ec0344afc89647b526ddd19f6a2d71b1dfce5b42a9","sourceFileName":"chopin-op69-holdout-p2.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p3","sha256":"57a2be93cecb3b7c6c190266625aa2b77c8f4946c32313ed48b7e21920a764d0","sourceFileName":"chopin-op69-holdout-p3.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p4","sha256":"95b159c6e57d1c7c0f49ba298029a04e4f577a19af99019ba546050c055fc3c1","sourceFileName":"chopin-op69-holdout-p4.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p5","sha256":"ffdeb1ce258cc9b8450894575f023aaf8d6df35c569e97c8fee569d2445c9268","sourceFileName":"chopin-op69-holdout-p5.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p6","sha256":"37c9140f3f8a8cc679bd579aeca9e24facb08f9d6391d1794736c6b9ad2462b9","sourceFileName":"chopin-op69-holdout-p6.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p7","sha256":"7871b9665609a3242aa9c3c0f238930a63edf6065926082781d9d8f2232af6f8","sourceFileName":"chopin-op69-holdout-p7.png","staffPresent":null,"systems":null,"width":1902},
+    {"completed":false,"height":2426,"notes":"","pageId":"chopin-op69-holdout-p8","sha256":"d96cd78959069f2dd4201e70cafa1b1e7f2b0455cc61ff0f56956b589ee5b88d","sourceFileName":"chopin-op69-holdout-p8.png","staffPresent":null,"systems":null,"width":1902}
+  ],
+  "qualificationEvidence": false,
+  "qualificationEvidenceCandidate": true,
+  "restoredOutputsShownToTeacher": false,
+  "schemaVersion": "stage11.v2d.staff-line-independent-holdout-teacher-work-package.v1",
+  "sourceDatasetItemId": "dataset.item.imslp82860-chopin-op69.v2",
+  "sourceFamilyId": "source.family.imslp82860-chopin-op69.v1",
+  "sourceParentPdfSha256": "b45544448622c668702b7a9aa5317960c106a939c40faef36ffbb83e4d3af3d3",
+  "sourceRasterization": {"allPages":true,"dpi":200,"pageCount":8,"renderer":"pdfium"},
+  "status": "READY_FOR_BLIND_HUMAN_ANNOTATION",
+  "teacherAnnotationIndependent": true
+}
