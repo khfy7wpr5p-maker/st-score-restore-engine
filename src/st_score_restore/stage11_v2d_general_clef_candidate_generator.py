@@ -138,6 +138,17 @@ def _line_topology_proposals(gray: np.ndarray, line_count: int) -> list[dict[str
                         ]
                     )
                 )
+                line_starts: list[float] = []
+                line_ends: list[float] = []
+                for row in rows:
+                    yy = min(height - 1, max(0, int(round(row))))
+                    band = line_mask[max(0, yy - 1) : min(height, yy + 2), :]
+                    xs = np.flatnonzero(np.any(band > 0, axis=0))
+                    if xs.size:
+                        line_starts.append(float(xs.min()))
+                        line_ends.append(float(xs.max() + 1))
+                staff_x1 = float(np.median(line_starts)) if line_starts else 0.0
+                staff_x2 = float(np.median(line_ends)) if line_ends else float(width)
                 pool.append(
                     {
                         "line_count": line_count,
@@ -145,6 +156,8 @@ def _line_topology_proposals(gray: np.ndarray, line_count: int) -> list[dict[str
                         "staff_spacing": spacing,
                         "staff_center_y": float(np.mean(rows)),
                         "support": support,
+                        "x1": staff_x1,
+                        "x2": staff_x2,
                     }
                 )
 
@@ -464,8 +477,8 @@ def _normalized_external_staff_systems(
                 "line_rows": [float(value) for value in item["line_rows"]],
                 "staff_spacing": float(item["staff_spacing"]),
                 "staff_center_y": float(item["staff_center_y"]),
-                "x1": 0.0,
-                "x2": float(source_width),
+                "x1": float(item.get("x1", 0.0)),
+                "x2": float(item.get("x2", source_width)),
             }
             for item in fallback_topologies
             if int(item["line_count"]) == 5
