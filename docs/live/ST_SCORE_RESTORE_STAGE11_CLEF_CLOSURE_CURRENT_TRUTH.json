@@ -1,12 +1,15 @@
 {
-  "schemaVersion": "stage11.v2d.clef-closure-current-truth.v1",
+  "schemaVersion": "stage11.v2d.clef-closure-current-truth.v2",
   "generatedOn": "2026-09-26",
-  "state": "C_CLEF_P4_14_FROZEN_GENERAL_CLEF_SUCCESSOR_REQUIRED",
+  "state": "C_CLEF_P4_14_FROZEN_GENERAL_CLEF_SUCCESSOR_V2_FROZEN_NOT_QUALIFIED",
   "cClef": {
     "candidate": "stage11-v2d-c-clef-precision.p4_14.v1",
     "developmentDisposition": "CANDIDATE_AND_PREQUALIFICATION_POLICY_FROZEN",
     "qualified": false,
     "independentHoldoutOpened": false,
+    "implementationCommit": "ce74902e5d3acedf8381d73b69676673f0789248",
+    "prequalificationPolicyCommit": "13399bf7e4b526ae9bbd56a463a9836ffe070fdc",
+    "freezeVerificationBinding": "a61e536d189773ee25d43bebb1e0eb6a17b82a99",
     "frozenThresholds": {
       "pooledPrecisionMinimum": 0.8,
       "pooledRecallMinimum": 0.85,
@@ -14,26 +17,76 @@
     }
   },
   "generalClef": {
-    "existingCandidate": "oemer-onnx-segmentation-dbe2a933",
-    "disposition": "REJECTED_CURRENT_GENERAL_CLEF_PATH",
-    "successorRequired": true,
-    "coveredTeacherTypes": [
+    "historicalCandidate": "oemer-onnx-segmentation-dbe2a933",
+    "historicalDisposition": "REJECTED_CURRENT_GENERAL_CLEF_PATH",
+    "successorCandidate": "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative-c-review.v2",
+    "developmentDisposition": "CANDIDATE_AND_PREQUALIFICATION_POLICY_FROZEN",
+    "candidateFrozen": true,
+    "prequalificationPolicyFrozen": true,
+    "qualified": false,
+    "independentHoldoutOpened": false,
+    "independentHoldoutAuthorized": false,
+    "candidateGeneratorCommit": "b72bcc344501788b93d7daef6e8d35cec44b983d",
+    "successorCommit": "aeaf323d7fd3e199053251240d10bc9d447602d0",
+    "developmentEvidenceCommit": "a056737fb0032b5447b10b306c5c973b85a1b612",
+    "prequalificationPolicyCommit": "f245c7038737cd559e9d4093f3de80c8c5ec24eb",
+    "freezeVerificationBinding": "ecbd2af756282378c175c3234e6ae5faeb590dd1",
+    "typedScope": [
       "treble",
       "bass",
-      "tab",
-      "soprano"
-    ]
+      "tab"
+    ],
+    "sopranoAndCClefScope": {
+      "mode": "EXPLICIT_REVIEW_ONLY",
+      "typedSopranoQualificationClaimAllowed": false,
+      "requiredStatus": "REVIEW_REQUIRED",
+      "requiredReason": "POSSIBLE_C_CLEF"
+    },
+    "frozenThresholds": {
+      "typedPooledPrecisionMinimum": 0.9,
+      "typedPooledRecallMinimum": 0.85,
+      "typedSubtypeRecallMinimum": {
+        "treble": 0.9,
+        "bass": 0.85,
+        "tab": 0.8
+      },
+      "cClefReviewPrecisionMinimum": 0.8,
+      "cClefReviewRecallMinimum": 0.8,
+      "determinismRequired": true
+    },
+    "developmentMetrics": {
+      "typed": {
+        "teacherBoxes": 213,
+        "tp": 201,
+        "fp": 4,
+        "fn": 12,
+        "precision": 0.9804878048780488,
+        "recall": 0.9436619718309859
+      },
+      "cClefReviewOnly": {
+        "teacherBoxes": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1,
+        "typedSopranoSupportEstablished": false
+      }
+    }
   },
   "ses19": {
     "state": "IN_PROGRESS",
     "closureAllowed": false,
-    "reason": "C-clef P4.14 is frozen but no accepted general-clef successor exists for the 213-box treble/bass/TAB/soprano scope."
+    "reason": "Both C-clef P4.14 and the general-clef successor are frozen development candidates, but neither has passed a fresh independent one-shot qualification."
   },
   "authorization": {
     "freshCClefHoldoutOpened": false,
+    "freshGeneralClefHoldoutOpened": false,
+    "freshGeneralClefHoldoutAuthorized": false,
+    "pr217MergeAuthorized": false,
     "pr211MergeAuthorized": false,
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "Brainstorm and approve a separately versioned general-clef successor candidate before implementation. Do not open the C-clef holdout merely to bypass the unresolved general-clef path."
+  "nextSafeBoundary": "Stop at freeze. Fresh independent holdout construction/access and one-shot qualification require separate explicit approval; do not retune frozen candidates or thresholds after holdout access."
 }
