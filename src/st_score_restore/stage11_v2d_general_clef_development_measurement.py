@@ -12,7 +12,9 @@ import math
 from typing import Any, Mapping
 
 
-SCHEMA_VERSION = "stage11.v2d.general-clef-successor-development-measurement.v1"
+SCHEMA_VERSION_V1 = "stage11.v2d.general-clef-successor-development-measurement.v1"
+SCHEMA_VERSION_V2 = "stage11.v2d.general-clef-successor-development-measurement.v2"
+SCHEMA_VERSION = SCHEMA_VERSION_V1
 EXPECTED_TEACHER_SHA256 = "68df771d5ace9f0b968452ff532fa2693fa2cd3405477d91fa3a98eccb190d54"
 EXPECTED_HISTORICAL_OEMER_SHA256 = "bfb1e99b779453ee272c6679b29ac884a10183d841ca45bdcab6dbc394d10e1a"
 EXPECTED_TEACHER_COUNTS = {"treble": 165, "bass": 34, "tab": 12, "soprano": 2}
@@ -69,7 +71,11 @@ def _metric(tp: int, fp: int, fn: int) -> dict[str, float | int]:
 
 
 def validate_general_clef_development_measurement(payload: Mapping[str, Any]) -> dict[str, Any]:
-    _require(payload.get("schemaVersion") == SCHEMA_VERSION, "general-clef development schema mismatch")
+    schema_version = payload.get("schemaVersion")
+    _require(
+        schema_version in {SCHEMA_VERSION_V1, SCHEMA_VERSION_V2},
+        "general-clef development schema mismatch",
+    )
     _require(payload.get("developmentOnly") is True, "artifact must remain development-only")
     _require(payload.get("qualificationEvidence") is False, "development replay cannot become qualification evidence")
 
@@ -126,20 +132,147 @@ def validate_general_clef_development_measurement(payload: Mapping[str, Any]) ->
     _require(assessment.get("trebleRecallPass") is True, "treble recall target must pass")
     _require(assessment.get("bassRecallPass") is True, "bass recall target must pass")
     _require(assessment.get("tabRecallPass") is True, "TAB recall target must pass")
-    _require(assessment.get("sopranoDevelopmentExpectationPass") is False, "soprano must remain unresolved at this checkpoint")
-    _require(assessment.get("generalClefDevelopmentFreezeReady") is False, "soprano blocker must keep freeze closed")
 
     decision = payload.get("decision") or {}
-    _require(decision.get("disposition") == "PARTIAL_PASS_SOPRANO_UNRESOLVED", "development disposition mismatch")
-    _require(decision.get("typedTrebleBassTabDevelopmentTargetsMet") is True, "treble/bass/TAB target status mismatch")
-    _require(decision.get("sopranoTypedSupportEstablished") is False, "soprano typed support is not established")
-    _require(decision.get("nextSafeAction") == "RESOLVE_SOPRANO_VIA_FROZEN_P4_14_COEXISTENCE_OR_EXPLICIT_REVIEW_PATH_BEFORE_FREEZE", "next safe action mismatch")
+    if schema_version == SCHEMA_VERSION_V1:
+        _require(
+            assessment.get("sopranoDevelopmentExpectationPass") is False,
+            "soprano must remain unresolved at this checkpoint",
+        )
+        _require(
+            assessment.get("generalClefDevelopmentFreezeReady") is False,
+            "soprano blocker must keep freeze closed",
+        )
+        _require(
+            decision.get("disposition") == "PARTIAL_PASS_SOPRANO_UNRESOLVED",
+            "development disposition mismatch",
+        )
+        _require(
+            decision.get("typedTrebleBassTabDevelopmentTargetsMet") is True,
+            "treble/bass/TAB target status mismatch",
+        )
+        _require(
+            decision.get("sopranoTypedSupportEstablished") is False,
+            "soprano typed support is not established",
+        )
+        _require(
+            decision.get("nextSafeAction")
+            == "RESOLVE_SOPRANO_VIA_FROZEN_P4_14_COEXISTENCE_OR_EXPLICIT_REVIEW_PATH_BEFORE_FREEZE",
+            "next safe action mismatch",
+        )
+    else:
+        review = payload.get("reviewPath") or {}
+        _require(review.get("mode") == "EXPLICIT_REVIEW_ONLY", "review mode mismatch")
+        _require(review.get("autoSubtypeAssignment") is False, "review path must not auto-type soprano")
+        _require(review.get("outputClefType") == "unknown", "review path output type mismatch")
+        _require(review.get("outputStatus") == "REVIEW_REQUIRED", "review path output status mismatch")
+        _require(review.get("outputReason") == "POSSIBLE_C_CLEF", "review path reason mismatch")
+        _require(
+            review.get("candidateProvenance")
+            == "source-only:c-clef-review:five-line-c1-compact",
+            "review path provenance mismatch",
+        )
+        _require(review.get("p414Modified") is False, "P4.14 must remain unchanged")
+
+        thresholds = review.get("thresholds") or {}
+        expected_thresholds = {
+            "minimumFiveLineTopologySupport": 0.60,
+            "minimumPresenceConfidence": 0.79,
+            "minimumXOffsetStaffSpaces": 0.50,
+            "maximumXOffsetStaffSpaces": 2.00,
+            "minimumYOffsetStaffSpaces": 1.50,
+            "maximumYOffsetStaffSpaces": 2.50,
+            "typedSuppressionIou": 0.20,
+        }
+        _require(thresholds == expected_thresholds, "review-path thresholds mismatch")
+
+        review_metrics = review.get("developmentMeasurement") or {}
+        expected_review_counts = {
+            "teacherBoxes": 2,
+            "candidateCount": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+        }
+        for key, expected in expected_review_counts.items():
+            _require(review_metrics.get(key) == expected, f"review metric mismatch: {key}")
+        _require(
+            abs(_finite_probability(review_metrics.get("precision"), "review precision") - 1.0)
+            <= 1e-12,
+            "review precision mismatch",
+        )
+        _require(
+            abs(_finite_probability(review_metrics.get("recall"), "review recall") - 1.0)
+            <= 1e-12,
+            "review recall mismatch",
+        )
+        _require(
+            review_metrics.get("sameDevelopmentTruthUsedForThresholdSelection") is True,
+            "review threshold-selection disclosure required",
+        )
+
+        _require(
+            assessment.get("sopranoDevelopmentExpectationPass") is True,
+            "soprano review-routing expectation must pass",
+        )
+        _require(
+            assessment.get("sopranoReviewRoutingPass") is True,
+            "soprano review routing must pass",
+        )
+        _require(
+            assessment.get("sopranoTypedClassificationPass") is False,
+            "soprano typed classification must remain unclaimed",
+        )
+        _require(
+            assessment.get("generalClefDevelopmentFreezeReady") is True,
+            "development candidate must be freeze-ready",
+        )
+
+        _require(
+            decision.get("disposition")
+            == "DEVELOPMENT_FREEZE_READY_WITH_SOPRANO_REVIEW_ONLY",
+            "development disposition mismatch",
+        )
+        _require(
+            decision.get("typedTrebleBassTabDevelopmentTargetsMet") is True,
+            "treble/bass/TAB target status mismatch",
+        )
+        _require(
+            decision.get("sopranoTypedSupportEstablished") is False,
+            "soprano typed support must remain false",
+        )
+        _require(
+            decision.get("sopranoReviewRoutingEstablished") is True,
+            "soprano review routing must be established",
+        )
+        _require(
+            decision.get("candidateFreezePerformed") is False,
+            "candidate freeze is a later approval gate",
+        )
+        _require(
+            decision.get("prequalificationPolicyFreezePerformed") is False,
+            "prequalification freeze is a later approval gate",
+        )
+        _require(
+            decision.get("nextSafeAction")
+            == "FREEZE_GENERAL_CLEF_CANDIDATE_AND_PREQUALIFICATION_POLICY_BEFORE_ANY_FRESH_HOLDOUT_ACCESS",
+            "next safe action mismatch",
+        )
 
     boundary = payload.get("claimBoundary") or {}
     for key in FORBIDDEN_TRUE_CLAIMS:
         _require(boundary.get(key) is False, f"forbidden claim must remain false: {key}")
+    if schema_version == SCHEMA_VERSION_V2:
+        _require(
+            boundary.get("generalClefCandidateFrozen") is False,
+            "general-clef candidate is not frozen yet",
+        )
+        _require(
+            boundary.get("prequalificationPolicyFrozen") is False,
+            "prequalification policy is not frozen yet",
+        )
 
-    return {
+    result = {
         "status": "pass",
         "disposition": decision["disposition"],
         "teacher_box_count": EXPECTED_POOLED["teacherBoxCount"],
@@ -149,6 +282,24 @@ def validate_general_clef_development_measurement(payload: Mapping[str, Any]) ->
         "detector_qualified": False,
         "holdout_authorized": False,
     }
+    if schema_version == SCHEMA_VERSION_V2:
+        review_metrics = payload["reviewPath"]["developmentMeasurement"]
+        result.update(
+            {
+                "soprano_review_tp": int(review_metrics["tp"]),
+                "soprano_review_fp": int(review_metrics["fp"]),
+                "soprano_review_fn": int(review_metrics["fn"]),
+                "development_freeze_ready": True,
+                "soprano_typed_support_established": False,
+                "candidate_frozen": False,
+            }
+        )
+    return result
 
 
-__all__ = ["SCHEMA_VERSION", "validate_general_clef_development_measurement"]
+__all__ = [
+    "SCHEMA_VERSION",
+    "SCHEMA_VERSION_V1",
+    "SCHEMA_VERSION_V2",
+    "validate_general_clef_development_measurement",
+]
