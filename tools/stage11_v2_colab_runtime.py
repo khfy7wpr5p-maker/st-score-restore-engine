@@ -311,7 +311,7 @@ def load_frozen_model(device: Any) -> tuple[Any, dict[str, Any], Path]:
     import torch
     best = TRAIN_OUT / "best.pt"
     if not best.exists(): raise FileNotFoundError(best)
-    checkpoint = torch.load(best, map_location=device)
+    checkpoint = torch.load(best, map_location=device, weights_only=True)
     if checkpoint.get("datasetMd5") != EXPECTED_ARCHIVE_MD5 or checkpoint.get("configSha256") != CONFIG_SHA256:
         raise RuntimeError("checkpoint/config/dataset provenance mismatch")
     model = build_residual_unet(base_channels=32).to(device); model.load_state_dict(checkpoint["model"]); model.eval()
@@ -331,7 +331,7 @@ def train_mode(data: dict[str, Any]) -> None:
     start_epoch = 0; history = []
     last = TRAIN_OUT / "last.pt"; best = TRAIN_OUT / "best.pt"; history_path = TRAIN_OUT / "history.v2.json"
     if last.exists():
-        checkpoint = torch.load(last, map_location=device)
+        checkpoint = torch.load(last, map_location=device, weights_only=True)
         if checkpoint.get("datasetMd5") != EXPECTED_ARCHIVE_MD5 or checkpoint.get("configSha256") != CONFIG_SHA256: raise RuntimeError("resume checkpoint provenance mismatch")
         model.load_state_dict(checkpoint["model"]); optimizer.load_state_dict(checkpoint["optimizer"]); start_epoch = int(checkpoint["epoch"]) + 1
         if history_path.exists(): history = json.loads(history_path.read_text(encoding="utf-8")).get("epochs", [])
