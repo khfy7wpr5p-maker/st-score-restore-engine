@@ -126,6 +126,28 @@ class Stage11V2dGeneralClefCandidateGeneratorTests(unittest.TestCase):
         )
         self.assertEqual(2, result["diagnostics"]["typed_standard_candidate_count"])
 
+    def test_fallback_staff_topology_preserves_staff_start_for_bass(self) -> None:
+        image = np.full((300, 600), 255, dtype=np.uint8)
+        for y in [110, 120, 130, 140, 150]:
+            cv2.line(image, (200, y), (570, y), 0, 2, cv2.LINE_8)
+
+        result = generate_general_clef_candidates(
+            image,
+            oemer_candidate_boxes=[[205.0, 114.0, 225.0, 146.0]],
+            oemer_prediction_shape=(600, 300),
+        )
+
+        bass = [
+            item
+            for item in result["candidates"]
+            if item["clef_type_or_unknown"] == "bass"
+        ]
+        self.assertEqual(1, len(bass))
+        self.assertEqual(
+            "source-only:oemer-staff-relative:bass",
+            bass[0]["candidate_provenance"],
+        )
+
     def test_oemer_treble_path_preserves_mid_staff_candidate(self) -> None:
         image = self._five_line_page(clef_x=None)
         result = generate_general_clef_candidates(
