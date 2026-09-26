@@ -1,7 +1,7 @@
 {
-  "schemaVersion": "stage11.v2d.clef-closure-current-truth.v2",
+  "schemaVersion": "stage11.v2d.clef-closure-current-truth.v3",
   "generatedOn": "2026-09-26",
-  "state": "C_CLEF_P4_14_FROZEN_GENERAL_CLEF_SUCCESSOR_V2_FROZEN_NOT_QUALIFIED",
+  "state": "GENERAL_CLEF_FRESH_HOLDOUT_CONSTRUCTION_OPENED_INCOMPLETE",
   "cClef": {
     "candidate": "stage11-v2d-c-clef-precision.p4_14.v1",
     "developmentDisposition": "CANDIDATE_AND_PREQUALIFICATION_POLICY_FROZEN",
@@ -24,13 +24,45 @@
     "candidateFrozen": true,
     "prequalificationPolicyFrozen": true,
     "qualified": false,
-    "independentHoldoutOpened": false,
-    "independentHoldoutAuthorized": false,
     "candidateGeneratorCommit": "b72bcc344501788b93d7daef6e8d35cec44b983d",
     "successorCommit": "aeaf323d7fd3e199053251240d10bc9d447602d0",
     "developmentEvidenceCommit": "a056737fb0032b5447b10b306c5c973b85a1b612",
     "prequalificationPolicyCommit": "f245c7038737cd559e9d4093f3de80c8c5ec24eb",
     "freezeVerificationBinding": "ecbd2af756282378c175c3234e6ae5faeb590dd1",
+    "holdoutConstruction": {
+      "authorized": true,
+      "opened": true,
+      "constructionStateCommit": "4dfe0804aab3dc5152ff7ac7c4075589d2820868",
+      "completeSourceSetFrozen": false,
+      "blindTeacherTruthFrozen": false,
+      "predictionArtifactFrozen": false,
+      "oneShotQualificationExecuted": false,
+      "repositoryValidationRun": 36237175446,
+      "constructionTests": "5/5 PASS on Python 3.11 and Python 3.12",
+      "blockers": [
+        "FRESH_TAB_EXACT_BYTES_MISSING",
+        "C_CLEF_RASTER_SOURCE_MISSING",
+        "STAFF_PRESENT_NEGATIVE_SOURCE_NOT_FROZEN",
+        "BLIND_CLEF_TEACHER_TRUTH_MISSING"
+      ]
+    },
+    "frozenSourceBindingsAvailable": [
+      {
+        "sourceRef": "private-source:tchaikovsky-staffline-v1_4",
+        "role": "FRESH_RASTER_TREBLE_BASS_POSITIVE_CANDIDATE",
+        "sha256": "f13755833ef51354e1d632292b48bfa72571bb0ca96d1d7c2e57b924919e2f47"
+      },
+      {
+        "sourceRef": "private-source:nearer-phone-derivative-v1",
+        "role": "FRESH_RASTER_TREBLE_BASS_AND_DEGRADATION_CANDIDATE",
+        "sha256": "abbc9a05e308ad52c8f681ad53b16845f4d2fce38a4628a5efd965293d5852b5"
+      },
+      {
+        "sourceRef": "private-source:debussy-string-quartet-op10-mxl",
+        "role": "FRESH_C_CLEF_SEMANTIC_SOURCE_CANDIDATE_NOT_RASTER_READY",
+        "sha256": "f720a48649c5e3fba806c2832b28dc664d166042143825a8a2f7ea70f3175875"
+      }
+    ],
     "typedScope": [
       "treble",
       "bass",
@@ -53,40 +85,24 @@
       "cClefReviewPrecisionMinimum": 0.8,
       "cClefReviewRecallMinimum": 0.8,
       "determinismRequired": true
-    },
-    "developmentMetrics": {
-      "typed": {
-        "teacherBoxes": 213,
-        "tp": 201,
-        "fp": 4,
-        "fn": 12,
-        "precision": 0.9804878048780488,
-        "recall": 0.9436619718309859
-      },
-      "cClefReviewOnly": {
-        "teacherBoxes": 2,
-        "tp": 2,
-        "fp": 0,
-        "fn": 0,
-        "precision": 1,
-        "recall": 1,
-        "typedSopranoSupportEstablished": false
-      }
     }
   },
   "ses19": {
     "state": "IN_PROGRESS",
     "closureAllowed": false,
-    "reason": "Both C-clef P4.14 and the general-clef successor are frozen development candidates, but neither has passed a fresh independent one-shot qualification."
+    "reason": "General-clef fresh holdout construction is authorized and opened, but the independent source set and blind teacher truth are incomplete; one-shot qualification has not run."
   },
   "authorization": {
     "freshCClefHoldoutOpened": false,
-    "freshGeneralClefHoldoutOpened": false,
-    "freshGeneralClefHoldoutAuthorized": false,
+    "freshGeneralClefHoldoutConstructionAuthorized": true,
+    "freshGeneralClefHoldoutConstructionOpened": true,
+    "freshGeneralClefOneShotScoringAllowedNow": false,
+    "candidateRetuningAllowed": false,
+    "thresholdMutationAllowed": false,
     "pr217MergeAuthorized": false,
     "pr211MergeAuthorized": false,
     "productionPromotionAuthorized": false,
     "stage12EntryAuthorized": false
   },
-  "nextSafeBoundary": "Stop at freeze. Fresh independent holdout construction/access and one-shot qualification require separate explicit approval; do not retune frozen candidates or thresholds after holdout access."
+  "nextSafeBoundary": "Complete and freeze the fresh general-clef source set, freeze blind teacher truth without predictions, then freeze source-only A/B-identical predictions before opening teacher truth for the single qualification comparison. No candidate or threshold retuning is permitted."
 }
