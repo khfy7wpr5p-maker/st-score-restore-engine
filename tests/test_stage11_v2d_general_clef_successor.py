@@ -186,6 +186,31 @@ class Stage11V2dGeneralClefSuccessorTests(unittest.TestCase):
         self.assertEqual("REVIEW_REQUIRED", result["detections"][0]["status"])
         self.assertEqual("P4_14_COLLISION", result["detections"][0]["abstain_reason"])
 
+    def test_p414_frozen_staff_index_schema_does_not_cross_collide(self) -> None:
+        second_staff = {
+            "staff_index": 1,
+            "line_rows": [100.0, 110.0, 120.0, 130.0, 140.0],
+            "x1": 10.0,
+            "x2": 490.0,
+        }
+        result = resolve_general_clef_successor(
+            [self._candidate(clef_type="soprano")],
+            [self.five_line[0], second_staff],
+            source_width=500,
+            source_height=300,
+            p414_detections=[
+                {
+                    "bbox": [19.0, 91.0, 46.0, 149.0],
+                    "staffIndex": 1,
+                }
+            ],
+        )
+
+        self.assertEqual(1, len(result["detections"]))
+        self.assertEqual("soprano", result["detections"][0]["clef_type_or_unknown"])
+        self.assertEqual("ACCEPT_TYPED", result["detections"][0]["status"])
+        self.assertIsNone(result["detections"][0]["abstain_reason"])
+
     def test_non_inference_metadata_cannot_change_output(self) -> None:
         base = self._candidate()
         polluted = self._candidate(
