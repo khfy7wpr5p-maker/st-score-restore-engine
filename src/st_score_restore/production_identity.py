@@ -304,12 +304,12 @@ class ProductionIdentityAdapter:
         )
 
     @staticmethod
-    def _role_values(value: Any) -> tuple[str, ...]:
+    def _role_values(value: Any) -> list[str]:
         if isinstance(value, str) and value.strip():
-            return (value,)
+            return [value]
         if isinstance(value, (list, tuple)) and value and all(isinstance(item, str) and item.strip() for item in value):
-            return tuple(value)
-        return ()
+            return list(value)
+        return []
 
     @staticmethod
     def _opaque_key(kind: str, issuer: str, value: str) -> str:

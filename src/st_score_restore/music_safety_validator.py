@@ -374,7 +374,7 @@ def _compare_geometry(source_systems, candidate_systems, source_dark, candidate_
                 line_break_pixels += int(np.count_nonzero(missing))
                 line_source_pixels += int(np.count_nonzero(relevant))
                 if np.count_nonzero(missing):
-                    xs = np.where(missing)[0]
+                    xs = np.nonzero(missing)[0]
                     findings.append(_finding(f"{kind}_line_break", "medium", _region(int(xs.min()), max(0, candidate_y - 2), int(xs.max() - xs.min() + 1), 5, candidate_dark.shape), {"missingPixels": int(xs.size)}))
         break_fraction = line_break_pixels / max(1, line_source_pixels)
         if break_fraction >= config.line_break_reject_fraction:
@@ -550,7 +550,7 @@ def _region(x: int, y: int, width: int, height: int, shape: tuple[int, int]) -> 
 
 
 def _bounding_region(mask: np.ndarray, shape: tuple[int, int]) -> dict[str, Any] | None:
-    ys, xs = np.where(mask)
+    ys, xs = np.nonzero(mask)
     if not xs.size:
         return None
     return _region(int(xs.min()), int(ys.min()), int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1), shape)
