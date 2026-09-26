@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "stage11.v2d.general-clef-successor-development-measurement.v2",
+  "generatedOn": "2026-09-26",
+  "developmentOnly": true,
+  "qualificationEvidence": false,
+  "supersedesEvidencePath": "evidence/stage11/v2d/v2d-general-clef-successor-v1-development-measurement.v1.json",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "ses-19-general-clef-successor-v1",
+    "pullRequest": 217,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false,
+    "candidateGeneratorId": "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative-c-review.v2",
+    "candidateGeneratorCommit": "b72bcc344501788b93d7daef6e8d35cec44b983d",
+    "candidateGeneratorBlobSha": "1cc4108319eb0c0531f4fbeced0d30738c6bd541",
+    "successorCommit": "aeaf323d7fd3e199053251240d10bc9d447602d0",
+    "successorBlobSha": "8bef05863aa15df9da102f5bfd71345435657bbc"
+  },
+  "inputBindings": {
+    "teacherTruth": {
+      "filename": "clef_box_teacher_completion.v1.json",
+      "sha256": "68df771d5ace9f0b968452ff532fa2693fa2cd3405477d91fa3a98eccb190d54",
+      "byteSize": 70465,
+      "pageCount": 18,
+      "clefBoxCount": 213,
+      "clefTypeCounts": {
+        "treble": 165,
+        "bass": 34,
+        "tab": 12,
+        "soprano": 2
+      },
+      "reviewBasis": "source_page_only"
+    },
+    "sourceReviewBundle": {
+      "filename": "ST_SCORE_RESTORE_STAGE11_V2D_SPATIAL_TEACHER_REVIEW_PACKAGE_2026-09-09.zip",
+      "sha256": "e5609d2f79139c209618a0fa8d61145ab55a6e548c0124e4664bb59d87366559",
+      "byteSize": 18175904,
+      "pageCount": 18
+    },
+    "sourceImageIdentityMatchedCount": 18,
+    "historicalOemerDevelopmentArtifact": {
+      "filename": "v2d_clef_source_qualification_result.json",
+      "sha256": "bfb1e99b779453ee272c6679b29ac884a10183d841ca45bdcab6dbc394d10e1a",
+      "byteSize": 86142,
+      "historicalPooledMetrics": {
+        "tp": 3,
+        "fp": 582,
+        "fn": 210,
+        "precision": 0.005128205128205128,
+        "recall": 0.014084507042253521,
+        "f1": 0.007518796992481202
+      },
+      "coordinateSpace": "oemer_resized_prediction_pixels",
+      "qualificationEvidence": false,
+      "historicalDisposition": "REJECTED_CURRENT_GENERAL_CLEF_PATH"
+    }
+  },
+  "coordinateNormalization": {
+    "oemerResizeContract": "preserve source dimensions only when pixel count is within [3000000,4350000], otherwise resize isotropically to 3675000 target pixels using rounded width and height",
+    "normalization": "prediction_bbox * source_dimension / prediction_dimension",
+    "sourceBoundsRequired": true
+  },
+  "candidatePolicy": {
+    "standardClefs": {
+      "treble": {
+        "minimumHeightStaffSpaces": 5.1,
+        "minimumWidthStaffSpaces": 1.4,
+        "aspectRatioMin": 1.4,
+        "aspectRatioMax": 3.6,
+        "bboxWidthScale": 1.225,
+        "bboxHeightScale": 1.125
+      },
+      "bass": {
+        "heightStaffSpacesMin": 2.7,
+        "heightStaffSpacesMax": 3.7,
+        "minimumWidthStaffSpaces": 1.25,
+        "aspectRatioMax": 2.2,
+        "staffStartOffsetSpacesMin": -2,
+        "staffStartOffsetSpacesMax": 15,
+        "bboxWidthScale": 1.95,
+        "bboxHeightScale": 1.5
+      },
+      "staffTopology": "source-only five-line morphology with source horizontal staff extent"
+    },
+    "tab": {
+      "provider": "existing source-six-line-tab-marker.p4_2.v1",
+      "sixLineTopologyAloneMayForceTab": false,
+      "explicitTabMarkerRequired": true
+    },
+    "soprano": {
+      "typedProvider": "none",
+      "resolutionMode": "EXPLICIT_REVIEW_ONLY",
+      "p414MustRemainFrozen": true
+    }
+  },
+  "selectionDisclosure": {
+    "developmentTruthUsedForThresholdSelection": true,
+    "postSelectionReplayOnSameDevelopmentCorpus": true,
+    "independentQualificationClaim": false,
+    "freshHoldoutAccessed": false,
+    "reason": "The same 213-box development truth was used while selecting deterministic typed geometry and the review-only C-clef routing thresholds. These metrics measure development fit only."
+  },
+  "matching": {
+    "method": "greedy_one_to_one_descending_iou_type_aware",
+    "iouThreshold": 0.5
+  },
+  "pooledMetrics": {
+    "teacherBoxCount": 213,
+    "candidateCount": 205,
+    "tp": 201,
+    "fp": 4,
+    "fn": 12,
+    "precision": 0.9804878048780488,
+    "recall": 0.9436619718309859,
+    "f1": 0.9617224880382774
+  },
+  "perSubtype": {
+    "treble": {
+      "teacherBoxes": 165,
+      "candidateCount": 157,
+      "typedTp": 157,
+      "typedFp": 0,
+      "typedFn": 8,
+      "precision": 1,
+      "recall": 0.9515151515151515
+    },
+    "bass": {
+      "teacherBoxes": 34,
+      "candidateCount": 36,
+      "typedTp": 32,
+      "typedFp": 4,
+      "typedFn": 2,
+      "precision": 0.8888888888888888,
+      "recall": 0.9411764705882353
+    },
+    "tab": {
+      "teacherBoxes": 12,
+      "candidateCount": 12,
+      "typedTp": 12,
+      "typedFp": 0,
+      "typedFn": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "soprano": {
+      "teacherBoxes": 2,
+      "candidateCount": 0,
+      "typedTp": 0,
+      "typedFp": 0,
+      "typedFn": 2,
+      "precision": 1,
+      "recall": 0,
+      "typedDisposition": "NOT_ESTABLISHED_REVIEW_ONLY"
+    }
+  },
+  "reviewPath": {
+    "mode": "EXPLICIT_REVIEW_ONLY",
+    "autoSubtypeAssignment": false,
+    "outputClefType": "unknown",
+    "outputStatus": "REVIEW_REQUIRED",
+    "outputReason": "POSSIBLE_C_CLEF",
+    "candidateProvenance": "source-only:c-clef-review:five-line-c1-compact",
+    "p414Modified": false,
+    "thresholds": {
+      "minimumFiveLineTopologySupport": 0.6,
+      "minimumPresenceConfidence": 0.79,
+      "minimumXOffsetStaffSpaces": 0.5,
+      "maximumXOffsetStaffSpaces": 2,
+      "minimumYOffsetStaffSpaces": 1.5,
+      "maximumYOffsetStaffSpaces": 2.5,
+      "typedSuppressionIou": 0.2
+    },
+    "developmentMeasurement": {
+      "teacherBoxes": 2,
+      "candidateCount": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "sameDevelopmentTruthUsedForThresholdSelection": true,
+      "pageMatches": [
+        {
+          "pageId": "bach-anna-magdalena-p24",
+          "iou": 0.7062724509533022,
+          "outputType": "unknown",
+          "outputStatus": "REVIEW_REQUIRED",
+          "reason": "POSSIBLE_C_CLEF"
+        },
+        {
+          "pageId": "bach-anna-magdalena-p4",
+          "iou": 0.6767759849409039,
+          "outputType": "unknown",
+          "outputStatus": "REVIEW_REQUIRED",
+          "reason": "POSSIBLE_C_CLEF"
+        }
+      ]
+    }
+  },
+  "developmentTargets": {
+    "pooledPrecisionMinimum": 0.9,
+    "pooledRecallMinimum": 0.85,
+    "trebleRecallMinimum": 0.9,
+    "bassRecallMinimum": 0.85,
+    "tabRecallMinimum": 0.8
+  },
+  "targetAssessment": {
+    "pooledPrecisionPass": true,
+    "pooledRecallPass": true,
+    "trebleRecallPass": true,
+    "bassRecallPass": true,
+    "tabRecallPass": true,
+    "sopranoDevelopmentExpectationPass": true,
+    "sopranoReviewRoutingPass": true,
+    "sopranoTypedClassificationPass": false,
+    "generalClefDevelopmentFreezeReady": true
+  },
+  "decision": {
+    "disposition": "DEVELOPMENT_FREEZE_READY_WITH_SOPRANO_REVIEW_ONLY",
+    "typedTrebleBassTabDevelopmentTargetsMet": true,
+    "sopranoTypedSupportEstablished": false,
+    "sopranoReviewRoutingEstablished": true,
+    "candidateFreezePerformed": false,
+    "prequalificationPolicyFreezePerformed": false,
+    "nextSafeAction": "FREEZE_GENERAL_CLEF_CANDIDATE_AND_PREQUALIFICATION_POLICY_BEFORE_ANY_FRESH_HOLDOUT_ACCESS"
+  },
+  "claimBoundary": {
+    "qualificationEvidence": false,
+    "detectorQualified": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "freshIndependentHoldoutAccessed": false,
+    "trainingOrFineTuningPerformed": false,
+    "p414Modified": false,
+    "pr211MergeAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "stage12EntryAuthorized": false,
+    "generalClefCandidateFrozen": false,
+    "prequalificationPolicyFrozen": false
+  }
+}
