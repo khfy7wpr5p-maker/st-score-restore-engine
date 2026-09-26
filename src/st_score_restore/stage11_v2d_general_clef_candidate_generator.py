@@ -20,7 +20,17 @@ import numpy as np
 from .stage11_v2d_clef_adapter import detect_tab_clef_markers
 
 
-CANDIDATE_GENERATOR_ID = "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative.v1"
+CANDIDATE_GENERATOR_ID = "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative-c-review.v2"
+
+_C_CLEF_REVIEW_MIN_TOPOLOGY_SUPPORT = 0.60
+_C_CLEF_REVIEW_MIN_PRESENCE_CONFIDENCE = 0.79
+_C_CLEF_REVIEW_MIN_X_OFFSET_SPACES = 0.50
+_C_CLEF_REVIEW_MAX_X_OFFSET_SPACES = 2.00
+_C_CLEF_REVIEW_MIN_Y_OFFSET_SPACES = 1.50
+_C_CLEF_REVIEW_MAX_Y_OFFSET_SPACES = 2.50
+_C_CLEF_REVIEW_TYPED_SUPPRESSION_IOU = 0.20
+_C_CLEF_REVIEW_PROVENANCE = "source-only:c-clef-review:five-line-c1-compact"
+_C_CLEF_REVIEW_REASON = "POSSIBLE_C_CLEF"
 
 _OEMER_TARGET_PIXEL_MIDPOINT = 3_675_000.0
 _TREBLE_MIN_HEIGHT_SPACES = 5.10
@@ -658,6 +668,109 @@ def _typed_oemer_candidates(
     return typed
 
 
+def _bbox_iou(a: Sequence[float], b: Sequence[float]) -> float:
+    ax1, ay1, ax2, ay2 = (float(value) for value in a)
+    bx1, by1, bx2, by2 = (float(value) for value in b)
+    ix1 = max(ax1, bx1)
+    iy1 = max(ay1, by1)
+    ix2 = min(ax2, bx2)
+    iy2 = min(ay2, by2)
+    iw = max(0.0, ix2 - ix1)
+    ih = max(0.0, iy2 - iy1)
+    intersection = iw * ih
+    if intersection <= 0.0:
+        return 0.0
+    union = (
+        (ax2 - ax1) * (ay2 - ay1)
+        + (bx2 - bx1) * (by2 - by1)
+        - intersection
+    )
+    return intersection / union if union > 0.0 else 0.0
+
+
+def _c_clef_review_candidates(
+    gray: np.ndarray,
+    five_line_topologies: Sequence[dict[str, Any]],
+    typed_standard: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Return fail-closed source-only C-clef review candidates.
+
+    This path intentionally does not emit a C-clef subtype. It uses only
+    five-line topology support, staff-relative location and source connected
+    components. Candidates that materially overlap an already typed treble/bass
+    candidate are suppressed before the semantic successor sees them.
+    """
+    if not five_line_topologies:
+        return []
+
+    presence = _component_presence_candidates(gray, five_line_topologies)
+    eligible_by_topology: dict[int, list[tuple[tuple[float, ...], dict[str, Any]]]] = {}
+
+    for item in presence:
+        if item.get("candidate_provenance") != "source-only:staff-relative-cc:5-line:compact":
+            continue
+        confidence = float(item["clef_presence_confidence"])
+        if confidence < _C_CLEF_REVIEW_MIN_PRESENCE_CONFIDENCE:
+            continue
+
+        box = item["bbox"]
+        center_x = (float(box[0]) + float(box[2])) / 2.0
+        center_y = (float(box[1]) + float(box[3])) / 2.0
+        topology = _nearest_topology(center_y, five_line_topologies)
+        if topology is None:
+            continue
+        if float(topology["support"]) < _C_CLEF_REVIEW_MIN_TOPOLOGY_SUPPORT:
+            continue
+
+        spacing = float(topology["staff_spacing"])
+        x_offset_spaces = (center_x - float(topology.get("x1", 0.0))) / spacing
+        y_offset_spaces = (center_y - float(topology["staff_center_y"])) / spacing
+        if not (
+            _C_CLEF_REVIEW_MIN_X_OFFSET_SPACES
+            <= x_offset_spaces
+            <= _C_CLEF_REVIEW_MAX_X_OFFSET_SPACES
+        ):
+            continue
+        if not (
+            _C_CLEF_REVIEW_MIN_Y_OFFSET_SPACES
+            <= y_offset_spaces
+            <= _C_CLEF_REVIEW_MAX_Y_OFFSET_SPACES
+        ):
+            continue
+        if any(
+            _bbox_iou(box, typed["bbox"]) >= _C_CLEF_REVIEW_TYPED_SUPPRESSION_IOU
+            for typed in typed_standard
+        ):
+            continue
+
+        candidate = {
+            "bbox": [float(value) for value in box],
+            "clef_presence_confidence": confidence,
+            "clef_type_or_unknown": "unknown",
+            "clef_type_confidence": 0.0,
+            "candidate_provenance": _C_CLEF_REVIEW_PROVENANCE,
+            "review_required_reason": _C_CLEF_REVIEW_REASON,
+        }
+        rank = (
+            abs(y_offset_spaces - 2.0),
+            abs(x_offset_spaces - 1.25),
+            -confidence,
+            float(box[0]),
+            float(box[1]),
+            float(box[2]),
+            float(box[3]),
+        )
+        eligible_by_topology.setdefault(int(topology["topology_index"]), []).append(
+            (rank, candidate)
+        )
+
+    selected: list[dict[str, Any]] = []
+    for topology_index in sorted(eligible_by_topology):
+        ranked = sorted(eligible_by_topology[topology_index], key=lambda item: item[0])
+        selected.append(ranked[0][1])
+    return selected
+
+
 def _typed_tab_candidates(gray: np.ndarray) -> list[dict[str, Any]]:
     result = detect_tab_clef_markers(gray)
     detections = result.get("detections") or []
@@ -721,8 +834,13 @@ def generate_general_clef_candidates(
         prediction_shape=oemer_prediction_shape,
         staff_systems=normalized_staff_systems,
     )
+    c_clef_review = (
+        _c_clef_review_candidates(gray, five_line, typed_standard)
+        if oemer_candidate_boxes
+        else []
+    )
     candidates = (
-        typed_standard
+        [*typed_standard, *c_clef_review]
         if oemer_candidate_boxes
         else _component_presence_candidates(gray, topologies)
     )
@@ -758,6 +876,11 @@ def generate_general_clef_candidates(
                 1
                 for item in candidates
                 if item["clef_type_or_unknown"] in {"treble", "bass"}
+            ),
+            "c_clef_review_candidate_count": sum(
+                1
+                for item in candidates
+                if item.get("review_required_reason") == _C_CLEF_REVIEW_REASON
             ),
             "oemer_candidate_count": len(oemer_candidate_boxes),
             "oemer_prediction_shape": (
