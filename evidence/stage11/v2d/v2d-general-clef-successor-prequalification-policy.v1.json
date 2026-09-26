@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "stage11.v2d.general-clef-successor-prequalification-policy.v1",
+  "generatedOn": "2026-09-26",
+  "status": "FROZEN_BEFORE_NEW_INDEPENDENT_HOLDOUT_ACCESS",
+  "repository": {
+    "repository": "khfy7wpr5p-maker/st-score-restore-engine",
+    "branch": "ses-19-general-clef-successor-v1",
+    "pullRequest": 217,
+    "pullRequestMustRemainDraft": true,
+    "mergeAuthorized": false
+  },
+  "candidate": {
+    "candidateGeneratorId": "stage11-general-clef-candidate-generator.hybrid-oemer-staff-relative-c-review.v2",
+    "candidateGeneratorImplementationCommit": "b72bcc344501788b93d7daef6e8d35cec44b983d",
+    "candidateGeneratorBlobSha": "1cc4108319eb0c0531f4fbeced0d30738c6bd541",
+    "successorImplementationCommit": "aeaf323d7fd3e199053251240d10bc9d447602d0",
+    "successorBlobSha": "8bef05863aa15df9da102f5bfd71345435657bbc",
+    "developmentEvidencePath": "evidence/stage11/v2d/v2d-general-clef-successor-v2-development-measurement.v2.json",
+    "developmentEvidenceCommit": "a056737fb0032b5447b10b306c5c973b85a1b612",
+    "developmentEvidenceBlobSha": "57fb15a5d8597803206bbacda6ee0611b0779919",
+    "p414Compatibility": {
+      "modifiedByGeneralClefCandidate": false,
+      "frozenImplementationCommit": "ce74902e5d3acedf8381d73b69676673f0789248",
+      "frozenPolicyCommit": "13399bf7e4b526ae9bbd56a463a9836ffe070fdc",
+      "freezeVerificationBinding": "a61e536d189773ee25d43bebb1e0eb6a17b82a99"
+    }
+  },
+  "frozenCandidateConfig": {
+    "standardClefs": {
+      "treble": {
+        "minimumHeightStaffSpaces": 5.1,
+        "minimumWidthStaffSpaces": 1.4,
+        "aspectRatioMin": 1.4,
+        "aspectRatioMax": 3.6,
+        "bboxWidthScale": 1.225,
+        "bboxHeightScale": 1.125
+      },
+      "bass": {
+        "heightStaffSpacesMin": 2.7,
+        "heightStaffSpacesMax": 3.7,
+        "minimumWidthStaffSpaces": 1.25,
+        "aspectRatioMax": 2.2,
+        "staffStartOffsetSpacesMin": -2,
+        "staffStartOffsetSpacesMax": 15,
+        "bboxWidthScale": 1.95,
+        "bboxHeightScale": 1.5
+      },
+      "topology": "source-only five-line morphology with source horizontal staff extent"
+    },
+    "tab": {
+      "provider": "existing source-six-line-tab-marker.p4_2.v1",
+      "sixLineTopologyAloneMayForceTab": false,
+      "explicitTabMarkerRequired": true
+    },
+    "cClefReview": {
+      "mode": "EXPLICIT_REVIEW_ONLY",
+      "candidateProvenance": "source-only:c-clef-review:five-line-c1-compact",
+      "minimumFiveLineTopologySupport": 0.6,
+      "minimumPresenceConfidence": 0.79,
+      "minimumXOffsetStaffSpaces": 0.5,
+      "maximumXOffsetStaffSpaces": 2,
+      "minimumYOffsetStaffSpaces": 1.5,
+      "maximumYOffsetStaffSpaces": 2.5,
+      "typedSuppressionIou": 0.2,
+      "outputClefType": "unknown",
+      "outputStatus": "REVIEW_REQUIRED",
+      "outputReason": "POSSIBLE_C_CLEF",
+      "autoSubtypeAssignmentAllowed": false
+    }
+  },
+  "qualificationScope": {
+    "typedTrebleBassTab": {
+      "claim": "source-only box localization plus typed clef classification for treble/bass/TAB",
+      "matching": "greedy_one_to_one_descending_iou_type_aware",
+      "primaryIouThreshold": 0.5
+    },
+    "sopranoAndCClef": {
+      "mode": "EXPLICIT_REVIEW_ONLY",
+      "claim": "source-only C-clef/soprano region routing to human review; no automatic soprano subtype qualification claim",
+      "requiredOutputClefType": "unknown",
+      "requiredStatus": "REVIEW_REQUIRED",
+      "requiredReason": "POSSIBLE_C_CLEF",
+      "autoSubtypeAssignmentAllowed": false,
+      "typedSopranoQualificationClaimAllowed": false,
+      "matching": "greedy_one_to_one_descending_iou_presence_only",
+      "primaryIouThreshold": 0.5
+    }
+  },
+  "frozenThresholds": {
+    "typedPooledPrecisionMinimum": 0.9,
+    "typedPooledRecallMinimum": 0.85,
+    "typedSubtypeRecallMinimum": {
+      "treble": 0.9,
+      "bass": 0.85,
+      "tab": 0.8
+    },
+    "cClefReviewPrecisionMinimum": 0.8,
+    "cClefReviewRecallMinimum": 0.8,
+    "cClefReviewAutomaticSubtypeAssignmentsMaximum": 0,
+    "determinismRequired": true,
+    "allCriteriaConjunctive": true
+  },
+  "thresholdRationale": {
+    "typedPooledPrecisionMinimum": "0.90 is below the same-corpus development precision 0.9805 while preserving a materially high precision requirement.",
+    "typedPooledRecallMinimum": "0.85 is below the same-corpus development recall 0.9437 and preserves the previously approved general-clef recall floor.",
+    "typedSubtypeRecallMinimum": "Treble 0.90 / bass 0.85 / TAB 0.80 are the explicitly approved development-gate subtype floors and prevent pooled metrics from masking a failed class.",
+    "cClefReviewThresholds": "The development corpus contains only two soprano labels. Qualification therefore measures fail-closed review routing rather than typed soprano classification. Precision and recall must each reach 0.80 while automatic subtype assignment remains zero."
+  },
+  "developmentBinding": {
+    "corpus": "18-page/213-box general-clef development corpus",
+    "sourceOnlyTeacherTruth": true,
+    "teacherTruthUsedForThresholdSelection": true,
+    "qualificationEvidence": false,
+    "typedDevelopmentMetrics": {
+      "teacherBoxes": 213,
+      "candidates": 205,
+      "tp": 201,
+      "fp": 4,
+      "fn": 12,
+      "precision": 0.9804878048780488,
+      "recall": 0.9436619718309859,
+      "f1": 0.9617224880382774,
+      "subtypeRecall": {
+        "treble": 0.9515151515151515,
+        "bass": 0.9411764705882353,
+        "tab": 1
+      }
+    },
+    "cClefReviewDevelopmentMetrics": {
+      "teacherBoxes": 2,
+      "candidates": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "typedSopranoSupportEstablished": false
+    }
+  },
+  "independentHoldoutRequirements": {
+    "disjointFrom": [
+      "18-page/213-box general-clef development corpus",
+      "P4.7 spent holdout",
+      "P4.9 spent holdout"
+    ],
+    "newSourceFamiliesPreferred": true,
+    "minimumUnseenSourceFamiliesTarget": 2,
+    "representativeTrebleBassTabRequired": true,
+    "positiveAndNegativeEvidenceRequired": true,
+    "includeStaffPresentNegativeEvidence": true,
+    "cClefReviewPositiveRequiredForOverallQualification": true,
+    "ifNoIndependentCClefReviewPositiveAvailable": "NO_OVERALL_GENERAL_CLEF_QUALIFICATION_CLAIM",
+    "sourceBytesAndManifestFrozenBeforeInference": true,
+    "teacherTruthFrozenBlindToPredictions": true,
+    "teacherTruthOpenedOnlyAfterCandidateAndPredictionsAreFrozen": true,
+    "candidateABDeterminismRequired": true,
+    "noPostAccessCodeOrThresholdChanges": true,
+    "noPostAccessCandidateSelection": true,
+    "oneShotPassFail": true
+  },
+  "holdoutFirewall": {
+    "newIndependentHoldoutOpenedByThisArtifact": false,
+    "freshHoldoutAccessAuthorizedByThisArtifact": false,
+    "retuningAfterHoldoutAccessAllowed": false,
+    "repeatQualificationForCandidateSelectionAllowed": false,
+    "pageIdFilenameSourceFamilyInferenceRulesAllowed": false,
+    "teacherMetadataInferenceRulesAllowed": false
+  },
+  "claimBoundary": {
+    "generalClefCandidateFrozen": true,
+    "prequalificationPolicyFrozen": true,
+    "detectorQualified": false,
+    "typedTrebleBassTabQualified": false,
+    "cClefReviewRoutingQualified": false,
+    "typedSopranoSupportEstablished": false,
+    "freshIndependentHoldoutAccessed": false,
+    "freshIndependentHoldoutAuthorized": false,
+    "p414Modified": false,
+    "pr217MergeAuthorized": false,
+    "pr211MergeAuthorized": false,
+    "overallStage11PassAuthorized": false,
+    "productionPromotionAuthorized": false,
+    "stage12EntryAuthorized": false
+  },
+  "nextSafeAction": "REQUEST_SEPARATE_APPROVAL_FOR_FRESH_INDEPENDENT_HOLDOUT_CONSTRUCTION_AND_ONE_SHOT_QUALIFICATION"
+}
