@@ -172,6 +172,41 @@ class Stage11V2dGeneralClefCandidateGeneratorTests(unittest.TestCase):
         self.assertEqual(1, len(treble))
         self.assertGreater(treble[0]["bbox"][0], 300.0)
 
+    def test_strong_five_line_c1_geometry_routes_to_explicit_c_clef_review(self) -> None:
+        image = np.full((220, 400), 255, dtype=np.uint8)
+        for y in [90, 95, 100, 105, 110]:
+            cv2.line(image, (30, y), (370, y), 0, 1, cv2.LINE_8)
+        cv2.ellipse(image, (38, 110), (5, 7), 0, 25, 335, 0, 3, cv2.LINE_8)
+        cv2.line(image, (35, 104), (35, 116), 0, 3, cv2.LINE_8)
+
+        result = generate_general_clef_candidates(
+            image,
+            oemer_candidate_boxes=[[200.0, 78.0, 212.0, 120.0]],
+            oemer_prediction_shape=(400, 220),
+            staff_systems=[
+                {
+                    "staff_index": 0,
+                    "line_rows": [90.0, 95.0, 100.0, 105.0, 110.0],
+                    "x1": 30.0,
+                    "x2": 370.0,
+                }
+            ],
+        )
+
+        review = [
+            item
+            for item in result["candidates"]
+            if item.get("review_required_reason") == "POSSIBLE_C_CLEF"
+        ]
+        self.assertEqual(1, len(review))
+        self.assertEqual("unknown", review[0]["clef_type_or_unknown"])
+        self.assertEqual(0.0, review[0]["clef_type_confidence"])
+        self.assertEqual(
+            "source-only:c-clef-review:five-line-c1-compact",
+            review[0]["candidate_provenance"],
+        )
+        self.assertEqual(1, result["diagnostics"]["c_clef_review_candidate_count"])
+
     def test_inference_signature_has_no_teacher_or_identity_channel(self) -> None:
         signature = inspect.signature(generate_general_clef_candidates)
         self.assertEqual(
